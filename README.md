@@ -12,8 +12,12 @@ La commande <code>\splinetikz[...]</code>, trace un ensemble de <i>splines</i> g
 
 Également de quoi tracer, grâce à la commande <code>\tangentetikz[...]</code>, (une ou) des tangentes à l'aide de triplets <code>xa/ya/da§...</code> pour tracer une (portion de) tangente via <code>da*(x-xa)+ya</code>.
 
+![illustr](proflycee-test-splines.png?raw=true "testsplines")
+
 ## Émulation fenêtre de calcul formel
 
 Une commande <code>\paramCF[...]</code> pour paramétrer la *fenêtre de travail* du calcul formel.
 
 Une commande <code>\ligneCF[...]</code> pour créer les lignes de la *fenêtre de travail*.
+
+![illustr](proflycee-test-calcformel.png?raw=true "testcalc")
