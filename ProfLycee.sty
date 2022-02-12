@@ -3,21 +3,21 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/02/10 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/02/12 - v1.0.1 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.0.1	Modif mineure du chargement de xcolor (compatibilité avec d'autres packages notamment...)
 % 1.0	Version initiale
 
 %------Packages utiles
-\RequirePackage[dvipsnames,table]{xcolor}
+\RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
 \RequirePackage{tikz}
-\RequirePackage{pgf,pgffor,pgfplots}
+\RequirePackage{pgf,pgffor}
 \RequirePackage{ifthen}
-\pgfplotsset{compat=1.18}
-\usepackage{xkeyval}
-\usepackage{xfp}
-\usepackage{xstring}
-\usepackage{simplekv}
-\usepackage{listofitems}
-\usepackage{xintexpr}
+\RequirePackage{xkeyval}
+\RequirePackage{xfp}
+\RequirePackage{xstring}
+\RequirePackage{simplekv}
+\RequirePackage{listofitems}
+\RequirePackage{xintexpr}
 %librairies tikz
 \usetikzlibrary{calc}
 \usetikzlibrary{decorations.pathreplacing}
