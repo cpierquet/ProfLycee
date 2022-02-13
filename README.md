@@ -4,7 +4,9 @@ Package, sans prétention, pour quelques commandes LaTeX utiles au lycée !
 Pour le moment :
 
 - deux macros pour créer, dans un environnement TikZ, des courbes d'interpolations et des tangentes ;
-- deux macros pour configurer un environnement de Calcul Forme et pour créer les lignes.
+- deux macros pour configurer un environnement de Calcul Formel et pour créer les lignes ;
+- un environnement pour présenter du code python (via pythontex) ;
+- un environnement pour exécuter du code python et présenter le résultat dans une <i>console</i>.
 
 ## Courbe d'interpolation
 
@@ -21,3 +23,13 @@ Une commande <code>\paramCF[...]</code> pour paramétrer la *fenêtre de travail
 Une commande <code>\ligneCF[...]</code> pour créer les lignes de la *fenêtre de travail*.
 
 ![illustr](proflycee-test-calcformel.png?raw=true "testcalc")
+
+## Code et console Python
+
+Un environnement <code>envcodepythontex[...]</code> pour présenter du code Python.
+
+Un environnement <code>envconsolepythontex[...]</code> pour présenter du code Python.
+
+![illustr](proflycee-test-codepython.png?raw=true "testcode")
+
+![illustr](proflycee-test-consolepython.png?raw=true "testconsole")
