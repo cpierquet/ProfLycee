@@ -1,4 +1,4 @@
-% !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
+% !TeX TXS-program:compile = txs:///pythonpdfse
 
 \documentclass{article}
 \usepackage[utf8]{inputenc}
@@ -18,6 +18,8 @@
 \usepackage{listofitems}
 \usepackage{xintexpr}
 \usepackage{codehigh}
+\usepackage{hyperref}
+\hypersetup{pdfborder=0 0 0}
 
 \usepackage{listings}
 
@@ -61,7 +63,7 @@
 \newverbcommand{\pverb}{\color{purple}}{}
 \newverbcommand{\rverb}{\color{red}}{}
 \newverbcommand{\vverb}{\color{ForestGreen}}{}
-\newverbcommand{\averb}{\color{Aquamarine}}{}
+\newverbcommand{\averb}{\color{CadetBlue}}{}
 \newverbcommand{\overb}{\color{orange}}{}
 \newverbcommand{\bverb}{\color{blue}}{}
 \setlength{\parindent}{0pt}
@@ -76,9 +78,9 @@
 \tcbset{vignettelatex/.style={%
 		fontupper={\vphantom{pf}\footnotesize\ttfamily},
 		vignettes,%
-		colframe=Turquoise,coltitle=white,colback=Turquoise!5,%
+		colframe=CadetBlue,coltitle=white,colback=CadetBlue!5,%
 		overlay={\begin{tcbclipinterior}%
-				\fill[fill=lightgray!50]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{Turquoise}{\scalebox{0.6}[0.75]{\textbf{\LaTeX}}}}} ($(interior.north west)+(5pt,0pt)$);%
+				\fill[fill=lightgray!50]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{CadetBlue}{\scalebox{0.6}[0.75]{\textbf{\LaTeX}}}}} ($(interior.north west)+(5pt,0pt)$);%
 		\end{tcbclipinterior}}
 	}
 }
@@ -109,7 +111,7 @@
 	\tikzset{noeudexpl/.style={purple,font=\sffamily\small}}
 	\tikzset{portionexpl/.style={orange,thick,<->}}
 	\tikzset{expl/.style={midway,inner sep=1pt,above right=0,orange,font=\sffamily\scriptsize,rotate=45}}
-	\tikzset{coeffs/.style={Aquamarine!50!black,circle,draw=Aquamarine,thick,fill=Aquamarine!5,font=\small\ttfamily}}
+	\tikzset{coeffs/.style={CadetBlue!50!black,circle,draw=CadetBlue,thick,fill=CadetBlue!5,font=\small\ttfamily}}
 	\tikzset{tangente/.style={teal,line width=1pt,dashed}}
 	%grilles & axes
 	\tgrilles[line width=0.3pt,lightgray!50]
@@ -144,7 +146,7 @@
 }
 
 \newcommand\listecoeffs[4]{%
-	\draw (0,5.5) node[left,Aquamarine,font=\small\ttfamily] {Coeffs} ;
+	\draw (0,5.5) node[left,CadetBlue,font=\small\ttfamily] {Coeffs} ;
 	\node[coeffs] at (2,5.5) {#1} ;
 	\node[coeffs] at ({(4+7.5)/2},5.5) {#2} ;
 	\node[coeffs] at ({(7.5+9)/2},5.5) {#3} ;
@@ -259,8 +261,8 @@ Le \ctex{package}, qui s'enrichira peut-être au fil du temps permet -- pour le 
 \begin{center}
 	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
 		\paramCF[titre=true]
-		\ligneCF{\textsf{(x+1)\chap2}}{$\mathsf{x^2+2x+1}$}
-		\ligneCF{\texttt{(x+1)\chap2}}{$\mathtt{x^2+2x+1}$}
+		\ligneCF{\textsf{(x+1)\CFchap2}}{$\mathsf{x^2+2x+1}$}
+		\ligneCF{\texttt{(x+1)\CFchap2}}{$\mathtt{x^2+2x+1}$}
 		\ligneCF{\textsf{Dérivée[(x+5)*exp(-0.1*x)]}}{$\mathsf{\rightarrow (0.5-0.1*x)*exp(-0.1*x)}$}
 	\end{tikzpicture}
 \end{center}
@@ -641,7 +643,7 @@ produira le résultat suivant :
 	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
 		\paramCF[titre=true,couleurcmd=olive,couleurres=orange]
 		\ligneCF{COMMANDE 1}{RÉSULTAT 1}
-		\ligneCF[hc=1,hr=1.25]{\texttt{(x+1)\chap2}}{$\mathtt{x^2+2x+1}$}
+		\ligneCF[hc=1,hr=1.25]{\texttt{(x+1)\CFchap2}}{$\mathtt{x^2+2x+1}$}
 	\end{tikzpicture}
 \end{center}
 
@@ -649,7 +651,7 @@ produira le résultat suivant :
 
 \subsection{Visualisation des paramètres}
 
-Pour \textit{ilustrer} un peur les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
+Pour \textit{illustrer} un peur les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
 
 \medskip
 
@@ -672,22 +674,162 @@ Pour \textit{ilustrer} un peur les \Cle{clés}, un petit schéma, avec les diff�
 	\ligneCF{COMMANDE 1}{RÉSULTAT 1}
 	\ligneCF[hc=1.25,hr=1.5]{COMMANDE 2}{RÉSULTAT 2}
 	%explications
-	\draw[Aquamarine,<->] ($(A22) + (0,-12pt)$) -- ($(A52) + (0,-12pt)$) node[midway,below,font=\sffamily] {\Cle{larg}} ;
-	\draw[Aquamarine,<->] ($(A51) + (12pt,0)$) -- ($(A32) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{esplg}} ;
-	\draw[Aquamarine,<->] ($(A02) + (0,2pt)$) -- ($(A02) + (0,2pt) + ({-\CFpremcol},0) $) node[midway,above,font=\sffamily] {\Cle{premcol}} ;
-	\draw[Aquamarine,<->] ($(A02) + ({-\CFpremcol},0) + (-2pt,0)$) -- ($(A02) + ({-\CFpremcol},{-\CFhpremcol}) +(-2pt,0)$) node[midway,left,font=\sffamily] {\Cle{hpremcol}} ;
-	\draw[Aquamarine,<->] ($(A31) + (12pt,0)$) -- ($(A41) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hc}} ;
-	\draw[Aquamarine,<->] ($(A41) + (12pt,0)$) -- ($(A51) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hr}} ;
-	\draw[Aquamarine,<->] ($(A32) + (12pt,0)$) -- ($(A42) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hc}} ;
-	\draw[Aquamarine,<->] ($(A42) + (12pt,0)$) -- ($(A52) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hr}} ;
-	\draw[Aquamarine,->] ($(A12) + (0,-12pt)$) to[bend left=10] ($(A12) + (0,-12pt) + (-18pt,-12pt)$) node[below left,font=\sffamily] {\Cle{couleur}} ;
-	\draw[Aquamarine,->] ($(A52) + (-0.65,0.25)$) to[bend left=10] ($(A52) + (-0.65,0.25) + (-18pt,12pt)$) node[inner sep=0pt,above left=1pt,font=\sffamily] {\Cle{menu}} ;
-	\draw[Aquamarine,->] ($(A12) + (16pt,0)$) to[bend left=10] ($(A12) + (16pt,0) + (18pt,-12pt)$) node[inner sep=0pt,below right=1pt,font=\sffamily] {\Cle{sep}} ;
-	\draw[Aquamarine,->] ($(A01) + (8pt,2pt) + (0,1em)$) to[bend left=10] ($(A01) + (8pt,2pt) + (0,1em) + (-18pt,12pt)$) node[inner sep=0pt,above=1pt,font=\sffamily] {\Cle{titre} \& \Cle{tailletitre} \& \Cle{labeltitre}} ;
+	\draw[CadetBlue,<->] ($(A22) + (0,-12pt)$) -- ($(A52) + (0,-12pt)$) node[midway,below,font=\sffamily] {\Cle{larg}} ;
+	\draw[CadetBlue,<->] ($(A51) + (12pt,0)$) -- ($(A32) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{esplg}} ;
+	\draw[CadetBlue,<->] ($(A02) + (0,2pt)$) -- ($(A02) + (0,2pt) + ({-\CFpremcol},0) $) node[midway,above,font=\sffamily] {\Cle{premcol}} ;
+	\draw[CadetBlue,<->] ($(A02) + ({-\CFpremcol},0) + (-2pt,0)$) -- ($(A02) + ({-\CFpremcol},{-\CFhpremcol}) +(-2pt,0)$) node[midway,left,font=\sffamily] {\Cle{hpremcol}} ;
+	\draw[CadetBlue,<->] ($(A31) + (12pt,0)$) -- ($(A41) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hc}} ;
+	\draw[CadetBlue,<->] ($(A41) + (12pt,0)$) -- ($(A51) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hr}} ;
+	\draw[CadetBlue,<->] ($(A32) + (12pt,0)$) -- ($(A42) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hc}} ;
+	\draw[CadetBlue,<->] ($(A42) + (12pt,0)$) -- ($(A52) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hr}} ;
+	\draw[CadetBlue,->] ($(A12) + (0,-12pt)$) to[bend left=10] ($(A12) + (0,-12pt) + (-18pt,-12pt)$) node[below left,font=\sffamily] {\Cle{couleur}} ;
+	\draw[CadetBlue,->] ($(A52) + (-0.65,0.25)$) to[bend left=10] ($(A52) + (-0.65,0.25) + (-18pt,12pt)$) node[inner sep=0pt,above left=1pt,font=\sffamily] {\Cle{menu}} ;
+	\draw[CadetBlue,->] ($(A12) + (16pt,0)$) to[bend left=10] ($(A12) + (16pt,0) + (18pt,-12pt)$) node[inner sep=0pt,below right=1pt,font=\sffamily] {\Cle{sep}} ;
+	\draw[CadetBlue,->] ($(A01) + (8pt,2pt) + (0,1em)$) to[bend left=10] ($(A01) + (8pt,2pt) + (0,1em) + (-18pt,12pt)$) node[inner sep=0pt,above=1pt,font=\sffamily] {\Cle{titre} \& \Cle{tailletitre} \& \Cle{labeltitre}} ;
 \end{tikzpicture}
 \end{center}
 
 Chaque argument COMMANDE \& RÉSULTAT peut être formaté (niveau police) de manière indépendante.
+
+\newpage
+
+\section{Code \& Console Python}
+
+\subsection{Introduction}
+
+Le \textsf{package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
+
+\begin{itemize}
+	\item présenter du code python ;
+	\item exécuter du code python dans un environnement type \og console \fg{} ;
+	\item charger du code python, et éventuellement l'utiliser dans la console.
+\end{itemize}
+
+\subsection{Présentation de code Python}
+
+L'environnement \ctex{\textbackslash envcodepythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{colorbox} avec un style particulier. 
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{envcodepythontex}[largeur=...,centre=...,lignes=...]
+...
+\end{envcodepythontex}
+\end{minted}
+
+Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} modifier le style :
+
+\begin{itemize}
+	\item \Cle{largeur} : largeur de la \textit{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item \Cle{centre} : booléen pour centrer ou non la \textit{tcbox} ;\hfill{}défaut \Cle{true}
+	\item \Cle{lignes} : booléen pour afficher ou non les numéros de ligne.\hfill{}défaut \Cle{true}
+\end{itemize}
+
+\medskip
+
+Ainsi, le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=4,breaklines]{tex}
+\begin{envcodepythontex}[largeur=12cm]
+	#environnement Python(tex) centré avec numéros de ligne
+	def f(x) :
+		return x**2
+\end{envcodepythontex}
+\end{minted}
+
+produira 
+
+\begin{envcodepythontex}[largeur=12cm]
+	#environnement Python(tex) centré avec numéros de ligne
+	def f(x) :
+		return x**2
+\end{envcodepythontex}
+
+Le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envcodepythontex}[largeur=12cm,lignes=false,centre=false]
+	#environnement Python(tex) non centré sans numéro de ligne
+	def f(x) :
+		return x**2
+\end{envcodepythontex}
+\end{minted}
+
+produira :
+
+\begin{envcodepythontex}[largeur=12cm,lignes=false,centre=false]
+	#environnement Python(tex) non centré sans numéro de ligne
+	def f(x) :
+		return x**2
+\end{envcodepythontex}
+
+\newpage
+
+\subsection{Console d'exécution Python}
+
+\ctex{pythontex} permet également de \textit{simuler} (en exécutant également !) du code python dans une \textit{console}.
+
+C'est l'environnement \ctex{\textbackslash envconsolepythontex} qui permet de le faire.
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{envconsolepythontex}[largeur=...,centre=...,label=...]
+...
+\end{envconsolepythontex}
+\end{minted}
+
+Les \Cle{Clés} disponibles sont :
+
+\begin{itemize}
+	\item \Cle{largeur} : largeur de la \textit{console} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item \Cle{centre} : booléen pour centrer ou non la \textit{console} ;\hfill{}défaut \Cle{true}
+	\item \Cle{label} : booléen pour afficher ou non le titre.\hfill{}défaut \Cle{true}
+\end{itemize}
+
+\medskip
+
+Ainsi, le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=4,breaklines]{tex}
+\begin{envconsolepythontex}[largeur=14cm,centre=false]
+	#console Python(tex) non centrée avec label
+	from math import sqrt
+	1+1
+	sqrt(12)
+\end{envconsolepythontex}
+\end{minted}
+
+produira 
+
+\begin{envconsolepythontex}[largeur=14cm,centre=false]
+	#console Python(tex) non centrée avec label
+	from math import sqrt
+	1+1
+	sqrt(12)
+\end{envconsolepythontex}
+
+Le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envconsolepythontex}[largeur=14cm,label=false]
+	#console Python(tex) centrée sans label
+	table = [[1,2],[3,4]]
+	table[0][0]
+\end{envconsolepythontex}
+\end{minted}
+
+produira :
+
+\begin{envconsolepythontex}[largeur=14cm,label=false]
+	#console Python(tex) centrée sans label
+	table = [[1,2],[3,4]]
+	table[0][0]
+\end{envconsolepythontex}
+
+\subsection{Personnalisation}
+
+\textbf{NB : } compte tenu de la \textit{relative complexité} de gérer les options (par paramètres\ldots) des \textit{tcbox} et des \textit{fancyvrb}, le style est \og fixé \fg{} tel quel, et seules la taille et la position de la \textit{tcbox} sont modifiables. Si toutefois vous souhaitez personnaliser davantage, il faudra prendre le code correspondant et appliquer vos modifications !
+
+\medskip
+
+Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une base \textit{pré}existante !
 
 \newpage
 
