@@ -28,7 +28,7 @@ Une commande <code>\ligneCF[...]</code> pour créer les lignes de la *fenêtre d
 
 Un environnement <code>envcodepythontex[...]</code> pour présenter du code Python.
 
-Un environnement <code>envconsolepythontex[...]</code> pour présenter du code Python.
+Un environnement <code>envconsolepythontex[...]</code> pour présenter une console Python.
 
 ![illustr](proflycee-test-codepython.png?raw=true "testcode")
 
