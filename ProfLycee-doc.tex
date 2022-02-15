@@ -1,6 +1,7 @@
 % !TeX TXS-program:compile = txs:///pythonpdfse
 
 \documentclass{article}
+\usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[upright]{fourier}
@@ -8,9 +9,7 @@
 \renewcommand\ttdefault{lmtt}
 \usepackage[scaled=0.875]{cabin}
 \usepackage{ProfLycee}
-\usepackage[most]{tcolorbox}
 \usetikzlibrary{hobby}
-\usepackage[french]{babel}
 \usepackage{siunitx}
 \usepackage{graphics}
 \usepackage{hvlogos}
@@ -20,40 +19,6 @@
 \usepackage{codehigh}
 \usepackage{hyperref}
 \hypersetup{pdfborder=0 0 0}
-
-\usepackage{listings}
-
-\lstset{%
-	classoffset = 0,%
-	language     = [LaTeX]TeX,%
-	basicstyle   = \ttfamily,%
-	breaklines = true,%
-	commentstyle =\color{gray},%
-	columns=fullflexible,%
-	keepspaces,
-	frame=tb,%
-	%texcsstyle=*\color{blue},%pour colorer la contre-oblique
-	alsoletter={\\},%
-	keywordstyle=\color{blue},%
-	emph=[1]{tkz,ProfLycee,ProfCollege},%
-	emphstyle=[1]{\color{blue}},%
-	emph=[3]{beamer},%
-	emphstyle=[3]{\color{red}},%
-	classoffset=1,%
-	keywords={Ecran},%
-	keywordstyle=\color{green},%
-	classoffset=0,%
-	literate=*{[}{{\textcolor{orange}{[}}}{1}
-	{]}{{\textcolor{orange}{]}}}{1}
-	{\{}{\textcolor{amber}{\{}}{1}
-	{\}}{\textcolor{amber}{\}}}{1}
-	{\&}{\textcolor{red}{\&}}{1}
-	{\\[}{{\textcolor{purple}{\textbackslash[}}}{2}
-	{\\]}{{\textcolor{purple}{\textbackslash]}}}{2}
-	{$}{{\textcolor{purple}{\$}}}{1}%$
-	{_}{{\textcolor{purple}{\_}}}{1}%
-	{^}{{\textcolor{purple}{\^{}}}}{1}%,
-}
 
 \usepackage{minted}
 \sisetup{locale=FR}
@@ -172,7 +137,7 @@
 		{\ttfamily c pierquet -- at -- outlook . fr}
 	\end{tabular}
 }
-\date{Version 1.0.2 -- 13 Février 2022}
+\date{Version 1.0.5 -- 16 Février 2022}
 
 \newcommand\Cle[1]{{\bfseries\sffamily\textlangle #1\textrangle}}
 
@@ -189,7 +154,7 @@
 \noindent Quelques commandes (dans des environnements \TikZ) pour faciliter l'utilisation
 	de \LaTeX{} pour les enseignants de mathématiques en lycée.\\
 
-\bigskip
+\newpage
 
 \tableofcontents
 
@@ -205,7 +170,20 @@ On peut le voir comme un (maigre) complément à \ctex{ProfCollege}, et je préc
 
 \medskip
 
-L'idée est donc de conserver l'idée de \Cle{Clés} qui sont :
+Il se charge, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee\}}.
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\documentclass{article}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ProfLycee}
+...
+\end{minted}
+
+\medskip
+
+L'idée est de conserver l'idée de \Cle{Clés} qui sont :
 %
 \begin{itemize}
 	\item modifiables ;
@@ -633,7 +611,7 @@ Ainsi, le code :
 	\paramCF[titre=true,couleurcmd=olive,couleurres=orange]
 	\ligneCF{COMMANDE 1}{RÉSULTAT 1}
 	\ligneCF{\texttt{(x+1)\chap2}}{$\mathtt{x^2+2x+1}$}
-	\ligneCF[HC=1,HR=1]{\textsf{Dérivée[(x+5)*exp(-0.1*x)]}}{$\mathsf{\rightarrow (0.5-0.1*x)*exp(-0.1*x)}$}
+	\ligneCF[hc=1,hr=1.25]{\textsf{Dérivée[(x+5)*exp(-0.1*x)]}}{$\mathsf{\rightarrow (0.5-0.1*x)*exp(-0.1*x)}$}
 \end{tikzpicture}
 \end{minted}
 
@@ -705,7 +683,13 @@ Le \textsf{package} \ctex{pythontex} permet d'insérer et d'exécuter du code Py
 	\item charger du code python, et éventuellement l'utiliser dans la console.
 \end{itemize}
 
-\subsection{Présentation de code Python}
+\medskip
+
+\textbf{Attention : }il faut dans ce cas une compilation en plusieurs parties, comme par exemple \textsf{pdflatex puis pythontex puis pdflatex} !
+
+Voir par exemple \url{http://lesmathsduyeti.fr/fr/informatique/latex/pythontex/} !
+
+\subsection{Présentation de code Python via pythontex}
 
 L'environnement \ctex{\textbackslash envcodepythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{colorbox} avec un style particulier. 
 
@@ -760,6 +744,70 @@ produira :
 	def f(x) :
 		return x**2
 \end{envcodepythontex}
+
+\newpage
+
+\subsection{Présentation de code Python via minted}
+
+Pour celles et ceux qui ne sont pas à l'aise avec le \textsf{package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le \textsf{package} \ctex{minted} qui permet de présenter du code, et notamment python (il nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18}).
+
+\medskip
+
+L'environnement \ctex{\textbackslash envcodepythonminted} permet de présenter du code python, dans une \ctex{colorbox} avec un style (\textit{minted}) particulier.
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{envcodepythonminted}(*)[largeur][options]
+...
+\end{envcodepythonminted}
+\end{minted}
+
+Plusieurs \Cle{arguments} (optionnels) sont disponibles :
+
+\begin{itemize}
+	\item la version \textit{étoilée} qui permet de pas afficher les numéros de lignes ;
+	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
+	\item le second argument optionnel concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+\end{itemize}
+
+\medskip
+
+Ainsi le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envcodepythonminted}[12cm][center]
+	#environnement Python(minted) centré avec numéros, de largeur 12cm
+	def f(x) :
+		return x**2
+\end{envcodepythonminted}
+\end{minted}
+
+produira :
+
+\begin{envcodepythonminted}[12cm][center]
+	#environnement Python(minted) centré avec numéros
+	def f(x) :
+		return x**2
+\end{envcodepythonminted}
+
+\medskip
+
+Et le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envcodepythonminted}*[0.8\linewidth][]
+	#environnement Python(minted) sans numéro, de largeur 0.8\linewidth
+	def f(x) :
+		return x**2
+\end{envcodepythonminted}
+\end{minted}
+
+produira :
+
+\begin{envcodepythonminted}*[0.8\linewidth][]
+	#environnement Python(minted) sans numéro, de largeur 0.8\linewidth
+	def f(x) :
+		return x**2
+\end{envcodepythonminted}
 
 \newpage
 
@@ -833,157 +881,183 @@ Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une b
 
 \newpage
 
+\section{Pseudo-Code}
+
+\subsection{Introduction}
+
+Le \textsf{package} \ctex{listings} permet d'insérer et de présenter du code, et avec \ctex{tclorobx} on peut obtenir une présentation similaire à celle du code Python. Pour le moment la \textit{philosophie} de la commande est un peu différente de celle du code python, avec son système de \Cle{Clés}, car l'environnement \ctex{tcblisting} est un peu différente\ldots
+
+\subsection{Présentation de Pseudo-Code}
+
+L'environnement \ctex{\textbackslash envpseudocode} (chargé par \ctex{ProfLycee} permet de présenter du (pseudo-code) dans une \ctex{tcolorbox}.
+
+\smallskip
+
+De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gérer le paramètre \textit{autogobble}, donc il faudra être vigilant quant à la position du code (pas de tabulation en fait\ldots)
+
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{envpseudocode}(*)[largeur][options]
+%attention à l'indentation, gobble ne fonctionne pas...
+...
+\end{envpseudocode}
+\end{minted}
+
+Plusieurs \Cle{arguments} (optionnels) sont disponibles :
+
+\begin{itemize}
+	\item la version \textit{étoilée} qui permet de pas afficher les numéros de lignes ;
+	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
+	\item le second argument optionnel concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+\end{itemize}
+
+\medskip
+
+Ainsi le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envpseudocode}
+%non centré, de largeur par défaut (12cm) avec lignes
+List = [...]          # à déclarer au préalable
+n = longueur(List)
+Pour i allant de 0 à n-1 Faire
+	Afficher(List[i])
+FinPour
+\end{envpseudocode}
+\end{minted}
+
+produira :
+
+\begin{envpseudocode}
+List = [...]          # à déclarer au préalable
+n = longueur(List)
+Pour i allant de 0 à n-1 Faire
+	Afficher(List[i])
+FinPour
+\end{envpseudocode}
+
+\medskip
+
+Et le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envpseudocode}*[15cm][center]
+%centré, de largeur 15cm sans ligne
+List = [...]          # à déclarer au préalable
+n = longueur(List)
+Pour i allant de 0 à n-1 Faire
+	Afficher(List[i])
+FinPour
+\end{envpseudocode}
+\end{minted}
+
+produira :
+
+\begin{envpseudocode}*[15cm][center]
+List = [...]          # à déclarer au préalable
+n = longueur(List)
+Pour i allant de 0 à n-1 Faire
+	Afficher(List[i])
+FinPour
+\end{envpseudocode}
+
+\newpage
+
+\section{Terminal Windows/UNiX/OSX}
+
+\subsection{Introduction}
+
+L'idée des \textsf{commandes} suivantes est de permettre de simuler des fenêtres de \textsf{Terminal}, que ce soit pour Windows, Ubuntu ou OSX.
+
+\smallskip
+
+Le \textsf{contenu} est géré par le package \ctex{listings}, sans langage particulier, et donc sans coloration syntaxique particulière.
+
+\smallskip
+
+Comme pour le pseudo-code, pas d'\textsf{autogobble}, donc commandes à aligner à gauche !
+
+\subsection{Commandes}
+
+Les (trois) environnements disponibles sont :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{PLtermwin}[largeur]{titre=...}[options]
+...
+
+\begin{PLtermunix}[largeur]{titre=...}[options]
+...
+
+\begin{PLtermosx}[largeur]{titre=...}[options]
+...
+\end{minted}
+
+Peu d'options pour ces commandes :
+
+\begin{itemize}
+	\item le premier, optionnel, est la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item le deuxième, mandataire, permet de spécifier le titre par la clé \Cle{titre}.\hfill{}défaut \Cle{Terminal Windows/UNiX/OSX}
+	\item le troisième, optionnel, concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+\end{itemize}
+
+\medskip
+
+Ainsi le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{PLtermwin}[15cm]{} %largeur 15cm avec titre par défaut
+Microsoft Windows [version 10.0.22000.493]
+(c) Microsoft Corporation. Tous droits réservés.
+
+C:\Users\test>ping -c 2ctan.org
+Envoi d'une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+\end{PLtermwin}
+
+\begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center] %12cm, avec titre modifié et centré
+test@DESKTOP:~$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermunix}
+
+\begin{PLtermosx}[0.5\linewidth]{titre=Terminal MacOSX}[flush right] %1/2-largeur et titre modifié et droite
+[test@server]$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermosx}
+\end{minted}
+
+produira :
+
+\begin{PLtermwin}[15cm]{}
+Microsoft Windows [version 10.0.22000.493]
+(c) Microsoft Corporation. Tous droits réservés.
+
+C:\Users\test>ping -c 2ctan.org
+Envoi d'une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+\end{PLtermwin}
+
+\begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center]
+test@DESKTOP:~$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermunix}
+
+\begin{PLtermosx}[0.5\linewidth]{titre=Terminal MacOSX}[flush right]
+[test@server]$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermosx}
+
+\newpage
+
 \section{Historique}
 
-{\small \bverb|v1.0.2| : Ajout des environnements pour Python
+{\small \bverb|v1.0.5|  : Ajout d'un environnement pour Python (minted)
 
-{\small \bverb|v1.0.1| : Modification mineure liée au chargement de \ctex{xcolor}
+{\small \bverb|v1.0.4|  : Ajout des environnements pour Terminal (win, osx, unix)
 
-{\small \bverb|v1.0  | : Version initiale}
+{\small \bverb|v1.0.3|  : Ajout des environnements pour PseudoCode
 
-%\newpage
-%
-%\section{Codes du package splinetikz.sty}
-%
-%\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
-%\NeedsTeXFormat{LaTeX2e}
-%\ProvidesPackage{splinetikz}[2022/02/10 - v1.0 - Splines cubiques, en TikZ]
-%
-%%------Packages utiles
-%\RequirePackage[dvipsnames,table]{xcolor}
-%\RequirePackage{tikz}
-%\RequirePackage{pgf,pgffor,pgfplots}
-%\pgfplotsset{compat=1.18}
-%\RequirePackage{ifthen}
-%\RequirePackage{xkeyval}
-%\RequirePackage{xfp}
-%\RequirePackage{xstring}
-%\RequirePackage{simplekv}
-%\RequirePackage{listofitems}
-%\RequirePackage{xintexpr}
-%\usetikzlibrary{decorations.pathreplacing}
-%\usetikzlibrary{decorations.markings}
-%\usetikzlibrary{arrows.meta}
-%\end{minted}
-%
-%\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
-%%------commande utile pour extraire des infos d'une liste
-%\newcommand\extractcoeff[2]{% #1=liste & #2=numero
-%	\setsepchar{§}%
-%	\readlist\lcoeffs{#1}
-%	\ifnum \lcoeffslen=1
-%		\def\COEFFA{#1}
-%		\def\COEFFB{#1}
-%	\else
-%		\itemtomacro\lcoeffs[#2]\COEFF
-%		\IfSubStr{\COEFF}{/}%
-%			{\StrCut{\COEFF}{/}{\COEFFA}{\COEFFB}}%
-%			{\def\COEFFA{\COEFF}\def\COEFFB{\COEFF}}
-%	\fi
-%}
-%\end{minted}
-%
-%\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
-%%------tangente(s) en TikZ, avec point/dérivée ou liste points/dérivées
-%\defKV[tgte]{%
-%	liste=\def\TGTliste{#1},%
-%	width=\def\TGTepaisseur{#1},%
-%	couleur=\def\TGTcouleur{#1},%
-%	xl=\def\TGTXL{#1},%
-%	xr=\def\TGTXR{#1},%
-%	style=\def\TGTstyle{#1},%
-%	point=\def\TGTnumpt{#1}
-%}
-%
-%\setKVdefault[tgte]{
-%	liste=,%
-%	width=1.25pt,%
-%	couleur=red,%
-%	xl=0.5,xr=0.5,%
-%	style=,%
-%	point=1
-%}
-%
-%\newcommand\tangentetikz[1][]{%
-%	\useKVdefault[tgte]%
-%	\setKV[tgte]{#1}% on paramètres les nouvelles clés et on les simplifie
-%	\setsepchar[.]{§./}%
-%	\readlist\TGTlistepoints\TGTliste
-%	\itemtomacro\TGTlistepoints[\TGTnumpt,1]\xa
-%	\itemtomacro\TGTlistepoints[\TGTnumpt,2]\ya
-%	\itemtomacro\TGTlistepoints[\TGTnumpt,3]\fprimea
-%	\def\TGTDEB{\fpeval{\xa-\TGTXL}}\def\TGTFIN{\fpeval{\xa+\TGTXR}}%
-%	\draw[line width=\TGTepaisseur,\TGTcouleur,domain=\TGTDEB:\TGTFIN,\TGTstyle] plot (\x,{\fprimea*(\x-\xa)+\ya}) ;%
-%}
-%\end{minted}
-%
-%\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2,breaklines]{tex}
-%%------splines en tikz avec ..controls
-%\defKV[spline]{%
-%	liste=\def\SPLliste{#1},%
-%	width=\def\SPLepaisseur{#1},%
-%	couleur=\def\SPLcouleur{#1},%
-%	coeffs=\def\SPLcoeffs{#1},%
-%	couleurpoints=\def\SPLcouleurpoints{#1},%
-%	taillepoints=\def\SPLtaillepoints{#1},%
-%	style=\def\SPLstyle{#1}
-%}
-%
-%\setKVdefault[spline]{%
-%	liste=,%
-%	width=1.25pt,%
-%	couleur=red,%
-%	coeffs=3,%
-%	couleurpoints=black,%
-%	taillepoints=2pt,%
-%	affpoints=false,%
-%	style=
-%}
-%
-%\newcommand\splinetikz[1][]{%
-%	\useKVdefault[spline]
-%	\setKV[spline]{#1}% on paramètres les nouvelles clés et on les simplifie
-%	%on lit la liste des points/nbderivés et on stocke dans \listepoints
-%	\setsepchar[.]{§./}
-%	\readlist\SPLlistepoints\SPLliste
-%	\def\SPLnbsplines{\inteval{\SPLlistepointslen-1}}
-%	%si uniquement deux points, pas de boucle...
-%	\ifnum \SPLlistepointslen=2
-%		%extraction des coeffs de compensation
-%		\extractcoeff{\SPLcoeffs}{1}
-%		%extraction des coordonnées
-%		\itemtomacro\SPLlistepoints[1,1]\xa
-%		\itemtomacro\SPLlistepoints[1,2]\ya
-%		\itemtomacro\SPLlistepoints[1,3]\fprimea
-%		\itemtomacro\SPLlistepoints[2,1]\xb
-%		\itemtomacro\SPLlistepoints[2,2]\yb
-%		\itemtomacro\SPLlistepoints[2,3]\fprimeb
-%		\draw[line width=\SPLepaisseur,\SPLcouleur,\SPLstyle] (\xa,\ya) ..controls +({atan \fprimea}:{(\xb-\xa)/\COEFFA}) and +({-180 + atan \fprimeb}:{(\xb-\xa)/\COEFFA}).. (\xb,\yb) ;%
-%	%sinon on construit bout par bout !
-%	\else
-%		\foreach \i in {1,2,...,\SPLnbsplines}{
-%			%extraction des coeffs de compensation
-%			\extractcoeff{\SPLcoeffs}{\i}
-%			\def\j{\inteval{\i+1}}
-%			\itemtomacro\SPLlistepoints[\i,1]\xa
-%			\itemtomacro\SPLlistepoints[\i,2]\ya
-%			\itemtomacro\SPLlistepoints[\i,3]\fprimea
-%			\itemtomacro\SPLlistepoints[\j,1]\xb
-%			\itemtomacro\SPLlistepoints[\j,2]\yb
-%			\itemtomacro\SPLlistepoints[\j,3]\fprimeb
-%			\draw[line width=\SPLepaisseur,\SPLcouleur,\SPLstyle] (\xa,\ya) ..controls +({atan \fprimea}:{(\xb-\xa)/\COEFFA}) and +({-180 + atan \fprimeb}:{(\xb-\xa)/\COEFFB}).. (\xb,\yb) ;%
-%		}
-%	\fi
-%	\ifboolKV[spline]{affpoints}%on affiche les points de contrôle
-%	{%
-%		\foreach \i in {1,2,...,\SPLlistepointslen}{%
-%			\itemtomacro\SPLlistepoints[\i,1]\xa
-%			\itemtomacro\SPLlistepoints[\i,2]\ya
-%			\filldraw[\SPLcouleurpoints] (\xa,\ya) circle[radius=\SPLtaillepoints] ;%
-%		}
-%	}
-%	{}
-%}
-%\end{minted}
+{\small \bverb|v1.0.2|  : Ajout des environnements pour Python (pythontex)
+
+{\small \bverb|v1.0.1|  : Modification mineure liée au chargement de \ctex{xcolor}
+
+{\small \bverb|v1.0  |  : Version initiale}
 
 \end{document}

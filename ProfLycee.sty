@@ -3,22 +3,28 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/02/13 - v1.0.3 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/02/14 - v1.0.4 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.0.4 Environnement pour simuler terminal windows & linux
+% 1.0.3	Environnement pour présenter du pseudocode
 % 1.0.2	Environnement pour présenter du code python (avec pythontex)
 % 1.0.1	Modif mineure du chargement de xcolor (compatibilité avec d'autres packages notamment...)
 % 1.0	Version initiale
 
 %------Packages utiles
 \RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
+\RequirePackage{amssymb}
 \RequirePackage{tikz}
 \RequirePackage{pgf,pgffor}
 \RequirePackage{ifthen}
+\RequirePackage{environ}
+\RequirePackage{xparse}
 \RequirePackage{xkeyval}
 \RequirePackage{xfp}
 \RequirePackage{xstring}
 \RequirePackage{simplekv}
 \RequirePackage{listofitems}
 \RequirePackage{xintexpr}
+\RequirePackage{tabularray}
 \RequirePackage{fontawesome5}
 %librairies tikz
 \usetikzlibrary{calc}
@@ -27,7 +33,6 @@
 \usetikzlibrary{arrows.meta}
 %tcolorbox
 \RequirePackage[most]{tcolorbox}
-\tcbuselibrary{minted}
 %divers
 \RequirePackage{ifluatex}
 %python
@@ -310,7 +315,7 @@
 			top=2pt,bottom=1pt,left=6pt,right=6pt
 		},
 		fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
-		title={\scriptsize\faPython}\:Code Python\vphantom{/},
+		title={\scriptsize\faPython}\:Code Python\vphantom{p},
 		watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
 	}
 }
@@ -359,53 +364,245 @@
 	\verbcenterpost
 }
 
-%%=========CODEPYTHONMINTED=========== KO!!
-%\newtcblisting{tcpythonminted}[3][\linewidth]{%
-%	listing engine=minted,minted style=colorful,
-%	minted language=python,listing only,
-%	minted options={tabsize=4,fontsize=\small,#3},
-%	width=#1,
-%	#2,
-%	colframe=Green,colback=ForestGreen!5,
-%	enhanced,boxrule=1.25pt,
-%	sharp corners=downhill,arc=12pt,
-%	before skip=12pt,after skip=12pt,
-%	leftupper=10pt,top=10pt,bottom=4pt,rightupper=4pt,
-%	attach boxed title to top right={yshift=-\tcboxedtitleheight},
-%	boxed title style={
-%		size=small,colback=ForestGreen!25,boxrule=1.25pt,
-%		colframe=Green,boxsep=1.25pt,
-%		sharp corners=downhill,
-%		arc=12pt,
-%		top=2pt,bottom=1pt,left=6pt,right=6pt
-%	},
-%	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
-%	title={\scriptsize\faPython}\:Code Python\vphantom{/},
-%	watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
-%	before upper = \renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Green}\arabic{FancyVerbLine}}
-%}
+%=========PSEUDOCODE=========== OK !!
+\ifluatex
+	\tcbuselibrary{listings}
+	\lstdefinelanguage{langnat}{%
+		keywords={},
+		inputencoding=utf8,
+		comment=[l]{}}
+\else
+	\tcbuselibrary{listingsutf8}
+	\lstdefinelanguage{langnat}{%
+		keywords={},
+		inputencoding=utf8/latin1,
+		comment=[l]{}}
+\fi
 
-%\newtcblisting{pythonmintedno}[2][\linewidth]{%
-%	listing engine=minted,minted style=colorful,
-%	minted language=python,listing only,
-%	minted options={tabsize=4,fontsize=\small,#2},
-%	width=#1,colframe=Green,colback=ForestGreen!5,%
-%	enhanced,center,boxrule=1.25pt,
-%	sharp corners=downhill,arc=12pt,
-%	before skip=12pt,after skip=12pt,%
-%	leftupper=8pt,top=10pt,bottom=4pt,rightupper=4pt,%
-%	attach boxed title to top right={yshift=-\tcboxedtitleheight},
-%	boxed title style={
-%		size=small,colback=ForestGreen!25,boxrule=1.25pt,
-%		colframe=Green,boxsep=1.25pt,
-%		sharp corners=downhill,
-%		arc=12pt,
-%		top=2pt,bottom=1pt,left=6pt,right=6pt
-%	},
-%	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
-%	title={\scriptsize\faPython}\:Code Python\vphantom{y},
-%	watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
-%	before upper = \renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Green}\arabic{FancyVerbLine}}
-%}
+%language pseudocode listings
+\lstdefinestyle{pseudocodePL}{%
+	language=langnat,
+	basicstyle=\footnotesize\ttfamily,
+	numberstyle=\scriptsize\ttfamily\color{gray},
+	keywordstyle=\bfseries,
+	stringstyle=\color{red!75},
+	keepspaces=true,
+	tabsize=4,numbersep=10pt,
+	xleftmargin=14pt,
+	numbers=left,
+	morestring=[b]",
+	showstringspaces=false,
+	%showtabs=false,
+	escapeinside={(*}{*)}
+}
+
+\lstdefinestyle{pseudocodenoPL}{%
+	language=langnat,
+	basicstyle=\footnotesize\ttfamily,
+	numberstyle=\scriptsize\ttfamily\color{gray},
+	keywordstyle=\bfseries,
+	stringstyle=\color{red!75},
+	keepspaces=true,
+	tabsize=4,numbersep=10pt,
+	numbers=none,
+	showstringspaces=false,
+	morestring=[b]",
+	%showtabs=true,
+	escapeinside={(*}{*)}
+}
+
+%style tcbox pseudocode avec bannière hautdroite
+\tcbset{stylepseudocodePL/.style={%
+		%fontupper=\small\sffamily,%
+		enhanced,boxrule=1.25pt,sharp corners=downhill,arc=12pt,
+		before skip=12pt,after skip=12pt,leftupper=10pt,top=8pt,bottom=2pt,rightupper=4pt,%
+		attach boxed title to top right={yshift=-\tcboxedtitleheight},
+		boxed title style={
+			size=small,colback=gray!25,boxrule=1.25pt,
+			colframe=darkgray,boxsep=1.25pt,
+			sharp corners=downhill,
+			arc=12pt,
+			top=2pt,bottom=1pt,left=6pt,right=6pt
+		},
+		fonttitle=\color{darkgray}\ttfamily\footnotesize,
+		title={\scriptsize\faFileCode}\:\textit{Pseudo-Code}\vphantom{p},
+		watermark text={\faCode},watermark opacity=0.175,watermark zoom=0.50,
+	}
+}
+
+\ifluatex
+	\newcommand\algomathttPL[1]{\symtt{#1}}
+\else
+	\newcommand\algomathttPL[1]{\mathtt{#1}}
+\fi
+
+\DeclareTCBListing{envpseudocode}{ s O{12cm} O{} }{% étoilée sans numéro, taille puis option...
+	width=#2,#3,
+	stylepseudocodePL,
+	listing only,listing engine=listings,
+	listing options={
+		style=\IfBooleanTF{#1}{pseudocodenoPL}{pseudocodePL},%version étoilée sans numéro de lignes
+		aboveskip=2pt,belowskip=2pt,
+		columns=fullflexible,
+		literate={é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1% 
+		{ú}{{\'u}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1%
+		{è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1%
+		{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1%
+		{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1%
+		{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1%
+		{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1%
+		{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1%
+		{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1%
+		{ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1%
+		{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1%
+		{€}{{\texteuro}}1 {£}{{\pounds}}1%
+		{=}{\textleftarrow}1 {==}{=}1%
+		{*}{$\algomathttPL{\times}$}{1}%
+	}
+}
+
+%============FakeTerm===========
+%couleurs (inspirées par termsim !)
+\definecolor{PLmpurple}{RGB}{48,10,36}
+\definecolor{PLmgray}{RGB}{70,72,67}
+\definecolor{PLogray}{RGB}{148,147,141}
+\definecolor{PLoorange}{RGB}{233,101,56}
+\definecolor{PLterminal}{RGB}{80,78,70}
+\definecolor{PLlinux}{RGB}{0,39,51}
+\definecolor{PLwinblue}{HTML}{1883D7}
+\definecolor{PLosxgray}{HTML}{D8D6D9}
+
+%WINDOWS
+\tcbset{PLfaketermwin/.style={%
+		enhanced,boxrule=1pt,sharp corners,before skip=12pt,after skip=12pt,%
+		colframe=PLwinblue,colback=black,colbacktitle=white,colupper=white,coltitle=black,%
+		titlerule=0.4pt,left=2pt,top=2pt,bottom=2pt,right=2pt,middle=2pt,%
+		fonttitle=\bfseries\small\sffamily
+	}
+}
+
+\setKVdefault[fakeTERMwin]{titre={Terminal Windows}}
+
+\newcommand\PLcommandeswin{%
+	\begin{tikzpicture}[thick,scale=0.66]
+		\draw (0,0)--(1em,0) ; \draw (2em,0) rectangle (3em,1em) ; \draw (4em,1em)--(5em,0) (4em,0)--(5em,1em) ;
+	\end{tikzpicture}%
+}
+
+\newcommand\termwintitre[1][]{%
+	\restoreKV[fakeTERMwin]
+	\setKV[fakeTERMwin]{#1}
+	\begin{tblr}{colsep=0pt,rowsep=0pt,width=\linewidth,colspec={X[l]r}}
+		{\footnotesize\faTerminal}~~\useKV[fakeTERMwin]{titre} & \PLcommandeswin \\ %
+	\end{tblr}
+}
+
+\DeclareTCBListing{PLtermwin}{ O{\linewidth} m !O{} }{%[taille] puis {titre=...} puis [option]
+	PLfaketermwin,title={\termwintitre[#2]},%
+	listing only,listing engine=listings,%
+	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
+	width=#1,#3
+}
+
+%LINUX
+\newcommand{\PLUbuntuWhite}{%
+	\begin{tikzpicture}[thick,anchor=base,baseline]
+		\filldraw[PLmgray] (0,0.25em) circle[radius=0.5em] ;
+	\end{tikzpicture}%
+}
+\newcommand{\PLUbuntuMin}{%
+	\begin{tikzpicture}[thick,anchor=base,baseline]
+		\filldraw[color=PLogray!50!white] (0,0.25em) circle[radius=0.5em];
+		\draw[PLterminal](-0.35em,0.25em)--(0.35em,0.25em);
+	\end{tikzpicture}%
+}
+\newcommand{\PLUbuntuClose}{%
+	\begin{tikzpicture}[thick,anchor=base,baseline]
+		\filldraw[color=PLoorange!70!white] (0,0.25em) circle[radius=0.5em];
+		\draw[PLterminal] (-0.32em,-0.07em)--(0.32em,0.57em);
+		\draw[PLterminal] (-0.32em,0.57em)--(0.32em,-0.07em);
+	\end{tikzpicture}%
+}
+\newcommand{\PLUbuntuMax}{%
+	\begin{tikzpicture}[thick,anchor=base,baseline]
+		\filldraw[color=PLogray!50!white] (0,0.25em) circle[radius=0.5em];
+		\draw[PLterminal] (-0.32em,0.5em) rectangle (0.32em,0);
+	\end{tikzpicture}%
+}
+
+\tcbset{PLtermlinux/.style={%
+		enhanced,boxrule=1pt,arc=4pt,before skip=12pt,after skip=12pt,%
+		colframe=PLmgray,colback=PLmpurple,colbacktitle=PLmgray,colupper=white,coltitle=white,%
+		titlerule=0.4pt,left=2pt,top=2pt,bottom=2pt,right=2pt,middle=2pt,%
+		fonttitle=\bfseries\small\sffamily
+	}
+}
+
+\setKVdefault[fakeTERMnux]{titre={Terminal UNiX}}
+
+\newcommand\termnuxtitre[1][]{%
+	\restoreKV[fakeTERMnux]
+	\setKV[fakeTERMnux]{#1}
+	\begin{tblr}{colsep=0pt,rowsep=0pt,width=\linewidth,colspec={lX[c]r}}
+		\PLUbuntuWhite~~\PLUbuntuWhite~~\PLUbuntuWhite & \vphantom{p}\useKV[fakeTERMnux]{titre} & \PLUbuntuMin~~\PLUbuntuMax~~\PLUbuntuClose \\
+	\end{tblr}
+}
+
+\DeclareTCBListing{PLtermunix}{ O{\linewidth} m !O{} }{%[taille] puis {titre=...} puis [option]
+	PLtermlinux,title={\termnuxtitre[#2]},%
+	listing only,listing engine=listings,%
+	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
+	width=#1,#3
+}
+
+%OSX
+\tcbset{PLfaketermosx/.style={%
+	enhanced,boxrule=1pt,arc=6pt,before skip=12pt,after skip=12pt,%
+	colframe=PLosxgray,colback=lightgray!15,colbacktitle=PLosxgray,colupper=black,coltitle=black,%
+	titlerule=0.4pt,left=2pt,top=2pt,bottom=2pt,right=2pt,middle=2pt,%
+	fonttitle=\bfseries\small\sffamily
+	}
+}
+
+\newcommand{\PLOSXRed}{%
+	\begin{tikzpicture}[thick,anchor=base,baseline]
+		\filldraw[red] (0,0.25em) circle[radius=0.45em] ;
+	\end{tikzpicture}%
+}
+
+\newcommand{\PLOSXOrange}{%
+	\begin{tikzpicture}[thick,anchor=base,baseline]
+		\filldraw[orange] (0,0.25em) circle[radius=0.45em] ;
+	\end{tikzpicture}%
+}
+
+\newcommand{\PLOSXGreen}{%
+	\begin{tikzpicture}[thick,anchor=base,baseline]
+		\filldraw[ForestGreen] (0,0.25em) circle[radius=0.45em] ;
+	\end{tikzpicture}%
+}
+
+\newcommand{\PLOSXLG}{%
+	\begin{tikzpicture}[thick,anchor=base,baseline]
+		\filldraw[PLosxgray] (0,0.25em) circle[radius=0.45em] ;
+	\end{tikzpicture}%
+}
+
+\setKVdefault[fakeTERMosx]{titre={Terminal OSX}}
+
+\newcommand\termosxtitre[1][]{%
+	\restoreKV[fakeTERMosx]
+	\setKV[fakeTERMosx]{#1}
+	\begin{tblr}{colsep=0pt,rowsep=0pt,width=\linewidth,colspec={lX[c]r}}
+		\PLOSXRed~\PLOSXOrange~\PLOSXGreen & \vphantom{p}\useKV[fakeTERMosx]{titre} & \PLOSXLG~\PLOSXLG~\PLOSXLG \\
+	\end{tblr}
+}
+
+\DeclareTCBListing{PLtermosx}{ O{\linewidth} m !O{} }{%[taille] puis {titre=...} puis [option]
+	PLfaketermosx,title={\termosxtitre[#2]},%
+	listing only,listing engine=listings,%
+	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
+	width=#1,#3
+}
 
 \endinput
