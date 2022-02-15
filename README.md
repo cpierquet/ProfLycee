@@ -6,7 +6,8 @@ Pour le moment :
 - deux macros pour créer, dans un environnement TikZ, des courbes d'interpolations et des tangentes ;
 - deux macros pour configurer un environnement de Calcul Formel et pour créer les lignes ;
 - un environnement pour présenter du code python (via pythontex) ;
-- un environnement pour exécuter du code python et présenter le résultat dans une <i>console</i>.
+- un environnement pour exécuter du code python et présenter le résultat dans une <i>console</i> ;
+- des environnements pour présenter un "émuler" un terminal WIN/UNiX/OSX.
 
 ## Courbe d'interpolation
 
@@ -26,10 +27,20 @@ Une commande <code>\ligneCF[...]</code> pour créer les lignes de la *fenêtre d
 
 ## Code et console Python
 
-Un environnement <code>envcodepythontex[...]</code> pour présenter du code Python.
+Un environnement <code>envcodepythontex[...]</code> pour présenter du code Python via pythontex.
 
 Un environnement <code>envconsolepythontex[...]</code> pour présenter une console Python.
 
+Un environnement <code>envconsolepythonminted[...]</code> pour présenter du code Python via minted.
+
 ![illustr](proflycee-test-codepython.png?raw=true "testcode")
 
-![illustr](proflycee-test-consolepython.png?raw=true "testconsole")
+## Terminal Win/UNiX/OSX
+
+Un environnement <code>PLtermwin[...]</code> pour un terminal Win.
+
+Un environnement <code>PLterunix[...]</code> pour un terminal UNiX.
+
+Un environnement <code>PLtermosx[...]</code> pour un terminal OSX.
+
+![illustr](proflycee-test_terminals.png?raw=true "testterminals")
