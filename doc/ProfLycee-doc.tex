@@ -1,0 +1,1061 @@
+\documentclass{article}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[upright]{fourier}
+\usepackage[scaled=0.875]{helvet}
+\renewcommand\ttdefault{lmtt}
+\usepackage[scaled=0.875]{cabin}
+\usepackage{ProfLycee}
+\usetikzlibrary{hobby}
+\usepackage{siunitx}
+\usepackage{graphics}
+\usepackage{hvlogos}
+\usepackage{simplekv}
+\usepackage{listofitems}
+\usepackage{xintexpr}
+\usepackage{codehigh}
+\usepackage{hyperref}
+\hypersetup{pdfborder=0 0 0}
+
+\usepackage{minted}
+\sisetup{locale=FR}
+\usepackage{geometry}
+\geometry{margin=1.5cm}
+\usepackage{newverbs}
+\newverbcommand{\pverb}{\color{purple}}{}
+\newverbcommand{\rverb}{\color{red}}{}
+\newverbcommand{\vverb}{\color{ForestGreen}}{}
+\newverbcommand{\averb}{\color{CadetBlue}}{}
+\newverbcommand{\overb}{\color{orange}}{}
+\newverbcommand{\bverb}{\color{blue}}{}
+\setlength{\parindent}{0pt}
+\definecolor{LightGray}{gray}{0.9}
+
+\tcbset{vignettes/.style={%
+		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
+		boxrule=0.75pt,left=7pt,right=1pt,top=0pt,bottom=0.25pt,%
+		%before upper={{\normalsize \vphantom{pf}}}
+	}
+}
+\tcbset{vignettelatex/.style={%
+		fontupper={\vphantom{pf}\footnotesize\ttfamily},
+		vignettes,%
+		colframe=CadetBlue,coltitle=white,colback=CadetBlue!5,%
+		overlay={\begin{tcbclipinterior}%
+				\fill[fill=lightgray!50]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{CadetBlue}{\scalebox{0.6}[0.75]{\textbf{\LaTeX}}}}} ($(interior.north west)+(5pt,0pt)$);%
+		\end{tcbclipinterior}}
+	}
+}
+\newcommand\ctex[1]{\tcbox[vignettelatex]{#1}}
+
+%gestion de la fenêtre v2 directement dans le tikzpicture
+\tikzset{%
+	xmin/.store in=\xmin,xmin/.default=-5,xmin=-5,
+	xmax/.store in=\xmax,xmax/.default=5,xmax=5,
+	ymin/.store in=\ymin,ymin/.default=-5,ymin=-5,
+	ymax/.store in=\ymax,ymax/.default=5,ymax=5,
+	xgrille/.store in=\xgrille,xgrille/.default=1,xgrille=1,
+	xgrilles/.store in=\xgrilles,xgrilles/.default=0.5,xgrilles=0.5,
+	ygrille/.store in=\ygrille,ygrille/.default=1,ygrille=1,
+	ygrilles/.store in=\ygrilles,ygrilles/.default=0.5,ygrilles=0.5,
+	xunit/.store in=\xunit,unit/.default=1,xunit=1,
+	yunit/.store in=\yunit,unit/.default=1,yunit=1
+}
+\newcommand\tgrilles[1][ultra thin,lightgray]{%
+	\draw[xstep=\xgrilles,ystep=\ygrilles,#1] (\xmin,\ymin) grid (\xmax,\ymax);%
+}
+\newcommand\tgrillep[1][thin,gray]{%
+	\draw[xstep=\xgrille,ystep=\ygrille,#1] (\xmin,\ymin) grid (\xmax,\ymax);%
+}
+
+\newcommand\genfenetre{%
+	%styles
+	\tikzset{noeudexpl/.style={purple,font=\sffamily\small}}
+	\tikzset{portionexpl/.style={orange,thick,<->}}
+	\tikzset{expl/.style={midway,inner sep=1pt,above right=0,orange,font=\sffamily\scriptsize,rotate=45}}
+	\tikzset{coeffs/.style={CadetBlue!50!black,circle,draw=CadetBlue,thick,fill=CadetBlue!5,font=\small\ttfamily}}
+	\tikzset{tangente/.style={teal,line width=1pt,dashed}}
+	%grilles & axes
+	\tgrilles[line width=0.3pt,lightgray!50]
+	\tgrillep[line width=0.6pt,lightgray!50]
+	\draw[line width=1.5pt,->,gray] (\xmin,0)--(\xmax,0) ;
+	\draw[line width=1.5pt,->,gray] (0,\ymin)--(0,\ymax) ;
+	\foreach \x in {0,1,...,10} {\draw[gray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+	\foreach \y in {0,1,...,6} {\draw[gray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+}
+
+\newcommand\gennotice{%
+	%notice
+	\draw (0,1) node[noeudexpl,below] {point 1} ;
+	\draw (4,3.667) node[noeudexpl,above] {point 2} ;
+	\draw (7.5,1.75) node[noeudexpl,below] {point 3} ;
+	\draw (9,2) node[noeudexpl,above] {point 4} ;
+	\draw (10,0) node[noeudexpl,below] {point 5} ;
+	\draw[portionexpl] (0,6)--(4,6) node[expl] {portion 1} ;
+	\draw[portionexpl] (4,6)--(7.5,6) node[expl] {portion 2} ;
+	\draw[portionexpl] (7.5,6)--(9,6) node[expl] {portion 3} ;
+	\draw[portionexpl] (9,6)--(10,6) node[expl] {portion 4} ;
+	\draw[orange,densely dashed,thick] (4,0)--(4,6) (7.5,0)--(7.5,6) (9,0)--(9,6) (10,0)--(10,6) ;
+}
+
+\newcommand\gentangentes{%
+	%tangentes
+	\draw[tangente] (0,1)--(1,1) ;
+	\draw[tangente,domain=3:5] plot (\x,{-1/3*(\x-9)+2}) ;
+	\draw[tangente] (6.5,1.75)--(8.5,1.75) ;
+	\draw[tangente,domain=8:10] plot (\x,{-1/3*(\x-9)+2}) ;
+	\draw[tangente,domain=9.5:10] plot (\x,{-10*(\x-10)+0}) ;%
+}
+
+\newcommand\listecoeffs[4]{%
+	\draw (0,5.5) node[left,CadetBlue,font=\small\ttfamily] {Coeffs} ;
+	\node[coeffs] at (2,5.5) {#1} ;
+	\node[coeffs] at ({(4+7.5)/2},5.5) {#2} ;
+	\node[coeffs] at ({(7.5+9)/2},5.5) {#3} ;
+	\node[coeffs] at ({(9+10)/2},5.5) {#4} ;%
+}
+
+\title{%
+\begin{minipage}{0.75\linewidth}
+	\begin{tcolorbox}[colframe=yellow,colback=yellow!15]
+		\begin{center}
+			\begin{tabular}{c}
+				\lstinline!ProfLycee!\\
+				\\
+				Quelques \textit{petites} commandes pour  \LaTeX{} (au lycée)
+			\end{tabular}
+		\end{center}
+	\end{tcolorbox}
+\end{minipage}
+}
+\author{
+	\begin{tabular}{c}
+		Cédric Pierquet\\
+		{\ttfamily c pierquet -- at -- outlook . fr}
+	\end{tabular}
+}
+\date{Version 1.0.5 -- 16 Février 2022}
+
+\newcommand\Cle[1]{{\bfseries\sffamily\textlangle #1\textrangle}}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\maketitle
+
+{\Large \bfseries Résumé : }
+
+\medskip
+
+\noindent Quelques commandes (dans des environnements \TikZ) pour faciliter l'utilisation
+	de \LaTeX{} pour les enseignants de mathématiques en lycée.\\
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+\subsection{\og Philosophie \fg{} du package}
+
+Ce \ctex{package}, très largement inspiré (et beaucoup moins abouti !) de l'excellent \ctex{ProfCollege} de C. Poulain et des excellents \ctex{tkz-*} d'A. Matthes, va définir quelques outils pour des situations particulières qui ne sont pas encore dans \ctex{ProfCollege}.
+
+On peut le voir comme un (maigre) complément à \ctex{ProfCollege}, et je précise que la syntaxe est très proche (car pertinente de base) et donc pas de raison de changer une équipe qui gagne !
+
+\medskip
+
+Il se charge, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee\}}.
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\documentclass{article}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ProfLycee}
+...
+\end{minted}
+
+\medskip
+
+L'idée est de conserver l'idée de \Cle{Clés} qui sont :
+%
+\begin{itemize}
+	\item modifiables ;
+	\item définies (en majorité) par défaut pour chaque commande.
+\end{itemize}
+
+\medskip
+
+J'ai utilisé allègrement les \ctex{packages} du phénoménal C. Tellechea, je vous conseille d'aller jeter un œil sur ce qu'il est possible de faire en \LaTeX{} avec \ctex{listofitems}, \ctex{randomlist}, \ctex{simplekv} et \ctex{xstring} !
+
+\subsection{Outils disponibles}
+
+Le \ctex{package}, qui s'enrichira peut-être au fil du temps permet -- pour le moment -- de :
+
+\begin{itemize}
+	\item tracer des splines cubiques avec gestion \textit{assez fine} des tangentes ;
+	\item tracer des tangentes (ou portions) de tangentes sur la même base que pour les splines ;
+	\item simuler une fenêtre de logiciel formel (\textit{à la manière de} \textsf{XCas}).
+\end{itemize}
+
+\medskip
+
+À noter que le commandes disponibles sont liées à un environnement \ctex{tikzpicture}, elles ne sont pas autonomes mais permettent de conserver -- en parallèle -- toute commande liée à \TikZ{} !
+
+\bigskip
+
+\begin{center}
+	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=5,ygrille=1,ygrilles=0.5]
+		%axes et grilles
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.3pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.6pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+		\draw[line width=1.5pt,->,gray] (\xmin,0)--(\xmax,0) ;
+		\draw[line width=1.5pt,->,gray] (0,\ymin)--(0,\ymax) ;
+		\foreach \x in {0,1,...,10} {\draw[gray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+		\foreach \y in {0,1,...,4} {\draw[gray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+		\draw[darkgray] (1,-4pt) node[below,font=\sffamily] {1} ;
+		\draw[darkgray] (-4pt,1) node[left,font=\sffamily] {1} ;
+		%splines
+		\def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
+		\splinetikz[liste=\LISTE,affpoints=true,coeffs=3,couleur=red]
+		%tangentes
+		\tangentetikz[liste=\LISTE,xl=0,xr=1,couleur=ForestGreen,style=dashed]
+		\tangentetikz[liste=\LISTE,xl=1,xr=1,couleur=ForestGreen,style=dashed,point=2]
+		\tangentetikz[liste=\LISTE,xl=1,xr=1,couleur=ForestGreen,style=dashed,point=3]
+		\tangentetikz[liste=\LISTE,xl=1,xr=1,couleur=ForestGreen,style=dashed,point=4]
+		\tangentetikz[liste=\LISTE,xl=0.5,xr=0,couleur=ForestGreen,style=dashed,point=5]
+		
+	\end{tikzpicture}
+\end{center}
+
+\medskip
+
+\begin{center}
+	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
+		\paramCF[titre=true]
+		\ligneCF{\textsf{(x+1)\CFchap2}}{$\mathsf{x^2+2x+1}$}
+		\ligneCF{\texttt{(x+1)\CFchap2}}{$\mathtt{x^2+2x+1}$}
+		\ligneCF{\textsf{Dérivée[(x+5)*exp(-0.1*x)]}}{$\mathsf{\rightarrow (0.5-0.1*x)*exp(-0.1*x)}$}
+	\end{tikzpicture}
+\end{center}
+
+\newpage
+
+\section{L'outil \og splinetikz \fg}
+
+\subsection{Courbe d'interpolation}
+
+On va utiliser les notions suivantes pour paramétrer le tracé \og automatique \fg{} grâce à  \ctex{..controls} :
+%
+\begin{itemize}
+	\item il faut rentrer les \textcolor{purple}{\textsf{points de contrôle}} ;
+	\item il faut préciser les \textcolor{ForestGreen}{\textsf{pentes des tangentes}} (pour le moment on travaille avec les mêmes à gauche et à droite\ldots) ;
+	\item on peut paramétrer les \textcolor{Aquamarine}{\textsf{coefficients}} pour \og affiner \fg{} les portions.
+\end{itemize}
+
+\medskip
+
+Pour déclarer les paramètres :
+%
+\begin{itemize}
+	\item liste des points de contrôle par : \verb|liste=x1/y1/d1§x2/y2/d2§...|
+	\begin{itemize}
+		\item il faut au-moins deux points ;
+		\item avec les points \pverb|(xi;yi)| et \vverb|f'(xi)=di|.
+	\end{itemize}
+	\item coefficients de contrôle par \verb|coeffs=...| :
+	\begin{itemize}
+		\item \averb|coeffs=x| pour mettre tous les coefficients à x ;
+		\item \averb|coeffs=C1§C2§...| pour spécifier les coefficients par portion (donc il faut avoir autant de § que pour les points !) ;
+		\item \averb|coeffs=C1G/C1D§...| pour spécifier les coefficients par portion et par partie gauche/droite ;
+		\item on peut mixer avec \averb|coeffs=C1§C2G/C2D§...|.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Clés et options}
+
+La commande \ctex{\textbackslash splinetikz} se présente sous la forme :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{tikzpicture}
+	...
+	\splinetikz[liste=...,coeffs=...,affpoints=...,couleur=...,epaisseur=...,taillepoints=...,couleurpoints=...,style=...]
+	...
+\end{tikzpicture}
+\end{minted}
+
+Certains paramètres peuvent être gérés directement dans la commande \ctex{\textbackslash splinetikz} :
+
+\begin{itemize}
+	\item la couleur de la courbe est \textcolor{red}{rouge}, gérée par la \textsf{clé} \Cle{couleur=...} ;
+	\item l'épaisseur de la courbe est de \textcolor{red}{1.25pt}, gérée par la \textsf{clé} \Cle{epaisseur=...} ;
+	\item du style supplémentaire pour la courbe peut être rajouté, grâce à la \textsf{clé} \Cle{style=...} ;
+	\item les coefficients de \textit{compensation} sont par défaut à 3, gérés par la \textsf{clé} \Cle{coeffs=...}
+	\item les points de contrôle ne sont pas affichés par défaut, mais \textsf{clé booléenne} \Cle{affpoints=true} permet de les afficher ;
+	\item la taille des points de contrôle est géré par la \textsf{clé} \Cle{taillepoints=...}.
+\end{itemize}
+
+\newpage
+
+\subsection{Exemples}
+
+La commande :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{center}
+	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=5,ygrille=1,ygrilles=0.5]
+		%axes et grilles
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.3pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.6pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+		\draw[line width=1.5pt,->,gray] (\xmin,0)--(\xmax,0) ;
+		\draw[line width=1.5pt,->,gray] (0,\ymin)--(0,\ymax) ;
+		\foreach \x in {0,1,...,10} {\draw[gray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+		\foreach \y in {0,1,...,4} {\draw[gray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+		\draw[darkgray] (1,-4pt) node[below,font=\sffamily] {1} ;
+		\draw[darkgray] (-4pt,1) node[left,font=\sffamily] {1} ;
+		%splines
+		\def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
+		\splinetikz[liste=\LISTE,affpoints=true,coeffs=3,couleur=red]
+	\end{tikzpicture}
+\end{center}
+\end{minted}
+
+produit la figure suivante :
+
+\begin{center}
+	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=5,ygrille=1,ygrilles=0.5]
+		%axes et grilles
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.3pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.6pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+		\draw[line width=1.5pt,->,gray] (\xmin,0)--(\xmax,0) ;
+		\draw[line width=1.5pt,->,gray] (0,\ymin)--(0,\ymax) ;
+		\foreach \x in {0,1,...,10} {\draw[gray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+		\foreach \y in {0,1,...,4} {\draw[gray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+		\draw[darkgray] (1,-4pt) node[below,font=\sffamily] {1} ;
+		\draw[darkgray] (-4pt,1) node[left,font=\sffamily] {1} ;
+		%splines
+		\def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
+		\splinetikz[liste=\LISTE,affpoints=true]
+	\end{tikzpicture}
+\end{center}
+
+Avec des explications utiles à la compréhension :
+
+\begin{center}
+	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=7,ygrille=1,ygrilles=0.5]
+		\genfenetre
+		\splinetikz[liste=0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10,affpoints=true]
+		\gennotice
+		\gentangentes
+		\listecoeffs{3}{3}{3}{3}
+	\end{tikzpicture}
+\end{center}
+
+\newpage
+
+\subsection{Avec une gestion plus fine des \og coefficients \fg}
+
+Dans la majorité des cas, le \textit{coefficient} \textcircled{3} permet d'obtenir une courbe (ou une portion) très satisfaisante !
+
+Dans certains cas, notamment si l'une des pentes est relativement \og forte \fg{} et/ou si l'intervalle horizontal de la portion est relativement \og étroit \fg, il se peut que la portion paraisse un peu trop \og abrupte \fg{}.
+
+On peut dans ce cas \textit{jouer} sur les coefficients de cette portion pour \textit{arrondir} un peu tout cela !
+
+Ces fameux \textit{coefficients} peuvent :
+\begin{itemize}
+	\item être donnés (pour utiliser le même partout) sous la forme \Cle{coeffs=C} ;
+	\item être donnés portion par portion, sous la forme \Cle{coeffs=C1§C2§...} ;
+	\item être donné de manière très fine, portion par portion et côté par côté, sous la forme \Cle{coeffs=C1G/C1D§C2G/C2D§...}.
+\end{itemize}
+
+\begin{center}
+	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=7,ygrille=1,ygrilles=0.5]
+		\genfenetre
+		\draw (1,-4pt) node[below,font=\sffamily] {1} ;
+		\draw (-4pt,1) node[left,font=\sffamily] {1} ;
+		\def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
+		\splinetikz[liste=\LISTE,affpoints=true,coeffs=3§3§3§2/1]
+		\gennotice
+		\listecoeffs{3/3}{3/3}{3/3}{2/1}
+	\end{tikzpicture}
+\end{center}
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{center}
+...
+%splines
+\def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
+\splinetikz[liste=\LISTE,affpoints=true,coeffs=3§3§3§2/1]
+...
+\end{center}
+\end{minted}
+
+\begin{center}
+	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=5,ygrille=1,ygrilles=0.5]
+		%axes et grilles
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.3pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.6pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+		\draw[line width=1.5pt,->,gray] (\xmin,0)--(\xmax,0) ;
+		\draw[line width=1.5pt,->,gray] (0,\ymin)--(0,\ymax) ;
+		\foreach \x in {0,1,...,10} {\draw[gray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+		\foreach \y in {0,1,...,4} {\draw[gray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+		\draw[darkgray] (1,-4pt) node[below,font=\sffamily] {1} ;
+		\draw[darkgray] (-4pt,1) node[left,font=\sffamily] {1} ;
+		\draw (1,-4pt) node[below,font=\sffamily] {1} ;
+		\draw (-4pt,1) node[left,font=\sffamily] {1} ;
+		\def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
+		\splinetikz[liste=\LISTE,affpoints=true,coeffs=3§3§3§2/1]
+	\end{tikzpicture}
+\end{center}
+
+\subsection{Conclusion}
+
+Le plus \og simple \fg{} est donc:
+%
+\begin{itemize}
+	\item de déclarer la liste des points de contrôle, grâce à \ctex{\textbackslash def\textbackslash LISTE\{x1/y1:d1§x2/y2/d2§...\}} ;
+	\item de  saisir la commande \ctex{\textbackslash splinetikz[liste=\textbackslash LISTE]} ;
+	\item d'ajuster les options et coefficients en fonction du rendu !
+\end{itemize}
+
+\medskip
+
+Si jamais il existe ou ou des points \textit{anguleux}, le plus simple est de créer les splines en plusieurs fois.
+
+\newpage
+
+\section{L'outil \og tangentetikz \fg{}}
+
+\subsection{Définitions}
+
+En parallèle de l'outil \ctex{\textbackslash splinetikz}, il existe l'outil \ctex{\textbackslash tangentetikz} qui va permettre de tracer des tangentes à l'aide de la liste de points précédemment définie pour l'outil \ctex{\textbackslash splinetikz}.
+
+\smallskip
+
+NB : il peut fonctionner indépendamment de l'outil \ctex{\textbackslash splinetikz} puisque la liste des points de travail est gérée de manière autonome !
+
+\medskip
+
+La commande \ctex{\textbackslash tangentetikz} se présente sous la forme :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{tikzpicture}
+	...
+	\tangentetikz[liste=...,couleur=...,epaisseur=...,xl=...,xr=...,style=...,point=...]
+	...
+\end{tikzpicture}
+\end{minted}
+
+Cela permet de tracer la tangente :
+%
+\begin{itemize}
+	\item au point numéro numéro \Cle{point} de la liste \Cle{liste}, de coordonnées \textsf{xi/yi} avec la pente \textsf{di} ;
+	\item avec une épaisseur de \Cle{epaisseur}, une couleur \Cle{couleur} et un style additionnel \Cle{style} ;
+	\item en la traçant à partir de \Cle{xl} avant \textsf{xi} et jusqu'à \Cle{xr} après \textsf{xi}.
+\end{itemize}
+
+\subsection{Exemple et illustration}
+
+\begin{center}
+	\begin{tikzpicture}[x=3cm,y=3cm,xmin=0,xmax=2,xgrilles=0.25,ymin=0,ymax=2.25,ygrilles=0.25]
+		\tikzset{noeudexpl/.style={purple,font=\sffamily\small}}
+		\tgrilles
+		\draw[line width=1.5pt,->,darkgray] (\xmin,0)--(\xmax,0) ;
+		\draw[line width=1.5pt,->,darkgray] (0,\ymin)--(0,\ymax) ;
+		\draw (0,1.5) node[noeudexpl,below] {point 1} ;
+		\draw (1,2) node[noeudexpl,below] {point 2} ;
+		\draw (2,0) node[noeudexpl,above left] {point 3} ;
+		%spline
+		\splinetikz[liste=0/1.5/0§1/2/-0.333§2/0/-5,affpoints=true,coeffs=3§2,couleur=red]
+		%tangente
+		\tangentetikz[liste=0/1.5/0§1/2/-0.333§2/0/-5,xl=0,xr=0.5,couleur=ForestGreen,style=dashed]
+		\tangentetikz[liste=0/1.5/0§1/2/-0.333§2/0/-5,xl=0.5,xr=0.75,couleur=orange,style=dotted,point=2]
+		\tangentetikz[liste=0/1.5/0§1/2/-0.333§2/0/-5,xl=0.33,xr=0,couleur=blue,style=densely dashed,point=3]
+		%explications
+		\draw[<->,very thick,darkgray] (0.5,2.2)--(1,2.2) node[midway,above,font=\sffamily] {xl} ;
+		\draw[<->,very thick,darkgray] (1,2.2)--(1.75,2.2) node[midway,above,font=\sffamily] {xr};
+	\end{tikzpicture}
+\end{center}
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{tikzpicture}
+	...
+	\def\LISTE{0/1.5/0§1/2/-0.333§2/0/-5}
+	%spline
+	\splinetikz[liste=\LISTE,affpoints=true,coeffs=3§2,couleur=red]
+	%tangente
+	\tangentetikz[liste=\LISTE,xl=0,xr=0.5,couleur=ForestGreen,style=dashed]
+	\tangentetikz[liste=\LISTE,xl=0.5,xr=0.75,couleur=orange,style=dotted,point=2]
+	\tangentetikz[liste=\LISTE,xl=0.33,xr=0,couleur=blue,style=densely dashed,point=3]
+	...
+\end{tikzpicture}
+\end{minted}
+
+\subsection{Exemple avec les deux outils, et \og personnalisation \fg}
+
+\begin{center}
+\begin{tikzpicture}[x=0.5cm,y=0.5cm,xmin=0,xmax=16,xgrilles=1,ymin=0,ymax=16,ygrilles=1]
+		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.3pt,lightgray] (\xmin,\ymin) grid (\xmax,\ymax) ;
+		\draw[line width=1.5pt,->,darkgray] (\xmin,0)--(\xmax,0) ;
+		\draw[line width=1.5pt,->,darkgray] (0,\ymin)--(0,\ymax) ;
+		\foreach \x in {0,2,...,14} {\draw[gray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+		\foreach \y in {0,2,...,14} {\draw[gray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+		\draw[darkgray] (1,-4pt) node[below,font=\sffamily] {1} ;
+		\draw[darkgray] (-4pt,1) node[left,font=\sffamily] {1} ;
+		%la liste pour la courbe d'interpolation
+		\def\liste{0/6/3§3/11/0§7/3/0§10/0/0§14/14/6}
+		%les tangentes "stylisées"
+		\tangentetikz[liste=\liste,xl=0,xr=1,couleur=blue,style=dashed]
+		\tangentetikz[liste=\liste,xl=2,xr=2,couleur=purple,style=dotted,point=2]
+		\tangentetikz[liste=\liste,xl=2,xr=2,couleur=orange,style=<->,point=3]
+		\tangentetikz[liste=\liste,xl=2,xr=0,couleur=ForestGreen,point=5]
+		%la courbe en elle-même
+		\splinetikz[liste=\liste,affpoints=true,coeffs=3,couleur=cyan,style=densely dotted]
+	\end{tikzpicture}
+\end{center}
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=4,breaklines]{tex}
+\tikzset{%
+	xmin/.store in=\xmin,xmin/.default=-5,xmin=-5,
+	xmax/.store in=\xmax,xmax/.default=5,xmax=5,
+	ymin/.store in=\ymin,ymin/.default=-5,ymin=-5,
+	ymax/.store in=\ymax,ymax/.default=5,ymax=5,
+	xgrille/.store in=\xgrille,xgrille/.default=1,xgrille=1,
+	xgrilles/.store in=\xgrilles,xgrilles/.default=0.5,xgrilles=0.5,
+	ygrille/.store in=\ygrille,ygrille/.default=1,ygrille=1,
+	ygrilles/.store in=\ygrilles,ygrilles/.default=0.5,ygrilles=0.5,
+	xunit/.store in=\xunit,unit/.default=1,xunit=1,
+	yunit/.store in=\yunit,unit/.default=1,yunit=1
+}
+
+\begin{tikzpicture}[x=0.5cm,y=0.5cm,xmin=0,xmax=16,xgrilles=1,ymin=0,ymax=16,ygrilles=1]
+	\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.3pt,lightgray] (\xmin,\ymin) grid (\xmax,\ymax) ;
+	\draw[line width=1.5pt,->,darkgray] (\xmin,0)--(\xmax,0) ;
+	\draw[line width=1.5pt,->,darkgray] (0,\ymin)--(0,\ymax) ;
+	\foreach \x in {0,2,...,14} {\draw[gray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+	\foreach \y in {0,2,...,14} {\draw[gray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+	%la liste pour la courbe d'interpolation
+	\def\liste{0/6/3§3/11/0§7/3/0§10/0/0§14/14/6}
+	%les tangentes "stylisées"
+	\tangentetikz[liste=\liste,xl=0,xr=1,couleur=blue,style=dashed]
+	\tangentetikz[liste=\liste,xl=2,xr=2,couleur=purple,style=dotted,point=2]
+	\tangentetikz[liste=\liste,xl=2,xr=2,couleur=orange,style=<->,point=3]
+	\tangentetikz[liste=\liste,xl=2,xr=0,couleur=ForestGreen,point=5]
+	%la courbe en elle-même
+	\splinetikz[liste=\liste,affpoints=true,coeffs=3,couleur=cyan,style=densely dotted]
+\end{tikzpicture}
+\end{minted}
+
+\newpage
+
+\section{L'outil \og Calcul Formel \fg}
+
+\subsection{Introduction}
+
+L'idée des commandes suivantes est de définir, dans un environnement \TikZ, une présentation proche de celle d'un logiciel de calcul formel comme \textsf{XCas} ou \textsf{Geogebra}.
+
+\smallskip
+
+Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{captures d'écran} de logiciel de calcul formel, l'idée est ici de reproduire, de manière autonome, une telle présentation.
+
+\smallskip
+
+À la manière du \textsf{package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes dont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
+
+\subsection{La commande \og paramCF \fg}
+
+La première chose à définir est l'ensemble des paramètres \textit{globaux} de la fenêtre de calcul formel, à l'aide de \Cle{Clés}.
+
+C'est la commande \ctex{\textbackslash paramCF} qui s'y colle, avec :
+
+\begin{itemize}
+	\item \Cle{larg} : largeur de l'environnement ; \hfill{}défaut \Cle{16}
+	\item \Cle{esplg} : espacement vertical entre les lignes ;\hfill{}défaut \Cle{2pt}
+	\item \Cle{premcol} : largeur de la case du \textit{petit numéro} ;\hfill{}défaut \Cle{0.3}
+	\item \Cle{hpremcol} : hauteur de la case du \textit{petit numéro} ;\hfill{}défaut \Cle{0.4}
+	\item \Cle{taille} : taille du texte ;\hfill{}défaut \Cle{\textbackslash normalsize}
+	\item \Cle{couleur} : couleur des traits de l'environnement ;\hfill{}défaut \Cle{darkgray}
+	\item \Cle{titre} : booléen pour l'affichage d'un bandeau de titre ;\hfill{}défaut \Cle{false}
+	\item \Cle{tailletitre} : taille du titre ;\hfill{}défaut \Cle{\textbackslash normalsize}
+	\item \Cle{poscmd} : position horizontale de la commande d'entrée ;\hfill{}défaut \Cle{gauche}
+	\item \Cle{posres} : position horizontale de la commande de sortie ;\hfill{}défaut \Cle{centre}
+	\item \Cle{couleurcmd} : couleur de la commande d'entrée ;\hfill{}défaut \Cle{ed}
+	\item \Cle{couleurres} : couleur de la commande de sortie ;\hfill{}défaut \Cle{blue}
+	\item \Cle{sep} : booléen pour l'affichage du trait de séparation E/S ;\hfill{}défaut \Cle{true}
+	\item \Cle{menu} : booléen pour l'affichage du \textit{bouton} MENU ;\hfill{}défaut \Cle{true}
+	\item \Cle{labeltitre} : libellé du titre.\hfill{}défaut \Cle{Résultats obtenus avec un logiciel de Calcul Formel}
+\end{itemize}
+
+\subsection{La commande \og ligneCF \fg}
+
+Une fois les paramètres déclarés, il faut créer les différentes lignes, grâce à la \ctex{\textbackslash ligneCF} :
+
+\begin{itemize}
+	\item \Cle{hc} : hauteur de la ligne de commande d'entrée ;\hfill{}défaut \Cle{0.75}
+	\item \Cle{hr} : hauteur de la ligne de commande de sortie ;\hfill{}défaut \Cle{0.75}
+	\item deux \textsf{arguments}, celui de la commande d'entrée et celui de la commande de sortie.
+\end{itemize}
+
+\medskip
+
+Ainsi, le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=4,breaklines]{tex}
+\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
+	\paramCF[titre=true,couleurcmd=olive,couleurres=orange]
+	\ligneCF{COMMANDE 1}{RÉSULTAT 1}
+	\ligneCF{\texttt{(x+1)\chap2}}{$\mathtt{x^2+2x+1}$}
+	\ligneCF[hc=1,hr=1.25]{\textsf{Dérivée[(x+5)*exp(-0.1*x)]}}{$\mathsf{\rightarrow (0.5-0.1*x)*exp(-0.1*x)}$}
+\end{tikzpicture}
+\end{minted}
+
+produira le résultat suivant :
+
+\begin{center}
+	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
+		\paramCF[titre=true,couleurcmd=olive,couleurres=orange]
+		\ligneCF{COMMANDE 1}{RÉSULTAT 1}
+		\ligneCF[hc=1,hr=1.25]{\texttt{(x+1)\CFchap2}}{$\mathtt{x^2+2x+1}$}
+	\end{tikzpicture}
+\end{center}
+
+\newpage
+
+\subsection{Visualisation des paramètres}
+
+Pour \textit{illustrer} un peur les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
+
+\medskip
+
+\begin{center}
+	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
+	\paramCF[larg=12cm,couleur=lightgray,esplg=12pt,menu=false]
+	\ligneCF{}{}
+	\ligneCF[hc=1,hr=1.25]{}{}
+	%explications
+	\foreach \noeud in {01,11,21,31,41,51,02,12,22,32,42,52}
+		\draw[blue] (A\noeud) node[font=\ttfamily] {A\noeud} ;
+\end{tikzpicture}
+\end{center}
+
+\medskip
+
+\begin{center}
+	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
+	\paramCF[titre=true,larg=12cm,esplg=10pt,premcol=0.5,hpremcol=0.7,couleur=lightgray]
+	\ligneCF{COMMANDE 1}{RÉSULTAT 1}
+	\ligneCF[hc=1.25,hr=1.5]{COMMANDE 2}{RÉSULTAT 2}
+	%explications
+	\draw[CadetBlue,<->] ($(A22) + (0,-12pt)$) -- ($(A52) + (0,-12pt)$) node[midway,below,font=\sffamily] {\Cle{larg}} ;
+	\draw[CadetBlue,<->] ($(A51) + (12pt,0)$) -- ($(A32) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{esplg}} ;
+	\draw[CadetBlue,<->] ($(A02) + (0,2pt)$) -- ($(A02) + (0,2pt) + ({-\CFpremcol},0) $) node[midway,above,font=\sffamily] {\Cle{premcol}} ;
+	\draw[CadetBlue,<->] ($(A02) + ({-\CFpremcol},0) + (-2pt,0)$) -- ($(A02) + ({-\CFpremcol},{-\CFhpremcol}) +(-2pt,0)$) node[midway,left,font=\sffamily] {\Cle{hpremcol}} ;
+	\draw[CadetBlue,<->] ($(A31) + (12pt,0)$) -- ($(A41) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hc}} ;
+	\draw[CadetBlue,<->] ($(A41) + (12pt,0)$) -- ($(A51) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hr}} ;
+	\draw[CadetBlue,<->] ($(A32) + (12pt,0)$) -- ($(A42) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hc}} ;
+	\draw[CadetBlue,<->] ($(A42) + (12pt,0)$) -- ($(A52) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hr}} ;
+	\draw[CadetBlue,->] ($(A12) + (0,-12pt)$) to[bend left=10] ($(A12) + (0,-12pt) + (-18pt,-12pt)$) node[below left,font=\sffamily] {\Cle{couleur}} ;
+	\draw[CadetBlue,->] ($(A52) + (-0.65,0.25)$) to[bend left=10] ($(A52) + (-0.65,0.25) + (-18pt,12pt)$) node[inner sep=0pt,above left=1pt,font=\sffamily] {\Cle{menu}} ;
+	\draw[CadetBlue,->] ($(A12) + (16pt,0)$) to[bend left=10] ($(A12) + (16pt,0) + (18pt,-12pt)$) node[inner sep=0pt,below right=1pt,font=\sffamily] {\Cle{sep}} ;
+	\draw[CadetBlue,->] ($(A01) + (8pt,2pt) + (0,1em)$) to[bend left=10] ($(A01) + (8pt,2pt) + (0,1em) + (-18pt,12pt)$) node[inner sep=0pt,above=1pt,font=\sffamily] {\Cle{titre} \& \Cle{tailletitre} \& \Cle{labeltitre}} ;
+\end{tikzpicture}
+\end{center}
+
+Chaque argument COMMANDE \& RÉSULTAT peut être formaté (niveau police) de manière indépendante.
+
+\newpage
+
+\section{Code \& Console Python}
+
+\subsection{Introduction}
+
+Le \textsf{package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
+
+\begin{itemize}
+	\item présenter du code python ;
+	\item exécuter du code python dans un environnement type \og console \fg{} ;
+	\item charger du code python, et éventuellement l'utiliser dans la console.
+\end{itemize}
+
+\medskip
+
+\textbf{Attention : }il faut dans ce cas une compilation en plusieurs parties, comme par exemple \textsf{pdflatex puis pythontex puis pdflatex} !
+
+Voir par exemple \url{http://lesmathsduyeti.fr/fr/informatique/latex/pythontex/} !
+
+\subsection{Présentation de code Python via pythontex}
+
+L'environnement \ctex{\textbackslash envcodepythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{colorbox} avec un style particulier. 
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{envcodepythontex}[largeur=...,centre=...,lignes=...]
+...
+\end{envcodepythontex}
+\end{minted}
+
+Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} modifier le style :
+
+\begin{itemize}
+	\item \Cle{largeur} : largeur de la \textit{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item \Cle{centre} : booléen pour centrer ou non la \textit{tcbox} ;\hfill{}défaut \Cle{true}
+	\item \Cle{lignes} : booléen pour afficher ou non les numéros de ligne.\hfill{}défaut \Cle{true}
+\end{itemize}
+
+\medskip
+
+Ainsi, le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=4,breaklines]{tex}
+\begin{envcodepythontex}[largeur=12cm]
+	#environnement Python(tex) centré avec numéros de ligne
+	def f(x) :
+		return x**2
+\end{envcodepythontex}
+\end{minted}
+
+produira 
+
+\begin{envcodepythontex}[largeur=12cm]
+	#environnement Python(tex) centré avec numéros de ligne
+	def f(x) :
+		return x**2
+\end{envcodepythontex}
+
+Le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envcodepythontex}[largeur=12cm,lignes=false,centre=false]
+	#environnement Python(tex) non centré sans numéro de ligne
+	def f(x) :
+		return x**2
+\end{envcodepythontex}
+\end{minted}
+
+produira :
+
+\begin{envcodepythontex}[largeur=12cm,lignes=false,centre=false]
+	#environnement Python(tex) non centré sans numéro de ligne
+	def f(x) :
+		return x**2
+\end{envcodepythontex}
+
+\newpage
+
+\subsection{Présentation de code Python via minted}
+
+Pour celles et ceux qui ne sont pas à l'aise avec le \textsf{package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le \textsf{package} \ctex{minted} qui permet de présenter du code, et notamment python (il nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18}).
+
+\medskip
+
+L'environnement \ctex{\textbackslash envcodepythonminted} permet de présenter du code python, dans une \ctex{colorbox} avec un style (\textit{minted}) particulier.
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{envcodepythonminted}(*)[largeur][options]
+...
+\end{envcodepythonminted}
+\end{minted}
+
+Plusieurs \Cle{arguments} (optionnels) sont disponibles :
+
+\begin{itemize}
+	\item la version \textit{étoilée} qui permet de pas afficher les numéros de lignes ;
+	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
+	\item le second argument optionnel concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+\end{itemize}
+
+\medskip
+
+Ainsi le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envcodepythonminted}[12cm][center]
+	#environnement Python(minted) centré avec numéros, de largeur 12cm
+	def f(x) :
+		return x**2
+\end{envcodepythonminted}
+\end{minted}
+
+produira :
+
+\begin{envcodepythonminted}[12cm][center]
+	#environnement Python(minted) centré avec numéros
+	def f(x) :
+		return x**2
+\end{envcodepythonminted}
+
+\medskip
+
+Et le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envcodepythonminted}*[0.8\linewidth][]
+	#environnement Python(minted) sans numéro, de largeur 0.8\linewidth
+	def f(x) :
+		return x**2
+\end{envcodepythonminted}
+\end{minted}
+
+produira :
+
+\begin{envcodepythonminted}*[0.8\linewidth][]
+	#environnement Python(minted) sans numéro, de largeur 0.8\linewidth
+	def f(x) :
+		return x**2
+\end{envcodepythonminted}
+
+\newpage
+
+\subsection{Console d'exécution Python}
+
+\ctex{pythontex} permet également de \textit{simuler} (en exécutant également !) du code python dans une \textit{console}.
+
+C'est l'environnement \ctex{\textbackslash envconsolepythontex} qui permet de le faire.
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{envconsolepythontex}[largeur=...,centre=...,label=...]
+...
+\end{envconsolepythontex}
+\end{minted}
+
+Les \Cle{Clés} disponibles sont :
+
+\begin{itemize}
+	\item \Cle{largeur} : largeur de la \textit{console} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item \Cle{centre} : booléen pour centrer ou non la \textit{console} ;\hfill{}défaut \Cle{true}
+	\item \Cle{label} : booléen pour afficher ou non le titre.\hfill{}défaut \Cle{true}
+\end{itemize}
+
+\medskip
+
+Ainsi, le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=4,breaklines]{tex}
+\begin{envconsolepythontex}[largeur=14cm,centre=false]
+	#console Python(tex) non centrée avec label
+	from math import sqrt
+	1+1
+	sqrt(12)
+\end{envconsolepythontex}
+\end{minted}
+
+produira 
+
+\begin{envconsolepythontex}[largeur=14cm,centre=false]
+	#console Python(tex) non centrée avec label
+	from math import sqrt
+	1+1
+	sqrt(12)
+\end{envconsolepythontex}
+
+Le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envconsolepythontex}[largeur=14cm,label=false]
+	#console Python(tex) centrée sans label
+	table = [[1,2],[3,4]]
+	table[0][0]
+\end{envconsolepythontex}
+\end{minted}
+
+produira :
+
+\begin{envconsolepythontex}[largeur=14cm,label=false]
+	#console Python(tex) centrée sans label
+	table = [[1,2],[3,4]]
+	table[0][0]
+\end{envconsolepythontex}
+
+\subsection{Personnalisation}
+
+\textbf{NB : } compte tenu de la \textit{relative complexité} de gérer les options (par paramètres\ldots) des \textit{tcbox} et des \textit{fancyvrb}, le style est \og fixé \fg{} tel quel, et seules la taille et la position de la \textit{tcbox} sont modifiables. Si toutefois vous souhaitez personnaliser davantage, il faudra prendre le code correspondant et appliquer vos modifications !
+
+\medskip
+
+Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une base \textit{pré}existante !
+
+\newpage
+
+\section{Pseudo-Code}
+
+\subsection{Introduction}
+
+Le \textsf{package} \ctex{listings} permet d'insérer et de présenter du code, et avec \ctex{tclorobx} on peut obtenir une présentation similaire à celle du code Python. Pour le moment la \textit{philosophie} de la commande est un peu différente de celle du code python, avec son système de \Cle{Clés}, car l'environnement \ctex{tcblisting} est un peu différente\ldots
+
+\subsection{Présentation de Pseudo-Code}
+
+L'environnement \ctex{\textbackslash envpseudocode} (chargé par \ctex{ProfLycee} permet de présenter du (pseudo-code) dans une \ctex{tcolorbox}.
+
+\smallskip
+
+De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gérer le paramètre \textit{autogobble}, donc il faudra être vigilant quant à la position du code (pas de tabulation en fait\ldots)
+
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=LightGray,fontsize=\footnotesize,tabsize=2]{tex}
+\begin{envpseudocode}(*)[largeur][options]
+%attention à l'indentation, gobble ne fonctionne pas...
+...
+\end{envpseudocode}
+\end{minted}
+
+Plusieurs \Cle{arguments} (optionnels) sont disponibles :
+
+\begin{itemize}
+	\item la version \textit{étoilée} qui permet de pas afficher les numéros de lignes ;
+	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
+	\item le second argument optionnel concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+\end{itemize}
+
+\medskip
+
+Ainsi le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envpseudocode}
+%non centré, de largeur par défaut (12cm) avec lignes
+List = [...]          # à déclarer au préalable
+n = longueur(List)
+Pour i allant de 0 à n-1 Faire
+	Afficher(List[i])
+FinPour
+\end{envpseudocode}
+\end{minted}
+
+produira :
+
+\begin{envpseudocode}
+List = [...]          # à déclarer au préalable
+n = longueur(List)
+Pour i allant de 0 à n-1 Faire
+	Afficher(List[i])
+FinPour
+\end{envpseudocode}
+
+\medskip
+
+Et le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{envpseudocode}*[15cm][center]
+%centré, de largeur 15cm sans ligne
+List = [...]          # à déclarer au préalable
+n = longueur(List)
+Pour i allant de 0 à n-1 Faire
+	Afficher(List[i])
+FinPour
+\end{envpseudocode}
+\end{minted}
+
+produira :
+
+\begin{envpseudocode}*[15cm][center]
+List = [...]          # à déclarer au préalable
+n = longueur(List)
+Pour i allant de 0 à n-1 Faire
+	Afficher(List[i])
+FinPour
+\end{envpseudocode}
+
+\newpage
+
+\section{Terminal Windows/UNiX/OSX}
+
+\subsection{Introduction}
+
+L'idée des \textsf{commandes} suivantes est de permettre de simuler des fenêtres de \textsf{Terminal}, que ce soit pour Windows, Ubuntu ou OSX.
+
+\smallskip
+
+Le \textsf{contenu} est géré par le package \ctex{listings}, sans langage particulier, et donc sans coloration syntaxique particulière.
+
+\smallskip
+
+Comme pour le pseudo-code, pas d'\textsf{autogobble}, donc commandes à aligner à gauche !
+
+\subsection{Commandes}
+
+Les (trois) environnements disponibles sont :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{PLtermwin}[largeur]{titre=...}[options]
+...
+
+\begin{PLtermunix}[largeur]{titre=...}[options]
+...
+
+\begin{PLtermosx}[largeur]{titre=...}[options]
+...
+\end{minted}
+
+Peu d'options pour ces commandes :
+
+\begin{itemize}
+	\item le premier, optionnel, est la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item le deuxième, mandataire, permet de spécifier le titre par la clé \Cle{titre}.\hfill{}défaut \Cle{Terminal Windows/UNiX/OSX}
+	\item le troisième, optionnel, concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+\end{itemize}
+
+\medskip
+
+Ainsi le code :
+
+\begin{minted}[frame=lines,framesep=2mm,bgcolor=lightgray!5,fontsize=\footnotesize,tabsize=4]{tex}
+\begin{PLtermwin}[15cm]{} %largeur 15cm avec titre par défaut
+Microsoft Windows [version 10.0.22000.493]
+(c) Microsoft Corporation. Tous droits réservés.
+
+C:\Users\test>ping -c 2ctan.org
+Envoi d'une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+\end{PLtermwin}
+
+\begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center] %12cm, avec titre modifié et centré
+test@DESKTOP:~$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermunix}
+
+\begin{PLtermosx}[0.5\linewidth]{titre=Terminal MacOSX}[flush right] %1/2-largeur et titre modifié et droite
+[test@server]$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermosx}
+\end{minted}
+
+produira :
+
+\begin{PLtermwin}[15cm]{}
+Microsoft Windows [version 10.0.22000.493]
+(c) Microsoft Corporation. Tous droits réservés.
+
+C:\Users\test>ping -c 2ctan.org
+Envoi d'une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+\end{PLtermwin}
+
+\begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center]
+test@DESKTOP:~$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermunix}
+
+\begin{PLtermosx}[0.5\linewidth]{titre=Terminal MacOSX}[flush right]
+[test@server]$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermosx}
+
+\newpage
+
+\section{Historique}
+
+{\small \bverb|v1.0.5|  : Ajout d'un environnement pour Python (minted)
+
+{\small \bverb|v1.0.4|  : Ajout des environnements pour Terminal (win, osx, unix)
+
+{\small \bverb|v1.0.3|  : Ajout des environnements pour PseudoCode
+
+{\small \bverb|v1.0.2|  : Ajout des environnements pour Python (pythontex)
+
+{\small \bverb|v1.0.1|  : Modification mineure liée au chargement de \ctex{xcolor}
+
+{\small \bverb|v1.0  |  : Version initiale}
+
+\end{document}
