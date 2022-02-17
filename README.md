@@ -15,7 +15,7 @@ La commande <code>\splinetikz[...]</code>, trace un ensemble de <i>splines</i> g
 
 Également de quoi tracer, grâce à la commande <code>\tangentetikz[...]</code>, (une ou) des tangentes à l'aide de triplets <code>xa/ya/da§...</code> pour tracer une (portion de) tangente via <code>da*(x-xa)+ya</code>.
 
-![illustr](proflycee-test-splines.png?raw=true "testsplines")
+![illustr](./test/proflycee-test-splines.png?raw=true "testsplines")
 
 ## Émulation fenêtre de calcul formel
 
@@ -23,7 +23,7 @@ Une commande <code>\paramCF[...]</code> pour paramétrer la *fenêtre de travail
 
 Une commande <code>\ligneCF[...]</code> pour créer les lignes de la *fenêtre de travail*.
 
-![illustr](proflycee-test-calcformel.png?raw=true "testcalc")
+![illustr](./test/proflycee-test-calcformel.png?raw=true "testcalc")
 
 ## Code et console Python
 
@@ -33,7 +33,7 @@ Un environnement <code>envconsolepythontex[...]</code> pour présenter une conso
 
 Un environnement <code>envconsolepythonminted[...]</code> pour présenter du code Python via minted.
 
-![illustr](proflycee-test-codepython.png?raw=true "testcode")
+![illustr](./test/proflycee-test-codepython.png?raw=true "testcode")
 
 ## Terminal Win/UNiX/OSX
 
@@ -43,4 +43,4 @@ Un environnement <code>PLterunix[...]</code> pour un terminal UNiX.
 
 Un environnement <code>PLtermosx[...]</code> pour un terminal OSX.
 
-![illustr](proflycee-test_terminals.png?raw=true "testterminals")
+![illustr](./test/proflycee-test_terminals.png?raw=true "testterminals")
