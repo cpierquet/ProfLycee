@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/02/16 - v1.0.5 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/02/18 - v1.0.6 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.0.6	Option [nominted] pour éviter de charger minted & nettoyage amssymb (pour éviter bug de chargement...)
 % 1.0.5 Environnement code python avec minted
 % 1.0.4 Environnement pour simuler terminal windows & linux
 % 1.0.3	Environnement pour présenter du pseudocode
@@ -11,9 +12,15 @@
 % 1.0.1	Modif mineure du chargement de xcolor (compatibilité avec d'autres packages notamment...)
 % 1.0	Version initiale
 
+%------Option(s)
+\newif\if@nominted \@nomintedfalse
+\DeclareOption{nominted}{\@nomintedtrue}
+\DeclareOption*{}
+\ProcessOptions\relax
+
 %------Packages utiles
 \RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
-\RequirePackage{amssymb}
+%\RequirePackage{amssymb}
 \RequirePackage{tikz}
 \RequirePackage{pgf,pgffor}
 \RequirePackage{ifthen}
@@ -365,7 +372,12 @@
 }
 
 %=========PYTHONMINTED========= OK !!
-\tcbuselibrary{minted}
+\if@nominted
+	%on ne charge pas minted et la librairie tcbox
+\else
+	%on charge minted et la librairie tcbox
+	\tcbuselibrary{minted}
+\fi
 
 \tcbset{pytmintedno/.style={%
 	listing engine=minted,minted style=colorful,
