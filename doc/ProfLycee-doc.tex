@@ -8,7 +8,7 @@
 \usepackage[scaled=0.875]{helvet}
 \renewcommand\ttdefault{lmtt}
 \usepackage[scaled=0.875]{cabin}
-\usepackage{ProfLycee}
+\usepackage[build]{ProfLycee}
 \usetikzlibrary{hobby}
 \usepackage{siunitx}
 \usepackage{graphics}
@@ -20,7 +20,6 @@
 \usepackage{hyperref}
 \hypersetup{pdfborder=0 0 0}
 
-\usepackage{minted}
 \sisetup{locale=FR}
 \usepackage{geometry}
 \geometry{margin=1.5cm}
@@ -37,7 +36,6 @@
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
 		boxrule=0.75pt,left=7pt,right=1pt,top=0pt,bottom=0.25pt,%
-		%before upper={{\normalsize \vphantom{pf}}}
 	}
 }
 \tcbset{vignettelatex/.style={%
@@ -154,7 +152,7 @@
 		{\ttfamily c pierquet -- at -- outlook . fr}
 	\end{tabular}
 }
-\date{Version 1.0.6 -- 18 Février 2022}
+\date{Version 1.0.7 -- 21 Février 2022}
 
 \newcommand\Cle[1]{{\bfseries\sffamily\textlangle #1\textrangle}}
 
@@ -255,10 +253,10 @@ J'ai utilisé les \ctex{packages} du phénoménal C. Tellechea, je vous conseill
 ...
 \end{codetex}
 
-\smallskip
+\subsection{Options du package}
 
 \begin{codeinfo}
-Par défaut, \ctex{minted} est chargé est donc la compilation nécessite d'utiliser \textsf{shell-escape}. Cependant, si vous ne souhaitez pas utiliser les commandes nécessitant \ctex{minted} vous pouvez charger le package \ctex{ProfLycee} avec l'option \Cle{nominted}.
+Par défaut, \ctex{minted} est chargé et donc la compilation nécessite d'utiliser \textsf{shell-escape}. Cependant, si vous ne souhaitez pas utiliser les commandes nécessitant \ctex{minted} vous pouvez charger le package \ctex{ProfLycee} avec l'option \Cle{nominted}.
 \end{codeinfo}
 
 \smallskip
@@ -268,6 +266,33 @@ Par défaut, \ctex{minted} est chargé est donc la compilation nécessite d'util
 \usepackage[nominted]{ProfLycee}
 ...
 \end{codetex}
+
+\medskip
+
+\begin{codeinfo}
+En compilant (notamment avec les packages \ctex{minted} et \ctex{pythontex}) on peut spécifier des répertoires particuliers pour les (ou des) fichiers auxiliaires.
+
+Avec l'option \Cle{build}, l'utilisateur a la possibilité de placer les fichiers temporaires de \ctex{minted} et \ctex{pythontex} dans un répertoire \textsf{build} du répertoire courant.
+\end{codeinfo}
+
+\smallskip
+
+\begin{codetex}[listing only]
+...
+\usepackage[build]{ProfLycee}
+...
+\end{codetex}
+
+\smallskip
+
+\begin{codeinfo}
+Les options précédentes sont cumulables, et, pour info, elles conditionnent le chargement des \textsf{packages} avec les options :
+
+\begin{itemize}
+	\item \ctex{\textbackslash setpythontexoutputdir\{./build/pythontex-files-\textbackslash jobname\}}
+	\item \ctex{\textbackslash RequirePackage[outputdir=build]\{minted\}}
+\end{itemize}
+\end{codeinfo}
 
 \subsection{Le système de \og clés/options \fg}
 
@@ -282,7 +307,7 @@ L'idée est de conserver -- autant que faire se peut -- l'idée de \Cle{Clés} q
 Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce fait le fonctionnement est plus \textit{basique} avec un système d'\textsf{arguments} optionnels (entre \textsf{[\ldots]}) ou mandataires (entre \textsf{\{\ldots\}}).
 \end{codeidee}
 
-\pagebreak
+\smallskip
 
 \begin{codeinfo}
 Les \textsf{commandes} et \textsf{environnements} présentés seront explicités via leur \textsf{syntaxe} avec les \textsf{options} ou \textsf{arguments}.
@@ -1240,6 +1265,8 @@ PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \newpage
 
 \section{Historique}
+
+{\small \bverb|v1.0.7| :~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire \textsf{./build}
 
 {\small \bverb|v1.0.6| :~~~~Ajout d'une option \textsf{nominted} pour ne pas charger \ctex{minted} (pas besoin de compiler avec \textsf{shell-escape})
 

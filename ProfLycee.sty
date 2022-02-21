@@ -3,10 +3,11 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/02/18 - v1.0.6 - Aide pour l'utilisation de LaTeX en lycée]
-% 1.0.6	Option [nominted] pour éviter de charger minted & nettoyage amssymb (pour éviter bug de chargement...)
-% 1.0.5 Environnement code python avec minted
-% 1.0.4 Environnement pour simuler terminal windows & linux
+\ProvidesPackage{ProfLycee}[2022/02/21 - v1.0.7 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.0.7	Option [build] pour placer les fichiers temporaires dans un répertoire build (désactivée par défaut)
+% 1.0.6	Option [nominted] pour éviter de charger minted & nettoyage amssymb
+% 1.0.5	Environnement code python avec minted
+% 1.0.4	Environnement pour simuler terminal windows & linux
 % 1.0.3	Environnement pour présenter du pseudocode
 % 1.0.2	Environnement pour présenter du code python (avec pythontex)
 % 1.0.1	Modif mineure du chargement de xcolor (compatibilité avec d'autres packages notamment...)
@@ -15,16 +16,16 @@
 %------Option(s)
 \newif\if@nominted \@nomintedfalse
 \DeclareOption{nominted}{\@nomintedtrue}
+\newif\if@build \@buildfalse
+\DeclareOption{build}{\@buildtrue}
 \DeclareOption*{}
 \ProcessOptions\relax
 
 %------Packages utiles
 \RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
-%\RequirePackage{amssymb}
 \RequirePackage{tikz}
 \RequirePackage{pgf,pgffor}
 \RequirePackage{ifthen}
-\RequirePackage{environ}
 \RequirePackage{xparse}
 \RequirePackage{xkeyval}
 \RequirePackage{xfp}
@@ -46,7 +47,10 @@
 %python
 \RequirePackage{fancyvrb}
 \RequirePackage[gobble=auto]{pythontex}
-\setpythontexlistingenv{pythont}
+\setpythontexlistingenv{pythont} %pour ne pas télescoper lstlistings (?)
+\if@build
+	\setpythontexoutputdir{./build/pythontex-files-\jobname} %essai de modif pythontex répertoire build
+\fi
 
 %---------------SPLINES----------------------
 %------commande utile pour extraire des infos d'une liste
@@ -375,7 +379,11 @@
 \if@nominted
 	%on ne charge pas minted et la librairie tcbox
 \else
-	%on charge minted et la librairie tcbox
+	\if@build
+		%on charge minted avec le répertoire build
+		\RequirePackage[outputdir=build]{minted}
+	\fi
+	%on charge minted via la librairie tcbox
 	\tcbuselibrary{minted}
 \fi
 
