@@ -18,6 +18,7 @@
 \usepackage{xintexpr}
 \usepackage{codehigh}
 \usepackage{hyperref}
+\urlstyle{same}
 \hypersetup{pdfborder=0 0 0}
 
 \sisetup{locale=FR}
@@ -152,7 +153,7 @@
 		{\ttfamily c pierquet -- at -- outlook . fr}
 	\end{tabular}
 }
-\date{Version 1.0.7 -- 21 Février 2022}
+\date{Version 1.0.8 -- 16 Mars 2022}
 
 \newcommand\Cle[1]{{\bfseries\sffamily\textlangle #1\textrangle}}
 
@@ -176,6 +177,7 @@ Quelques environnements (\textsf{tcbox}) pour présenter du code \textsf{python}
 
 Quelques environnements (\textsf{tcbox}) pour présenter des commandes dans un terminal (\textsf{win} ou \textsf{mac} ou \textsf{linux}).
 
+Un cartouche (\textsf{tcbox}) pour présenter des codes de partage \textsf{capytale}.
 
 \vfill
 
@@ -1224,18 +1226,47 @@ Peu d'options pour ces commandes :
 
 \medskip
 
-\begin{codetex}[listing only]
-\begin{PLtermwin}[15cm]{} %largeur 15cm avec titre par défaut
-Microsoft Windows [version 10.0.22000.493]
-(c) Microsoft Corporation. Tous droits réservés.
-C:\Users\test>ping -c 2ctan.org
-Envoi d'une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
-\end{PLtermwin}
+\begin{codeinfo}
+Le \textsf{code} n'est pas formaté, ni mis en coloration syntaxique.
 
+De ce fait tout les caractères sont autorisés, même si l'éditeur pourra détecter le \% comme le début d'un commentaire, tout sera intégré dans le code mis en forme !
+\end{codeinfo}
+
+\medskip
+
+\begin{codetex}[listing only]
 \begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center] %12cm, avec titre modifié et centré
 test@DESKTOP:~$ ping -c 2 ctan.org
 PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \end{PLtermunix}
+\end{codetex}
+
+\medskip
+
+\begin{codesortie}
+\begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center]
+test@DESKTOP:~$ ping -c 2 ctan.org
+PING ctan.org (5.35.249.60) 56(84) bytes of data.
+\end{PLtermunix}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+\begin{PLtermwin}[15cm]{} %largeur 15cm avec titre par défaut
+Microsoft Windows [version 10.0.22000.493]
+(c) Microsoft Corporation. Tous droits réservés.
+C:\Users\test>ping ctan.org
+
+Envoi d’une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+Réponse de 5.35.249.60 : octets=32 temps=35 ms TTL=51
+Réponse de 5.35.249.60 : octets=32 temps=37 ms TTL=51
+Réponse de 5.35.249.60 : octets=32 temps=35 ms TTL=51
+Réponse de 5.35.249.60 : octets=32 temps=39 ms TTL=51
+
+Statistiques Ping pour 5.35.249.60:
+Paquets : envoyés = 4, reçus = 4, perdus = 0 (perte 0%),
+Durée approximative des boucles en millisecondes :
+Minimum = 35ms, Maximum = 39ms, Moyenne = 36ms
+\end{PLtermwin}
 
 \begin{PLtermosx}[0.5\linewidth]{titre=Terminal MacOSX}[flush right] %1/2-largeur et titre modifié et droite
 [test@server]$ ping -c 2 ctan.org
@@ -1247,8 +1278,18 @@ PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \begin{PLtermwin}[15cm]{}
 Microsoft Windows [version 10.0.22000.493]
 (c) Microsoft Corporation. Tous droits réservés.
-C:\Users\test>ping -c 2ctan.org
-Envoi d'une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+C:\Users\test>ping ctan.org
+
+Envoi d’une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+Réponse de 5.35.249.60 : octets=32 temps=35 ms TTL=51
+Réponse de 5.35.249.60 : octets=32 temps=37 ms TTL=51
+Réponse de 5.35.249.60 : octets=32 temps=35 ms TTL=51
+Réponse de 5.35.249.60 : octets=32 temps=39 ms TTL=51
+
+Statistiques Ping pour 5.35.249.60:
+Paquets : envoyés = 4, reçus = 4, perdus = 0 (perte 0%),
+Durée approximative des boucles en millisecondes :
+Minimum = 35ms, Maximum = 39ms, Moyenne = 36ms
 \end{PLtermwin}
 
 \begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center]
@@ -1264,7 +1305,70 @@ PING ctan.org (5.35.249.60) 56(84) bytes of data.
 
 \newpage
 
+\section{Cartouche Capytale}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+L'idée est d'obtenir des \textsf{cartouches} tels que \textsf{Capytale} les présente, pour partager un code afin d'accéder à une activité \textsf{python}.
+\end{codeidee}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+\liencapytale(*)[options]{code}
+\end{codetex}
+
+\begin{codecles}
+Peu d'options pour ces commandes :
+
+\begin{itemize}
+	\item la version \textit{étoilée} qui permet de  passer de la police \Cle{sffamily} à la police \Cle{ttfamily}, et donc dépendante des fontes du document ;
+	\item le deuxième, optionnel, permet de rajouter des caractères après le code (comme un \textsf{espace}) ;\hfill{}défaut \Cle{vide}
+	\item le troisième, mandataire, est le \textsf{code} à afficher.
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\liencapytale{abcd-12345}           #lien simple, en sf
+
+\liencapytale[~]{abcd-12345}        #lien avec ~ à la fin, en sf
+
+\liencapytale*{abcd-12345}          #lien simple, en tt
+
+\liencapytale*[~]{abcd-12345}       #lien avec ~ à la fin, en tt
+\end{codetex}
+
+\begin{codesortie}
+\liencapytale{abcd-12345}
+
+\liencapytale[~]{abcd-12345}
+
+\liencapytale*{abcd-12345}
+
+\liencapytale*[~]{abcd-12345}
+\end{codesortie}
+
+\begin{codeinfo}
+Le \textsf{cartouche} peut être \og cliquable \fg{} grâce à \ctex{href}.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\usepackage{hyperref}
+\urlstyle{same}
+...
+\href{https://capytale2.ac-paris.fr/web/c/abcd-12345}{\liencapytale{abcd-12345}}
+\end{codetex}
+
+\begin{codesortie}
+\href{https://capytale2.ac-paris.fr/web/c/abcd-12345}{\liencapytale{abcd-12345}}
+\end{codesortie}
+
+\newpage
+
 \section{Historique}
+
+{\small \bverb|v1.0.8| :~~~~Ajout d'une commande \textsf{liencapytale} pour créer des cartouches de lien "comme capytale"
 
 {\small \bverb|v1.0.7| :~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire \textsf{./build}
 
