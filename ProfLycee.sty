@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/02/21 - v1.0.7 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/03/16 - v1.0.8 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.0.8 Ajout d'une commande liencapytale pour créer un cartouche "comme sur capytale"
 % 1.0.7	Option [build] pour placer les fichiers temporaires dans un répertoire build (désactivée par défaut)
 % 1.0.6	Option [nominted] pour éviter de charger minted & nettoyage amssymb
 % 1.0.5	Environnement code python avec minted
@@ -24,12 +25,15 @@
 %------Packages utiles
 \RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
 \RequirePackage{tikz}
+\RequirePackage{tkz-tab}
+\RequirePackage{mathtools}
 \RequirePackage{pgf,pgffor}
 \RequirePackage{ifthen}
 \RequirePackage{xparse}
 \RequirePackage{xkeyval}
 \RequirePackage{xfp}
 \RequirePackage{xstring}
+\RequirePackage{xintexpr}
 \RequirePackage{simplekv}
 \RequirePackage{listofitems}
 \RequirePackage{xintexpr}
@@ -170,7 +174,7 @@
 %----------------FENÊTRE CALCUL FORMEL
 \newcommand\CFchap{\textasciicircum}
 \newcounter{CFnum}
-% ========= DEF DES CLES PARAM FENETRES XCAS
+%def des clés
 \defKV[paramfenxcas]{%
 	larg=\def\CFlarg{#1},%
 	esplg=\def\CFesplg{#1},%
@@ -196,7 +200,7 @@
 	\useKVdefault[paramfenxcas]%
 	\setKV[paramfenxcas]{#1}% on paramètres les nouvelles clés et on les simplifie
 }
-% ========= DEF DES CLES PARAM LIGNES XCAS =========
+%def des clés
 \defKV[paramlgxcas]{%
 	hc=\def\CFhle{#1},%
 	hr=\def\CFhlr{#1}
@@ -520,7 +524,7 @@
 	}
 }
 
-%============FakeTerm===========
+%============FakeTerm=========== OK !!
 %couleurs (inspirées par termsim !)
 \definecolor{PLmpurple}{RGB}{48,10,36}
 \definecolor{PLmgray}{RGB}{70,72,67}
@@ -663,5 +667,11 @@
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
 	width=#1,#3
 }
+
+%============CartoucheCapytale========= OK !!
+\definecolor{vertcapyt}{HTML}{008000}
+\DeclareTotalTCBox{\liencapytale}{ s O{} m }
+	{enhanced,size=fbox,on line,arc=3pt,colback=vertcapyt,colframe=vertcapyt,fontupper=\IfBooleanTF{#1}{\ttfamily}{\sffamily}\bfseries,colupper=white}%
+	{#3#2~{\scriptsize\faLink}}
 
 \endinput
