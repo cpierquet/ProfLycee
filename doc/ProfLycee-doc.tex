@@ -34,6 +34,9 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
+\def\PLversion{1.1.0}
+\def\PLdate{25 Avril 2022}
+
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
 		boxrule=0.75pt,left=7pt,right=1pt,top=0pt,bottom=0.25pt,%
@@ -153,7 +156,7 @@
 		{\ttfamily c pierquet -- at -- outlook . fr}
 	\end{tabular}
 }
-\date{Version 1.0.8 -- 16 Mars 2022}
+\date{Version \PLversion{} -- \PLdate}
 
 \newcommand\Cle[1]{{\bfseries\sffamily\textlangle #1\textrangle}}
 
@@ -171,13 +174,15 @@
 
 Quelques commandes pour des courbes \textit{lisses} avec gestion des extrema et des dérivées.
 
-Quelques commandes pour simuler une fenêtre de logiciel de calcul formel.
+Quelques commandes pour simuler une fenêtre de logiciel de calcul formel, en \TikZ.
 
 Quelques environnements (\textsf{tcbox}) pour présenter du code \textsf{python} ou \textsf{pseudocode}.
 
 Quelques environnements (\textsf{tcbox}) pour présenter des commandes dans un terminal (\textsf{win} ou \textsf{mac} ou \textsf{linux}).
 
 Un cartouche (\textsf{tcbox}) pour présenter des codes de partage \textsf{capytale}.
+
+Une commande pour tracer un pavé en droit, en \TikZ, avec création des nœuds liés aux sommets.
 
 \vfill
 
@@ -786,7 +791,7 @@ Chaque argument \textsf{COMMANDE} \& \textsf{RÉSULTAT} peut être formaté (niv
 \subsection{Visualisation des paramètres}
 
 \begin{codeinfo}
-Pour \textit{illustrer} un peur les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
+Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
 
 \begin{center}
 	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
@@ -1366,7 +1371,220 @@ Le \textsf{cartouche} peut être \og cliquable \fg{} grâce à \ctex{href}.
 
 \newpage
 
+\section{Pavé droit \og simple \fg{}}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+L'idée est d'obtenir un pavé droit, dans un environnement \TikZ, avec les nœuds créés et nommés directement pour utilisation ultérieure.
+\end{codeidee}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	\paveCF[<options>]
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item \Cle{largeur} : largeur du pavé ;\hfill{}défaut \Cle{2}
+	\item \Cle{profondeur} : profondeur du pavé ;\hfill{}défaut \Cle{1}
+	\item \Cle{hauteur} : hauteur du pavé ;\hfill{}défaut \Cle{1.25}
+	\item \Cle{angle} : angle de fuite de la perspective ;\hfill{}défaut \Cle{30}
+	\item \Cle{fuite} : coefficient de fuite de la perspective ;\hfill{}défaut \Cle{0.5}
+	\item \Cle{sommets} : liste des sommets (avec délimiteur § !) ;\hfill{}défaut \Cle{A§B§C§D§E§F§G§H}
+	\item \Cle{epaisseur} : épaisseur des arêtes (en \textit{langage simplifié} \TikZ) ;\hfill{}défaut \Cle{thick}
+	\item \Cle{aff} : booléen pour afficher les noms des sommets ;\hfill{}défaut \Cle{false}
+	\item \Cle{plein} : booléen pour ne pas afficher les arêtes \textit{invisibles} ;\hfill{}défaut \Cle{false}
+	\item \Cle{cube} : booléen pour préciser qu'il s'agit d'un cube (seule la valeur \Cle{largeur} est util(isé)e).\hfill{}défaut \Cle{false}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\pavePL
+\end{codetex}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\pavePL[cube,largeur=3]
+\end{codetex}
+
+\begin{codeinfo}
+La ligne est de ce fait à insérer dans un environnement \TikZ, avec les options au choix pour cet environnement.
+
+Le code créé les nœuds relatifs aux sommets, et les nomme comme les sommets, ce qui permet de les réutiliser pour éventuellement compléter la figure !
+\end{codeinfo}
+
+\subsection{Influence des paramètres}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}[line join=bevel]
+	\pavePL[aff,largeur=4,profondeur=3,hauteur=2,epaisseur={ultra thick}]
+\end{tikzpicture}
+\end{codetex}
+
+\medskip
+
+\begin{codesortie}
+\begin{tikzpicture}[line join=bevel]
+	\pavePL[aff,largeur=4,profondeur=3,hauteur=2,epaisseur={ultra thick}]
+\end{tikzpicture}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}[line join=bevel]
+		\pavePL[plein,aff,largeur=7,profondeur=3.5,hauteur=4,sommets=Q§S§D§F§G§H§J§K]
+		\draw[thick,red,densely dotted] (G)--(J) ;
+		\draw[thick,blue,densely dotted] (K)--(H) ;
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\medskip
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}[line join=bevel]
+		\pavePL[plein,aff,largeur=7,profondeur=3.5,hauteur=4,sommets=Q§S§D§F§G§H§J§K]
+		\draw[thick,red,densely dotted] (G)--(J) ;
+		\draw[thick,blue,densely dotted] (K)--(H) ;
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\newpage
+
+\section{Tétraèdre \og simple \fg{}}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+L'idée est d'obtenir un tétraèdre, dans un environnement \TikZ, avec les nœuds créés et nommés directement pour utilisation ultérieure.
+\end{codeidee}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	\tetraCF[<options>]
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item \Cle{largeur} : \textit{largeur} du tétraèdre ;\hfill{}défaut \Cle{4}
+	\item \Cle{profondeur} : \textit{profondeur} du tétraèdre ;\hfill{}défaut \Cle{1.25}
+	\item \Cle{hauteur} : \textit{hauteur} du tétraèdre ;\hfill{}défaut \Cle{3}
+	\item \Cle{alpha} : angle \textit{du sommet de devant} ;\hfill{}défaut \Cle{40}
+	\item \Cle{beta} : angle \textit{du sommet du haut} ;\hfill{}défaut \Cle{60}
+	\item \Cle{sommets} : liste des sommets (avec délimiteur § !) ;\hfill{}défaut \Cle{A§B§C§D}
+	\item \Cle{epaisseur} : épaisseur des arêtes (en \textit{langage simplifié} \TikZ) ;\hfill{}défaut \Cle{thick}
+	\item \Cle{aff} : booléen pour afficher les noms des sommets ;\hfill{}défaut \Cle{false}
+	\item \Cle{plein} : booléen pour ne pas afficher l'arête \textit{invisible} .\hfill{}défaut \Cle{false}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\tetraPL
+\end{codetex}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\tetraPL[aff,largeur=2,profondeur=0.625,hauteur=1.5]
+\end{codetex}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\tetraPL[plein,aff,largeur=5,beta=60]
+\end{codetex}
+
+%\begin{codeinfo}
+%La ligne est de ce fait à insérer dans un environnement \TikZ, avec les options au choix pour cet environnement.
+%
+%Le code créé les nœuds relatifs aux sommets, et les nomme comme les sommets, ce qui permet de les réutiliser pour éventuellement compléter la figure !
+%\end{codeinfo}
+
+\subsection{Influence des paramètres}
+
+\begin{codeinfo}
+Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les différents paramètres utiles.
+
+\begin{center}
+	\begin{tikzpicture}[x=1.25cm,y=1.25cm,line width=1pt,line join=bevel]
+		\tetraPL[largeur=5,profondeur=1.95,hauteur=2.75,alpha=45,beta=70]
+		\draw[draw=none] (A)--(C) node[midway,sloped,above,font=\small\sffamily,CadetBlue] {largeur} ;
+		\draw[draw=none] (A)--(B) node[midway,sloped,below,font=\small\sffamily,CadetBlue] {profondeur} ;
+		\draw[draw=none] (A)--(D) node[midway,sloped,above,font=\small\sffamily,CadetBlue] {hauteur} ;
+		\draw[purple] (0.5,0) arc (0:-45:0.5) ;
+		\draw (-22.5:0.5) node[purple,right] {$\alpha$} ;
+		\draw[orange] (0.75,0) arc (0:70:0.75) ;
+		\draw (35:0.75) node[orange,right] {$\beta$} ;
+	\end{tikzpicture}
+\end{center}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}[line join=bevel]
+		\tetraPL[aff,largeur=7,profondeur=3,hauteur=5,epaisseur={ultra thick},alpha=20,beta=30]
+		\draw[very thick,ForestGreen,<->] ($(A)!0.5!(D)$)--($(B)!0.5!(D)$) ;
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\medskip
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}[line join=bevel]
+		\tetraPL[aff,largeur=7,profondeur=3,hauteur=5,epaisseur={ultra thick},alpha=20,beta=30]
+		\draw[very thick,ForestGreen,<->] ($(A)!0.5!(D)$)--($(B)!0.5!(D)$) ;
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+%
+%\begin{codetex}[listing only]
+%	\begin{center}
+%		\begin{tikzpicture}[line join=bevel]
+%			\pavePL[plein,aff,largeur=7,profondeur=3.5,hauteur=4,sommets=Q§S§D§F§G§H§J§K]
+%			\draw[thick,red,densely dotted] (G)--(J) ;
+%			\draw[thick,blue,densely dotted] (K)--(H) ;
+%		\end{tikzpicture}
+%	\end{center}
+%\end{codetex}
+%
+%\medskip
+%
+%\begin{codesortie}
+%	\begin{center}
+%		\begin{tikzpicture}[line join=bevel]
+%			\pavePL[plein,aff,largeur=7,profondeur=3.5,hauteur=4,sommets=Q§S§D§F§G§H§J§K]
+%			\draw[thick,red,densely dotted] (G)--(J) ;
+%			\draw[thick,blue,densely dotted] (K)--(H) ;
+%		\end{tikzpicture}
+%	\end{center}
+%\end{codesortie}
+
+\newpage
+
 \section{Historique}
+
+{\small \bverb|v1.1.0| :~~~~Ajout d'une commande \textsf{tatraPL} pour créer des tétraèdres (avec nœuds) en \TikZ
+
+{\small \bverb|v1.0.9| :~~~~Ajout d'une commande \textsf{pavePL} pour créer des pavés droits (avec nœuds) en \TikZ
 
 {\small \bverb|v1.0.8| :~~~~Ajout d'une commande \textsf{liencapytale} pour créer des cartouches de lien "comme capytale"
 
