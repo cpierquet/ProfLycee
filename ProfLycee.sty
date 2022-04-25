@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/03/16 - v1.0.8 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/04/24 - v1.0.9 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.0.9	Ajout d'une commande pavePL pour un pave droit dans un environnement TikZ
 % 1.0.8 Ajout d'une commande liencapytale pour créer un cartouche "comme sur capytale"
 % 1.0.7	Option [build] pour placer les fichiers temporaires dans un répertoire build (désactivée par défaut)
 % 1.0.6	Option [nominted] pour éviter de charger minted & nettoyage amssymb
@@ -673,5 +674,75 @@
 \DeclareTotalTCBox{\liencapytale}{ s O{} m }
 	{enhanced,size=fbox,on line,arc=3pt,colback=vertcapyt,colframe=vertcapyt,fontupper=\IfBooleanTF{#1}{\ttfamily}{\sffamily}\bfseries,colupper=white}%
 	{#3#2~{\scriptsize\faLink}}
+
+%============PaveDroitTikZ============= OK !!
+\defKV[paramspave]{%
+	largeur=\xdef\PFPaveLg{#1},%
+	profondeur=\xdef\PFPavePf{#1},%
+	hauteur=\xdef\PFPaveHt{#1},%
+	angle=\xdef\PFPaveAngl{#1},%
+	fuite=\xdef\PFPaveFuite{#1},%
+	sommets=\def\PFPaveSommets{#1},%
+	epaisseur=\xdef\PFPaveThick{#1}
+}
+\setKVdefault[paramspave]{%
+	aff=false,%
+	plein=false,%
+	largeur=2,%
+	profondeur=1,%
+	hauteur=1.25,%
+	angle=30,%
+	fuite=0.5,%
+	epaisseur=thick,%
+	sommets=A§B§C§D§E§F§G§H,%
+	cube=false
+}
+
+\newcommand\pavePL[1][]{%
+	\useKVdefault[paramspave]%
+	\setKV[paramspave]{#1}%
+	\ifboolKV[paramspave]{cube}
+	{\xdef\PFPavePf{\PFPaveLg}%
+		\xdef\PFPaveHt{\PFPaveLg}}
+	{}
+	\setsepchar{§}%
+	\readlist\PFListeSommets\PFPaveSommets
+	\itemtomacro\PFListeSommets[1]\PaveA
+	\itemtomacro\PFListeSommets[2]\PaveB
+	\itemtomacro\PFListeSommets[3]\PaveC
+	\itemtomacro\PFListeSommets[4]\PaveD
+	\itemtomacro\PFListeSommets[5]\PaveE
+	\itemtomacro\PFListeSommets[6]\PaveF
+	\itemtomacro\PFListeSommets[7]\PaveG
+	\itemtomacro\PFListeSommets[8]\PaveH
+	%les nœuds du pave
+	\coordinate (\PaveA) at (0,0) ;
+	\coordinate (\PaveB) at ({\PFPaveLg},0) ;
+	\coordinate (\PaveC) at ($(\PaveB) + ({\PFPaveAngl}:{\PFPaveFuite*\PFPavePf})$) ;
+	\coordinate (\PaveD) at ($(\PaveA) + ({\PFPaveAngl}:{\PFPaveFuite*\PFPavePf})$) ;
+	\coordinate (\PaveE) at ($(\PaveA) + (0,{\PFPaveHt})$) ;
+	\coordinate (\PaveF) at ($(\PaveB) + (0,{\PFPaveHt})$) ;
+	\coordinate (\PaveG) at ($(\PaveC) + (0,{\PFPaveHt})$) ;
+	\coordinate (\PaveH) at ($(\PaveD) + (0,{\PFPaveHt})$) ;
+	\ifboolKV[paramspave]{aff}
+		{\draw (\PaveA) node[below left] {\PaveA} ;
+			\draw (\PaveB) node[below right] {\PaveB} ;
+			\draw (\PaveC) node[above right] {\PaveC} ;
+			\ifboolKV[paramspave]{plein}
+				{}
+				{\draw (\PaveD) node[above left] {\PaveD} ;}
+				\draw (\PaveE) node[below left] {\PaveE} ;
+				\draw (\PaveF) node[below right] {\PaveF} ;
+				\draw (\PaveG) node[above right] {\PaveG} ;
+				\draw (\PaveH) node[above left] {\PaveH} ;}
+		{}%on affiche rien
+	\draw[\PFPaveThick] (\PaveA)--(\PaveB)--(\PaveF)--(\PaveE)--cycle
+	                    (\PaveB)--(\PaveC)--(\PaveG)--(\PaveF)--cycle
+	                    (\PaveG)--(\PaveH)--(\PaveE) ;
+	\ifboolKV[paramspave]{plein}
+		{}
+		{\draw[dashed,\PFPaveThick] (\PaveA)--(\PaveD)--(\PaveC)
+		                            (\PaveD)--(\PaveH) ;}
+}
 
 \endinput
