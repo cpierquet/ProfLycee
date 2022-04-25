@@ -51,9 +51,12 @@ Un environnement <code>PLtermosx[...]</code> pour un terminal OSX.
 
 Un cartouche <code>liencapytale(*)[...]{...}</code> pour un cartouche de partage de lien capytale.
 
+![illustr](./test/proflycee-test-capytala.png?raw=true "testcap")
+
 ## Solides de l'espace
 
 Une macro <code>pavePL[...]</code> pour un pavé droit.
 
 Une macro <code>tetraPL[...]</code> pour un tétraèdre.
 
+![illustr](./test/proflycee-test-pave.png?raw=true "testpave")
