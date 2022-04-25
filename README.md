@@ -51,7 +51,7 @@ Un environnement <code>PLtermosx[...]</code> pour un terminal OSX.
 
 Un cartouche <code>liencapytale(*)[...]{...}</code> pour un cartouche de partage de lien capytale.
 
-![illustr](./test/proflycee-test-capytala.png?raw=true "testcap")
+![illustr](./test/proflycee-test-capytale.png?raw=true "testcap")
 
 ## Solides de l'espace
 
