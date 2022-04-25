@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/04/24 - v1.0.9 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/04/25 - v1.1.0 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.1.0	Ajout d'une commande tetraPL pour un tetraèdre dans un environnement TikZ
 % 1.0.9	Ajout d'une commande pavePL pour un pave droit dans un environnement TikZ
 % 1.0.8 Ajout d'une commande liencapytale pour créer un cartouche "comme sur capytale"
 % 1.0.7	Option [build] pour placer les fichiers temporaires dans un répertoire build (désactivée par défaut)
@@ -743,6 +744,55 @@
 		{}
 		{\draw[dashed,\PFPaveThick] (\PaveA)--(\PaveD)--(\PaveC)
 		                            (\PaveD)--(\PaveH) ;}
+}
+
+%============TétraèdreTikZ============= OK !!
+\defKV[paramstetra]{%
+	largeur=\xdef\PFTetraLg{#1},%
+	profondeur=\xdef\PFTetraPf{#1},%
+	hauteur=\xdef\PFTetraHt{#1},%
+	alpha=\xdef\PFTetraAlpha{#1},%
+	beta=\xdef\PFTetraBeta{#1},%
+	sommets=\def\PFTetraSommets{#1},%
+	epaisseur=\xdef\PFTetraThick{#1}
+}
+\setKVdefault[paramstetra]{%
+	aff=false,%
+	plein=false,%
+	largeur=4,%
+	profondeur=1.25,%
+	hauteur=3,%
+	alpha=40,%
+	beta=60,%
+	epaisseur=thick,%
+	sommets=A§B§C§D,%
+}
+
+\newcommand\tetraPL[1][]{%
+	\useKVdefault[paramstetra]%
+	\setKV[paramstetra]{#1}%
+	\setsepchar{§}%
+	\readlist\PFListeSommets\PFTetraSommets
+	\itemtomacro\PFListeSommets[1]\TetraA
+	\itemtomacro\PFListeSommets[2]\TetraB
+	\itemtomacro\PFListeSommets[3]\TetraC
+	\itemtomacro\PFListeSommets[4]\TetraD
+	%les nœuds du tétraèdre
+	\coordinate (\TetraA) at (0,0) ;
+	\coordinate (\TetraB) at ($(\TetraA) + ({-\PFTetraAlpha}:{\PFTetraPf})$) ;
+	\coordinate (\TetraC) at ({\PFTetraLg},0) ;
+	\coordinate (\TetraD) at ($(\TetraA) + ({\PFTetraBeta}:{\PFTetraHt})$) ;
+	\ifboolKV[paramstetra]{aff}
+	{\draw (\TetraA) node[left] {\TetraA} ;
+		\draw (\TetraB) node[below] {\TetraB} ;
+		\draw (\TetraC) node[right] {\TetraC} ;
+		\draw (\TetraD) node[above] {\TetraD} ;}
+		{}%on affiche rien
+	\draw[\PFTetraThick] (\TetraA)--(\TetraD)--(\TetraC)--(\TetraB)--cycle
+						(\TetraD)--(\TetraB) ;
+	\ifboolKV[paramstetra]{plein}
+		{}
+		{\draw[dashed,\PFTetraThick] (\TetraA)--(\TetraC) ;}
 }
 
 \endinput
