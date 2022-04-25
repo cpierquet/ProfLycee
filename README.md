@@ -7,7 +7,9 @@ Pour le moment :
 - deux macros pour configurer un environnement de Calcul Formel et pour créer les lignes ;
 - un environnement pour présenter du code python (via pythontex) ;
 - un environnement pour exécuter du code python et présenter le résultat dans une <i>console</i> ;
-- des environnements pour présenter un "émuler" un terminal WIN/UNiX/OSX.
+- des environnements pour présenter un "émuler" un terminal WIN/UNiX/OSX ;
+- une macro pour simuler un cartouche de type "capytale".
+- deux macros pour créer, dans un environnement TikZ, un pavé droit ou un tétraèdre.
 
 ## Courbe d'interpolation
 
@@ -44,3 +46,14 @@ Un environnement <code>PLterunix[...]</code> pour un terminal UNiX.
 Un environnement <code>PLtermosx[...]</code> pour un terminal OSX.
 
 ![illustr](./test/proflycee-test_terminals.png?raw=true "testterminals")
+
+## Cartouche Capytale
+
+Un cartouche <code>liencapytale(*)[...]{...}</code> pour un cartouche de partage de lien capytale.
+
+## Solides de l'espace
+
+Une macro <code>pavePL[...]</code> pour un pavé droit.
+
+Une macro <code>tetraPL[...]</code> pour un tétraèdre.
+
