@@ -34,8 +34,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.1.0}
-\def\PLdate{25 Avril 2022}
+\def\PLversion{1.1.3}
+\def\PLdate{2 Mai 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -184,6 +184,16 @@ Un cartouche (\textsf{tcbox}) pour présenter des codes de partage \textsf{capyt
 
 Une commande pour tracer un pavé en droit, en \TikZ, avec création des nœuds liés aux sommets.
 
+Une commande pour simplifier des calculs sous forme fractionnaire.
+
+Une commande pour simplifier l'écriture d'un ensemble, avec espaces \og automatiques \fg.
+
+Une commande pour créer, en \TikZ, la \textit{toile} pour une suite récurrente.
+
+\vspace{1.5cm}
+
+\hfill{}\textit{Merci à Anne pour ses retours et sa relecture !}
+
 \vfill
 
 \hrule
@@ -224,15 +234,15 @@ On peut le voir comme un (maigre) complément à \ctex{ProfCollege}, et je préc
 
 \medskip
 
-Il se charge, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee\}}. Il charge quelques \textsf{packages} utiles, mais j'ai fait le choix de laisser l'utilisateur gérer ses autres \textsf{packages}, comment notamment \ctex{amssymb} qui peut poser souci en fonction de la \textit{position} de son chargement.
+Il se charge, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee\}}. Il charge quelques {packages} utiles, mais j'ai fait le choix de laisser l'utilisateur gérer ses autres {packages}, comme notamment \ctex{amssymb} qui peut poser souci en fonction de la \textit{position} de son chargement.
 
-L'utlisateur est libre de charger ses autres \textsf{packages} utiles et habituels, ainsi que ses \textsf{polices} et \textsf{encodages} habituels.
+L'utilisateur est libre de charger ses autres {packages} utiles et habituels, ainsi que ses \textsf{polices} et \textsf{encodages} habituels.
 \end{codeidee}
 
 \smallskip
 
 \begin{codeinfo}
-Le \textsf{package} \ctex{ProfLycee} charge les \textsf{packages} :
+Le {package} \ctex{ProfLycee} charge les {packages} :
 
 \begin{itemize}
 	\item \ctex{xcolor} avec les options \textsf{[table,svgnames]} ;
@@ -246,7 +256,7 @@ Le \textsf{package} \ctex{ProfLycee} charge les \textsf{packages} :
 \smallskip
 
 \begin{codeidee}
-J'ai utilisé les \ctex{packages} du phénoménal C. Tellechea, je vous conseille d'aller jeter un œil sur ce qu'il est possible de faire en \LaTeX{} avec \ctex{listofitems}, \ctex{randomlist}, \ctex{simplekv} et \ctex{xstring} !
+J'ai utilisé les {packages} du phénoménal C. Tellechea, je vous conseille d'aller jeter un œil sur ce qu'il est possible de faire en \LaTeX{} avec \ctex{listofitems}, \ctex{randomlist}, \ctex{simplekv} et \ctex{xstring} !
 \end{codeidee}
 
 \smallskip
@@ -293,7 +303,7 @@ Avec l'option \Cle{build}, l'utilisateur a la possibilité de placer les fichier
 \smallskip
 
 \begin{codeinfo}
-Les options précédentes sont cumulables, et, pour info, elles conditionnent le chargement des \textsf{packages} avec les options :
+Les options précédentes sont cumulables, et, pour info, elles conditionnent le chargement des {packages} avec les options :
 
 \begin{itemize}
 	\item \ctex{\textbackslash setpythontexoutputdir\{./build/pythontex-files-\textbackslash jobname\}}
@@ -312,6 +322,15 @@ L'idée est de conserver -- autant que faire se peut -- l'idée de \Cle{Clés} q
 \end{itemize}
 
 Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce fait le fonctionnement est plus \textit{basique} avec un système d'\textsf{arguments} optionnels (entre \textsf{[\ldots]}) ou mandataires (entre \textsf{\{\ldots\}}).
+
+\smallskip
+
+À noter que les :
+%
+\begin{itemize}
+	\item les \Cle{Clés} peuvent être mises dans n'importe quel ordre, elles peuvent être omises lorsque la valeur par défaut est conservée ;
+	\item les \textsf{arguments} doivent, eux, être positionnés dans le \textit{bon ordre}.
+\end{itemize}
 \end{codeidee}
 
 \smallskip
@@ -331,14 +350,18 @@ Les \textsf{clés} ou \textsf{options} seront présentées dans des \textsf{boî
 \subsection{Outils disponibles}
 
 \begin{codeidee}
-Le \ctex{package}, qui s'enrichira peut-être au fil du temps permet -- pour le moment -- de :
+Le {package}, qui s'enrichira peut-être au fil du temps permet -- pour le moment -- de :
 
 \begin{itemize}
 	\item tracer des splines cubiques avec gestion \textit{assez fine} des tangentes ;
 	\item tracer des tangentes (ou portions) de tangentes sur la même base que pour les splines ;
 	\item simuler une fenêtre de logiciel formel (\textit{à la manière de} \textsf{XCas}) ;
 	\item mettre en forme du code \textsf{python} ou \textsf{pseudocode} ;
-	\item simuler une fenêtre de terminal (win/unix/osx).
+	\item simuler une fenêtre de terminal (win/unix/osx) ;
+	\item créer un cartouche \textit{à la manière de} Capytale ;
+	\item créer rapidement un pavé droit ou un tétraèdre en \TikZ, avec gestion des nœuds ;
+	\item créer rapidement un ensemble d'éléments, avec gestion des espaces ;
+	\item créer, dans un environnement \TikZ, la \og toile \fg{} pour une suite récurrente.
 \end{itemize}
 \end{codeidee}
 
@@ -363,7 +386,11 @@ En ce qui concerne les codes \textsf{python} et/ou \textsf{pseudocode}, il faudr
 \end{itemize}
 \end{codeinfo}
 
+\subsection{Problèmes éventuels\ldots}
 
+\begin{codeinfo}
+Certaines \textsf{commandes} sont à intégrer dans un environnement \TikZ, afin de pouvoir rajouter des éléments, elles ont été testés dans des environnement \ctex{tikzpicture}, à vérifier que la gestion des axes par l'environnement \ctex{axis} est compatible\ldots
+\end{codeinfo}
 
 \newpage
 
@@ -377,7 +404,7 @@ On va utiliser les notions suivantes pour paramétrer le tracé \og automatique 
 \begin{itemize}
 	\item il faut rentrer les \textcolor{purple}{\textsf{points de contrôle}} ;
 	\item il faut préciser les \textcolor{ForestGreen}{\textsf{pentes des tangentes}} (pour le moment on travaille avec les mêmes à gauche et à droite\ldots) ;
-	\item on peut paramétrer les \textcolor{CadetBlue}{\textsf{coefficients}} pour \og affiner \fg{} les portions.
+	\item on peut \og affiner \fg{} les portions de courbe en paramétrant des \textcolor{CadetBlue}{\textsf{coefficients}} (comme pour une courbe de Bézier).
 \end{itemize}
 
 \medskip
@@ -421,7 +448,7 @@ Certains paramètres peuvent être gérés directement dans la commande \ctex{\t
 	\item l'épaisseur de la courbe par la \textsf{clé} \Cle{epaisseur} ;\hfill{}défaut \Cle{1.25pt}
 	\item du style supplémentaire pour la courbe peut être rajouté, grâce à la \textsf{clé} \Cle{style=} ;\hfill{}défaut \Cle{vide}
 	\item les coefficients de \textit{compensation} gérés par la \textsf{clé} \Cle{coeffs} ;\hfill{}défaut \Cle{3}
-	\item les points de contrôle ne sont pas affichés par défaut, mais \textsf{clé booléenne} \Cle{affpoints} permet de les afficher ;\hfill{}défaut \Cle{true}
+	\item les points de contrôle ne sont pas affichés par défaut, mais la \textsf{clé booléenne} \Cle{affpoints} permet de les afficher ;\hfill{}défaut \Cle{true}
 	\item la taille des points de contrôle est géré par la \textsf{clé} \Cle{taillepoints}.\hfill{}défaut \Cle{2pt}
 \end{itemize}
 \end{codecles}
@@ -437,7 +464,7 @@ Pour \textit{simplifier} la gestion des nombres dérivés, les points de contrô
 
 Le coefficient \Cle{3} signifie que, pour une courbe de Bézier entre $x=a$ et $x=b$, les points de contrôles seront situés à une distance radiale de $\frac{b-a}{3}$.
 
-Pour \textit{écarter} les points de contrôle, on peut du coup \textsf{réduire} le coefficient de compensation !
+Pour \textit{écarter} les points de contrôle, on peut du coup \textit{réduire} le coefficient de compensation !
 
 \medskip
 
@@ -445,7 +472,7 @@ Pour des intervalles \textit{étroits}, la \textit{pente} peut paraître abrupte
 
 \medskip
 
-Si jamais il existe ou ou des points \textit{anguleux}, le plus simple est de créer les splines en plusieurs fois.
+Si jamais il existe (un ou) des points \textit{anguleux}, le plus simple est de créer les splines en plusieurs fois.
 \end{codeidee}
 
 \subsection{Exemples}
@@ -456,7 +483,6 @@ Si jamais il existe ou ou des points \textit{anguleux}, le plus simple est de cr
 \def\xmin{-1}\def\xmax{11}\def\xgrille{1}\def\xgrilles{0.5}
 \def\ymin{-1}\def\ymax{5}\def\ygrille{1}\def\ygrilles{0.5}
 %axes et grilles
-\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.3pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
 \draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.6pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
 \draw[line width=1.5pt,->,gray] (\xmin,0)--(\xmax,0) ;
 \draw[line width=1.5pt,->,gray] (0,\ymin)--(0,\ymax) ;
@@ -587,7 +613,7 @@ NB : il peut fonctionner indépendamment de l'outil \ctex{\textbackslash splinet
 Cela permet de tracer la tangente :
 %
 \begin{itemize}
-	\item au point numéro numéro \Cle{point} de la liste \Cle{liste}, de coordonnées \textsf{xi/yi} avec la pente \textsf{di} ;
+	\item au point numéro \Cle{point} de la liste \Cle{liste}, de coordonnées \textsf{xi/yi} avec la pente \textsf{di} ;
 	\item avec une épaisseur de \Cle{epaisseur}, une couleur \Cle{couleur} et un style additionnel \Cle{style} ;
 	\item en la traçant à partir de \Cle{xl} avant \textsf{xi} et jusqu'à \Cle{xr} après \textsf{xi}.
 \end{itemize}
@@ -708,7 +734,7 @@ Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{cap
 
 \smallskip
 
-À la manière du \textsf{package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes dont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
+À la manière du {package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes dont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
 \end{codeidee}
 
 \subsection{La commande \og paramCF \fg}
@@ -741,7 +767,7 @@ Les \Cle{Clés} disponibles sont :
 	\item \Cle{tailletitre} : taille du titre ;\hfill{}défaut \Cle{\textbackslash normalsize}
 	\item \Cle{poscmd} : position horizontale de la commande d'entrée ;\hfill{}défaut \Cle{gauche}
 	\item \Cle{posres} : position horizontale de la commande de sortie ;\hfill{}défaut \Cle{centre}
-	\item \Cle{couleurcmd} : couleur de la commande d'entrée ;\hfill{}défaut \Cle{ed}
+	\item \Cle{couleurcmd} : couleur de la commande d'entrée ;\hfill{}défaut \Cle{red}
 	\item \Cle{couleurres} : couleur de la commande de sortie ;\hfill{}défaut \Cle{blue}
 	\item \Cle{sep} : booléen pour l'affichage du trait de séparation E/S ;\hfill{}défaut \Cle{true}
 	\item \Cle{menu} : booléen pour l'affichage du \textit{bouton} MENU ;\hfill{}défaut \Cle{true}
@@ -833,7 +859,7 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 \subsection{Introduction}
 
 \begin{codeidee}
-Le \textsf{package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
+Le {package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
 
 \begin{itemize}
 	\item présenter du code python ;
@@ -853,7 +879,7 @@ Voir par exemple \url{http://lesmathsduyeti.fr/fr/informatique/latex/pythontex/}
 \smallskip
 
 \begin{codeinfo}
-Compte tenu de la \textit{relative complexité} de gérer les options (par paramètres/clés\ldots) des \textit{tcbox} et des \textit{fancyvrb}, le style est \og fixé \fg{} tel quel, et seules la taille et la position de la \textit{tcbox} sont modifiables. Si toutefois vous souhaitez personnaliser davantage, il faudra prendre le code correspondant et appliquer vos modifications !
+Compte tenu de la \textit{relative complexité} pour gérer les options (par paramètres/clés\ldots) des \textit{tcbox} et des \textit{fancyvrb}, le style est \og fixé \fg{} tel quel, et seules la taille et la position de la \textit{tcbox} sont modifiables. Si toutefois vous souhaitez personnaliser davantage, il faudra prendre le code correspondant et appliquer vos modifications !
 
 Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une base \textit{pré}existante !
 \end{codeinfo}
@@ -861,7 +887,7 @@ Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une b
 \subsection{Présentation de code Python via pythontex}
 
 \begin{codeidee}
-L'environnement \ctex{\textbackslash envcodepythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{colorbox} avec un style particulier.
+L'environnement \ctex{\textbackslash envcodepythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
 \end{codeidee}
 
 \smallskip
@@ -929,13 +955,13 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \subsection{Présentation de code Python via minted}
 
 \begin{codeinfo}
-Pour celles et ceux qui ne sont pas à l'aise avec le \textsf{package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le \textsf{package} \ctex{minted} qui permet de présenter du code, et notamment python (il nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18}).
+Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment python (il nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18}).
 \end{codeinfo}
 
 \smallskip
 
 \begin{codeidee}
-L'environnement \ctex{\textbackslash envcodepythonminted} permet de présenter du code python, dans une \ctex{colorbox} avec un style (\textit{minted}) particulier.
+L'environnement \ctex{\textbackslash envcodepythonminted} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style (\textit{minted}) particulier.
 \end{codeidee}
 
 \smallskip
@@ -952,7 +978,7 @@ L'environnement \ctex{\textbackslash envcodepythonminted} permet de présenter d
 Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 
 \begin{itemize}
-	\item la version \textit{étoilée} qui permet de pas afficher les numéros de lignes ;
+	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
 	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
 	\item le second argument optionnel concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
 \end{itemize}
@@ -1077,7 +1103,7 @@ Les \Cle{Clés} disponibles sont :
 \subsection{Introduction}
 
 \begin{codeinfo}
-Le \textsf{package} \ctex{listings} permet d'insérer et de présenter du code, et avec \ctex{tclorobox} on peut obtenir une présentation similaire à celle du code Python. Pour le moment la \textit{philosophie} de la commande est un peu différente de celle du code python, avec son système de \Cle{Clés}, car l'environnement \ctex{tcblisting} est un peu différent\ldots
+Le {package} \ctex{listings} permet d'insérer et de présenter du code, et avec \ctex{tcolorbox} on peut obtenir une présentation similaire à celle du code Python. Pour le moment la \textit{philosophie} de la commande est un peu différente de celle du code python, avec son système de \Cle{Clés}, car l'environnement \ctex{tcblisting} est un peu différent\ldots
 \end{codeinfo}
 
 \subsection{Présentation de Pseudo-Code}
@@ -1107,7 +1133,7 @@ De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gére
 Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 
 \begin{itemize}
-	\item la version \textit{étoilée} qui permet de pas afficher les numéros de lignes ;
+	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
 	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
 	\item le second argument optionnel concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
 \end{itemize}
@@ -1164,9 +1190,9 @@ FinPour
 \subsection{Compléments}
 
 \begin{codeinfo}
-À l'instar de \textsf{packages} existants, la \textit{philosophie} ici est de laisser l'utilisateur gérer \textit{son} langage pseudo-code.
+À l'instar de packages existants, la \textit{philosophie} ici est de laisser l'utilisateur gérer \textit{son} langage pseudo-code.
 
-J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique ou de mise en évidence de mots clés, uniquement un formatage libre de code pseudo-code.
+J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique ou de mise en évidence de mots clés, uniquement un formatage libre de pseudo-code.
 \end{codeinfo}
 
 \smallskip
@@ -1176,7 +1202,7 @@ J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeu
 
 \smallskip
 
-Celles et ceux qui sont déjà à l'aise avec les \textsf{packages} \ctex{listings} ou \ctex{minted} doivent déj avoir leur environnement personnel prêt ! 
+Celles et ceux qui sont déjà à l'aise avec les packages \ctex{listings} ou \ctex{minted} doivent déjà avoir leur environnement personnel prêt ! 
 
 Il s'agit ici de présenter une version \og clé en main \fg{}.
 \end{codeidee}
@@ -1192,7 +1218,7 @@ L'idée des \textsf{commandes} suivantes est de permettre de simuler des fenêtr
 
 \smallskip
 
-L'idée de base vient du \textsf{package} \ctex{termsim}, mais ici la gestion du \textsf{code} et des \textsf{fenêtres} est légèrement différente.
+L'idée de base vient du {package} \ctex{termsim}, mais ici la gestion du \textsf{code} et des \textsf{fenêtres} est légèrement différente.
 
 \smallskip
 
@@ -1234,7 +1260,7 @@ Peu d'options pour ces commandes :
 \begin{codeinfo}
 Le \textsf{code} n'est pas formaté, ni mis en coloration syntaxique.
 
-De ce fait tout les caractères sont autorisés, même si l'éditeur pourra détecter le \% comme le début d'un commentaire, tout sera intégré dans le code mis en forme !
+De ce fait tous les caractères sont autorisés : même si l'éditeur pourra détecter le \% comme le début d'un commentaire, tout sera intégré dans le code mis en forme !
 \end{codeinfo}
 
 \medskip
@@ -1384,7 +1410,7 @@ L'idée est d'obtenir un pavé droit, dans un environnement \TikZ, avec les nœu
 \begin{codetex}[listing only]
 ...
 \begin{tikzpicture}[<options>]
-	\paveCF[<options>]
+	\pavePL[<options>]
 	...
 \end{tikzpicture}
 \end{codetex}
@@ -1419,7 +1445,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 \begin{codeinfo}
 La ligne est de ce fait à insérer dans un environnement \TikZ, avec les options au choix pour cet environnement.
 
-Le code créé les nœuds relatifs aux sommets, et les nomme comme les sommets, ce qui permet de les réutiliser pour éventuellement compléter la figure !
+Le code crée les nœuds relatifs aux sommets, et les nomme comme les sommets, ce qui permet de les réutiliser pour éventuellement compléter la figure !
 \end{codeinfo}
 
 \subsection{Influence des paramètres}
@@ -1475,7 +1501,7 @@ L'idée est d'obtenir un tétraèdre, dans un environnement \TikZ, avec les nœu
 \begin{codetex}[listing only]
 ...
 \begin{tikzpicture}[<options>]
-	\tetraCF[<options>]
+	\tetraPL[<options>]
 	...
 \end{tikzpicture}
 \end{codetex}
@@ -1580,28 +1606,352 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 
 \newpage
 
+\section{Fractions, ensembles}
+
+\subsection{Fractions}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour simplifier un calcul sous forme de fraction irréductible.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\convertfraction[<option>]{<argument>}
+\end{codetex}
+
+\begin{codecles}
+Peu d'options pour ces commandes :
+
+\begin{itemize}
+	\item le premier argument, optionnel, permet de spécifier le mode de sortie de la fraction \textsf{[t]} pour \textsf{tfrac} et \textsf{[d]} pour \textsf{dfrac} ;
+	\item le second, mandataire, est le \textsf{calcul} ou la \textsf{division} à convertir.
+\end{itemize}
+
+À noter que la macro est dans un bloc \textsf{ensuremath} donc les \textsf{\$\ldots\$} ne sont pas nécessaires.
+\end{codecles}
+
+\begin{codetex}[listing only]
+\convertfraction{111/2145}
+\convertfraction{111/3}
+$\frac{111}{2145}=\convertfraction{111/2145}$
+$\frac{3}{15}=\convertfraction[]{3/15}$
+$\tfrac{3}{15}=\convertfraction[t]{3/15}$                   #formatage en \tfrac
+$\dfrac{3}{15}=\convertfraction[d]{3/15}$                   #formatage en \dfrac
+$\dfrac{0,42}{0,015}=\convertfraction[d]{0.42/0.015}$
+$\dfrac{0,41}{0,015}=\convertfraction[d]{0.41/0.015}$
+$\dfrac{1}{7}+\dfrac{3}{8}=\convertfraction[d]{1/7+3/8}$
+$\convertfraction[d]{1+1/2}$
+$\convertfraction{0.1/0.7+30/80}$
+\end{codetex}
+
+\begin{codesortie}
+\convertfraction{111/2145}
+
+\smallskip
+
+\convertfraction{111/3}
+
+\smallskip
+
+$\frac{111}{2145}=\convertfraction{111/2145}$
+
+\smallskip
+
+$\frac{3}{15}=\convertfraction[]{3/15}$
+
+\smallskip
+
+$\tfrac{3}{15}=\convertfraction[t]{3/15}$
+
+\smallskip
+
+$\dfrac{3}{15}=\convertfraction[d]{3/15}$
+
+\smallskip
+
+$\dfrac{0,42}{0,015}=\convertfraction[d]{0.42/0.015}$
+
+\smallskip
+
+$\dfrac{0,41}{0,015}=\convertfraction[d]{0.41/0.015}$
+
+\smallskip
+
+$\dfrac{1}{7}+\dfrac{3}{8}=\convertfraction[d]{1/7+3/8}$
+
+\smallskip
+
+$\convertfraction[d]{1+1/2}$
+
+\smallskip
+
+$\convertfraction{0.1/0.7+30/80}$
+\end{codesortie}
+
+\begin{codeinfo}
+A priori le package \ctex{xint} permet de s'en sortir pour des calculs \og simples \fg, je ne garantis pas que tout calcul ou toute division donne un résultat \textit{satisfaisant} !
+\end{codeinfo}
+
+\pagebreak
+
+\subsection{Ensembles}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour simplifier l'écriture d'un ensemble d'éléments, en laissant gérer les espaces.
+
+Les délimiteurs de l'ensemble créé sont toujours \textsf{\{~~\}}.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\ensPL[<clés>]{<liste>}
+\end{codetex}
+
+\begin{codecles}
+Peu d'options pour ces commandes :
+
+\begin{itemize}
+	\item le premier argument, optionnel, permet de spécifier les \Cle{Clés} :
+	\begin{itemize}
+		\item clé \Cle{sep} qui correspond au délimiteur des éléments de l'ensemble ; \hfill{}défaut \Cle{;}
+		\item clé \Cle{option} qui est un code (par exemple \textsf{strut}\dots) inséré avant les éléments ;\hfill{}défaut \Cle{vide}
+		\item un booléen \Cle{mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct};\hfill{}défaut \Cle{true}
+	\end{itemize}
+	\item le second, mandataire, est la \textsf{liste} des éléments, séparés par \textsf{/}.
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+$\ensPL{a/b/c/d/e}$
+$\ensPL[mathpunct=false]{a/b/c/d/e}$
+$\ensPL[sep={,}]{a/b/c/d/e}$
+$\ensPL[option={\strut}]{a/b/c/d/e}$                             % \strut pour "augmenter" un peu la hauteur des {}
+$\ensPL{ \frac{1}{1+\frac{1}{3}} / b / c / d / \frac{1}{2} }$
+\end{codetex}
+
+\begin{codesortie}
+$\ensPL{a/b/c/d/e}$
+
+\smallskip
+
+$\ensPL[mathpunct=false]{a/b/c/d/e}$
+
+\smallskip
+
+$\ensPL[sep={,}]{a/b/c/d/e}$
+
+\smallskip
+
+$\ensPL[option={\strut}]{a/b/c/d/e}$
+
+\smallskip
+
+$\ensPL{ \displaystyle\frac{1}{1+\frac{1}{3}} / b / c / d / \displaystyle\frac{1}{2} }$
+\end{codesortie}
+
+\begin{codeinfo}
+Attention cependant au comportement de la commande avec des éléments en mode \textsf{mathématique}, ceux-ci peuvent générer une erreur si \textsf{displaystyle} n'est pas utilisé\ldots
+\end{codeinfo}
+
+\newpage
+
+\section{Suites récurrentes et \og toile \fg}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour tracer (en \TikZ) la \og toile \fg{} permettant d'obtenir -- graphiquement -- les termes d'une suite récurrente définie par une relation $u_{n+1}=f(u_n)$.
+
+\smallskip
+
+Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{recurrPL} pour afficher la \og toile \fg.
+\end{codeidee}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	...
+	\recurrPL[<clés>][<options du tracé>][<option supplémentaire des termes>]
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Plusieurs \Cle{arguments} (optionnels) sont disponibles :
+
+\begin{itemize}
+	\item le premier argument optionnel définit les \Cle{Clés} de la commande :
+	\begin{itemize}
+		\item la clé \Cle{fct} qui définit la fonction $f$ ;\hfill{}défaut \Cle{vide}
+		\item la clé \Cle{nom} qui est le \textit{nom} de la suite ;\hfill{}défaut \Cle{u}
+		\item la clé \Cle{no} qui est l'indice initial ;\hfill{}défaut \Cle{0}
+		\item la clé \Cle{uno} qui est la valeur du terme initial ;\hfill{}défaut \Cle{vide}
+		\item la clé \Cle{nb} qui est le nombre de termes à construire ;\hfill{}défaut \Cle{5}
+		\item la clé \Cle{poslabel} qui correspond au placement des labels par rapport à l'axe des abscisses ;\hfill{}défaut \Cle{below}
+		\item la clé \Cle{decallabel} qui correspond au décalage des labels par rapport aux abscisses ;\hfill{}défaut \Cle{6pt}
+		\item la clé \Cle{taillelabel} qui correspond à la taille des labels ;\hfill{}défaut \Cle{small}
+		\item un booléen \Cle{afftermes} qui permet d'afficher les termes de la suite sur l'axe $(Ox)$.\hfill{}défaut \Cle{true}
+	\end{itemize}
+	\item le deuxième argument optionnel concerne les \Cle{options} du tracé de l'\textit{escalier} en \textit{langage \TikZ} ;
+	
+	\hfill{}défaut \Cle{thick,color=magenta} ;
+	\item le troisième argument optionnel concerne les \Cle{options} du tracé des termes en \textit{langage \TikZ}.
+	
+	\hfill{}défaut \Cle{dotted}.
+\end{itemize}
+\end{codecles}
+
+\begin{codeinfo}
+Il est à noter que le \textsf{code} n'est pas autonome, et doit être intégré dans un environnement \ctex{tikzpicture}.
+
+\smallskip
+
+L'utilisateur est donc libre de définir ses styles pour l'affichage des éléments de son graphique, et il est libre également de rajouter des éléments en plus du tracé de la \textit{toile} !
+
+\smallskip
+
+La macro ne permet -- pour le moment -- ni de tracer la bissectrice, ni de tracer la courbe$\ldots$
+
+En effet, il y aurait trop d'options pour ces deux éléments, et l'idée est quand même de conserver une commande \textit{simple} ! Donc l'utilisateur se chargera de tracer et de personnaliser sa courbe et sa bissectrice !
+\end{codeinfo}
+
+\subsection{Exemples}
+
+\begin{codeinfo}
+On va tracer la \textit{toile} des 4 premiers termes de la suite récurrente $\begin{dcases} u_1 = 1 \\ u_{n+1} = \sqrt{5u_n}+1 \text{ pour tout entier } n \geqslant 1\end{dcases}$.
+\end{codeinfo}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\def\x{1.5cm}\def\y{1.5cm}
+\def\xmin{0}\def\xmax{10}\def\xgrille{1}\def\xgrilles{0.5}
+\def\ymin{0}\def\ymax{8}\def\ygrille{1}\def\ygrilles{0.5}
+%axes et grilles
+\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.6pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+\draw[line width=1.5pt,->,darkgray] (\xmin,0)--(\xmax,0) ;
+\draw[line width=1.5pt,->,darkgray] (0,\ymin)--(0,\ymax) ;
+\foreach \x in {0,1,...,9} {\draw[darkgray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+\foreach \y in {0,1,...,7} {\draw[darkgray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+%fonction définie et réutilisable
+\def\f{sqrt(5*\x)+1}
+%toile
+\recurrPL[fct={\f},no=1,uno=1,nb=4,decallabel=4pt]
+%éléments supplémentaires
+\draw[very thick,blue,domain=0:8,samples=250] plot (\x,{\f}) ;
+\draw[very thick,ForestGreen,domain=0:8,samples=2] plot (\x,\x) ;
+\end{codetex}
+
+\begin{codeinfo}
+Peut-être que -- ultérieurement -- des options \textit{booléennes} seront disponibles pour un tracé \textit{générique} de la courbe et de la bissectrice, mais pour le moment la \textsf{macro} ne fait \textit{que} l'escalier.
+\end{codeinfo}
+
+\subsection{Influence des paramètres}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}[x=4cm,y=3cm]
+	%axes + grilles + graduations
+	...
+	%fonction
+	\def\f{-0.25*\x*\x+\x}
+	%tracés
+	\begin{scope}
+		\clip (0,0) rectangle (2.5,1.25) ;
+		\draw[line width=1.25pt,blue,domain=0:2.5,samples=200] plot (\x,{\f}) ;
+	\end{scope}
+	\recurrPL[fct={\f},no=0,uno=2,nb=5,poslabel=above right,decallabel=0pt]
+\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\medskip
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}[x=4cm,y=3cm]
+	\draw[xstep=0.25,ystep=0.25,line width=0.3pt,lightgray!50] (0,0) grid (2.5,1.25);
+	\draw[thick,->] (0,0)--(2.5,0) ;
+	\draw[thick,->] (0,0)--(0,1.25) ;
+	\foreach \x in {0,1,2}
+	\draw[line width=1.25pt] (\x,4pt) -- (\x,-4pt) node[below] {\num{\x}} ;
+	\foreach \y in {0,0.5,1.0}
+	\draw[line width=1.25pt] (4pt,\y) -- (-4pt,\y) node[left] {\num{\y}} ;
+	\draw[line width=1.25pt,red](0,0) -- (1.25,1.25) ;
+	%fonction
+	\def\f{-0.25*\x*\x+\x}
+	%tracés
+	\begin{scope}
+		\clip (0,0) rectangle (2.5,1.25) ;
+		\draw[line width=1.25pt,blue,domain=0:2.5,samples=200] plot (\x,{\f}) ;
+	\end{scope}
+	\recurrPL[fct={\f},no=0,uno=2,nb=5,poslabel=above right,decallabel=0pt]
+\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}[x=5cm,y=1.5cm]
+		...
+		\def\f{-0.25*\x*\x+\x}
+		\recurrPL%
+			[fct={\f},no=0,uno=1,nb=7,poslabel=above right,decallabel=0pt,afftermes=false]%
+			[line width=1.25pt,ForestGreen,densely dashed][]
+		\draw[line width=1.25pt,blue,domain=0:2.25,samples=2] plot(\x,{\x});
+		\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}[x=5cm,y=1.5cm]
+		%axes et grille
+		\draw[xstep=0.5,ystep=0.25,line width=0.3pt,lightgray!50] (0,0) grid (2.5,2.25);
+		\draw[thick,->] (0,0)--(2.5,0) ;
+		\draw[thick,->] (0,0)--(0,2.25) ;
+		\foreach \x in {0,0.5,...,2}
+			\draw[line width=1.25pt] (\x,4pt) -- (\x,-4pt) node[below] {\num{\x}};
+		\foreach \y in {0,0.5,...,2}
+			\draw[line width=1.25pt] (4pt,\y) -- (-4pt,\y) node[left] {\num{\y}};
+		%fonction
+		\def\f{1+1/\x}
+		%tracés
+		\recurrPL[fct={\f},no=0,uno=1,nb=7,poslabel=above right,decallabel=0pt,afftermes=false][line width=1.25pt,ForestGreen,densely dashed][]
+		\draw[line width=1.25pt,blue,domain=0:2.25,samples=2] plot(\x,{\x});
+		\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\newpage
+
 \section{Historique}
 
-{\small \bverb|v1.1.0| :~~~~Ajout d'une commande \textsf{tatraPL} pour créer des tétraèdres (avec nœuds) en \TikZ
+{\small \bverb|v1.1.3|~:~~~~Ajout des commandes \textsf{convertfraction}, \textsf{ensPL} et \textsf{recurrPL} (changement de numérotation du package également)
 
-{\small \bverb|v1.0.9| :~~~~Ajout d'une commande \textsf{pavePL} pour créer des pavés droits (avec nœuds) en \TikZ
+{\small \bverb|v1.1.1|~:~~~~Modification mineure de l'environnement \textsf{ligneCF} (calcul formel), avec prise de charge de la taille du texte !
 
-{\small \bverb|v1.0.8| :~~~~Ajout d'une commande \textsf{liencapytale} pour créer des cartouches de lien "comme capytale"
+{\small \bverb|v1.1.0|~:~~~~Ajout d'une commande \textsf{tetraPL} pour créer des tétraèdres (avec nœuds) en \TikZ
 
-{\small \bverb|v1.0.7| :~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire \textsf{./build}
+{\small \bverb|v1.0.9|~:~~~~Ajout d'une commande \textsf{pavePL} pour créer des pavés droits (avec nœuds) en \TikZ
 
-{\small \bverb|v1.0.6| :~~~~Ajout d'une option \textsf{nominted} pour ne pas charger \ctex{minted} (pas besoin de compiler avec \textsf{shell-escape})
+{\small \bverb|v1.0.8|~:~~~~Ajout d'une commande \textsf{liencapytale} pour créer des cartouches de lien "comme capytale"
 
-{\small \bverb|v1.0.5| :~~~~Ajout d'un environnement pour Python (minted)
+{\small \bverb|v1.0.7|~:~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire \textsf{./build}
 
-{\small \bverb|v1.0.4| :~~~~Ajout des environnements pour Terminal (win, osx, unix)
+{\small \bverb|v1.0.6|~:~~~~Ajout d'une option \textsf{nominted} pour ne pas charger \ctex{minted} (pas besoin de compiler avec \textsf{shell-escape})
 
-{\small \bverb|v1.0.3| :~~~~Ajout des environnements pour PseudoCode
+{\small \bverb|v1.0.5|~:~~~~Ajout d'un environnement pour Python (minted)
 
-{\small \bverb|v1.0.2| :~~~~Ajout des environnements pour Python (pythontex)
+{\small \bverb|v1.0.4|~:~~~~Ajout des environnements pour Terminal (win, osx, unix)
 
-{\small \bverb|v1.0.1| :~~~~Modification mineure liée au chargement de \ctex{xcolor}
+{\small \bverb|v1.0.3|~:~~~~Ajout des environnements pour PseudoCode
 
-{\small \bverb|v1.0  | :~~~~Version initiale}
+{\small \bverb|v1.0.2|~:~~~~Ajout des environnements pour Python (pythontex)
+
+{\small \bverb|v1.0.1|~:~~~~Modification mineure liée au chargement de \ctex{xcolor}
+
+{\small \bverb|v1.0  |~:~~~~Version initiale}
 
 \end{document}
