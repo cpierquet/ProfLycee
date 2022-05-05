@@ -3,7 +3,10 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/04/25 - v1.1.0 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/05/02 - v1.1.3 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.1.3	Ajout d'une commande ensemble pour créer un ensemble à partir d'une liste
+% 1.1.2	Modifications mineures
+% 1.1.1	Modification mineure de l'environnement CF, avec prise de charge de la taille du texte !
 % 1.1.0	Ajout d'une commande tetraPL pour un tetraèdre dans un environnement TikZ
 % 1.0.9	Ajout d'une commande pavePL pour un pave droit dans un environnement TikZ
 % 1.0.8 Ajout d'une commande liencapytale pour créer un cartouche "comme sur capytale"
@@ -45,7 +48,7 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{decorations.markings}
-\usetikzlibrary{arrows.meta}
+\usetikzlibrary{arrows,arrows.meta}
 %tcolorbox
 \RequirePackage[most]{tcolorbox}
 %divers
@@ -235,13 +238,13 @@
 	\draw[\CFcouleur] (A0\CFL) rectangle (A5\CFL) ;
 	%LA COMMANDE EN ROUGE
 	\IfStrEq{\CFposcmd}{centre}%si poscmd=center
-		{\draw (C2\CFL) node[\CFcoulcmd] {#2} ;}
+		{\draw (C2\CFL) node[\CFcoulcmd,font=\CFtaille] {#2} ;}
 		{}
 	\IfStrEq{\CFposcmd}{gauche}%si poscmd=left
-		{\draw (C1\CFL) node[right,\CFcoulcmd] {#2} ;}
+		{\draw (C1\CFL) node[right,\CFcoulcmd,font=\CFtaille] {#2} ;}
 		{}
 	\IfStrEq{\CFposcmd}{right}%si poscmd=right
-		{\draw (C3\CFL) node[left,\CFcoulcmd] {#2} ;}
+		{\draw (C3\CFL) node[left,\CFcoulcmd,font=\CFtaille] {#2} ;}
 		{}
 	%LA LIGNE DE SÉPARATION
 	\ifboolKV[paramfenxcas]{sep}%si sep=true
@@ -249,13 +252,13 @@
 		{}
 	%LE RÉSULTAT
 	\IfStrEq{\CFposres}{centre}%si posrep=center
-		{\draw (R2\CFL) node[\CFcoulres] {#3} ;}
+		{\draw (R2\CFL) node[\CFcoulres,font=\CFtaille] {#3} ;}
 		{}
 	\IfStrEq{\CFposres}{gauche}%si posrep=left
-		{\draw (R1\CFL) node[right,\CFcoulres] {#3} ;}
+		{\draw (R1\CFL) node[right,\CFcoulres,font=\CFtaille] {#3} ;}
 		{}
 	\IfStrEq{\CFposres}{right}%si posrep=right
-		{\draw (R3\CFL) node[left,\CFcoulres] {#3} ;}
+		{\draw (R3\CFL) node[left,\CFcoulres,font=\CFtaille] {#3} ;}
 		{}
 	\ifboolKV[paramfenxcas]{sep}%si sep=true
 		{\draw[\CFcouleur] (A1\CFL) -- (A4\CFL);}%
@@ -794,5 +797,91 @@
 		{}
 		{\draw[dashed,\PFTetraThick] (\TetraA)--(\TetraC) ;}
 }
+
+%============EnsembleList============== OK !!
+\defKV[kvensemble]{%
+	sep=\def\PLenssep{#1},%
+	option=\def\PLensopt{#1}
+}
+
+\setKVdefault[kvensemble]{%
+	sep={;},%
+	option=,%
+	mathpunct=true
+}
+
+\newcommand\ensPL[2][1]{%
+	\useKVdefault[kvensemble]
+	\setKV[kvensemble]{#1}
+	\ifboolKV[kvensemble]{mathpunct}%
+		{\left\lbrace \PLensopt{} \mathpunct{} \StrSubstitute{#2}{/}{\mathpunct{}{\PLenssep}\mathpunct{}} \mathpunct{} \right\rbrace}%
+		{\left\lbrace \PLensopt{} \StrSubstitute{#2}{/}{{\PLenssep}} \right\rbrace}
+}
+
+%===============SimplFrac============== OK !!
+\DeclareDocumentCommand\convertfraction{ O{} m }{% argument optionnel [d ou t] puis argument mandataire {calcul ou fraction}
+	\def\calculargument{\xintPRaw{\xintIrr{\xinteval{#2}}}}%on calcule et on transforme en A/B
+	\IfSubStr{\calculargument}{/}%on teste si le symbole / apparaît
+	{%si oui := fraction
+		\StrBefore{\calculargument}{/}[\numerateur]%on extrait le numérateur
+		\StrBehind{\calculargument}{/}[\denominateur]%on extrait le dénominateur
+		\ifblank{#1}{\ensuremath{\frac{\numerateur}{\denominateur}}}{}%si l'argument optionnel est vide
+		\IfStrEq{#1}{d}{\ensuremath{\dfrac{\numerateur}{\denominateur}}}{}%si l'arg opt est d
+		\IfStrEq{#1}{t}{\ensuremath{\tfrac{\numerateur}{\denominateur}}}{}%si l'arg opt est t
+	}{%si non := entier
+		\num{\calculargument}%on affiche l'entier, avec le package siunitx
+	}
+}
+
+%================CabWeb================ OK !!
+\defKV[webrecurr]{%
+	fct=\def\PLRecurfct{#1},%
+	nom=\def\PLRecurnom{#1},%
+	no=\def\PLRecurno{#1},%
+	nb=\def\PLRecurnb{#1},%
+	uno=\def\PLRecuruno{#1},%
+	poslabel=\def\PLRecurposlab{#1},%
+	decallabel=\def\PLRecuroffset{#1},%
+	taillelabel=\def\PLRecurlabelsize{#1},%
+}
+
+\setKVdefault[webrecurr]{
+	no=0,%
+	nom=u,%
+	nb=5,%
+	afftermes=true,%
+	poslabel=below,%
+	decallabel=6pt,%
+	taillelabel=\small
+}
+
+%\newcommand\recurr[1][]{%
+	\NewDocumentCommand\recurrPL{ O{} O{thick,color=magenta} O{dotted} }{
+		%<clés> + <style cabweb> + <style supplémentaire pointillés>
+		\useKVdefault[webrecurr]%
+		\setKV[webrecurr]{#1}% on paramètres les nouvelles clés et on les simplifie
+		\foreach \i [remember=\i as \x (initially \PLRecuruno)] in {1,...,\PLRecurnb}{%
+			\def\y{\fpeval{\PLRecurfct}}
+			%test de la position courbe / bissectrice ?
+			\ifnum \i=1
+				\newdimen \X
+				\newdimen \Y
+				\X = \x pt
+				\Y = \y pt
+				\ifdim \Y < \X
+					\draw[#2] (\x,\y)--(\y,\y) ;
+				\else
+					\draw[#2] (\x,\x)--(\x,\y)--(\y,\y) ;
+				\fi
+			\else
+				\draw[#2] (\x,\x)--(\x,\y)--(\y,\y) ;
+			\fi
+			\ifboolKV[webrecurr]{afftermes}
+				{\def\indice{\fpeval{\i+\PLRecurno-1}}
+				 \draw[#2,#3] (\x,\y)--(\x,0) node[\PLRecurposlab=\PLRecuroffset,font=\PLRecurlabelsize]{$\PLRecurnom_\indice$};}
+				{}
+			\def\i{\fpeval{\y}}%
+		}
+	}
 
 \endinput
