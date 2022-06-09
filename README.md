@@ -71,6 +71,10 @@ Une macro <code>ensPL</code> pour écrire un ensemble d'éléments entre accolad
 
 Une commande<code>recurrPL</code> pour tracer (dans la mesure du possible) la "toile" d'une suite récurrente.
 
+![illustr](./test/proflycee-test-recurr.png?raw=true "testrecurr")
+
 ## Cercle trigo
 
 Une commande <code>cercletrigoPL</code> pour tracer rapidement un cercle trigo, avec affichage ou non de valeurs/équations.
+
+![illustr](./test/proflycee-test-trigo.png?raw=true "testrigo")
