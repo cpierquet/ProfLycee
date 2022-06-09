@@ -3,9 +3,11 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/05/02 - v1.1.3 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/05/13 - v1.1.5 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.1.5	Ajout de commandes pour "visualiser" le signe de ax+b ou de ax2+bx+c (cf tnsana !)
+% 1.1.4	Ajout d'une commande cercletrigoPL pour, en \TikZ, créer facilement un cercle trigo avec options
 % 1.1.3	Ajout d'une commande ensemble pour créer un ensemble à partir d'une liste
-% 1.1.2	Modifications mineures
+% 1.1.2	Modifs mineures
 % 1.1.1	Modification mineure de l'environnement CF, avec prise de charge de la taille du texte !
 % 1.1.0	Ajout d'une commande tetraPL pour un tetraèdre dans un environnement TikZ
 % 1.0.9	Ajout d'une commande pavePL pour un pave droit dans un environnement TikZ
@@ -41,7 +43,6 @@
 \RequirePackage{xintexpr}
 \RequirePackage{simplekv}
 \RequirePackage{listofitems}
-\RequirePackage{xintexpr}
 \RequirePackage{tabularray}
 \RequirePackage{fontawesome5}
 %librairies tikz
@@ -49,6 +50,7 @@
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{decorations.markings}
 \usetikzlibrary{arrows,arrows.meta}
+\usetikzlibrary{babel}
 %tcolorbox
 \RequirePackage[most]{tcolorbox}
 %divers
@@ -883,5 +885,306 @@
 			\def\i{\fpeval{\y}}%
 		}
 	}
+
+%================CercleTrigo=========== OK !!
+\defKV[cercletrigo]{%
+	rayon=\def\PLcerclerayon{#1},%
+	epaisseur=\def\PLcerclethick{#1},%
+	epaisseursol=\def\PLcerclesolthick{#1},%
+	marge=\def\PLcerclemarge{#1},%
+	taillevaleurs=\def\PLcerclevaleurs{#1},%
+	tailleangles=\def\PLcercleangles{#1},%
+	couleurfond=\def\PLcerclefond{#1},%
+	decal=\def\PLcercledecal{#1},%
+	cos=\def\PLcerclevalcos{#1},%
+	sin=\def\PLcerclevalsin{#1},%
+	couleursol=\def\PLcerclecoleq{#1}
+}
+
+\setKVdefault[cercletrigo]{
+	rayon=3,%
+	marge=0.25,%
+	decal=10pt,%
+	epaisseur=thick,%
+	epaisseursol=very thick,%
+	affangles=true,%
+	afftraits=true,%
+	affvaleurs=true,%
+	moinspi=true,%
+	taillevaleurs=\scriptsize,%
+	tailleangles=\footnotesize,%
+	couleurfond=white,%
+	equationcos=false,%
+	equationsin=false,%
+	cos=45,%
+	sin=30,%
+	couleursol=blue
+}
+
+\newcommand\cercletrigoPL[1][]{%
+	\useKVdefault[cercletrigo]
+	\setKV[cercletrigo]{#1}
+	\tikzset{PLval/.style={inner sep=1pt,font=\PLcerclevaleurs,fill=\PLcerclefond}}
+	\tikzset{PLagl/.style={inner sep=1pt,font=\PLcercleangles,fill=\PLcerclefond}}
+	%valeurs remarquables
+	\ifboolKV[cercletrigo]{affangles}
+		{%valeursdudessus
+		\draw ({\PLcerclerayon},0) node[above right=2pt,font=\PLcercleangles] {0} ;
+		\draw ($(30:{\PLcerclerayon})+(30:\PLcercledecal)$) node[PLagl] {$\tfrac{\pi}{6}$} ;
+		\draw ($(45:{\PLcerclerayon})+(45:\PLcercledecal)$) node[PLagl] {$\tfrac{\pi}{4}$} ;
+		\draw ($(60:{\PLcerclerayon})+(60:\PLcercledecal)$) node[PLagl] {$\tfrac{\pi}{3}$} ;
+		\draw (0,{\PLcerclerayon}) node[above right=2pt,PLagl] {$\tfrac{\pi}{2}$} ;
+		\draw ({-\PLcerclerayon},0) node[above left=2pt,PLagl] {$\pi$} ;
+		\draw ($(150:{\PLcerclerayon})+(150:\PLcercledecal)$) node[PLagl] {$\tfrac{5\pi}{6}$} ;
+		\draw ($(135:{\PLcerclerayon})+(135:\PLcercledecal)$) node[PLagl] {$\tfrac{3\pi}{4}$} ;
+		\draw ($(120:{\PLcerclerayon})+(120:\PLcercledecal)$) node[PLagl] {$\tfrac{2\pi}{3}$} ;
+		\draw ($(30:{\PLcerclerayon})+(30:\PLcercledecal)$) node[PLagl] {$\tfrac{\pi}{6}$} ;
+		%valeursdudessous
+		\draw ($(-30:{\PLcerclerayon})+(-30:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-}{11}\pi}{6}$} ;
+		\draw ($(-45:{\PLcerclerayon})+(-45:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-}{7}\pi}{4}$} ;
+		\draw ($(-60:{\PLcerclerayon})+(-60:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-}{5}\pi}{3}$} ;
+		\draw (0,{-\PLcerclerayon}) node[below right=2pt,PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-}{3}\pi}{2}$} ;
+		\draw ($(-120:{\PLcerclerayon})+(-120:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-2}{4}\pi}{3}$} ;
+		\draw ($(-135:{\PLcerclerayon})+(-135:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-3}{5}\pi}{4}$} ;
+		\draw ($(-150:{\PLcerclerayon})+(-150:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-5}{7}\pi}{6}$} ;
+		\ifboolKV[cercletrigo]{moinspi}
+			{\draw ({-\PLcerclerayon},0) node[below left=2pt,PLagl] {$-\pi$} ;}
+			{\draw ({\PLcerclerayon},0) node[below right=2pt,PLagl] {$2\pi$} ;}
+		}%
+		{}
+	%tracés
+	\draw[\PLcerclethick,->] ({-\PLcerclerayon-\PLcerclemarge},0)--({\PLcerclerayon+\PLcerclemarge},0) ;
+	\draw[\PLcerclethick,->] (0,{-\PLcerclerayon-\PLcerclemarge})--(0,{\PLcerclerayon+\PLcerclemarge}) ;
+	\draw[\PLcerclethick] (0,0) circle[radius=\PLcerclerayon] ;
+	\draw (0,0) node[below left=2pt,PLval] {0} ;
+	%equations
+	\ifboolKV[cercletrigo]{equationcos}
+		{%traitsdeconstructioncos
+		\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon) -- (135:\PLcerclerayon)
+										  (-135:\PLcerclerayon) -- (45:\PLcerclerayon)
+										  (30:\PLcerclerayon) -- (150:\PLcerclerayon)
+										  (-30:\PLcerclerayon) -- (-150:\PLcerclerayon)
+										  (-60:\PLcerclerayon)--(60:\PLcerclerayon)
+										  (-120:\PLcerclerayon)--(120:\PLcerclerayon) ;
+		\draw[\PLcerclesolthick,\PLcerclecoleq] ({\PLcerclevalcos}:\PLcerclerayon)--({-\PLcerclevalcos}:\PLcerclerayon) ;
+		\filldraw[\PLcerclecoleq] ({\PLcerclevalcos}:\PLcerclerayon) circle[radius=2pt] ({-\PLcerclevalcos}:\PLcerclerayon) circle[radius=2pt] ;%
+		}
+		{}
+	\ifboolKV[cercletrigo]{equationsin}
+		{%traitsdeconstructioncos
+		\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon) -- (135:\PLcerclerayon)
+										  (-135:\PLcerclerayon) -- (45:\PLcerclerayon)
+										  (30:\PLcerclerayon) -- (150:\PLcerclerayon)
+										  (-30:\PLcerclerayon) -- (-150:\PLcerclerayon)
+										  (-60:\PLcerclerayon)--(60:\PLcerclerayon)
+										  (-120:\PLcerclerayon)--(120:\PLcerclerayon) ;
+		\draw[\PLcerclesolthick,\PLcerclecoleq] ({\PLcerclevalsin}:\PLcerclerayon)--({180-\PLcerclevalsin}:\PLcerclerayon) ;
+		\filldraw[\PLcerclecoleq] ({\PLcerclevalsin}:\PLcerclerayon) circle[radius=2pt] ({180-\PLcerclevalsin}:\PLcerclerayon) circle[radius=2pt] ;%
+		}
+		{}
+	%valeurs
+	\ifboolKV[cercletrigo]{affvaleurs}
+		{%
+		\draw ({0.5*\PLcerclerayon},0) node[below=2pt,PLval] {$\tfrac{1}{2}$} ;
+		\draw ({-0.5*\PLcerclerayon},0) node[below=2pt,PLval] {$-\tfrac{1}{2}$} ;
+		\draw (0,{0.5*\PLcerclerayon}) node[left=2pt,PLval] {$\tfrac{1}{2}$} ;
+		\draw (0,{-0.5*\PLcerclerayon}) node[left=2pt,PLval] {$-\tfrac{1}{2}$} ;
+		\draw ({0.866*\PLcerclerayon},0) node[below=2pt,PLval] {$\tfrac{\sqrt{3}}{2}$} ;
+		\draw ({-0.866*\PLcerclerayon},0) node[below=2pt,PLval] {$-\tfrac{\sqrt{3}}{2}$} ;
+		\draw (0,{0.866*\PLcerclerayon}) node[left=2pt,PLval] {$\tfrac{\sqrt{3}}{2}$} ;
+		\draw (0,{-0.866*\PLcerclerayon}) node[left=2pt,PLval] {$-\tfrac{\sqrt{3}}{2}$} ;
+		\draw ({0.707*\PLcerclerayon},0) node[above=2pt,PLval] {$\tfrac{\sqrt{2}}{2}$} ;
+		\draw ({-0.707*\PLcerclerayon},0) node[above=2pt,PLval] {$-\tfrac{\sqrt{2}}{2}$} ;
+		\draw (0,{0.707*\PLcerclerayon}) node[right=2pt,PLval] {$\tfrac{\sqrt{2}}{2}$} ;
+		\draw (0,{-0.707*\PLcerclerayon}) node[right=2pt,PLval] {$-\tfrac{\sqrt{2}}{2}$} ;
+		}%
+		{}
+	%valeurs remarquables en dernier
+	\ifboolKV[cercletrigo]{afftraits}
+		{%
+		\draw[\PLcerclethick,dotted,gray] (-120:\PLcerclerayon) rectangle (60:\PLcerclerayon) ;
+		\draw[\PLcerclethick,dotted,gray] (-150:\PLcerclerayon) rectangle (30:\PLcerclerayon) ;
+		\draw[\PLcerclethick,dotted,gray] (-135:\PLcerclerayon) rectangle (45:\PLcerclerayon) ;
+		\draw[\PLcerclethick,dotted,gray] (-120:\PLcerclerayon)--(60:\PLcerclerayon) ;
+		\draw[\PLcerclethick,dotted,gray] (-150:\PLcerclerayon)--(30:\PLcerclerayon) ;
+		\draw[\PLcerclethick,dotted,gray] (-135:\PLcerclerayon)--(45:\PLcerclerayon) ;
+		\draw[\PLcerclethick,dotted,gray] (120:\PLcerclerayon)--(-60:\PLcerclerayon) ;
+		\draw[\PLcerclethick,dotted,gray] (150:\PLcerclerayon)--(-30:\PLcerclerayon) ;
+		\draw[\PLcerclethick,dotted,gray] (135:\PLcerclerayon)--(-45:\PLcerclerayon) ;
+		}%
+		{}
+}
+
+%==================AideTds============= OK !!
+\defKV[aidetds]{%
+	code=\def\tdsparam{#1},%
+	couleur=\def\tdscouleur{#1},%
+	racines=\def\tdsracine{#1},%
+	largeur=\def\tdslarg{#1},%
+	hauteur=\def\tdshaut{#1}
+}
+
+\setKVdefault[aidetds]{%
+	code=da+,
+	couleur=red,%
+	largeur=2,%
+	hauteur=1,%
+	cadre=true,%
+	racines=2
+}
+
+\NewDocumentCommand\schematdsaff{ s m m m m }{%pour les droites (interne)
+	% * = étoilée -> a négatif
+	% #2 = couleur
+	% #3 = largeur
+	% #4 = hauteur
+	% #5 = racine
+	\IfBooleanTF{#1}%si étoile := droite qui descend
+		{%
+			\def\possgnavant{above right}\def\possgnapres{below left}\def\sgnavant{\strut+}\def\sgnapres{\strut-}%
+			\draw[thick,#2] ({-0.5*#3},{0.5*#4})--({0.5*#3},{-0.5*#4});
+		}
+		{%
+			\def\possgnavant{below right}\def\possgnapres{above left}\def\sgnavant{\strut-}\def\sgnapres{\strut+}%
+			\draw[thick,#2] ({-0.5*#3},{-0.5*#4})--({0.5*#3},{0.5*#4});
+		}
+	\draw[#2] ({-0.5*#3},0) node[inner sep=0pt,\possgnavant=1pt,font=\scriptsize] {\textcircled{$\sgnavant$}};
+	\draw[#2] ({0.5*#3},0) node[inner sep=0pt,\possgnapres=1pt,font=\scriptsize] {\textcircled{$\sgnapres$}};
+	\draw[#2] (0,0) node[inner sep=0pt,above=3pt,font=\scriptsize] {$\strut#5$} ;
+	\filldraw[#2] (0,0) circle[radius=2pt] ;
+}
+
+\NewDocumentCommand\schematdsparab{ m m m m m o }{%pour les paraboles (interne)
+	% #1 = signe de a (1 ou -1) ?
+	% #2 = couleur
+	% #3 = largeur
+	% #4 = hauteur
+	% #5 = nb racine
+	% #6 = liste racines (option)
+	\xintifboolexpr{ #1 > 0 'and' #5 == 2 } %a>0 et delta>0
+	{%
+		\StrCut{#6}{/}{\xun}{\xdeux}
+		\draw[thick,#2] ({-0.375*#3},{0.5*#4}) parabola bend (0,{-0.5*#4}) ({0.375*#3},{0.5*#4}) ;
+		\draw[#2] ({-0.5*#3},0) node[above right=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut+$}};
+		\draw[#2] ({0.5*#3},0) node[above left=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut+$}};
+		\draw[#2] (0,0) node[below=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut-$}};
+		\filldraw[#2] ({0.2625*#3},0) circle[radius=2pt] node[below right=1pt,inner sep=0pt,font=\scriptsize] {$\strut\xdeux$};
+		\filldraw[#2] ({-0.2625*#3},0) circle[radius=2pt] node[below left=1pt,inner sep=0pt,font=\scriptsize] {$\strut\xun$};%
+	}
+	{}
+	\xintifboolexpr{ #1 < 0 'and' #5 == 2 } %a<0 et delta>0
+	{%
+		\StrCut{#6}{/}{\xun}{\xdeux}
+		\draw[thick,#2] ({-0.375*#3},{-0.5*#4}) parabola bend (0,{0.5*#4}) ({0.375*#3},{-0.5*#4}) ;
+		\draw[#2] ({-0.5*#3},0) node[below right=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut-$}};
+		\draw[#2] ({0.5*#3},0) node[below left=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut-$}};
+		\draw[#2] (0,0) node[above=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut+$}};
+		\filldraw[#2] ({0.2625*#3},0) circle[radius=2pt] node[above right=1pt,inner sep=0pt,font=\scriptsize] {$\strut\xdeux$};
+		\filldraw[#2] ({-0.2625*#3},0) circle[radius=2pt] node[above left=1pt,inner sep=0pt,font=\scriptsize] {$\strut\xun$};%
+	}
+	{}
+	\xintifboolexpr{ #1 > 0 'and' #5 == 1 } %a>0 et delta=0
+	{%
+		\draw[thick,#2] ({-0.375*#3},{0.5*#4}) parabola bend (0,0) ({0.375*#3},{0.5*#4}) ;
+		\filldraw[#2] (0,0) circle[radius=2pt] node[below=3pt,inner sep=1pt,font=\scriptsize] {$#6$};
+		\draw[#2] (0,0) node[above=3pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut+$}};
+	}
+	{}
+	\xintifboolexpr{ #1 < 0 'and' #5 == 1 } %a>0 et delta=0
+	{%
+		\draw[thick,#2] ({-0.375*#3},{-0.5*#4}) parabola bend (0,0) ({0.375*#3},{-0.5*#4}) ;
+		\filldraw[#2] (0,0) circle[radius=2pt] node[above=3pt,inner sep=0pt,font=\scriptsize] {$#6$};
+		\draw[#2] (0,0) node[below=3pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut-$}};
+	}
+	{}
+	\xintifboolexpr{ #1 > 0 'and' #5 == 0 } %a>0 et delta<0
+	{%
+		\draw[thick,#2] ({-0.375*#3},{0.5*#4}) parabola bend (0,{0.075*#4}) ({0.375*#3},{0.5*#4}) ;
+		\draw[#2] (0,{0.075*#4}) node[above=2pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut+$}};
+	}
+	{}
+	\xintifboolexpr{ #1 < 0 'and' #5 == 0 } %a>0 et delta<0
+	{%
+		\draw[thick,#2] ({-0.375*#3},{-0.5*#4}) parabola bend (0,{-0.075*#4}) ({0.375*#3},{-0.5*#4}) ;
+		\draw[#2] (0,{-0.075*#4}) node[below=2pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut-$}};
+	}
+	{}
+}
+
+\newcommand\aidesignePL[1][]{%
+	\useKVdefault[aidetds]
+	\setKV[aidetds]{#1}
+	%simplification des codes
+	\IfEq{\tdsparam}{da+}{\def\xcode{1}}{}
+	\IfEq{\tdsparam}{da-}{\def\xcode{-1}}{}
+	\IfEq{\tdsparam}{pa+d+}{\def\xcode{12}}{}
+	\IfEq{\tdsparam}{pa-d+}{\def\xcode{-12}}{}
+	\IfEq{\tdsparam}{pa+d0}{\def\xcode{11}}{}
+	\IfEq{\tdsparam}{pa-d0}{\def\xcode{-11}}{}
+	\IfEq{\tdsparam}{pa+d-}{\def\xcode{10}}{}
+	\IfEq{\tdsparam}{pa-d-}{\def\xcode{-10}}{}
+	%cadre si booléen true
+	\ifboolKV[aidetds]{cadre}
+		{\draw[lightgray] ({-0.5*\tdslarg},{-0.5*\tdshaut}) rectangle ({0.55*\tdslarg},{0.5*\tdshaut}) ;}
+		{}
+	%restriction de la petite fenêtre
+	\clip ({-0.5*\tdslarg},{-0.5*\tdshaut}) rectangle ({0.55*\tdslarg},{0.5*\tdshaut}) ;
+	%axe (Ox)
+	\draw[thick,->] ({-0.5*\tdslarg},0)--({0.55*\tdslarg},0);
+	%1er degré a+ code = 1
+	\ifnum\xcode=1
+		\schematdsaff{\tdscouleur}{\tdslarg}{\tdshaut}{\tdsracine}
+	\fi
+	%1er degré a- code = -1
+	\ifnum\xcode=-1
+		\schematdsaff*{\tdscouleur}{\tdslarg}{\tdshaut}{\tdsracine}
+	\fi
+	%2d degré a+delta+ code = 12
+	\ifnum\xcode=12
+		\schematdsparab{1}{\tdscouleur}{\tdslarg}{\tdshaut}{2}[\tdsracine]
+	\fi
+	%2d degré a-delta+ code = -12
+	\ifnum\xcode=-12
+		\schematdsparab{-1}{\tdscouleur}{\tdslarg}{\tdshaut}{2}[\tdsracine]
+	\fi
+	%2d degré a+delta0 code = 11
+	\ifnum\xcode=11
+		\schematdsparab{1}{\tdscouleur}{\tdslarg}{\tdshaut}{1}[\tdsracine]
+	\fi
+	%2d degré a-delta0 code = -11
+	\ifnum\xcode=-11
+		\schematdsparab{-1}{\tdscouleur}{\tdslarg}{\tdshaut}{1}[\tdsracine]
+	\fi
+	%2d degré a+delta- code = 10
+	\ifnum\xcode=10
+		\schematdsparab{1}{\tdscouleur}{\tdslarg}{\tdshaut}{0}
+	\fi
+	%2d degré a-delta- code = -10
+	\ifnum\xcode=-10
+		\schematdsparab{-1}{\tdscouleur}{\tdslarg}{\tdshaut}{0}
+	\fi
+}
+
+%pour l'interaction avec tkz-tab
+\defKV[aidetdstkz]{%
+	echelle=\def\tdstkzscale{#1},%
+	decal=\def\tdstkzoffset{#1}
+}
+
+\setKVdefault[aidetdstkz]{%
+	echelle=1,%
+	decal=1.25
+}
+
+\NewDocumentCommand\aidesignetkztabPL{ o m O{0.85} O{1.5} }{%
+	#1 = codeaidetikz
+	#2 = numligne
+	#3 = échelle
+	#4 = décalage
+	\shorthandoff{:}\shorthandoff{!} %bizzzzzzzzare
+	\coordinate (Z) at ($(T2#2)!.5!(T2\the\numexpr#2+1\relax)$) ;
+	\shorthandon{:}\shorthandon{!}
+	\path (Z.east) + (#4,0) pic[right,scale=#3,every node/.style={scale=#3}] {code={\aidesignePL[#1]}} ;
+}
 
 \endinput
