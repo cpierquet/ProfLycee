@@ -63,14 +63,14 @@ Une macro <code>tetraPL[...]</code> pour un tétraèdre.
 
 ## Fractions et ensembles
 
-Une macro <code>convertfraction<\code> pour simlifier (dans la mesure du possible) une division.
+Une macro <code>convertfraction</code> pour simlifier (dans la mesure du possible) une division.
 
-Une macro <code>ensPL<\code> pour écrire un ensemble d'éléments entre accolades.
-
+Une macro <code>ensPL</code> pour écrire un ensemble d'éléments entre accolades.
+  
 ## Suite récurrente et toile
 
-Une commande<code>recurrPL<\code> pour tracer (dans la mesure du possible) la "toile" d'une suite récurrente.
+Une commande<code>recurrPL</code> pour tracer (dans la mesure du possible) la "toile" d'une suite récurrente.
 
 ## Cercle trigo
 
-Une commande <code>cercletrigoPL<\code> pour tracer rapidement un cercle trigo, avec affichage ou non de valeurs/équations.
+Une commande <code>cercletrigoPL</code> pour tracer rapidement un cercle trigo, avec affichage ou non de valeurs/équations.
