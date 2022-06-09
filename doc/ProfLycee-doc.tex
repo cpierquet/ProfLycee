@@ -14,6 +14,7 @@
 \usepackage{graphics}
 \usepackage{hvlogos}
 \usepackage{simplekv}
+\usepackage{tkz-tab}
 \usepackage{listofitems}
 \usepackage{xintexpr}
 \usepackage{codehigh}
@@ -34,8 +35,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.1.3}
-\def\PLdate{2 Mai 2022}
+\def\PLversion{1.1.5}
+\def\PLdate{13 Mai 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -189,6 +190,12 @@ Une commande pour simplifier des calculs sous forme fractionnaire.
 Une commande pour simplifier l'écriture d'un ensemble, avec espaces \og automatiques \fg.
 
 Une commande pour créer, en \TikZ, la \textit{toile} pour une suite récurrente.
+
+Une commande pour créer, en \TikZ, un cercle trigo avec options.
+
+Une commande pour afficher un petit schéma, en \TikZ, sur le signe d'une fonction affine ou d'un trinôme.
+
+Deux commandes pour, en \TikZ, créer des petits schémas \og de signe \fg
 
 \vspace{1.5cm}
 
@@ -390,6 +397,14 @@ En ce qui concerne les codes \textsf{python} et/ou \textsf{pseudocode}, il faudr
 
 \begin{codeinfo}
 Certaines \textsf{commandes} sont à intégrer dans un environnement \TikZ, afin de pouvoir rajouter des éléments, elles ont été testés dans des environnement \ctex{tikzpicture}, à vérifier que la gestion des axes par l'environnement \ctex{axis} est compatible\ldots
+
+\smallskip
+
+Certains packages ont une fâcheuse tendance à être tatillons sur leurs options (les \textit{fameux} \textsf{option clash for} \ldots) ou leur \textit{position} dans le chargement, donc attention notamment au chargement de \ctex{xcolor} et de \ctex{amsmath}.
+
+\smallskip
+
+En dehors de cela, ce sont des tests multiples et variés qui permettront de détecter d'éventuels bugs !
 \end{codeinfo}
 
 \newpage
@@ -404,7 +419,7 @@ On va utiliser les notions suivantes pour paramétrer le tracé \og automatique 
 \begin{itemize}
 	\item il faut rentrer les \textcolor{purple}{\textsf{points de contrôle}} ;
 	\item il faut préciser les \textcolor{ForestGreen}{\textsf{pentes des tangentes}} (pour le moment on travaille avec les mêmes à gauche et à droite\ldots) ;
-	\item on peut \og affiner \fg{} les portions de courbe en paramétrant des \textcolor{CadetBlue}{\textsf{coefficients}} (comme pour une courbe de Bézier).
+	\item on peut \og affiner \fg{} les portions de courbe en paramétrant des \textcolor{CadetBlue}{\textsf{coefficients}} (voir un peu plus loin\ldots).
 \end{itemize}
 
 \medskip
@@ -734,7 +749,7 @@ Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{cap
 
 \smallskip
 
-À la manière du {package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes dont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
+À la manière du {package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes sont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
 \end{codeidee}
 
 \subsection{La commande \og paramCF \fg}
@@ -1926,9 +1941,364 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 
 \newpage
 
+\section{Cercle trigo}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour tracer (en \TikZ) un cercle trigonométrique, avec personnalisation des affichages.
+
+\smallskip
+
+Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{cercletrigoPL} pour afficher le cercle.
+\end{codeidee}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\cercletrigoPL
+\end{codetex}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	...
+	\cercletrigoPL[<clés>]
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Plusieurs \Cle{Clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{rayon} qui définit le rayon du cercle ;\hfill{}défaut \Cle{3}
+	\item la clé \Cle{epaisseur} qui donne l'épaisseur des traits de base ;\hfill{}défaut \Cle{thick}
+	\item la clé \Cle{marge} qui est l'\textit{écartement} de axes  ;\hfill{}défaut \Cle{0.25}
+	\item la clé \Cle{taillevaleurs} qui est la taille des valeurs remarquables ;\hfill{}défaut \Cle{scriptsize}
+	\item la clé \Cle{tailleangles} qui est la taille des angles ;\hfill{}défaut \Cle{footnotesize}
+	\item la clé \Cle{couleurfond} qui correspond à la couleur de fond des labels ;\hfill{}défaut \Cle{white}
+	\item la clé \Cle{decal} qui correspond au décalage des labels par rapport au cercle ;\hfill{}défaut \Cle{10pt}
+	\item un booléen \Cle{moinspi} qui bascule les angles \og -pipi \fg{} à \og zerodeuxpi \fg{} ;\hfill{}défaut \Cle{true}
+	\item un booléen \Cle{affangles} qui permet d'afficher les angles ;\hfill{}défaut \Cle{true}
+	\item un booléen \Cle{afftraits} qui permet d'afficher les \textit{traits de construction}  ;\hfill{}défaut \Cle{true}
+	\item un booléen \Cle{affvaleurs} qui permet d'afficher les valeurs remarquables.\hfill{}défaut \Cle{true}
+\end{itemize}
+\end{codecles}
+
+\pagebreak
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}[line join=bevel]
+		\cercletrigoPL[rayon=2.5,affvaleurs=false,decal=8pt]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}[line join=bevel]
+		\cercletrigoPL[rayon=2.5,affangles=false]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}[line join=bevel]
+		\cercletrigoPL[rayon=2.5,moinspi=false,couleurfond=orange!15]
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\medskip
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}[line join=bevel]
+		\cercletrigoPL[rayon=2.5,affvaleurs=false,decal=8pt]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}[line join=bevel]
+		\cercletrigoPL[rayon=2.5,affangles=false]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}[line join=bevel]
+		\cercletrigoPL[rayon=2.5,moinspi=false,couleurfond=orange!15,taillevaleurs=\tiny]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\subsection{Équations trigos}
+
+\begin{codeinfo}
+En plus des \Cle{Clés} précédentes, il existe un complément pour visualiser des solutions d'équations simples du type $\cos(x)=\ldots$ ou $\sin(x)=\ldots$.
+\end{codeinfo}
+
+\begin{codecles}
+Les \Cle{Clés} pour cette possibilité sont :
+
+\begin{itemize}
+	\item un booléen \Cle{equationcos} pour \textit{activer} \og $\cos=$ \fg; \hfill{}défaut \Cle{false}
+	\item un booléen \Cle{equationsin} pour \textit{activer} \og $\sin=$ \fg;\hfill{}défaut \Cle{false}
+	\item la clé \Cle{sin} qui est la valeur de l'angle (en degrés) du sin ;\hfill{}défaut \Cle{30}
+	\item la clé \Cle{cos} qui est la valeur de l'angle (en degrés) cos ;\hfill{}défaut \Cle{45}
+	\item la clé \Cle{couleursol} qui est la couleur des \textit{solutions}.\hfill{}défaut \Cle{blue}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}
+		\cercletrigoPL[%
+		affangles=false,affvaleurs=false,afftraits=false,rayon=2,equationsin,sin=-30,couleursol=red]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\cercletrigoPL[%
+		affangles=false,affvaleurs=false,afftraits=false,rayon=2,equationcos,cos=135,couleursol=orange]
+	\end{tikzpicture}
+	
+	\medskip
+	
+	\begin{tikzpicture}
+		\cercletrigoPL[%
+		afftraits=false,affangles=false,rayon=2.75,equationcos,cos=60,couleursol=purple,taillevaleurs=\tiny]
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\medskip
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}
+		\cercletrigoPL[%
+		affangles=false,affvaleurs=false,afftraits=false,rayon=2,equationsin,sin=-30,couleursol=red]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\cercletrigoPL[%
+		affangles=false,affvaleurs=false,afftraits=false,rayon=2,equationcos,cos=150,couleursol=orange]
+	\end{tikzpicture}
+	
+	\medskip
+	
+	\begin{tikzpicture}
+		\cercletrigoPL[%
+		afftraits=false,affangles=false,rayon=2.75,equationcos,cos=60,couleursol=purple,taillevaleurs=\tiny]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\newpage
+
+\section{Petits schémas pour le signe d'une fonction affine ou d'un trinôme}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour tracer (en \TikZ) un petit schéma pour \textit{visualiser} le signe d'une fonction affine ou d'un trinôme.
+
+Le code est très largement inspiré de celui du package \ctex{tnsana} même si la philosophie est légèrement différente.
+
+\smallskip
+
+Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{aidesignePL} pour afficher le schéma.
+\end{codeidee}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\aidesignePL
+\end{codetex}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	...
+	\aidesignePL[<clés>]
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codetex}[listing only]
+... {\tikz[<options>] \aidesignePL[<clés>]}...
+\end{codetex}
+
+\begin{codecles}
+Plusieurs \Cle{Clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{code} qui permet de définir le type d'expression (voir en-dessous) ;\hfill{}défaut \Cle{da+}
+	\item la clé \Cle{couleur} qui donne la couleur de la représentation ;\hfill{}défaut \Cle{red}
+	\item la clé \Cle{racines} qui définit la ou les racines ;\hfill{}défaut \Cle{2}
+	\item la clé \Cle{largeur} qui est la largeur du schéma ;\hfill{}défaut \Cle{2}
+	\item la clé \Cle{hauteur} qui est la hauteur du schéma ;\hfill{}défaut \Cle{1}
+	\item un booléen \Cle{cadre} qui affiche un cadre autour du schéma.\hfill{}défaut \Cle{true}
+\end{itemize}
+\end{codecles}
+
+\begin{codecles}
+Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou \textsf{p} comme parabole) puis les éléments caractéristiques (\textsf{a+} pour $a>0$, \textsf{d0} pour $\Delta=0$, etc) :
+
+\begin{itemize}
+	\item \Cle{code=da+} := une droite croissante ;
+	\item \Cle{code=da-} := une droite décroissante ;
+	\item \Cle{code=pa+d+} := une parabole \textit{souriante} avec deux racines ;
+	\item etc
+\end{itemize}
+\end{codecles}
+
+\pagebreak
+
+\begin{codetex}[listing only]
+	\begin{center}
+		\begin{tikzpicture}
+			\aidesignePL[code=da+,racines=-4]
+		\end{tikzpicture}
+		~~~~
+		\begin{tikzpicture}
+			\aidesignePL[code=da-,racines={h},couleur=blue,largeur=3,cadre=false]
+		\end{tikzpicture}
+	\end{center}
+	%
+	\begin{center}
+		\begin{tikzpicture}
+			\aidesignePL[code=pa+d+,racines={1/2},couleur=orange]
+		\end{tikzpicture}
+		~~~~
+		\begin{tikzpicture}
+			\aidesignePL[code=pa+d-,couleur=ForestGreen]
+		\end{tikzpicture}
+		~~~~
+		\begin{tikzpicture}
+			\aidesignePL[code=pa+d0,racines={5},couleur=purple]
+		\end{tikzpicture}
+	\end{center}
+	%
+	\begin{center}
+		\begin{tikzpicture}
+			\aidesignePL[code=pa-d+,racines={-3/0},couleur=yellow]
+		\end{tikzpicture}
+		~~~~
+		\begin{tikzpicture}
+			\aidesignePL[code=pa-d-,couleur=cyan]
+		\end{tikzpicture}
+		~~~~
+		\begin{tikzpicture}
+			\aidesignePL[code=pa-d0,racines={-1},couleur=magenta]
+		\end{tikzpicture}
+	\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=da+,racines=-4]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=da-,racines={h},couleur=blue,largeur=3,cadre=false]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d+,racines={1/2},couleur=orange]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d-,couleur=ForestGreen]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d0,racines={5},couleur=purple]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d+,racines={-3/0},couleur=yellow]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d-,couleur=cyan]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d0,racines={-1},couleur=magenta]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\begin{codetex}[tikz lower]
+%code tikz
+	\aidesignePL[largeur=3.5,hauteur=1.5,code=da-,racines=\tfrac{-b}{a},couleur=Plum]
+\end{codetex}
+
+\subsection{Intégration avec tkz-tab}
+
+\begin{codeidee}
+Ces schémas peuvent être de plus utilisés, via la commande \ctex{aidesignetkztabPL} pour illustrer les signes obtenus dans un tableau de signes présentés grâce au package \ctex{tkz-tab}.
+
+Pour des raisons interne, le fonctionnement de la commande \ctex{aidesignetkztabPL} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}
+	%commandes tkztab
+	\aidesignetkztabPL[<options>]{<numligne>}[<echelle>][<décalage horizontal>]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Les \Cle{Clés} pour le premier argument optionnel sont les mêmes que pour la version \textit{initiale} de la commande précédente.
+
+En ce qui concerne les autres arguments :
+
+\begin{itemize}
+	\item le deuxième argument, mandataire, est le numéro de la ligne à côté de laquelle placer le schéma ;
+	\item le troisième argument, optionnel et valant \Cle{0.85} par défaut, est l'échelle à appliquer sur l'ensemble du schéma (à ajuster en fonction de la hauteur de la ligne) ;
+	\item le quatrième argument, optionnel et valant \Cle{1.5} par défait, est lié à l'écart horizontal entre le bord de la ligne du tableau et le schéma.
+\end{itemize}
+
+À noter que si l'un des arguments optionnels (le n°3 et/ou le n°4) sont utilisés, il vaut mieux préciser les 2 !
+\end{codecles}
+
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}
+		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
+		\tkzTabLine{,+,t,+,z,-,}
+		\tkzTabLine{,-,z,+,t,+,}
+		\tkzTabLine{,-,z,+,z,-,}
+		\aidesignetkztabPL[code=da-,racines={2,5},couleur=blue]{1}
+		\aidesignetkztabPL[code=da+,racines={-2},couleur=purple]{2}
+		\aidesignetkztabPL[code=pa-d+,racines={-2/2,5},couleur=orange]{3}[0.85][2]
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}
+		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
+		\tkzTabLine{,+,t,+,z,-,}
+		\tkzTabLine{,-,z,+,t,+,}
+		\tkzTabLine{,-,z,+,z,-,}
+		\aidesignetkztabPL[code=da-,racines={2,5},couleur=blue]{1}
+		\aidesignetkztabPL[code=da+,racines={-2},couleur=purple]{2}
+		\aidesignetkztabPL[code=pa-d+,racines={-2/2,5},couleur=orange]{3}[0.85][2]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\newpage
+
 \section{Historique}
 
-{\small \bverb|v1.1.3|~:~~~~Ajout des commandes \textsf{convertfraction}, \textsf{ensPL} et \textsf{recurrPL} (changement de numérotation du package également)
+{\small \bverb|v1.1.5|~:~~~~Ajout de deux commandes \textsf{aidesignePL} et \ctex{aidesignetkztabPL} pour, en \TikZ, créer des petits schémas \og de signe \fg
+
+{\small \bverb|v1.1.4|~:~~~~Ajout d'une commande \textsf{cercletrigoPL} pour, en \TikZ, créer facilement un cercle trigo avec \textit{options}
+
+{\small \bverb|v1.1.3|~:~~~~Ajout des commandes \textsf{convertfraction}, \textsf{ensPL} et \textsf{recurrPL}
 
 {\small \bverb|v1.1.1|~:~~~~Modification mineure de l'environnement \textsf{ligneCF} (calcul formel), avec prise de charge de la taille du texte !
 
