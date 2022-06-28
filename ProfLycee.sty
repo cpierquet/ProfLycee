@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/05/13 - v1.1.5 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/06/28 - v1.1.6 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.1.6	Ajout d'une commande pour déterminer les paramètres d'un régression linéaire par moindres carrés
 % 1.1.5	Ajout de commandes pour "visualiser" le signe de ax+b ou de ax2+bx+c (cf tnsana !)
 % 1.1.4	Ajout d'une commande cercletrigoPL pour, en \TikZ, créer facilement un cercle trigo avec options
 % 1.1.3	Ajout d'une commande ensemble pour créer un ensemble à partir d'une liste
@@ -1181,10 +1182,107 @@
 	#2 = numligne
 	#3 = échelle
 	#4 = décalage
-	\shorthandoff{:}\shorthandoff{!} %bizzzzzzzzare
+	%\shorthandoff{:}\shorthandoff{!} %bizzzzzzzzare
+	%\NoAutoSpacing
 	\coordinate (Z) at ($(T2#2)!.5!(T2\the\numexpr#2+1\relax)$) ;
-	\shorthandon{:}\shorthandon{!}
+	%\shorthandon{:}\shorthandon{!}
 	\path (Z.east) + (#4,0) pic[right,scale=#3,every node/.style={scale=#3}] {code={\aidesignePL[#1]}} ;
+}
+
+%=============RegressionLinéaire======= OK !!
+%calcul des paramètres
+\defKV[coeffreglin]{%
+	nomcoeffa=\def\RegLinCoeffa{#1},%
+	nomcoeffb=\def\RegLinCoeffb{#1},%
+	nomcoeffr=\def\RegLinCoeffr{#1},%
+	nomcoeffrd=\def\RegLinCoeffrd{#1},%
+	nomxmin=\def\RegLinCoeffXmin{#1},%
+	nomxmax=\def\RegLinCoeffXmax{#1}
+}
+
+\setKVdefault[coeffreglin]{%
+	nomcoeffa=COEFFa,%
+	nomcoeffb=COEFFb,%
+	nomcoeffr=COEFFr,%
+	nomcoeffrd=COEFFrd,%
+	nomxmin=LXmin,%
+	nomxmax=LXmax
+}
+
+\newcommand\PLreglin[3][]{
+	\useKVdefault[coeffreglin]
+	\setKV[coeffreglin]{#1}% on paramètres les nouvelles clés et on les simplifie
+	%xmin et xmax
+	\expandafter\def\csname\RegLinCoeffXmin\endcsname{\fpeval{min(#2)}}
+	\expandafter\def\csname\RegLinCoeffXmax\endcsname{\fpeval{max(#2)}}
+	%listes des données
+	\def\xliste{#2}
+	\def\yliste{#3}
+	\readlist*\LX{\xliste}
+	\readlist*\LY{\yliste}
+	%taille des listes
+	\def\LNB{\inteval{\LXlen}}
+	%somme des LX et des LY OK
+	\xdef\LXSomme{0}
+	\xdef\LYSomme{0}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LXSomme{\fpeval{\LXSomme+\LX[\i]}}
+	}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LYSomme{\fpeval{\LYSomme+\LY[\i]}}
+	}
+	%moyenne des LX et des LY OK
+	\xdef\LXmoy{\fpeval{\LXSomme/\LNB}}
+	\xdef\LYmoy{\fpeval{\LYSomme/\LNB}}
+	%variance des LX et des LY OK
+	\xdef\LXvar{0}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LXvar{\fpeval{\LXvar+(\LX[\i]-\LXmoy)*(\LX[\i]-\LXmoy)}}
+	}
+	\xdef\LXvar{\fpeval{\LXvar/\LNB}}
+	\xdef\LYvar{0}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LYvar{\fpeval{\LYvar+(\LY[\i]-\LYmoy)*(\LY[\i]-\LYmoy)}}
+	}
+	\xdef\LYvar{\fpeval{\LYvar/\LNB}}
+	%covariance des XY OK
+	\xdef\LXYvar{0}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LXYvar{\fpeval{\LXYvar+(\LX[\i]-\LXmoy)*(\LY[\i]-\LYmoy)}}
+	}
+	\xdef\LXYvar{\fpeval{\LXYvar/\LNB}}
+	%COEFFS OK
+	\expandafter\def\csname\RegLinCoeffa\endcsname{\fpeval{\LXYvar/\LXvar}}
+	\expandafter\def\csname\RegLinCoeffb\endcsname{\fpeval{\LYmoy-\csname\RegLinCoeffa\endcsname*\LXmoy}}
+	\expandafter\def\csname\RegLinCoeffr\endcsname{\fpeval{\LXYvar/sqrt(\LXvar*\LYvar)}}
+	\expandafter\def\csname\RegLinCoeffrd\endcsname{\fpeval{\csname\RegLinCoeffr\endcsname*\csname\RegLinCoeffr\endcsname}}
+}
+
+%pour un nuage en TiKz
+\defKV[nuagereglin]{%
+	couleur=\def\RegLinNuageCouleur{#1},%
+	taille=\def\RegLinNuageTaille{#1},
+	Ox=\def\RegLinNuageOx{#1},%
+	Oy=\def\RegLinNuageOy{#1},%
+}
+
+\setKVdefault[nuagereglin]{%
+	couleur=teal,%
+	taille=2pt,%
+	Ox=0,%
+	Oy=0
+}
+
+\newcommand\PLreglinpts[3][]{%
+	\useKVdefault[nuagereglin]
+	\setKV[nuagereglin]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\def\xliste{#2}
+	\def\yliste{#3}
+	\readlist*\LX{\xliste}
+	\readlist*\LY{\yliste}
+	%taille des listes
+	\def\LNB{\inteval{\LXlen}}
+	\foreach \i in {1,2,...,\LNB} {\filldraw[\RegLinNuageCouleur] ({\LX[\i]-\RegLinNuageOx},{\LY[\i]-\RegLinNuageOy}) circle[radius=\RegLinNuageTaille] ;}
 }
 
 \endinput
