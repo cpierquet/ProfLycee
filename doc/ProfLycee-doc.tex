@@ -14,6 +14,13 @@
 \usepackage{graphics}
 \usepackage{hvlogos}
 \usepackage{simplekv}
+\usepackage{tabto}
+\usepackage{pgf,pgfplots}
+\pgfplotsset{
+	compat=newest,
+	xlabel near ticks,
+	ylabel near ticks
+}
 \usepackage{tkz-tab}
 \usepackage{listofitems}
 \usepackage{xintexpr}
@@ -35,8 +42,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.1.5}
-\def\PLdate{13 Mai 2022}
+\def\PLversion{1.1.6}
+\def\PLdate{28 Juin 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -195,11 +202,15 @@ Une commande pour créer, en \TikZ, un cercle trigo avec options.
 
 Une commande pour afficher un petit schéma, en \TikZ, sur le signe d'une fonction affine ou d'un trinôme.
 
-Deux commandes pour, en \TikZ, créer des petits schémas \og de signe \fg
+Deux commandes pour, en \TikZ, créer des petits schémas \og de signe \fg.
+
+Une commande pour déterminer des paramètres ($a$, $b$, $r$ et $r^2$) d'une régression linéaire par moindres carrés.
 
 \vspace{1.5cm}
 
 \hfill{}\textit{Merci à Anne pour ses retours et sa relecture !}
+
+\hfill{}\textit{Merci aux membres du groupe \faFacebook{} du \og Coin \LaTeX{} \fg{} pour leur aide et leurs idées !}
 
 \vfill
 
@@ -2292,9 +2303,338 @@ En ce qui concerne les autres arguments :
 
 \newpage
 
+\section{Paramètres d'une régression linéaire par la méthode des moindres carrés}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est d'utiliser une commande qui va permettre de calculer les paramètres principaux d'un régression linéaire par la méthode des moindres carrés.
+
+Le package \ctex{pgfpots} permet de le faire nativement, mais le moteur de calculs de \textsf{pgf} n'est pas des plus performants avec de grandes valeurs, donc ici cela passe par \ctex{xfp} qui permet de gagner en précision !
+
+\smallskip
+
+L'idée est que cette macro calcule et stocke les paramètres dans des variables (le nom peut être personnalisé !) pour exploitation ultérieure :
+
+\begin{itemize}
+	\item en calculs \textit{purs} ;
+	\item dans un environnement \TikZ{} via \textsf{pgfplots} ou bien en \textit{natif} ;
+	\item dans un environnement \PSTricks{} ;
+	\item dans un environnement \METAPOST{} (à vérifier quand même) ;
+	\item \ldots
+\end{itemize}
+\end{codeidee}
+
+\begin{codetex}[listing only]
+...
+\PLreglin[<clés>]{<listeX>}{<listeY>}     %listes avec éléments séparés par des ,
+...
+\end{codetex}
+
+\begin{codeinfo}
+La commande \ctex{PLreglin} va définir également des \textsf{macros} pour chaque coefficient, qui de ce fait seront réutilisables après !
+\end{codeinfo}
+
+\subsection{Commandes}
+
+\begin{codecles}
+Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour \textit{renommer} les paramètres :
+
+\begin{itemize}
+	\item la clé \Cle{nomcoeffa} qui permet de définir la variable qui contiendra $a$ ;\hfill{}défaut \Cle{COEFFa}
+	\item la clé \Cle{nomcoeffb} qui permet de définir la variable qui contiendra $b$ ;\hfill{}défaut \Cle{COEFFb}
+	\item la clé \Cle{nomcoeffr} qui permet de définir la variable qui contiendra $r$ ;\hfill{}défaut \Cle{COEFFr}
+	\item la clé \Cle{nomcoeffrd} qui permet de définir la variable qui contiendra $r^2$ ;\hfill{}défaut \Cle{COEFFrd}
+	\item la clé \Cle{nomxmin} qui permet de définir la variable qui contiendra $x_{\text{min}}$ ;\hfill{}défaut \Cle{LXmin}
+	\item la clé \Cle{nomxmax} qui permet de définir la variable qui contiendra $x_{\text{max}}$.\hfill{}défaut \Cle{LXmax}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+%les espaces verticaux n'ont pas été écrits ici
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+%vérif des calculs (noms non modifiables...)
+Liste des X := \showitems\LX.
+Liste des Y := \showitems\LY.
+Somme des X := \LXSomme{} et somme des Y := \LYSomme.
+Moyenne des X := \LXmoy{} et moyenne des Y := \LYmoy.
+Variance des X := \LXvar{} et variance des Y := \LYvar{}
+Covariance des X/Y := \LXYvar.
+%les coefficients, avec des noms modifiables !
+Min des X := \LXmin{} et Max des X := \LXmax.
+Coefficient $a=\COEFFa$.
+Coefficient $b=\COEFFb$.
+Coefficient $r=\COEFFr$.
+Coefficient $r^2=\COEFFrd$.
+\end{codetex}
+
+\begin{codesortie}
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+
+Liste des X := \showitems\LX.
+
+\smallskip
+
+Liste des Y := \showitems\LY.
+
+\smallskip
+
+Somme des X := \LXSomme{} et somme des Y := \LYSomme.
+
+\smallskip
+
+Moyenne des X := \LXmoy{} et moyenne des Y := \LYmoy.
+
+\smallskip
+
+Variance des X := \LXvar{} et variance des Y := \LYvar{}
+
+\smallskip
+
+Covariance des X/Y := \LXYvar.
+
+\smallskip
+
+Min des X := \LXmin{} et Max des X := \LXmax.
+
+\smallskip
+
+Coefficient $a=\COEFFa$.\tabto{0.5\textwidth}Coefficient $b=\COEFFb$.
+
+%\smallskip
+%
+%Coefficient $b=\COEFFb$.
+
+\smallskip
+
+Coefficient $r=\COEFFr$.\tabto{0.5\textwidth}Coefficient $r^2=\COEFFrd$.
+
+%\smallskip
+%
+%Coefficient $r^2=\COEFFrd$.
+\end{codesortie}
+
+\begin{codeinfo}
+\hfill~\includegraphics[height=3cm]{./graphics/pl-doc-stats_a}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_b}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_c}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_c2}\hfill~
+\end{codeinfo}
+
+\begin{codeinfo}
+Les \textsf{macros} qui contiennent les paramètres de la régression sont donc réutilisables, en tant que nombres réels, donc exploitables par \ctex{siunitx} et \ctex{xfp} pour affichage \textit{fin} ! Ci-dessous un exemple permettant de visualiser tout cela.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%les espaces verticaux n'ont pas été écrits ici
+\def\LstX{0,1,3,4,5,6}
+\def\LstY{-35,-37.4,-37.7,-39.9,-39,-39.6}
+%on lance les calculs et on change le nom des "macros-résultats"
+\PLreglin[nomcoeffa=TESTa,nomcoeffb=TESTb,nomcoeffr=TESTr,nomcoeffrd=TESTrd,%
+          nomxmin=TESTmin,nomxmax=TESTmax]{\LstX}{\LstY}
+%commandes complémentaires
+\DeclareDocumentCommand\arrond{ s O{3} m }{% * pour afficher signe / opt = précision / argument = nb
+	\IfBooleanTF{#1}{\num[print-implicit-plus]{\fpeval{round(#3,#2)}}}{\num{\fpeval{round(#3,#2)}}}
+}
+%paramètres
+Les valeurs extr. de X sont \TESTmin{} et \TESTmax. Une éq. est $y=\arrond[3]{\TESTa}x \arrond*[3]{\TESTb}$.
+Le coeff. de corrélation est $r=\arrond[4]{\TESTr}$, et son carré est $r^2=\arrond[4]{\TESTrd}$.
+\end{codetex}
+
+\begin{codesortie}
+\def\LstX{0,1,3,4,5,6}\def\LstY{-35,-37.4,-37.7,-39.9,-39,-39.6}
+\PLreglin[nomcoeffa=TESTa,nomcoeffb=TESTb,nomcoeffr=TESTr,nomcoeffrd=TESTrd,nomxmin=TESTmin,nomxmax=TESTmax]{\LstX}{\LstY}
+\DeclareDocumentCommand\arrond{ s O{3} m }{
+	\IfBooleanTF{#1}{\num[print-implicit-plus]{\fpeval{ceil(#3,#2)}}}
+		{\num{\fpeval{round(#3,#2)}}}
+}
+
+Les valeurs extrêmes de X sont \TESTmin{} et \TESTmax. Une équation de la droite de régression de $y$ en $x$ est $y=\arrond[3]{\TESTa}x \arrond*[3]{\TESTb}$.
+
+\smallskip
+
+Le coefficient de corrélation linéaire est $r=\arrond[4]{\TESTr}$, et son carré est $r^2=\arrond[4]{\TESTrd}$.
+\end{codesortie}
+
+\begin{codeinfo}
+\hfill~\includegraphics[height=3cm]{./graphics/pl-doc-stats_d}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_e}\hfill~
+\end{codeinfo}
+
+\pagebreak
+
+\subsection{Intégration dans un environnement \TikZ}
+
+\begin{codeinfo}
+La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des environnements graphiques pour permettre un tracé \textit{facile} de la droite de régression.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}
+	\begin{axis}[
+		/pgf/number format/.cd,use comma,xmin = 1992, xmax = 2012,ymin = 1640, ymax = 1730,
+		width = 0.7\textwidth,height = 0.35\textwidth,xtick distance = 2,ytick distance = 10,
+		grid = both,minor tick num = 1,major grid style = {lightgray},minor grid style = {lightgray!25},
+		xlabel = {\small Année ($x$)},ylabel = {\small Altitude du glacier (en m) ($y$)},
+		x tick label style={/pgf/number format/.cd, set thousands separator={}},
+		y tick label style={/pgf/number format/.cd, set thousands separator={}},
+		legend cell align = {left},legend pos = north east]
+		\addplot[teal, only marks,forget plot] table{
+			X Y
+			1994 1718
+			1995 1710
+			1996 1708
+			1997 1700
+			1998 1698
+			1999 1697
+			2000 1691
+			2001 1688
+			2002 1683
+			2004 1679
+			2005 1671
+			2006 1670
+			2007 1663
+			2008 1661
+			2009 1656
+			2010 1649
+		};
+		\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+		\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+		\PLreglin{\LLX}{\LLY}
+		\addplot [thick,orange,domain=\LXmin:\LXmax,samples=2]{\COEFFa*x+\COEFFb};
+		\addlegendentry{$y = \fpeval{round(\COEFFa,3)}\,x + \fpeval{round(\COEFFb,3)}$};
+		\addlegendentry{$R^2=\fpeval{round(\COEFFrd,5)}$};
+	\end{axis}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\begin{tikzpicture}
+	\begin{axis}[
+		/pgf/number format/.cd,
+		use comma,
+		xmin = 1992, xmax = 2012,
+		ymin = 1640, ymax = 1730,
+		width = 0.7\textwidth,
+		height = 0.35\textwidth,
+		xtick distance = 2,
+		ytick distance = 10,
+		grid = both,
+		minor tick num = 1,
+		major grid style = {lightgray},
+		minor grid style = {lightgray!25},
+		xlabel = {\small Année ($x$)},
+		ylabel = {\small Altitude du glacier (en m) ($y$)},
+		x tick label style={/pgf/number format/.cd, set thousands separator={}},
+		y tick label style={/pgf/number format/.cd, set thousands separator={}},
+		legend cell align = {left},
+		legend pos = north east
+		]
+		\addplot[teal, only marks] table{
+			X Y
+			1994 1718
+			1995 1710
+			1996 1708
+			1997 1700
+			1998 1698
+			1999 1697
+			2000 1691
+			2001 1688
+			2002 1683
+			2004 1679
+			2005 1671
+			2006 1670
+			2007 1663
+			2008 1661
+			2009 1656
+			2010 1649
+		};
+		\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+		\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+		\PLreglin{\LLX}{\LLY}
+		\addplot [thick,orange,domain=\LXmin:\LXmax,samples=2]{\COEFFa*x+\COEFFb};
+		\addlegendentry{$y = \fpeval{round(\COEFFa,3)}\,x + \fpeval{round(\COEFFb,3)}$};
+		\addlegendentry{$R^2=\fpeval{round(\COEFFrd,5)}$};
+	\end{axis}
+\end{tikzpicture}
+\end{codesortie}
+
+
+\pagebreak
+
+\begin{codeinfo}
+IL existe également une commande auxiliaire, \ctex{PLreglinpts} pour afficher le nuage de points avec quelques options, dans un environnement \TikZ{} classique (sans \textsf{pgfplot})\ldots
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	...
+	\PLreglinpts[<clés>]{<listeX>}{<listeY>}
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour la mise en forme du nuage :
+
+\begin{itemize}
+	\item la clé \Cle{couleur} pour la couleur des points du nuage ;\hfill{}défaut \Cle{teal}
+	\item la clé \Cle{taille} pour la taille des points (type \textit{cercle}) ;\hfill{}défaut \Cle{2pt}
+	\item la clé \Cle{Ox} pour spécifier la valeur initiale Ox (si changement d'origine) ;\hfill{}défaut \Cle{0}
+	\item la clé \Cle{Oy} pour spécifier la valeur initiale Oy (si changement d'origine).\hfill{}défaut \Cle{0}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}[x=0.5cm,y=0.05cm]
+	\draw[xstep=1,ystep=5,lightgray!50,very thin] (0,0) grid (20,100);
+	\draw[xstep=2,ystep=10,lightgray,thin] (0,0) grid (20,100);
+	\draw[thick,->] (0,0)--(20,0) ;
+	\draw[thick,->] (0,0)--(0,100) ;
+	\foreach \x in {1992,1994,...,2010} \draw[thick] ({\x-1992},4pt)--({\x-1992},-4pt) node[below] {$\x$} ;
+	\foreach \y in {1640,1650,...,1730} \draw[thick] (4pt,{\y-1640})--(-4pt,{\y-1640}) node[left] {$\y$} ;
+	\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+	\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+	\def\Ox{1992}\def\Oy{1640}
+	\PLreglin{\LLX}{\LLY}
+	\PLreglinpts[Ox=1992,Oy=1640,couleur=blue,taille=3pt]{\LLX}{\LLY}
+	\draw[orange,very thick,samples=2,domain=\LXmin:\LXmax] plot ({\x-\Ox},{\COEFFa*(\x)+\COEFFb-\Oy}) ;
+	\matrix [draw,fill=white,below left] at (current bounding box.north east) {
+		\node {$y = \fpeval{round(\COEFFa,3)}\,x + \fpeval{round(\COEFFb,3)}$} ; \\
+		\node {$R^2=\fpeval{round(\COEFFrd,5)}$} ; \\
+	};
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\begin{tikzpicture}[x=0.5cm,y=0.05cm]
+	\draw[xstep=1,ystep=5,lightgray!50,very thin] (0,0) grid (20,100);
+	\draw[xstep=2,ystep=10,lightgray,thin] (0,0) grid (20,100);
+	\draw[thick,->] (0,0)--(20,0) ;
+	\draw[thick,->] (0,0)--(0,100) ;
+	\foreach \x in {1992,1994,...,2010} \draw[thick] ({\x-1992},4pt)--({\x-1992},-4pt) node[below] {$\x$} ;
+	\foreach \y in {1640,1650,...,1730} \draw[thick] (4pt,{\y-1640})--(-4pt,{\y-1640}) node[left] {$\y$} ;
+	\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+	\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+	\def\Ox{1992}\def\Oy{1640}
+	\PLreglin{\LLX}{\LLY}
+	\PLreglinpts[Ox=1992,Oy=1640,couleur=blue,taille=3pt]{\LLX}{\LLY}
+	\draw[orange,very thick,samples=2,domain=\LXmin:\LXmax] plot ({\x-\Ox},{\COEFFa*(\x)+\COEFFb-\Oy}) ;
+	\matrix [draw,fill=white,below left] at (current bounding box.north east) {
+		\node {$y = \fpeval{round(\COEFFa,3)}\,x + \fpeval{round(\COEFFb,3)}$} ; \\
+		\node {$R^2=\fpeval{round(\COEFFrd,5)}$} ; \\
+	};
+\end{tikzpicture}
+\end{codesortie}
+
+\newpage
+
 \section{Historique}
 
-{\small \bverb|v1.1.5|~:~~~~Ajout de deux commandes \textsf{aidesignePL} et \ctex{aidesignetkztabPL} pour, en \TikZ, créer des petits schémas \og de signe \fg
+{\small \bverb|v1.1.6|~:~~~~Ajout d'une commande \textsf{PLregln} pour déterminer les paramètres d'une régression linéaire par moindres carrés
+
+{\small \bverb|v1.1.5|~:~~~~Ajout de deux commandes \textsf{aidesignePL} et \textsf{aidesignetkztabPL} pour, en \TikZ, créer des petits schémas \og de signe \fg
 
 {\small \bverb|v1.1.4|~:~~~~Ajout d'une commande \textsf{cercletrigoPL} pour, en \TikZ, créer facilement un cercle trigo avec \textit{options}
 
