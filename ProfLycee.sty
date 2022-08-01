@@ -3,7 +3,9 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/06/28 - v1.1.6 - Aide pour l'utilisation de LaTeX en lycée]
+\ProvidesPackage{ProfLycee}[2022/08/01 - v1.1.8 - Aide pour l'utilisation de LaTeX en lycée]
+% 1.1.8	Ajout d'un style mainlevee pour tikz
+% 1.1.7	Ajout de commandes pour des conversions bin/dec/hex
 % 1.1.6	Ajout d'une commande pour déterminer les paramètres d'un régression linéaire par moindres carrés
 % 1.1.5	Ajout de commandes pour "visualiser" le signe de ax+b ou de ax2+bx+c (cf tnsana !)
 % 1.1.4	Ajout d'une commande cercletrigoPL pour, en \TikZ, créer facilement un cercle trigo avec options
@@ -42,12 +44,14 @@
 \RequirePackage{xfp}
 \RequirePackage{xstring}
 \RequirePackage{xintexpr}
+\RequirePackage{xintbinhex}
 \RequirePackage{simplekv}
 \RequirePackage{listofitems}
 \RequirePackage{tabularray}
 \RequirePackage{fontawesome5}
 %librairies tikz
 \usetikzlibrary{calc}
+\usetikzlibrary{decorations}
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{decorations.markings}
 \usetikzlibrary{arrows,arrows.meta}
@@ -1283,6 +1287,161 @@
 	%taille des listes
 	\def\LNB{\inteval{\LXlen}}
 	\foreach \i in {1,2,...,\LNB} {\filldraw[\RegLinNuageCouleur] ({\LX[\i]-\RegLinNuageOx},{\LY[\i]-\RegLinNuageOy}) circle[radius=\RegLinNuageTaille] ;}
+}
+
+%=============ConversionsBases========= OK !!
+%dec->bin avec blocs de 4 chiffres
+\setKVdefault[CONVDECBIN]{%
+	affbase=true
+}
+\NewDocumentCommand\PLconvdecbin{ s O{} m }{%
+	\useKVdefault[CONVDECBIN]
+	\setKV[CONVDECBIN]{#2}% on paramètres les nouvelles clés et on les simplifie
+	\def\resbrut{\xintDecToBin{#3}}
+	\StrLen{\resbrut}[\nbchiffres]
+	\def\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}}
+	\IfBooleanTF{#1}
+		{\num{#3}\ifboolKV[CONVDECBIN]{affbase}{_{10}}{}=\num[digit-group-size=4]{\resbrut}\ifboolKV[CONVDECBIN]{affbase}{_{2}}{}}
+		{\num{#3}\ifboolKV[CONVDECBIN]{affbase}{_{10}}{}=\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resbrut}\ifboolKV[CONVDECBIN]{affbase}{_{2}}{}}
+}
+
+%bin->hexa avec blocs de 4 chiffres
+\defKV[CONVBINHEX]{%
+	trait=\def\epcrochet{#1}
+}
+\setKVdefault[CONVBINHEX]{%
+	trait=0.5pt,%
+	affbase=true,%
+	details=true
+}
+
+%bourrage de 0 avant
+\ExplSyntaxOn
+\NewExpandableDocumentCommand{\PLstrzeros}{m}
+{
+	\int_compare:nT { #1 > 0 }
+	{
+		0 \prg_replicate:nn { #1 - 1 } { 0 }
+	}
+}
+\ExplSyntaxOff
+
+%conversion (visuelle) d'un bloc de 4 chiffres binaires
+\newcommand\PLconvblocbinhex[2][0.5pt]{%
+	\underbracket[#1]{#2}_{\xintBinToHex{#2}}
+}
+
+%la conversion complète
+\newcommand\PLconvbinhex[2][]{%
+	\useKVdefault[CONVBINHEX]
+	\setKV[CONVBINHEX]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\def\chbrut{#2}
+	\StrLen{\chbrut}[\nbchiffres] %nb de chiffres du binaire
+	\xdef\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}} %nb de chiffres avec blocs de 4
+	\xdef\nbblocs{\fpeval{\nbgrp/4}} %nb de blocs
+	%on rajoute des zeros si besoin := OK
+	\xdef\resinter{\chbrut}
+	\num[digit-group-size=4]{\chbrut}\ifboolKV[CONVBINHEX]{affbase}{_{2}}{}=
+	\ifboolKV[CONVBINHEX]{details}{%
+	\ifnum\nbchiffres<\nbgrp
+		\xdef\nbz{\inteval{\nbgrp-\nbchiffres}}
+		\xdef\resinter{\PLstrzeros{\nbz}\chbrut}
+		\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resinter}=
+	\fi
+	%découpage par blocs et conversion en hexa := OK
+	\newcount\cpt
+	\cpt0
+	\loop\ifnum \cpt<\nbblocs
+		\def\iinit{\fpeval{4*\cpt+1}}
+		\def\ifinal{\fpeval{4*(\cpt+1)}}
+		\StrMid{\resinter}{\iinit}{\ifinal}[\blocinter]
+		\PLconvblocbinhex[\epcrochet]{\blocinter}
+		\advance\cpt by 1
+	\repeat
+	=
+	}%
+	{}
+	\xintBinToHex{\chbrut}\ifboolKV[CONVBINHEX]{affbase}{_{16}}{}
+}
+
+%bin/hexa->dec avec écriture polynomiale
+\defKV[CONVTODEC]{%
+	basedep=\def\basedepart{#1}
+}
+\setKVdefault[CONVTODEC]{%
+	basedep=2,%
+	affbase=true,%
+	details=true,%
+	zeros=true
+}
+
+\newcommand\PLconvtodec[2][]{%
+	\useKVdefault[CONVTODEC]
+	\setKV[CONVTODEC]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\def\nbdepart{#2}
+	\StrLen{\nbdepart}[\nbchiffres]
+	\StrChar{\nbdepart}{1}[\chiffre]
+	%si on est en base 16
+	\xintifboolexpr{\basedepart == 16}%
+	{%
+		\nbdepart\ifboolKV[CONVTODEC]{affbase}{_{\basedepart}}{} =
+		\ifboolKV[CONVTODEC]{details}{%
+			\xintHexToDec{\chiffre}\times\basedepart^{\inteval{\nbchiffres-1}}%
+			\newcount\cpt
+			\cpt2
+			\loop\ifnum \cpt<\inteval{\nbchiffres+1}
+				\def\puiss{\inteval{\nbchiffres-\cpt}}
+				\StrChar{\nbdepart}{\cpt}[\chiffre]
+				\ifboolKV[CONVTODEC]{zeros}%
+					{%
+						+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
+					}
+					{
+						\ifnum\xintHexToDec{\chiffre} > 0
+							+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
+						\fi
+					}
+				\advance\cpt by 1
+			\repeat
+			=
+			}
+			{}
+		\num{\xintHexToDec{\nbdepart}}\ifboolKV[CONVTODEC]{affbase}{_{10}}{}
+	}%
+	{}
+	\xintifboolexpr{\basedepart == 2}%
+	{%
+		\num[digit-group-size=4]{\nbdepart}\ifboolKV[CONVTODEC]{affbase}{_{\basedepart}}{} =
+		\ifboolKV[CONVTODEC]{details}{%
+			\chiffre\times\basedepart^{\inteval{\nbchiffres-1}}%
+			\newcount\cpt
+			\cpt2
+			\loop\ifnum \cpt<\inteval{\nbchiffres+1}
+				\def\puiss{\inteval{\nbchiffres-\cpt}}
+				\StrChar{\nbdepart}{\cpt}[\chiffre]
+				\ifboolKV[CONVTODEC]{zeros}%
+				{%
+					+\chiffre\times\basedepart^{\puiss}%
+				}
+				{
+					\ifnum\chiffre > 0
+						+\chiffre\times\basedepart^{\puiss}%
+					\fi
+				}
+			\advance\cpt by 1
+			\repeat
+			=
+			}
+			{}
+		\num{\xintBinToDec{\nbdepart}}\ifboolKV[CONVTODEC]{affbase}{_{10}}{}
+	}%
+	{}
+}
+
+%==============MainLevée TikZ========== OK !!
+\tikzset{%
+	mainlevee/.style args={#1et#2}{decorate,decoration={random steps, segment length=#1,amplitude=#2}},
+	mainlevee/.default={5mm et 0.6pt}
 }
 
 \endinput
