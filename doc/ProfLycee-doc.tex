@@ -9,8 +9,20 @@
 \renewcommand\ttdefault{lmtt}
 \usepackage[scaled=0.875]{cabin}
 \usepackage[build]{ProfLycee}
+\usepackage{tkz-euclide}
 \usetikzlibrary{hobby}
 \usepackage{siunitx}
+\usepackage{fancyhdr}
+%fancy
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+%\lhead{\sffamily \small [ProfLycee]}
+%\chead{\entete{\classe{} - \annee}}
+%\rhead{\sffamily \small - \thepage{} -}
+\lfoot{\sffamily \small [ProfLycee]}
+\cfoot{\sffamily \small - \thepage{} -}
+\rfoot{\hyperlink{matoc}{\small\faArrowAltCircleUp[regular]}}
+
 \usepackage{graphics}
 \usepackage{hvlogos}
 \usepackage{simplekv}
@@ -42,8 +54,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.1.6}
-\def\PLdate{28 Juin 2022}
+\def\PLversion{1.1.8}
+\def\PLdate{01 Août 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -170,17 +182,22 @@
 
 \begin{document}
 
-\thispagestyle{empty}
+%\AddToShipoutPicture{%
+%\begin{tikzpicture}[remember picture,overlay]
+%	\node [anchor=center,yshift=1cm,xshift=-1.5cm] (box\thepage) at (current page.south east){\hyperlink{matoc}{\LARGE\faArrowAltCircleUp[regular]}};
+%\end{tikzpicture}}
+
+\pagestyle{fancy}
 
 \maketitle
 
-{\Large \bfseries Résumé : }
+\thispagestyle{empty}
+
+{\Large {\bfseries Résumé} : Quelques commandes pour faciliter l'utilisation de \LaTeX{} pour les enseignants de mathématiques en lycée.}
 
 \medskip
 
-\noindent Quelques commandes pour faciliter l'utilisation de \LaTeX{} pour les enseignants de mathématiques en lycée.
-
-Quelques commandes pour des courbes \textit{lisses} avec gestion des extrema et des dérivées.
+\noindent Quelques commandes pour des courbes \textit{lisses} avec gestion des extrema et des dérivées.
 
 Quelques commandes pour simuler une fenêtre de logiciel de calcul formel, en \TikZ.
 
@@ -205,6 +222,8 @@ Une commande pour afficher un petit schéma, en \TikZ, sur le signe d'une foncti
 Deux commandes pour, en \TikZ, créer des petits schémas \og de signe \fg.
 
 Une commande pour déterminer des paramètres ($a$, $b$, $r$ et $r^2$) d'une régression linéaire par moindres carrés.
+
+Quelques commandes pour convertir bin/dec/hex avec certains détails.
 
 \vspace{1.5cm}
 
@@ -237,6 +256,9 @@ Une commande pour déterminer des paramètres ($a$, $b$, $r$ et $r^2$) d'une ré
 
 \newpage
 
+\phantomsection
+\hypertarget{matoc}{}
+
 \tableofcontents
 
 \newpage
@@ -266,7 +288,7 @@ Le {package} \ctex{ProfLycee} charge les {packages} :
 	\item \ctex{xcolor} avec les options \textsf{[table,svgnames]} ;
 	\item \ctex{tikz}, \ctex{pgf}, \ctex{xfp} ;
 	\item \ctex{xparse}, \ctex{xkeyval}, \ctex{xstring}, \ctex{simplekv} ;
-	\item \ctex{listofitems}, \ctex{xintexpr} ;
+	\item \ctex{listofitems}, \ctex{xintexpr} et \ctex{xintbinhex} ;
 	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{tcolorbox}.
 \end{itemize}
 \end{codeinfo}
@@ -379,7 +401,8 @@ Le {package}, qui s'enrichira peut-être au fil du temps permet -- pour le momen
 	\item créer un cartouche \textit{à la manière de} Capytale ;
 	\item créer rapidement un pavé droit ou un tétraèdre en \TikZ, avec gestion des nœuds ;
 	\item créer rapidement un ensemble d'éléments, avec gestion des espaces ;
-	\item créer, dans un environnement \TikZ, la \og toile \fg{} pour une suite récurrente.
+	\item créer, dans un environnement \TikZ, la \og toile \fg{} pour une suite récurrente :
+	\item etc
 \end{itemize}
 \end{codeidee}
 
@@ -1637,7 +1660,7 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 \subsection{Fractions}
 
 \begin{codeidee}
-L'idée est d'obtenir une commande pour simplifier un calcul sous forme de fraction irréductible.
+L'idée est d'obtenir une commande pour \textit{simplifier} un calcul sous forme de fraction irréductible.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -2037,7 +2060,7 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande :
 \subsection{Équations trigos}
 
 \begin{codeinfo}
-En plus des \Cle{Clés} précédentes, il existe un complément pour visualiser des solutions d'équations simples du type $\cos(x)=\ldots$ ou $\sin(x)=\ldots$.
+En plus des \Cle{Clés} précédentes, il existe un complément pour \textit{visualiser} des solutions d'équations simples du type $\cos(x)=\ldots$ ou $\sin(x)=\ldots$.
 \end{codeinfo}
 
 \begin{codecles}
@@ -2248,7 +2271,7 @@ Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou
 \begin{codeidee}
 Ces schémas peuvent être de plus utilisés, via la commande \ctex{aidesignetkztabPL} pour illustrer les signes obtenus dans un tableau de signes présentés grâce au package \ctex{tkz-tab}.
 
-Pour des raisons interne, le fonctionnement de la commande \ctex{aidesignetkztabPL} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
+Pour des raisons internes, le fonctionnement de la commande \ctex{aidesignetkztabPL} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour que la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -2630,9 +2653,287 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 
 \newpage
 
+\section{Conversions binaire/hexadécimal/décimal}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de \textit{compléter} les possibilités offertes par le package \ctex{xintbinhex}, en mettant en forme quelques conversions :
+
+\begin{itemize}
+	\item décimal en binaire avec blocs de 4 chiffres en sortie ;
+	\item conversion binaire ou hexadécimal en décimal avec écriture polynomiale.
+\end{itemize}
+\end{codeidee}
+
+\begin{codeinfo}
+Le package \ctex{xintbinhex} est la base de ces macros, puisqu'il permet de faire des conversions directes !
+
+\smallskip
+
+Les macros présentées ici ne font que les intégrer dans un environnement adapté à une correction ou une présentation !
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\xintDecToHex{100}
+\xintDecToBin{51}
+\xintHexToDec{A4C}
+\xintBinToDec{110011}
+\xintBinToHex{11111111}
+\xintHexToBin{ACDC}
+\xintCHexToBin{3F}
+\end{codetex}
+
+\begin{codesortie}
+\xintDecToHex{100}
+
+\xintDecToBin{51}
+
+\xintHexToDec{A4C}
+
+\xintBinToDec{110011}
+
+\xintBinToHex{11111111}
+
+\xintHexToBin{ACDC}
+
+\xintCHexToBin{3F}
+\end{codesortie}
+
+\subsection{Conversion décimal vers binaire}
+
+\begin{codetex}[listing only]
+\PLconvdecbin(*)[<clés>]{<nombre>}
+\end{codetex}
+
+\begin{codecles}
+Concernant la commande en elle même, peu de paramétrage :
+
+\begin{itemize}
+	\item la version \textit{étoilée} qui permet de ne pas afficher de zéros avant pour \og compléter \fg{} ;
+	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
+	\item l'argument, mandataire, est le nombre entier à convertir.
+\end{itemize}
+
+Le formatage est géré par \ctex{sinuitx}, le mieux est donc de positionner la commande dans un environnement mathématique.
+
+\smallskip
+
+Les nombres écrits en binaire sont, par défaut, présentés en bloc(s) de 4 chiffres.
+\end{codecles}
+
+\begin{codetex}[listing only]
+% Conversion avec affichage de la base et par bloc de 4
+$\PLconvdecbin{415}$
+% Conversion avec affichage de la base et sans forcément des blocs de 4
+$\PLconvdecbin*{415}$
+% Conversion sans affichage de la base et par bloc de 4
+$\PLconvdecbin[affbase=false]{415}$
+% Conversion sans affichage de la base et sans forcément des blocs de 4
+$\PLconvdecbin*[affbase=false]{415}$
+\end{codetex}
+
+\begin{codesortie}
+$\PLconvdecbin{415}$
+
+\smallskip
+
+$\PLconvdecbin*{415}$
+
+\smallskip
+
+$\PLconvdecbin[affbase=false]{415}$
+
+\smallskip
+
+$\PLconvdecbin*[affbase=false]{415}$
+\end{codesortie}
+
+\subsection{Conversion hexadécimal vers binaire}
+
+\begin{codeinfo}
+L'idée est ici de présenter la conversion, grâce à la conversion \og directe \fg{} par blocs de 4 chiffres :
+
+\begin{itemize}
+	\item la macro rajoute éventuellement les zéros pour compléter ;
+	\item elle découpe par blocs de 4 chiffres binaires ;
+	\item elle présente la conversion de chacun des blocs de 4 chiffres binaires ;
+	\item elle affiche la conversion en binaire.
+\end{itemize}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\PLconvbinhex[<clés>]{<nombre>}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4 ; \hfill{}défaut \Cle{true}
+	\item la clé \Cle{trait} qui permet de modifier l'épaisseur du crochet. \hfill{}défaut \Cle{0.
+	5pt}
+\end{itemize}
+
+Le formatage est géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
+\end{codecles}
+
+\begin{codetex}[listing only]
+%conversion avec détails et affichage de la base
+$\PLconvbinhex{110011111}$
+%conversion avec détails et affichage, et modif taille crochet
+$\PLconvbinhex[trait=1.5pt]{110011111}$
+%conversion sans détails et affichage de la base
+$\PLconvbinhex[details=false]{110011111}$
+%conversion sans détails et sans affichage de la base
+$\PLconvbinhex[affbase=false,details=false]{110011111}$
+\end{codetex}
+
+\begin{codesortie}
+$\PLconvbinhex{110011111}$
+
+$\PLconvbinhex[trait=1.5pt]{110011111}$
+
+$\PLconvbinhex[details=false]{110011111}$
+
+$\PLconvbinhex[affbase=false,details=false]{110011111}$
+\end{codesortie}
+
+\pagebreak
+
+\subsection{Conversion binaire ou hexadécimal en décimal}
+
+\begin{codeinfo}
+L'idée est ici de présenter la conversion, grâce à l'écriture polynômiale :
+
+\begin{itemize}
+	\item écrit la somme des puissances ;
+	\item convertir si besoin les \textit{chiffres} hexadécimal ;
+	\item peut ne pas afficher les monômes de coefficient 0.
+\end{itemize}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\PLconvtodec[<clés>]{<nombre>}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{basedep} qui est la base de départ (2 ou 16 !) ; \hfill{}défaut \Cle{2}
+	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4 ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{zeros} qui affiche les chiffres 0 dans la somme. \hfill{}défaut \Cle{true}
+\end{itemize}
+
+Le formatage est toujours géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
+\end{codecles}
+
+\begin{codetex}[listing only]
+%conversion 16->10 avec détails et affichage de la base et zéros
+$\PLconvtodec[basedep=16]{19F}$
+%conversion 2->10 avec détails et affichage de la base et zéros
+$\PLconvtodec{110011}$
+%conversion 2->10 avec détails et affichage de la base et sans zéros
+$\PLconvtodec[zeros=false]{110011}$
+%conversion 16->10 sans détails et affichage de la base et avec zéros
+$\PLconvtodec[basedep=16,details=false]{AC0DC}$
+%conversion 16->10 avec détails et sans affichage de la base et sans zéros
+$\PLconvtodec[zeros=false,basedep=16]{AC0DC}$
+\end{codetex}
+
+\begin{codesortie}
+$\PLconvtodec[basedep=16]{19F}$
+
+$\PLconvtodec{110011}$
+
+$\PLconvtodec[zeros=false]{110011}$
+
+$\PLconvtodec[basedep=16,details=false]{AC0DC}$
+
+$\PLconvtodec[zeros=false,basedep=16]{AC0DC}$
+\end{codesortie}
+
+\newpage
+
+\section{Style \og main levée \fg{} en \TikZ}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de \textit{proposer} un style \textit{tout prêt} pour simuler un tracé, en \TikZ, à \og main levée \fg.
+
+Il s'agit d'un style \textit{basique} utilisant la librairie \ctex{decorations} avec \textsf{random steps}.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\tikzset{%
+	mainlevee/.style args={#1et#2}{decorate,decoration={random steps, segment length=#1,amplitude=#2}},
+	mainlevee/.default={5mm et 0.6pt}
+}
+\end{codetex}
+
+\subsection{Utilisation basique}
+
+\begin{codeinfo}
+Il s'agit ni plus ni moins d'un style \TikZ{} à intégrer dans les tracés et constructions \TikZ !
+\end{codeinfo}
+
+\begin{codecles}
+Concernant le style en lui-même, deux paramètres peuvent être précisés via \Cle{mainlevee=\#1 et \#2} :
+
+\begin{itemize}
+	\item \Cle{\#1} correspond à l'option \textsf{segment length} (longueur des segments \textit{types}) ;\hfill{}défaut \Cle{5mm}
+	\item \Cle{\#2} correspond à l'option \textsf{amplitude} (amplitude maximale de la \textit{déformation}).\hfill{}défaut \Cle{0.6pt}
+\end{itemize}
+
+Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -- satisfaisants, mais l'utilisateur pourra modifier à loisir ces paramètres !
+\end{codecles}
+
+\begin{codetex}[listing only]
+%la grille a été rajoutée pour la sortie
+\begin{tikzpicture}
+	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+
+\begin{tikzpicture}
+	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+
+\begin{tikzpicture}
+	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\hfill~\begin{tikzpicture}
+	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+\hspace{1.5cm}
+\begin{tikzpicture}
+	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+\hspace{1.5cm}
+\begin{tikzpicture}
+	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+\hfill~
+\end{codesortie}
+
+\newpage
+
 \section{Historique}
 
-{\small \bverb|v1.1.6|~:~~~~Ajout d'une commande \textsf{PLregln} pour déterminer les paramètres d'une régression linéaire par moindres carrés
+{\small \bverb|v1.1.8|~:~~~~Style "Mainlevée" basique pour \TikZ
+
+{\small \bverb|v1.1.7|~:~~~~Conversions bin/hex/dec (basées sur \ctex{xintbinhex}) avec quelques détails
+
+{\small \bverb|v1.1.6|~:~~~~Ajout d'une commande \textsf{PLreglin} pour déterminer les paramètres d'une régression linéaire par moindres carrés
 
 {\small \bverb|v1.1.5|~:~~~~Ajout de deux commandes \textsf{aidesignePL} et \textsf{aidesignetkztabPL} pour, en \TikZ, créer des petits schémas \og de signe \fg
 
