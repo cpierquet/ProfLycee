@@ -1,4 +1,8 @@
-% !TeX TXS-program:compile = txs:///pythonpdfse
+% !TeX TXS-program:compile = txs:///arara
+% arara: pdflatex: {shell: yes, synctex: no, interaction: batchmode}
+% arara: pythontex: {rerun: modified} if found('pytxcode', 'PYTHONTEX#py')
+% arara: pdflatex: {shell: yes, synctex: no, interaction: batchmode} if found('pytxcode', 'PYTHONTEX#py')
+% arara: pdflatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass{article}
 \usepackage[french]{babel}
@@ -11,14 +15,12 @@
 \usepackage[build]{ProfLycee}
 \usepackage{tkz-euclide}
 \usetikzlibrary{hobby}
-\usepackage{siunitx}
+\usepackage[group-minimum-digits=4]{siunitx}
+\usepackage{fancyvrb}
 \usepackage{fancyhdr}
 %fancy
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
-%\lhead{\sffamily \small [ProfLycee]}
-%\chead{\entete{\classe{} - \annee}}
-%\rhead{\sffamily \small - \thepage{} -}
 \lfoot{\sffamily \small [ProfLycee]}
 \cfoot{\sffamily \small - \thepage{} -}
 \rfoot{\hyperlink{matoc}{\small\faArrowAltCircleUp[regular]}}
@@ -37,6 +39,7 @@
 \usepackage{listofitems}
 \usepackage{xintexpr}
 \usepackage{codehigh}
+\usepackage{scontents}
 \usepackage{hyperref}
 \urlstyle{same}
 \hypersetup{pdfborder=0 0 0}
@@ -54,8 +57,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.1.8}
-\def\PLdate{01 Août 2022}
+\def\PLversion{1.2.7}
+\def\PLdate{1\ier{} Octobre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -221,9 +224,15 @@ Une commande pour afficher un petit schéma, en \TikZ, sur le signe d'une foncti
 
 Deux commandes pour, en \TikZ, créer des petits schémas \og de signe \fg.
 
-Une commande pour déterminer des paramètres ($a$, $b$, $r$ et $r^2$) d'une régression linéaire par moindres carrés.
+Une commande pour travailler sur les statistiques à deux variables (algébriques et graphiques).
 
 Quelques commandes pour convertir bin/dec/hex avec certains détails.
+
+Une commande pour, en \TikZ, créer un pixelart avec correction éventuelle.
+
+Une commande pour, en \TikZ, créer un SudoMaths non forcément $9\times9$.
+
+Des commandes pour effectuer des calculs de probas (lois binomiale, exponentielle, de Poisson, normale).
 
 \vspace{1.5cm}
 
@@ -279,8 +288,6 @@ Il se charge, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee
 L'utilisateur est libre de charger ses autres {packages} utiles et habituels, ainsi que ses \textsf{polices} et \textsf{encodages} habituels.
 \end{codeidee}
 
-\smallskip
-
 \begin{codeinfo}
 Le {package} \ctex{ProfLycee} charge les {packages} :
 
@@ -293,15 +300,14 @@ Le {package} \ctex{ProfLycee} charge les {packages} :
 \end{itemize}
 \end{codeinfo}
 
-\smallskip
-
 \begin{codeidee}
-J'ai utilisé les {packages} du phénoménal C. Tellechea, je vous conseille d'aller jeter un œil sur ce qu'il est possible de faire en \LaTeX{} avec \ctex{listofitems}, \ctex{randomlist}, \ctex{simplekv} et \ctex{xstring} !
+J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un œil sur ce qu'il est possible de faire en \LaTeX{} avec \ctex{listofitems}, \ctex{randomlist}, \ctex{simplekv} ou encore \ctex{xstring} !
 \end{codeidee}
 
-\smallskip
+\subsection{Chargement du package}
 
 \begin{codetex}[listing only]
+%exemple de chargement pour une compilation en (pdf)latex
 \documentclass{article}
 \usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
@@ -310,13 +316,21 @@ J'ai utilisé les {packages} du phénoménal C. Tellechea, je vous conseille d'a
 ...
 \end{codetex}
 
+\begin{codetex}[listing only]
+%exemple de chargement pour une compilation en (xe/lua)latex
+\documentclass{article}
+\usepackage[french]{babel}
+\usepackage{mathtools}
+\usepackage{fontspec}
+\usepackage{ProfLycee}
+...
+\end{codetex}
+
 \subsection{Options du package}
 
 \begin{codeinfo}
-Par défaut, \ctex{minted} est chargé et donc la compilation nécessite d'utiliser \textsf{shell-escape}. Cependant, si vous ne souhaitez pas utiliser les commandes nécessitant \ctex{minted} vous pouvez charger le package \ctex{ProfLycee} avec l'option \Cle{nominted}.
+Par défaut, \ctex{minted} est chargé et donc la compilation nécessite d'utiliser \textsf{shell-escape}. Cependant, si vous ne \underline{souhaitez pas} utiliser les commandes nécessitant \ctex{minted} vous pouvez charger le package \ctex{ProfLycee} avec l'option \Cle{nominted}.
 \end{codeinfo}
-
-\smallskip
 
 \begin{codetex}[listing only]
 ...
@@ -324,23 +338,17 @@ Par défaut, \ctex{minted} est chargé et donc la compilation nécessite d'utili
 ...
 \end{codetex}
 
-\medskip
-
 \begin{codeinfo}
 En compilant (notamment avec les packages \ctex{minted} et \ctex{pythontex}) on peut spécifier des répertoires particuliers pour les (ou des) fichiers auxiliaires.
 
 Avec l'option \Cle{build}, l'utilisateur a la possibilité de placer les fichiers temporaires de \ctex{minted} et \ctex{pythontex} dans un répertoire \textsf{build} du répertoire courant.
 \end{codeinfo}
 
-\smallskip
-
 \begin{codetex}[listing only]
 ...
 \usepackage[build]{ProfLycee}
 ...
 \end{codetex}
-
-\smallskip
 
 \begin{codeinfo}
 Les options précédentes sont cumulables, et, pour info, elles conditionnent le chargement des {packages} avec les options :
@@ -373,8 +381,6 @@ Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce
 \end{itemize}
 \end{codeidee}
 
-\smallskip
-
 \begin{codeinfo}
 Les \textsf{commandes} et \textsf{environnements} présentés seront explicités via leur \textsf{syntaxe} avec les \textsf{options} ou \textsf{arguments}.
 
@@ -387,26 +393,24 @@ Les \textsf{codes} seront présentés dans des \textsf{boîtes} \textcolor{red!7
 Les \textsf{clés} ou \textsf{options} seront présentées dans des \textsf{boîtes} \textcolor{ForestGreen}{{\small \faPaperclip} Clés}.
 \end{codeinfo}
 
-\subsection{Outils disponibles}
-
-\begin{codeidee}
-Le {package}, qui s'enrichira peut-être au fil du temps permet -- pour le moment -- de :
-
-\begin{itemize}
-	\item tracer des splines cubiques avec gestion \textit{assez fine} des tangentes ;
-	\item tracer des tangentes (ou portions) de tangentes sur la même base que pour les splines ;
-	\item simuler une fenêtre de logiciel formel (\textit{à la manière de} \textsf{XCas}) ;
-	\item mettre en forme du code \textsf{python} ou \textsf{pseudocode} ;
-	\item simuler une fenêtre de terminal (win/unix/osx) ;
-	\item créer un cartouche \textit{à la manière de} Capytale ;
-	\item créer rapidement un pavé droit ou un tétraèdre en \TikZ, avec gestion des nœuds ;
-	\item créer rapidement un ensemble d'éléments, avec gestion des espaces ;
-	\item créer, dans un environnement \TikZ, la \og toile \fg{} pour une suite récurrente :
-	\item etc
-\end{itemize}
-\end{codeidee}
-
-\smallskip
+%\subsection{Outils disponibles}
+%
+%\begin{codeidee}
+%Le {package}, qui s'enrichira peut-être au fil du temps permet -- pour le moment -- de :
+%
+%\begin{itemize}
+%	\item tracer des splines cubiques avec gestion \textit{assez fine} des tangentes ;
+%	\item tracer des tangentes (ou portions) de tangentes sur la même base que pour les splines ;
+%	\item simuler une fenêtre de logiciel formel (\textit{à la manière de} \textsf{XCas}) ;
+%	\item mettre en forme du code \textsf{python} ou \textsf{pseudocode} ;
+%	\item simuler une fenêtre de terminal (win/unix/osx) ;
+%	\item créer un cartouche \textit{à la manière de} Capytale ;
+%	\item créer rapidement un pavé droit ou un tétraèdre en \TikZ, avec gestion des nœuds ;
+%	\item créer rapidement un ensemble d'éléments, avec gestion des espaces ;
+%	\item créer, dans un environnement \TikZ, la \og toile \fg{} pour une suite récurrente :
+%	\item etc
+%\end{itemize}
+%\end{codeidee}
 
 \begin{codeinfo}
 À noter que certaines commandes disponibles sont liées à un environnement \ctex{tikzpicture}, elles ne sont pas autonomes mais permettent de conserver -- en parallèle -- toute commande liée à \TikZ{} !
@@ -487,8 +491,6 @@ Pour déclarer les paramètres :
 \end{tikzpicture}
 \end{codetex}
 
-\smallskip
-
 \begin{codecles}
 Certains paramètres peuvent être gérés directement dans la commande \ctex{\textbackslash splinetikz} :
 %
@@ -544,8 +546,6 @@ Si jamais il existe (un ou) des points \textit{anguleux}, le plus simple est de 
 \splinetikz[liste=\LISTE,affpoints=true,coeffs=3,couleur=red]
 \end{codetex}
 
-\smallskip
-
 \begin{codeinfo}
 Avec des explications utiles à la compréhension :
 
@@ -589,8 +589,6 @@ On peut dans ce cas \textit{jouer} sur les coefficients de cette portion pour \t
 	\end{tikzpicture}
 \end{center}
 \end{codeinfo}
-
-\smallskip
 
 \begin{codetex}[listing only]
 ...
@@ -646,8 +644,6 @@ En parallèle de l'outil \ctex{\textbackslash splinetikz}, il existe l'outil \ct
 NB : il peut fonctionner indépendamment de l'outil \ctex{\textbackslash splinetikz} puisque la liste des points de travail est gérée de manière autonome !
 \end{codeidee}
 
-\smallskip
-
 \begin{codetex}[listing only]
 \begin{tikzpicture}
 	...
@@ -655,8 +651,6 @@ NB : il peut fonctionner indépendamment de l'outil \ctex{\textbackslash splinet
 	...
 \end{tikzpicture}
 \end{codetex}
-
-\smallskip
 
 \begin{codecles}
 Cela permet de tracer la tangente :
@@ -792,8 +786,6 @@ Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{cap
 La première chose à définir est l'ensemble des paramètres \textit{globaux} de la fenêtre de calcul formel, à l'aide de \Cle{Clés}.
 \end{codeinfo}
 
-\smallskip
-
 \begin{codetex}[listing only]
 ...
 \begin{tikzpicture}[...]
@@ -801,8 +793,6 @@ La première chose à définir est l'ensemble des paramètres \textit{globaux} d
 	...
 \end{tikzpicture}
 \end{codetex}
-
-\smallskip
 
 \begin{codecles}
 Les \Cle{Clés} disponibles sont :
@@ -830,8 +820,6 @@ Les \Cle{Clés} disponibles sont :
 Une fois les paramètres déclarés, il faut créer les différentes lignes, grâce à la \ctex{\textbackslash ligneCF}.
 \end{codeinfo}
 
-\smallskip
-
 \begin{codetex}[listing only]
 \begin{tikzpicture}[...]
 	\paramCF[.......]
@@ -839,8 +827,6 @@ Une fois les paramètres déclarés, il faut créer les différentes lignes, gr�
 	...
 \end{tikzpicture}
 \end{codetex}
-
-\smallskip
 
 \begin{codecles}
 Les (quelques) \Cle{Clés} disponibles sont :
@@ -853,8 +839,6 @@ Les (quelques) \Cle{Clés} disponibles sont :
 %
 Chaque argument \textsf{COMMANDE} \& \textsf{RÉSULTAT} peut être formaté (niveau police) de manière indépendante.
 \end{codecles}
-
-\smallskip
 
 \begin{codetex}[tikz lower]
 %code tikz
@@ -903,7 +887,190 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 
 \newpage
 
-\section{Code \& Console Python}
+\section{Code Python \og simple \fg}\label{pythonsimple}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+Le {package} \ctex{listings} permet d'insérer et de formater du code, notamment du code Python. En \textit{partenariat} avec \ctex{tcolorbox}, on peut donc présenter \textit{joliment} du code python !
+\end{codeidee}
+
+\begin{codeinfo}
+Le package \ctex{listings} ne nécessite pas de compilation particulière, au contraire d'autres (comme \ctex{pythontex} ou \ctex{minted}) qui seront présentés à la section suivante.
+\end{codeinfo}
+
+\begin{codeinfo}
+Le style utilisé pour formater le code Python n'est pas modifiable. Il donne un rendu proche de celui des packages commes \ctex{pythontex} ou \ctex{minted}.
+
+\smallskip
+
+Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code Python (via les sections suivantes), le rendu peut être légèrement différent.
+\end{codeinfo}
+
+\subsection{Présentation de code Python grâce à listings}
+
+\begin{codeidee}
+L'environnement \ctex{\textbackslash envcodepython} (chargé par \ctex{ProfLycee} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\begin{envcodepython}(*)[largeur]{commandes tcbox}
+...
+\end{envcodepython}
+\end{codetex}
+
+\begin{codecles}
+Plusieurs \Cle{arguments} sont disponibles :
+
+\begin{itemize}
+	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
+	\item le premier argument (optionnel), concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item le second argument (mandataire), concerne des \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}, comme l'alignement.
+\end{itemize}
+\end{codecles}
+
+\begin{codeinfo}
+Les environnements \ctex{DeclareTCBListing} créés par \ctex{tcolorbox} et \ctex{listings} ne sont pas compatibles avec les options \Cle{gobble} (pour supprimer les tabulations d'environnement), donc il faut bien penser à \og aligner \fg{} le code à gauche, pour éviter des tabulations non esthétiques !
+\end{codeinfo}
+
+\subsection{Insertion via un fichier \og externe \fg}
+
+\begin{codeidee}
+Pour des raison pratiques, il est parfois intéressant d'avoir le code Python dans un fichier externe au ficher \ctex{tex}, ou bien créé directement par le fichier \ctex{tex} (via \ctex{scontents}, notamment, mais non chargé par \ctex{ProfLycee}).
+
+Dans ce cas, il n'est pas nécessaire d'aligner le code \og à gauche \fg, en utilisant une commande alternative.
+
+\smallskip
+
+Si cette méthode est utilisée, il ne faut oublier de charger le package \ctex{scontents}.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\usepackage{scontents} %si script déclaré dans le fichier tex
+...
+\envcodepythonfichier(*)[largeur]{commandes tcbox}{<script>}
+\end{codetex}
+
+\subsection{Exemples}
+
+\begin{codetex}[listing only]
+\begin{envcodepython}{} %les {}, même vides, sont nécessaires (bug avec # sinon !)
+#environnement par défaut
+nb = int(input("Saisir un entier Python positif"))
+if (nb %7 == 0) :
+	print(f"{nb} est bien divisible par 7")
+#endif
+
+def f(x) :
+	return x**2
+\end{envcodepython}
+\end{codetex}
+
+\begin{codesortie}
+\begin{envcodepython}{}
+#environnement par défaut
+nb = int(input("Saisir un entier Python positif"))
+if (nb %7 == 0) :
+	print(f"{nb} est bien divisible par 7")
+#endif
+
+def f(x) :
+	return x**2
+\end{envcodepython}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+\begin{envcodepython}*[0.5\linewidth]{flush right}
+#largeur de 50%, sans numéro, et aligné à droite
+nb = int(input("Saisir un entier Python positif"))
+if (nb %7 == 0) :
+	print(f"{nb} est bien divisible par 7")
+#endif
+
+def f(x) :
+	return x**2
+\end{envcodepython}
+\end{codetex}
+
+\begin{codesortie}
+\begin{envcodepython}*[0.5\linewidth]{flush right}
+#largeur de 50%, sans numéro, et aligné à droite
+nb = int(input("Saisir un entier Python positif"))
+if (nb %7 == 0) :
+	print(f"{nb} est bien divisible par 7")
+#endif
+
+def f(x) :
+	return x**2
+\end{envcodepython}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+\begin{scontents}[overwrite,write-out=testscript.py]
+# Calcul de la factorielle en langage Python
+def factorielle(x):
+	if x < 2:
+		return 1
+	else:
+		return x * factorielle(x-1)
+
+# rapidité de tracé
+import matplotlib.pyplot as plt
+import time
+def trace_parabole_tableaux():
+	depart=time.clock()
+	X = [] # Initialisation des listes
+	Y = []
+	a = -2
+	h = 0.001
+	while a<2:
+		X.append(a) # Ajout des valeurs
+		Y.append(a*a) # au "bout" de X et Y
+		a = a+h
+	# Tracé de l'ensemble du tableau de valeurs
+	plt.plot(X,Y,".b")
+	fin=time.clock()
+	return "Temps : " + str(fin-depart) + " s."
+\end{scontents}
+
+%environnement centré, avec numéros, largeur 9cm
+\envcodepythonfichier[9cm]{center}{testscript.py}
+\end{codetex}
+
+\begin{codesortie}
+\begin{scontents}[overwrite,write-out=testscript.py]
+# Calcul de la factorielle en langage Python
+def factorielle(x):
+	if x < 2:
+		return 1
+	else:
+		return x * factorielle(x-1)
+
+# rapidité de tracé
+import matplotlib.pyplot as plt
+import time
+def trace_parabole_tableaux():
+	depart=time.clock()
+	X = [] # Initialisation des listes
+	Y = []
+	a = -2
+	h = 0.001
+	while a<2:
+		X.append(a) # Ajout des valeurs
+		Y.append(a*a) # au "bout" de X et Y
+		a = a+h
+	# Tracé de l'ensemble du tableau de valeurs
+	plt.plot(X,Y,".b")
+	fin=time.clock()
+	return "Temps : " + str(fin-depart) + " s."
+\end{scontents}
+
+\envcodepythonfichier[9cm]{center}{testscript.py}
+\end{codesortie}
+
+\newpage
+
+\section{Code \& Console Python, version Pythontex ou Minted}
 
 \subsection{Introduction}
 
@@ -917,15 +1084,11 @@ Le {package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. O
 \end{itemize}
 \end{codeidee}
 
-\smallskip
-
 \begin{codeinfo}
 \textbf{Attention : }il faut dans ce cas une compilation en plusieurs étapes, comme par exemple \textsf{pdflatex puis pythontex puis pdflatex} !
 
 Voir par exemple \url{http://lesmathsduyeti.fr/fr/informatique/latex/pythontex/} !
 \end{codeinfo}
-
-\smallskip
 
 \begin{codeinfo}
 Compte tenu de la \textit{relative complexité} pour gérer les options (par paramètres/clés\ldots) des \textit{tcbox} et des \textit{fancyvrb}, le style est \og fixé \fg{} tel quel, et seules la taille et la position de la \textit{tcbox} sont modifiables. Si toutefois vous souhaitez personnaliser davantage, il faudra prendre le code correspondant et appliquer vos modifications !
@@ -939,15 +1102,11 @@ Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une b
 L'environnement \ctex{\textbackslash envcodepythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
 \end{codeidee}
 
-\smallskip
-
 \begin{codetex}[listing only]
 \begin{envcodepythontex}[largeur=...,centre=...,lignes=...]
 ...
 \end{envcodepythontex}
 \end{codetex}
-
-\smallskip
 
 \begin{codecles}
 Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} modifier le style :
@@ -959,8 +1118,6 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \end{itemize}
 \end{codecles}
 
-\smallskip
-
 \begin{codetex}[listing only]
 \begin{envcodepythontex}[largeur=12cm]
 	#environnement Python(tex) centré avec numéros de ligne
@@ -968,8 +1125,6 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 		return x**2
 \end{envcodepythontex}
 \end{codetex}
-
-\smallskip
 
 \begin{codesortie}
 \begin{envcodepythontex}[largeur=12cm]
@@ -979,8 +1134,6 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \end{envcodepythontex}
 \end{codesortie}
 
-\medskip
-
 \begin{codetex}[listing only]
 \begin{envcodepythontex}[largeur=12cm,lignes=false,centre=false]
 	#environnement Python(tex) non centré sans numéro de ligne
@@ -988,8 +1141,6 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 		return x**2
 \end{envcodepythontex}
 \end{codetex}
-
-\smallskip
 
 \begin{codesortie}
 \begin{envcodepythontex}[largeur=12cm,lignes=false,centre=false]
@@ -1007,21 +1158,15 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment python (il nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18}).
 \end{codeinfo}
 
-\smallskip
-
 \begin{codeidee}
 L'environnement \ctex{\textbackslash envcodepythonminted} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style (\textit{minted}) particulier.
 \end{codeidee}
-
-\smallskip
 
 \begin{codetex}[listing only]
 \begin{envcodepythonminted}(*)[largeur][options]
 ...
 \end{envcodepythonminted}
 \end{codetex}
-
-\smallskip
 
 \begin{codecles}
 Plusieurs \Cle{arguments} (optionnels) sont disponibles :
@@ -1033,8 +1178,6 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \end{itemize}
 \end{codecles}
 
-\medskip
-
 \begin{codetex}[listing only]
 \begin{envcodepythonminted}[12cm][center]
 	#environnement Python(minted) centré avec numéros, de largeur 12cm
@@ -1042,8 +1185,6 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 		return x**2
 \end{envcodepythonminted}
 \end{codetex}
-
-\smallskip
 
 \begin{codesortie}
 \begin{envcodepythonminted}[12cm][center]
@@ -1053,8 +1194,6 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \end{envcodepythonminted}
 \end{codesortie}
 
-\medskip
-
 \begin{codetex}[listing only]
 \begin{envcodepythonminted}*[0.8\linewidth][]
 	#environnement Python(minted) sans numéro, de largeur 0.8\linewidth
@@ -1062,8 +1201,6 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 		return x**2
 \end{envcodepythonminted}
 \end{codetex}
-
-\smallskip
 
 \begin{codesortie}
 \begin{envcodepythonminted}*[0.8\linewidth][]
@@ -1081,15 +1218,11 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 C'est l'environnement \ctex{\textbackslash envconsolepythontex} qui permet de le faire.
 \end{codeidee}
 
-\smallskip
-
 \begin{codetex}[listing only]
 \begin{envconsolepythontex}[largeur=...,centre=...,label=...]
 ...
 \end{envconsolepythontex}
 \end{codetex}
-
-\smallskip
 
 \begin{codecles}
 Les \Cle{Clés} disponibles sont :
@@ -1101,8 +1234,6 @@ Les \Cle{Clés} disponibles sont :
 \end{itemize}
 \end{codecles}
 
-\medskip
-
 \begin{codetex}[listing only]
 \begin{envconsolepythontex}[largeur=14cm,centre=false]
 	#console Python(tex) non centrée avec label
@@ -1111,8 +1242,6 @@ Les \Cle{Clés} disponibles sont :
 	sqrt(12)
 \end{envconsolepythontex}
 \end{codetex}
-
-\smallskip
 
 \begin{codesortie}
 \smallskip
@@ -1124,8 +1253,6 @@ Les \Cle{Clés} disponibles sont :
 \end{envconsolepythontex}
 \end{codesortie}
 
-\medskip
-
 \begin{codetex}[listing only]
 \begin{envconsolepythontex}[largeur=14cm,label=false]
 	#console Python(tex) centrée sans label
@@ -1133,8 +1260,6 @@ Les \Cle{Clés} disponibles sont :
 	table[0][0]
 \end{envconsolepythontex}
 \end{codetex}
-
-\smallskip
 
 \begin{codesortie}
 \smallskip
@@ -1161,13 +1286,9 @@ Le {package} \ctex{listings} permet d'insérer et de présenter du code, et avec
 L'environnement \ctex{\textbackslash envpseudocode} permet de présenter du (pseudo-code) dans une \ctex{tcolorbox}.
 \end{codeidee}
 
-\smallskip
-
 \begin{codeinfo}
 De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gérer le paramètre \textit{autogobble}, donc il faudra être vigilant quant à la position du code (pas de tabulation en fait\ldots)
 \end{codeinfo}
-
-\smallskip
 
 \begin{codetex}[listing only]
 \begin{envpseudocode}(*)[largeur][options]
@@ -1175,8 +1296,6 @@ De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gére
 ...
 \end{envpseudocode}
 \end{codetex}
-
-\smallskip
 
 \begin{codecles}
 Plusieurs \Cle{arguments} (optionnels) sont disponibles :
@@ -1188,8 +1307,6 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \end{itemize}
 \end{codecles}
 
-\medskip
-
 \begin{codetex}[listing only]
 \begin{envpseudocode} %non centré, de largeur par défaut (12cm) avec lignes
 List = [...]          # à déclarer au préalable
@@ -1199,8 +1316,6 @@ Pour i allant de 0 à n-1 Faire
 FinPour
 \end{envpseudocode}
 \end{codetex}
-
-\smallskip
 
 \begin{codesortie}
 \begin{envpseudocode}
@@ -1212,8 +1327,6 @@ FinPour
 \end{envpseudocode}
 \end{codesortie}
 
-\medskip
-
 \begin{codetex}[listing only]
 \begin{envpseudocode}*[15cm][center] %centré, de largeur 15cm sans ligne
 List = [...]          # à déclarer au préalable
@@ -1223,8 +1336,6 @@ Pour i allant de 0 à n-1 Faire
 FinPour
 \end{envpseudocode}
 \end{codetex}
-
-\smallskip
 
 \begin{codesortie}
 \begin{envpseudocode}*[15cm][center]
@@ -1244,8 +1355,6 @@ FinPour
 J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique ou de mise en évidence de mots clés, uniquement un formatage libre de pseudo-code.
 \end{codeinfo}
 
-\smallskip
-
 \begin{codeidee}
 Évidemment, le code source est récupérable et adaptable à volonté, en utilisant les possibilités du package \ctex{listings}.
 
@@ -1255,6 +1364,28 @@ Celles et ceux qui sont déjà à l'aise avec les packages \ctex{listings} ou \c
 
 Il s'agit ici de présenter une version \og clé en main \fg{}.
 \end{codeidee}
+
+\begin{codeinfo}
+Le style \ctex{listings} utilisé par la commande a l'option \Cle{mathescape} activé, et accessible grâce aux délimiteurs \Cle{(*...*)}.
+
+Cela permet d'insérer du code \LaTeX{} dans l'environnement \ctex{\textbackslash envpseudocode} (attention au fontes de rendu par contre !).
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\begin{envpseudocode}[12cm][]
+#Utilisation du mode mathescape
+Afficher (*\og*) .........(*\fg*)
+m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
+\end{envpseudocode}
+\end{codetex}
+
+\begin{codesortie}
+\begin{envpseudocode}[12cm][]
+#Utilisation du mode mathescape
+Afficher (*\og*) .........(*\fg*)
+m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
+\end{envpseudocode}
+\end{codesortie}
 
 \newpage
 
@@ -1304,15 +1435,11 @@ Peu d'options pour ces commandes :
 \end{itemize}
 \end{codecles}
 
-\medskip
-
 \begin{codeinfo}
 Le \textsf{code} n'est pas formaté, ni mis en coloration syntaxique.
 
 De ce fait tous les caractères sont autorisés : même si l'éditeur pourra détecter le \% comme le début d'un commentaire, tout sera intégré dans le code mis en forme !
 \end{codeinfo}
-
-\medskip
 
 \begin{codetex}[listing only]
 \begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center] %12cm, avec titre modifié et centré
@@ -1320,8 +1447,6 @@ test@DESKTOP:~$ ping -c 2 ctan.org
 PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \end{PLtermunix}
 \end{codetex}
-
-\medskip
 
 \begin{codesortie}
 \begin{PLtermunix}[12cm]{titre=Terminal Ubuntu}[center]
@@ -1410,13 +1535,13 @@ Peu d'options pour ces commandes :
 \end{codecles}
 
 \begin{codetex}[listing only]
-\liencapytale{abcd-12345}           #lien simple, en sf
+\liencapytale{abcd-12345}           %lien simple, en sf
 
-\liencapytale[~]{abcd-12345}        #lien avec ~ à la fin, en sf
+\liencapytale[~]{abcd-12345}        %lien avec ~ à la fin, en sf
 
-\liencapytale*{abcd-12345}          #lien simple, en tt
+\liencapytale*{abcd-12345}          %lien simple, en tt
 
-\liencapytale*[~]{abcd-12345}       #lien avec ~ à la fin, en tt
+\liencapytale*[~]{abcd-12345}       %lien avec ~ à la fin, en tt
 \end{codetex}
 
 \begin{codesortie}
@@ -1505,8 +1630,6 @@ Le code crée les nœuds relatifs aux sommets, et les nomme comme les sommets, c
 \end{tikzpicture}
 \end{codetex}
 
-\medskip
-
 \begin{codesortie}
 \begin{tikzpicture}[line join=bevel]
 	\pavePL[aff,largeur=4,profondeur=3,hauteur=2,epaisseur={ultra thick}]
@@ -1522,8 +1645,6 @@ Le code crée les nœuds relatifs aux sommets, et les nomme comme les sommets, c
 	\end{tikzpicture}
 \end{center}
 \end{codetex}
-
-\medskip
 
 \begin{codesortie}
 \begin{center}
@@ -1619,8 +1740,6 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 	\end{tikzpicture}
 \end{center}
 \end{codetex}
-
-\medskip
 
 \begin{codesortie}
 \begin{center}
@@ -1913,8 +2032,6 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 \end{center}
 \end{codetex}
 
-\medskip
-
 \begin{codesortie}
 \begin{center}
 	\begin{tikzpicture}[x=4cm,y=3cm]
@@ -2039,8 +2156,6 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande :
 \end{center}
 \end{codetex}
 
-\medskip
-
 \begin{codesortie}
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
@@ -2095,8 +2210,6 @@ Les \Cle{Clés} pour cette possibilité sont :
 	\end{tikzpicture}
 \end{center}
 \end{codetex}
-
-\medskip
 
 \begin{codesortie}
 \begin{center}
@@ -2294,7 +2407,6 @@ En ce qui concerne les autres arguments :
 
 À noter que si l'un des arguments optionnels (le n°3 et/ou le n°4) sont utilisés, il vaut mieux préciser les 2 !
 \end{codecles}
-
 
 \begin{codetex}[listing only]
 \begin{center}
@@ -2494,15 +2606,15 @@ La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des
 
 \begin{codetex}[listing only]
 \begin{tikzpicture}
-	\begin{axis}[
-		/pgf/number format/.cd,use comma,xmin = 1992, xmax = 2012,ymin = 1640, ymax = 1730,
-		width = 0.7\textwidth,height = 0.35\textwidth,xtick distance = 2,ytick distance = 10,
-		grid = both,minor tick num = 1,major grid style = {lightgray},minor grid style = {lightgray!25},
+	\begin{axis}[/pgf/number format/.cd,
+		use comma,xmin = 1992, xmax = 2012,ymin = 1640, ymax = 1730,width = 0.7\textwidth,
+		height = 0.35\textwidth,xtick distance = 2,ytick distance = 10,grid = both,
+		minor tick num = 1,major grid style = {lightgray},minor grid style = {lightgray!25},
 		xlabel = {\small Année ($x$)},ylabel = {\small Altitude du glacier (en m) ($y$)},
 		x tick label style={/pgf/number format/.cd, set thousands separator={}},
 		y tick label style={/pgf/number format/.cd, set thousands separator={}},
 		legend cell align = {left},legend pos = north east]
-		\addplot[teal, only marks,forget plot] table{
+		\addplot[teal, only marks] table{
 			X Y
 			1994 1718
 			1995 1710
@@ -2582,7 +2694,6 @@ La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des
 \end{tikzpicture}
 \end{codesortie}
 
-
 \pagebreak
 
 \begin{codeinfo}
@@ -2649,6 +2760,796 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 		\node {$R^2=\fpeval{round(\COEFFrd,5)}$} ; \\
 	};
 \end{tikzpicture}
+\end{codesortie}
+
+\newpage
+
+\section{Statistiques à deux variables}\label{statsdeuxvars}
+
+\subsection{Idées}
+
+\begin{codeidee}
+L'idée est de \textit{prolonger} le paragraphe précédent pour proposer un environnement \TikZ{} adapté à des situations venant de statistiques à deux variables.
+
+\smallskip
+
+Un des soucis pour ces situations est le fait que le repère dans lequel on travaille n'a pas forcément pour origine $(0\,;\,0)$.
+
+De ce fait - pour éviter des erreurs de \ctex{dimension too large} liées à \TikZ{} - il faut \textit{décaler les axes} pour se ramener à une origine en $O$.
+
+\smallskip
+
+Le code, intimement lié à un environnement \ctex{tikzpicture}, va donc :
+
+\begin{itemize}
+	\item préciser les informations utiles comme \ctex{xmin}, \ctex{xmax}, \ctex{Ox}, \ctex{xgrille}, etc
+	\item proposer des commandes (sans se soucier des \textit{translations} !) pour :
+	\begin{itemize}
+		\item tracer une grille (principale et/ou secondaire) ;
+		\item tracer les axes (avec légendes éventuelles) et éventuellement les graduer ;
+	\end{itemize}
+\end{itemize}
+
+En utilisant les commandes de \textsf{régression linéaire} du paragraphe précédent, il sera de plus possible (sans calculs !) de :
+
+\begin{itemize}
+	\item représenter le nuage de points ;
+	\item placer le point moyen ;
+	\item tracer la droite d'ajustement (obtenue par \ctex{ProfLycee}) ou une autre courbe.
+\end{itemize}
+\end{codeidee}
+
+\begin{codeinfo}
+Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situation, mais ne l'utilisant pas, j'ai préféré préparer des \textsf{macros} permettant de s'affranchir de ce package (est-ce pertinent, ça c'est une autre question\ldots).
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%Listes et calculs
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%tracé (simple), les options seront présentées juste après
+\begin{tikzpicture}%
+	[x=0.5cm,y=0.1cm,                                                 %unités
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,                 %axe Ox
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]                %axe Oy
+	\PLgrilletikz \PLaxestikz                                         %grilles et axes
+	\PLaxextikz[annee]{1992,1994,...,2010}                            %axeOx
+	\PLaxeytikz{1640,1650,...,1720}                                   %axeOy
+	\PLnuagepts{\LLX}{\LLY}                                           %nuage
+	\PLcourbe[line width=1.25pt,ForestGreen,samples=2]%
+		{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}                             %droite de régression
+	\PLnuageptmoy                                                     %point moyen
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%tracé avec options fenêtre par défaut
+\begin{tikzpicture}%
+	[....]                                                            %paramètres
+	\PLfenetresimple<annee>{1992,1994,...,2010}{1640,1650,...,1720}   %fenêtre "simple"
+	\PLnuagepts{\LLX}{\LLY}                                           %nuage
+	\PLcourbe[line width=1.25pt,ForestGreen,samples=2]%
+	{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}                               %droite de régression
+	\PLnuageptmoy                                                     %point moyen
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+
+\begin{tikzpicture}[x=0.5cm,y=0.1cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz \PLaxestikz
+	\PLaxextikz[annee]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+	\PLnuagepts{\LLX}{\LLY}
+	\PLcourbe[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}
+	\PLnuageptmoy
+\end{tikzpicture}
+\end{codesortie}
+
+\subsection{Commandes, clés et options}
+
+\begin{codeinfo}
+Les \Cle{paramètres} nécessaires à la bonne utilisation des commandes suivantes sont à déclarer directement dans l'environnement \ctex{tikzpicture}, seules versions \og x \fg{}  sont présentées ici:
+
+\begin{itemize}
+	\item \Cle{xmin}, stockée dans \ctex{\textbackslash{}xmin} ;\hfill{}défaut \Cle{-3}
+	\item \Cle{xmax}, stockée dans \ctex{\textbackslash{}xmax} ;\hfill{}défaut \Cle{3}
+	\item \Cle{Ox}, stockée dans \ctex{\textbackslash{}axexOx}, origine de l'axe $(Ox)$ ;\hfill{}défaut \Cle{0}
+	\item \Cle{xgrille}, stockée dans \ctex{\textbackslash{}xgrille}, graduation principale ;\hfill{}défaut \Cle{1}
+	\item \Cle{xgrilles}, stockée dans \ctex{\textbackslash{}xgrilles}, graduation secondaire.\hfill{}défaut \Cle{0.5}
+\end{itemize}
+
+La fenêtre d'affichage (de sortie) sera donc \textit{portée} par le rectangle de coins $(xmin\,;\,ymin)$ et $(xmax\,;\,ymax)$ ; ce qui correspond en fait à la fenêtre \TikZ{} \textit{portée} par le rectangle de coins $(xmin-Ox\,;\,ymin-Oy)$ et $(xmax-Ox\,;\,ymax-Oy)$.
+
+\smallskip
+
+Les commandes ont -- pour certaines -- pas mal de \Cle{clés} pour des réglages fins, mais dans la majorité des cas elles ne sont pas forcément \textit{utiles}.
+\end{codeinfo}
+
+\begin{codeinfo}
+Pour illustrer les commandes et options de ce paragraphe, la base sera le graphique présenté précédemment.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%...code tikz
+	\PLgrilletikz[<options>][<options grille ppale>][<options grille second.>]
+\end{codetex}
+
+\begin{codecles}
+Cette commande permet de tracer une grille principale et/ou une grille secondaire :
+
+\begin{itemize}
+	\item les premières \Cle{clés} sont les booléens \Cle{affp} et \Cle{affs} qui affichent ou non les grilles ;\hfill~défaut \Cle{true}
+	\item les options des grilles sont en \TikZ. \hfill~défaut \Cle{thin,lightgray} et \Cle{very thin,lightgray}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,%
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz
+\end{tikzpicture}
+~~
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,%
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz[affp=false][][orange,densely dotted]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\hfill~
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,%
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz
+\end{tikzpicture}
+~~
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,%
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz[affp=false][][orange,densely dotted]
+\end{tikzpicture}
+\hfill~
+\end{codesortie}
+
+\begin{codetex}[listing only]
+%...code tikz
+	\PLaxestikz[<options>]
+\end{codetex}
+
+\begin{codecles}
+Cette commande permet de tracer les axes, avec des \Cle{clés} :
+
+\begin{itemize}
+	\item \Cle{epaisseur} qui est l'épaisseur des traits ; \hfill~défaut \Cle{1.25pt}
+	\item \Cle{police} qui est le style des labels des axes  ; \hfill~défaut \Cle{\textbackslash{}normalsize\textbackslash{}normalfont}
+	\item \Cle{labelx} qui est le label de l'axe $(Ox)$ ; \hfill~défaut \Cle{\${}x\$}
+	\item \Cle{labely} qui est le label de l'axe $(Oy)$ ; \hfill~défaut \Cle{\${}y\$}
+	\item \Cle{afflabel} qui est le code pour préciser quels labels afficher, entre \Cle{x}, \Cle{y} ou \Cle{xy} ; \hfill~défaut \Cle{vide}
+	\item \Cle{poslabelx} pour la position du label de $(Ox)$ en bout d'axe ; \hfill~défaut \Cle{right}
+	\item \Cle{poslabely} pour la position du label de $(Oy)$ en bout d'axe ; \hfill~défaut \Cle{above}
+	\item \Cle{echellefleche} qui est l'échelle de la flèche des axes ; \hfill~défaut \Cle{1}
+	\item \Cle{typefleche} qui est le type de la flèche des axes.\hfill~défaut \Cle{>}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+%code tikz
+	\PLaxestikz
+
+%code tikz
+	\PLaxestikz%
+		[afflabel=xy,labelx={Année},labely={Altitude},%
+		poslabelx={below right},poslabely={above left}%
+		police=\small\sffamily]
+\end{codetex}
+
+\begin{codesortie}
+\hfill~
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,%
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLaxestikz
+\end{tikzpicture}
+~~
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,%
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLaxestikz%
+		[afflabel=xy,labelx={Année},labely={Altitude},%
+		poslabelx={below right},poslabely={above left},%
+		police=\small\sffamily]
+\end{tikzpicture}
+\hfill~
+\end{codesortie}
+
+%les axes
+
+\begin{codetex}[listing only]
+%...code tikz
+	\PLaxextikz[<options>]{valeurs}
+	\PLaxeytikz[<options>]{valeurs}
+\end{codetex}
+
+\begin{codecles}
+Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} identiques pour les deux directions :
+
+\begin{itemize}
+	\item \Cle{epaisseur} qui est l'épaisseur des graduations ; \hfill~défaut \Cle{1.25pt}
+	\item \Cle{police} qui est le style des labels des graduations ; \hfill~défaut \Cle{\textbackslash{}normalsize\textbackslash{}normalfont}
+	\item \Cle{posgrad} qui est la position des graduations par rapport à l'axe ; \hfill~défaut \Cle{below} et \Cle{left}
+	\item \Cle{hautgrad} qui est la position des graduations (sous la forme \Cle{lgt} ou \Cle{lgta/lgtb}) ; \hfill~défaut \Cle{4pt}
+	\item le booléen \Cle{affgrad} pour afficher les valeurs (formatés avec \ctex{num} donc dépendant de \ctex{sisetup}) des graduations  ; \hfill~défaut \Cle{true}
+	\item le booléen \Cle{afforigine} pour afficher la graduation de l'origine ; \hfill~défaut \Cle{true}
+	\item le booléen \Cle{annee} qui permet de ne pas formater les valeurs des graduations (type \textsf{année}). \hfill~défaut \Cle{false}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+%code tikz
+	\PLaxextikz[police=\small]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+	
+%code tikz
+	\PLaxextikz[police=\small,annee,hautgrad=0pt/4pt]{1992,1994,...,2010}
+	\PLaxeytikz[affgrad=false,hautgrad=6pt]{1640,1650,...,1720}
+
+%des axes fictifs (en gris) sont rajoutés pour la lisibilité du code de sortie
+\end{codetex}
+
+\begin{codesortie}
+\hfill~
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,%
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\draw[gray,line width=1.25pt,->] ({\xmin-\axexOx},0) -- ({\xmax-\axexOx},0) ;
+	\draw[gray,line width=1.25pt,->] (0,{\ymin-\axeyOy}) -- (0,{\ymax-\axeyOy}) ;
+	\PLaxextikz[police=\small]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+\end{tikzpicture}
+~~
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,%
+	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
+	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\draw[gray,line width=1.25pt,->] ({\xmin-\axexOx},0) -- ({\xmax-\axexOx},0) ;
+	\draw[gray,line width=1.25pt,->] (0,{\ymin-\axeyOy}) -- (0,{\ymax-\axeyOy}) ;
+	\PLaxextikz[police=\small,annee,hautgrad=0pt/4pt]{1992,1994,...,2010}
+	\PLaxeytikz[affgrad=false,hautgrad=6pt]{1640,1650,...,1720}
+\end{tikzpicture}
+\hfill~
+\end{codesortie}
+
+\subsection{Commandes annexes}
+
+\begin{codeinfo}
+Il existe, de manière marginale, quelques commandes complémentaires qui ne seront pas trop détaillées mais qui sont présentes dans l'introduction :
+
+\begin{itemize}
+	\item \ctex{\textbackslash{}PLfenetre} qui restreint les tracés à la fenêtre (utile pour des courbes qui \textit{débordent}) ;
+	\item \ctex{\textbackslash{}PLfenetresimple} qui permet d'automatiser le tracé des grilles/axes/graduations dans leurs versions par défaut, avec peu de paramétrages ;
+	\item \ctex{\textbackslash{}PLorigine} pour rajouter le libellé de l'origine si non affiché par les axes.
+\end{itemize}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%code tikz
+	\PLfenetre                %on restreint les tracés
+	\PLfenetresimple<options axe Ox>{liste abscisses}<options axe Oy>{liste ordonnées}
+\end{codetex}
+
+%%l'origine
+%
+%\begin{codetex}[listing only]
+%%...code tikz
+%	\PLorigine[<options>]
+%\end{codetex}
+
+\subsection{Interactions avec PLreglin}
+
+\begin{codetex}[listing only]
+%...code tikz
+	\PLnuagepts[<options>]{listeX}{listeY}
+\end{codetex}
+
+\begin{codecles}
+Cette commande, liée à la commande \ctex{\textbackslash{}PLreglin} permet de représenter le nuage de points associé aux deux listes, avec les \Cle{clés} suivantes :
+
+\begin{itemize}
+	\item \Cle{taille} qui est la taille des points du nuage ; \hfill~défaut \Cle{2pt}
+	\item \Cle{style} parmi \Cle{o} (rond) ou \Cle{x} (croix) ou \Cle{+} (plus) ; \hfill~défaut \Cle{o}
+	\item \Cle{couleur} qui est la couleur (éventuellement \Cle{couleurA/couleurB} pour les ronds). \hfill~défaut \Cle{blue}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+
+\begin{tikzpicture}[...]
+	\PLnuagepts[couleur=blue/red]{\LLX}{\LLY}
+\end{tikzpicture}
+~~
+\begin{tikzpicture}[...]
+	\PLnuagepts[couleur=ForestGreen,style=x,taille=6pt]{\LLX}{\LLY}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+
+\begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz \PLaxestikz
+	\PLaxextikz[annee,police=\small]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+	\PLnuagepts[couleur=blue/red]{\LLX}{\LLY}
+\end{tikzpicture}
+~~
+\begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz \PLaxestikz
+	\PLaxextikz[annee,police=\small]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+	\PLnuagepts[couleur=ForestGreen,style=x,taille=6pt]{\LLX}{\LLY}
+\end{tikzpicture}
+\end{codesortie}
+
+%point moyen
+\begin{codetex}[listing only]
+%...code tikz
+	\PLnuageptmoy[<options>]
+\end{codetex}
+
+\begin{codecles}
+Cette commande permet de rajouter le point moyen du nuage, calculé par la commande \ctex{\textbackslash{}PLreglin}, avec les \Cle{clés} :
+
+\begin{itemize}
+	\item \Cle{police}, comme précédemment ; \hfill~défaut \Cle{\textbackslash{}normalsize\textbackslash{}normalfont} ;
+	\item \Cle{taille}, taille du point moyen ; \hfill~défaut \Cle{4pt}
+	\item \Cle{couleur}, couleur du point moyen ; \hfill~défaut \Cle{red}
+	\item \Cle{style} parmi \Cle{o} (rond) ou \Cle{x} (croix) ou \Cle{+} (plus) ; \hfill~défaut \Cle{o}
+	\item \Cle{xg}, abscisse du point moyen, récupérable via \ctex{PLRegLin} ; \hfill~défaut \Cle{\textbackslash{}LXmoy}
+	\item \Cle{yg}, ordonnée du point moyen, récupérable via \ctex{PLRegLin} ; \hfill~défaut \Cle{\textbackslash{}LYmoy}
+	\item \Cle{nom}, label du point moyen ; \hfill~défaut \Cle{G}
+	\item \Cle{pos} qui est la position du label par rapport au point ; \hfill~défaut \Cle{above}
+	\item \Cle{decal} qui est l'éloignement de la position du label par rapport au point ; \hfill~défaut \Cle{0pt}
+	\item la booléen \Cle{affnom} qui affiche ou non le libellé.\hfill~défaut \Cle{true}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+
+\begin{tikzpicture}[...]
+	\PLnuagepts[couleur=blue/red]{\LLX}{\LLY}
+	\PLnuageptmoy
+\end{tikzpicture}
+~~
+\begin{tikzpicture}[...]
+	\PLnuagepts[couleur=ForestGreen,style=x,taille=6pt]{\LLX}{\LLY}
+	\PLnuageptmoy[couleur=orange,taille=8pt,style=+,nom={$G_1$}]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+
+\begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz \PLaxestikz
+	\PLaxextikz[annee,police=\small]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+	\PLnuagepts[couleur=blue/red]{\LLX}{\LLY}
+	\PLnuageptmoy
+\end{tikzpicture}
+~~
+\begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz \PLaxestikz
+	\PLaxextikz[annee,police=\small]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+	\PLnuagepts[couleur=ForestGreen,style=x,taille=6pt]{\LLX}{\LLY}
+	\PLnuageptmoy[couleur=orange,taille=8pt,style=+,nom={$G_1$},pos=below]
+\end{tikzpicture}
+\end{codesortie}
+
+%courbe
+\begin{codetex}[listing only]
+%...code tikz
+	\PLcourbe[<options>]{formule}{domaine}
+\end{codetex}
+
+\begin{codecles}
+Cette commande permet de rajouter une courbe sur le graphique (sans se soucier de la transformation de son expression) avec les arguments :
+
+\begin{itemize}
+	\item \Cle{optionnels} qui sont - en \TikZ{} - les paramètres du tracé ;
+	\item le premier mandataire, est - en langage \TikZ{} - l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
+	\item le second mandataire est le domaine du tracé , sous la forme \ctex{valxmin:valxmax}.
+\end{itemize}
+\end{codecles}
+
+\begin{codeinfo}
+L'idée principale est de récupérer les variables de la régression linéaire pour tracer la droite d'ajustement \textit{à moindres frais} !
+\end{codeinfo}
+
+\begin{codeinfo}
+	Toute courbe peut être tracée sur ce principe, par contre il faudra saisir la fonction \textit{à la main}.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+
+\begin{tikzpicture}[...]
+	\PLnuagepts[couleur=blue/red]{\LLX}{\LLY} \PLnuageptmoy
+	\PLcourbe[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+\PLreglin{\LLX}{\LLY}
+
+\begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz \PLaxestikz
+	\PLaxextikz[annee,police=\small]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+	\PLnuagepts[couleur=blue/red]{\LLX}{\LLY} \PLnuageptmoy
+	\PLcourbe[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
+\end{tikzpicture}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+
+\begin{tikzpicture}[...]
+	\PLnuagepts[couleur=blue/red]{\LLX}{\LLY} \PLfenetre %on fixe la fenêtre
+	\PLcourbe[line width=1.25pt,orange,samples=500]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
+\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
+
+\begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+	\PLgrilletikz \PLaxestikz
+	\PLaxextikz[annee,police=\small]{1992,1994,...,2010}
+	\PLaxeytikz{1640,1650,...,1720}
+	\PLnuagepts[couleur=blue/red]{\LLX}{\LLY} \PLfenetre
+	\PLcourbe[line width=1.25pt,orange,samples=500]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
+\end{tikzpicture}
+\end{codesortie}
+
+\newpage
+
+\section{Boîtes à moustaches}\label{boiteamoustaches}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+L'idée est de proposer une commande, à intégrer dans un environnement \TikZ, pour tracer une boîte à moustaches grâce aux paramètres, saisis par l'utilisateur.
+
+\smallskip
+
+Le code ne calcule pas les paramètres, il ne fait \textit{que} tracer la boîte à moustaches !
+\end{codeidee}
+
+\begin{codetex}[]
+\begin{tikzpicture}
+	\PLboitemoust[parametres={10/15/17/19/20}]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codeinfo}
+Étant donnée que la commande est intégrée dans un environnement \TikZ, les unités peuvent/doivent donc être précisées, \textit{comme d'habitude}, si besoin.
+\end{codeinfo}
+
+\subsection{Clés et options}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{parametres} qui sont sous la forme \Cle{Min/Q1/Med/Q3/Max} ;
+	\item la clé \Cle{couleur} qui est la couleur de la boîte ; \hfill~défaut \Cle{black}
+	\item la clé \Cle{elevation} qui est la position verticale (ordonnée des moustaches) de la boîte ; \hfill~défaut \Cle{1.5}
+	\item la clé \Cle{hauteur} qui est la hauteur de la boîte ; \hfill~défaut \Cle{1}
+	\item la clé \Cle{moyenne} qui est la moyenne (optionnelle) de la série ;
+	\item la clé \Cle{epaisseur} qui est l'épaisseur des traits de la boîte ; \hfill~défaut \Cle{thick}
+	\item la clé \Cle{remplir} qui est la couleur de remplissage de la boîte ; \hfill~défaut \Cle{white}
+	\item le booléen \Cle{affmoyenne} qui permet d'afficher ou non la moyenne (sous forme d'un point) ; \hfill~défaut \Cle{false}
+	\item le booléen \Cle{pointilles} qui permet d'afficher des pointillés au niveau des paramètres ; \hfill~défaut \Cle{false}
+	\item le booléen \Cle{valeurs} qui permet d'afficher les valeurs des paramètres au niveau des abscisses.\hfill~défaut \Cle{false}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[]
+\begin{tikzpicture}
+	\PLboitemoust[epaisseur=very thick,parametres={10/15/17/19/20},moyenne=18.5,couleur=blue,affmoyenne,%
+	pointilles,valeurs,hauteur=2.25,elevation=2.75]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%une grille a été rajoutée pour visualiser la "position verticale"
+\begin{center}
+	\begin{tikzpicture}[x=0.1cm]
+		\PLboitemoust[epaisseur=ultra thick,parametres={100/150/170/190/200},couleur=blue]
+		\PLboitemoust[epaisseur=thin,elevation=2.5,parametres={80/100/110/120/150},couleur=red]
+		\PLboitemoust[elevation=4,parametres={100/140/145/160/210},couleur=ForestGreen,remplir=ForestGreen!25]
+\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}[x=0.1cm]
+		\draw[xstep=10,ystep=0.5,very thin,lightgray] (80,0) grid (210,4.5) ;
+		\foreach \x in {80,90,...,210} \draw[very thin,lightgray] (\x,3pt)--(\x,-3pt) node[below] {\num{\x}} ;
+		\foreach \y in {0,0.5,...,4.5} \draw[very thin,lightgray] ($(210,\y)+(-3pt,0)$)--($(210,\y)+(3pt,0)$) node[right] {\num{\y}} ;
+		\PLboitemoust[epaisseur=ultra thick,parametres={100/150/170/190/200},couleur=blue]
+		\PLboitemoust[epaisseur=thin,elevation=2.5,parametres={80/100/110/120/150},couleur=red]
+		\PLboitemoust[elevation=4,parametres={100/140/145/160/210},couleur=ForestGreen,remplir=ForestGreen!25]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\subsection{Commande pour placer un axe horizontal}
+
+\begin{codeidee}
+L'idée est de proposer, en parallèle de la commande précédente, une commande pour tracer un axe horizontal \og sous \fg{} les éventuelles boîtes à moustaches.
+\end{codeidee}
+
+\begin{codetex}[]
+\begin{tikzpicture}
+	\PLboitemoustaxe[min=10,max=20]
+	\PLboitemoust[parametres={10/15/17/19/20}]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codetex}[]
+\begin{tikzpicture}
+	\PLboitemoustaxe[min=10,max=20,]
+	\PLboitemoust[parametres={10/15/17/19/20},valeurs,pointilles]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{min} qui est la valeur minimale de l'axe horizontal ;
+	\item la clé \Cle{max} qui est la valeur minimale de l'axe horizontal ;
+	\item la clé \Cle{elargir} qui est le pourcentage l'élargissement de l'axe ;\hfill~défaut \Cle{0.1}
+	\item la clé \Cle{epaisseur} qui est l'épaisseur des traits de la boîte ; \hfill~défaut \Cle{thick}
+	\item la clé \Cle{valeurs} qui est la liste (compréhensible en \TikZ) des valeurs à afficher.
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[]
+\begin{tikzpicture}
+	\PLboitemoustaxe[min=8,max=21,affvaleurs,valeurs={8,9,...,21},elargir=0.02]
+	\PLboitemoust[parametres={10/15/17/19/20},moyenne=18.5,couleur=blue]
+	\PLboitemoust[elevation=2.5,parametres={8/10/11/12/15},couleur=red]
+	\PLboitemoust[elevation=4,parametres={10/14/14.5/16/21},couleur=ForestGreen,remplir=ForestGreen!25]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codeinfo}
+Le placement des différentes boîtes n'est pas automatique, donc il faut penser à cela avant de se lancer dans le code.
+
+Sachant que la hauteur par défaut est de 1, il est -- a priori -- intéressant de placer les boîtes à des \Cle{élévations} de \num{1} puis \num{2.5} puis \num{4} etc
+\end{codeinfo}
+
+\newpage
+
+\section{Calculs de probabilités}\label{calcprobas}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+L'idée est de proposer des commandes permettant de calculer des probabilités avec des lois classiques :
+
+\begin{itemize}
+	\item binomiale ;
+	\item normale ;
+	\item exponentielle ;
+	\item de Poisson
+\end{itemize}
+\end{codeidee}
+
+\begin{codeinfo}
+Les commandes sont de deux natures :
+
+\begin{itemize}
+	\item des commandes pour calculer, grâce au package \ctex{xintexpr} ;
+	\item des commandes pour formater le résultat de \ctex{xintexpr}, grâce à \ctex{siunitx}.
+\end{itemize}
+
+De ce fait, les options de \ctex{siunitx} de l'utilisateur affecterons les formatage du résultat, la commande va \og forcer \fg{} les arrondis et l'écriture scientifique.
+\end{codeinfo}
+
+\subsection{Calculs \og simples \fg}
+
+\begin{codetex}[listing only]
+%loi binomiale B(n,p)
+\calcPbinomP{n}{p}{k}         %P(X=k)
+\calcPbinomC{n}{p}{a}{b}      %P(a<=X<=b)
+%loi de Poisson P (l)
+\calcPpoissP{l}{k}            %P(X=k)
+\calcPpoissC{l}{a}{b}         %P(a<=X<=b)
+%loi normale N(m,s)
+\calcPnormC{m}{s}{a}{b}       %P(a<=X<=b)
+%loi exponentielle E(l)
+\calcPexpoC{l}{a}{b}          %P(a<=X<=b)
+\end{codetex}
+
+\begin{codecles}
+Les probabilités calculables sont donc -- comme pour beaucoup de modèles de calculatrices -- les probabilités \textbf{P}onctuelles ($P(X=k)$) et \textbf{C}umulées ($P(a\leqslant X\leqslant b)$).
+
+\smallskip
+
+Pour les probabilités cumulées, on peut utiliser \ctex{*} comme borne ($a$ ou $b$), pour les probabilités du type $P(X\leqslant b)$ et $P(X \geqslant a)$.
+\end{codecles}
+
+\begin{codetex}[listing only]
+% X -> B(5,0.4)
+$P(X=3) \approx \calcPbinomP{5}{0.4}{3}$.
+$P(X\leqslant1) \approx \calcPbinomC{5}{0.4}{*}{1}$.
+% X -> B(100,0.02)
+$P(X=10) \approx \calcPbinomP{100}{0.02}{10}$.
+$P(15\leqslant X\leqslant25) \approx \calcPbinomC{100}{0.02}{15}{25}$.
+% Y -> P(5)
+$P(Y=3) \approx \calcPpoissP{5}{3}$.
+$P(Y\geqslant2) \approx \calcPpoissC{5}{2}{*}$.
+% X -> N(0,1)
+$P(X\leqslant1) \approx \calcPnormC{0}{1}{*}{1}$.
+$P(-1,96\leqslant Z\leqslant1,96) \approx \calcPnormC{0}{1}{-1.96}{1.96}$.
+% X -> N(550,30)
+$P(Y\geqslant600) \approx \calcPnormC{550}{30}{600}{*}$.
+$P(500\leqslant Y\leqslant600) \approx \calcPnormC{550}{30}{500}{600}$.
+% Z -> E(0.001)
+$P(Z\geqslant400) \approx \calcPexpoC{0.001}{400}{*}$.
+$P(300\leqslant Z\leqslant750) \approx \calcPexpoC{0.001}{300}{750}$.
+\end{codetex}
+
+\begin{codesortie}
+$\bullet~~~~X \hookrightarrow \mathcal{B}(5\,;\,0,4)$ :\\
+$P(X=3) \approx \calcPbinomP{5}{0.4}{3}$.\\
+$P(X\leqslant1) \approx \calcPbinomC{5}{0.4}{*}{1}$.
+
+\medskip
+
+$\bullet~~~~X \hookrightarrow \mathcal{B}(100\,;\,0,02)$ :\\
+$P(X=10) \approx \calcPbinomP{100}{0.02}{10}$.\\
+$P(15\leqslant X\leqslant25) \approx \calcPbinomC{100}{0.02}{15}{25}$.
+
+\medskip
+
+$\bullet~~~~Y \hookrightarrow \mathcal{P}_5$ :\\
+$P(Y=3) \approx \calcPpoissP{5}{3}$.\\
+$P(Y\geqslant2) \approx \calcPpoissC{5}{2}{*}$.
+
+\medskip
+
+$\bullet~~~~X \hookrightarrow \mathcal{N}(0\,;\,1)$ :\\
+$P(X\leqslant1) \approx \calcPnormC{0}{1}{*}{1}$.\\
+$P(-1,96\leqslant Z\leqslant1,96) \approx \calcPnormC{0}{1}{-1.96}{1.96}$.
+
+\medskip
+
+$\bullet~~~~Y \hookrightarrow \mathcal{N}(550\,;\,30)$ :\\
+$P(Y\geqslant600) \approx \calcPnormC{550}{30}{600}{*}$.\\
+$P(500\leqslant Y\leqslant600) \approx \calcPnormC{550}{30}{500}{600}$.
+
+\medskip
+
+$\bullet~~~~Z \hookrightarrow \mathcal{E}_{0,001}$ :\\
+$P(Z\geqslant400) \approx \calcPexpoC{0.001}{400}{*}$.\\
+$P(300\leqslant Z\leqslant750) \approx \calcPexpoC{0.001}{300}{750}$.
+\end{codesortie}
+
+\subsection{Complément avec sortie \og formaté \fg}
+
+\begin{codeidee}
+L'idée est ensuite de formater le résultat obtenu par \ctex{xintexpr}, pour un affichage homogène.
+
+\smallskip
+
+L'utilisateur peut donc utiliser \og sa \fg{} méthode pour formater les résultats obtenus par \ctex{xintexpr} !
+\end{codeidee}
+
+\begin{codetex}[listing only]
+%avec un formatage manuel
+\num[exponent-mode=scientific]{\calcPbinomP{100}{0.02}{10}}
+\end{codetex}
+
+\begin{codesortie}
+$\bullet~~~~X \hookrightarrow \mathcal{B}(100\,;\,0,02)$ :
+
+$P(X=10) \approx \num[exponent-mode=scientific]{\calcPbinomP{100}{0.02}{10}}$.
+\end{codesortie}
+
+\begin{codeidee}
+Le package \ctex{ProfLycee} propose -- en complément -- des commandes pour formater, grâce à \ctex{siunitx}, le résultat.
+
+Les commandes sont dans ce cas préfixées par \ctex{num} au lieu de \ctex{calc} :
+
+\begin{itemize}
+	\item formatage sous forme décimale \textit{pure} : $0,00\ldots$ ;
+	\item formatage sous forme scientifique : $n,\ldots\times10^{\ldots}$.
+\end{itemize}
+\end{codeidee}
+
+\begin{codetex}[listing only]
+%loi binomiale B(n,p)
+\numPbinomP(*)[prec]{n}{p}{k}         %P(X=k)
+\numPbinomC(*)[prec]{n}{p}{a}{b}      %P(a<=X<=b)
+%loi de Poisson P (l)
+\numPpoissP(*)[prec]{l}{k}            %P(X=k)
+\numPpoissC(*)[prec]{l}{a}{b}         %P(a<=X<=b)
+%loi normale N(m,s)
+\numPnormC(*)[prec]{m}{s}{a}{b}       %P(a<=X<=b)
+%loi exponentielle E(l)
+\numPexpoC(*)[prec]{l}{a}{b}          %P(a<=X<=b)
+\end{codetex}
+
+\begin{codecles}
+Quelques précisions sur les commandes précédentes :
+
+\begin{itemize}
+	\item la version étoilée \Cle{*} des commandes formate le résultat en mode scientifique ;
+	\item l'argument optionnel (par défaut \Cle{3}) correspond à quant à lui à l'arrondi.
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+% X -> N(550,30)
+$P(Y\geqslant600) \approx \numPnormC[4]{550}{30}{600}{*}$.
+$P(500\leqslant Y\leqslant600) \approx \numPnormC[4]{550}{30}{500}{600}$.
+% X -> B(100,0.02)
+$P(X=10) \approx \numPbinomP[7]{100}{0.02}{10} \approx \numPbinomP*[7]{100}{0.02}{10}$.
+$P(15\leqslant X\leqslant25) \approx \numPbinomC[10]{100}{0.02}{15}{25} \approx \numPbinomC*[10]{100}{0.02}{15}{25}$.
+\end{codetex}
+
+\begin{codesortie}
+$\bullet~~~~Y \hookrightarrow \mathcal{N}(550\,;\,30)$ :
+
+$P(Y\geqslant600) \approx \numPnormC[4]{550}{30}{600}{*}$.
+
+$P(500\leqslant Y\leqslant600) \approx \numPnormC[4]{550}{30}{500}{600}$.
+
+\medskip
+
+$\bullet~~~~X \hookrightarrow \mathcal{B}(100\,;\,0,02)$ :
+
+$P(X=10) \approx \numPbinomP[7]{100}{0.02}{10} \approx \numPbinomP*[7]{100}{0.02}{10}$.
+
+$P(15\leqslant X\leqslant25) \approx \numPbinomC[10]{100}{0.02}{15}{25} \approx \numPbinomC*[10]{100}{0.02}{15}{25}$.
 \end{codesortie}
 
 \newpage
@@ -2772,8 +3673,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 \begin{itemize}
 	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
 	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4 ; \hfill{}défaut \Cle{true}
-	\item la clé \Cle{trait} qui permet de modifier l'épaisseur du crochet. \hfill{}défaut \Cle{0.
-	5pt}
+	\item la clé \Cle{trait} qui permet de modifier l'épaisseur du crochet. \hfill{}défaut \Cle{0.5pt}
 \end{itemize}
 
 Le formatage est géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
@@ -2927,7 +3827,511 @@ Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -
 
 \newpage
 
+\section{PixelART via un fichier csv, en \TikZ}\label{pixelart}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+L'idée est de \textit{proposer}, dans un environnement \TikZ, une commande permettant de générer des grilles PixelART.
+
+Les données sont \textit{lues} à partir d'un fichier \textsf{csv}, externe au fichier \textsf{tex} ou déclaré en interne grâce à l'environnement \ctex{filecontents}.
+\end{codeidee}
+
+\begin{codeinfo}
+Avant toute chose, quelques petites infos sur les données au format \textsf{csv}, surtout dans l'optique de sa lecture et de son traitement par \ctex{ProfLycee} :
+
+\begin{itemize}
+	\item le fichier de données \textsf{csv} doit être formaté avec le séparateur décimal \og , \fg ;
+	\item des cases vides seront codées par \og \texttt{-} \fg.
+\end{itemize}
+
+Le fichier \textsf{csv} peut être déclaré directement dans le fichier \textsf{tex}, grâce à l'environnement \ctex{filecontents} (intégré en natif sur les dernières versions de \LaTeX) :
+
+\begin{Verbatim}[tabsize=2,fontsize=\scriptsize]
+\begin{filecontents*}{<nomfichier>.csv}
+A,B,C,D
+A,B,D,C
+B,A,C,D
+B,A,D,C
+\end{filecontents*}
+\end{Verbatim}
+
+À la compilation, le fichier \textsf{<nomfichier>.csv} sera créé automatiquement, et l'option \Cle{[overwrite]} permet (logiquement) de propager les modifications au fichier \textsf{csv}.
+\end{codeinfo}
+
+\subsection{Package csvsimple et option}
+
+\begin{codeinfo}
+Le package \textit{central} est ici \ctex{csvsimple}, qui permet de lire et traiter le fichier \textsf{csv}.
+
+Il est \og disponible \fg{} en version \LaTeXe{} ou en version \LaTeXIII. Par défaut, \ctex{ProfLycee} le charge en version \LaTeXIII{}, mais une \Cle{option} est disponible pour une \textit{rétro-compatibilité} avec la version \LaTeXe.
+
+\smallskip
+
+L'option \Cle{csvii} permet de passer l'appel au package en version \LaTeXe.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\usepackage{ProfLycee}                     %chargement du package version 3
+%qui charge :
+%\RequirePackage{expl3}
+%\RequirePackage[l3]{csvsimple}
+
+\usepackage[csvii]{ProfLycee}              %chargement du package version 2
+%qui charge :
+%\RequirePackage[legacy]{csvsimple}
+\end{codetex}
+
+\subsection{Exemple simple, clés et options}
+
+\begin{codetex}[listing only]
+%déclaration du fichier csv
+\begin{filecontents*}[overwrite]{basique.csv}
+A,B,C,D
+A,B,D,C
+B,A,C,D
+B,A,D,C
+C,A,B,D
+\end{filecontents*}
+
+\begin{tikzpicture}%avec lettres
+	\PLpixelart[codes=ABCD,style=\large\sffamily]{basique.csv}
+\end{tikzpicture}
+\begin{tikzpicture}%avec chiffres
+	\PLpixelart[codes=ABCD,symboles={45,22,1,7},symb,style=\large\sffamily]{basique.csv}
+\end{tikzpicture}
+\begin{tikzpicture}%avec correction
+	\PLpixelart[codes=ABCD,couleurs={Black,Green,Yellow,Red},correction]{basique.csv}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\begin{filecontents*}[overwrite]{basique.csv}
+A,B,C,D
+A,B,D,C
+B,A,D,C
+C,A,B,D
+\end{filecontents*}
+
+\begin{center}
+	\renewcommand\arraystretch{1.25}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\multicolumn{4}{|c|}{Notice} \\ \hline
+		A & B & C & D \\ \hline
+		45 & 22 & 1 & 7 \\ \hline
+		Noir & Vert & Jaune & Rouge \\ \hline
+	\end{tabular}
+\end{center}
+
+\hfill\begin{tikzpicture}
+	%avec lettres
+	\PLpixelart[codes=ABCD,style=\large\sffamily]{basique.csv}
+\end{tikzpicture}
+\begin{tikzpicture}
+	%avec chiffres
+	\PLpixelart[codes=ABCD,symboles={45,22,1,7},symb,style=\large\sffamily]{basique.csv}
+\end{tikzpicture}
+\begin{tikzpicture}
+	%avec correction
+	\PLpixelart[codes=ABCD,couleurs={Black,Green,Yellow,Red},correction]{basique.csv}
+\end{tikzpicture}\hfill~
+\end{codesortie}
+
+\begin{codeinfo}
+La commande \ctex{PLpixelart} nécessite de connaître :
+
+\begin{itemize}
+	\item le fichier \textsf{csv} à traiter ;
+	\item la liste (en fait sous forme de chaîne) des codes utilisés dans le fichier \textsf{csv} (comme \ctex{234679} ou \ctex{ABCDJK}\ldots);
+	\item la liste des symboles (éventuellement !) à afficher dans les cases s'il y a ambiguïté, comme \ctex{25,44,12} ou \ctex{AA,AB,AC};
+	\item la liste des couleurs (si la correction est demandée), dans le même ordre que la liste des caractères.
+\end{itemize}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%environnement tikz
+\PLpixelart[<clés>]{<fichier>.csv}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{Clés} sont nécessaires au bon fonctionnement de la commande :
+
+\begin{itemize}
+	\item la clé \Cle{codes} contient la \textsf{chaîne} des codes \textit{simples} du  fichier \textsf{csv} ;
+	\item la clé \Cle{couleurs} qui contient la \textsf{liste} des couleurs associées ;
+	\item la clé \Cle{symboles} qui contient la \textsf{liste éventuelles} des caractères alternatifs à afficher dans les cases ;
+	\item la clé booléenne \Cle{correction} qui permet de colorier le PixelART ;\hfill{}défaut \Cle{false}
+	\item la clé booléenne \Cle{symb} qui permet d'afficher les caractères \textit{alternatifs} ;\hfill{}défaut \Cle{false}
+	\item la clé \Cle{style} qui permet de spécifier le style des caractères. \hfill{}défaut \Cle{scriptsize}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+%codes simples et sans ambiguïté
+%une case vide sera codée par -
+
+\begin{filecontents*}[overwrite]{perroquet.csv}
+-,-,-,-,-,-,4,4,4,4,-,-,-,-,-,-
+-,-,-,-,4,4,1,1,1,1,4,4,-,-,-,-
+-,-,-,4,1,1,1,1,1,1,1,1,4,-,-,-
+-,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
+-,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
+-,4,1,9,9,1,1,1,1,1,1,9,9,1,4,-
+-,4,9,9,9,9,4,4,4,4,9,9,9,9,4,-
+-,4,9,4,9,9,4,4,4,4,9,4,9,9,4,-
+-,4,1,9,9,9,4,4,4,4,9,9,9,1,4,-
+-,-,4,1,1,9,4,4,4,4,9,1,1,4,-,-
+-,-,4,1,1,1,4,4,4,4,1,1,1,4,-,-
+-,-,-,4,1,1,1,4,4,1,1,1,4,-,-,-
+-,-,4,3,1,1,1,1,1,1,1,1,3,4,-,-
+-,4,6,3,1,1,1,1,1,1,1,1,3,6,4,-
+-,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
+-,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
+-,4,6,4,1,1,1,4,4,1,1,1,4,6,4,-
+2,2,4,2,4,4,4,2,2,4,4,4,2,4,2,2
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+-,-,-,-,-,4,1,1,1,1,4,-,-,-,-,-
+-,-,-,-,-,-,4,1,1,4,-,-,-,-,-,-
+-,-,-,-,-,-,-,4,4,-,-,-,-,-,-,-
+\end{filecontents*}
+
+\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+	\PLpixelart[codes=123469,style=\ttfamily]{perroquet.csv}
+\end{tikzpicture}
+
+\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+	\PLpixelart[codes=123469,couleurs={Red,Brown,Yellow,Black,Blue,White},correction]{perroquet.csv}
+\end{tikzpicture}
+\end{codetex}
+
+\subsection{Exemples complémentaires}
+
+\begin{codeinfo}
+Les symboles affichés dans les cases sont situés aux nœuds de coordonnées $(c\,;\,-l)$ où $l$ et $c$ sont les numéros de ligne et de colonne correspondants à la position de la donnée dans le fichier \textsf{csv}.
+\end{codeinfo}
+
+\begin{codesortie}
+\begin{filecontents*}[overwrite]{perroquet.csv}
+-,-,-,-,-,-,4,4,4,4,-,-,-,-,-,-
+-,-,-,-,4,4,1,1,1,1,4,4,-,-,-,-
+-,-,-,4,1,1,1,1,1,1,1,1,4,-,-,-
+-,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
+-,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
+-,4,1,9,9,1,1,1,1,1,1,9,9,1,4,-
+-,4,9,9,9,9,4,4,4,4,9,9,9,9,4,-
+-,4,9,4,9,9,4,4,4,4,9,4,9,9,4,-
+-,4,1,9,9,9,4,4,4,4,9,9,9,1,4,-
+-,-,4,1,1,9,4,4,4,4,9,1,1,4,-,-
+-,-,4,1,1,1,4,4,4,4,1,1,1,4,-,-
+-,-,-,4,1,1,1,4,4,1,1,1,4,-,-,-
+-,-,4,3,1,1,1,1,1,1,1,1,3,4,-,-
+-,4,6,3,1,1,1,1,1,1,1,1,3,6,4,-
+-,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
+-,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
+-,4,6,4,1,1,1,4,4,1,1,1,4,6,4,-
+2,2,4,2,4,4,4,2,2,4,4,4,2,4,2,2
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+-,-,-,-,-,4,1,1,1,1,4,-,-,-,-,-
+-,-,-,-,-,-,4,1,1,4,-,-,-,-,-,-
+-,-,-,-,-,-,-,4,4,-,-,-,-,-,-,-
+\end{filecontents*}
+
+\begin{center}
+	\renewcommand\arraystretch{1.25}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		\multicolumn{6}{|c|}{Notice} \\ \hline
+		1 & 2 & 3 & 5 & 6 & 9 \\ \hline
+		Rouge & Marron & Jaune & Noir & Bleu & Blanc \\ \hline
+	\end{tabular}
+\end{center}
+
+\begin{center}
+	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+		\PLpixelart[codes=123469,style=\ttfamily]{perroquet.csv}
+	\end{tikzpicture}
+	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+		\PLpixelart[codes=123469,couleurs={Red,Brown,Yellow,Black,Blue,White},correction]{perroquet.csv}
+	\end{tikzpicture}
+\end{center}
+
+\begin{center}
+	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+		\draw[very thin,gray,xstep=1,ystep=1] (0,0) grid (17,-24) ;
+		\foreach \x in {0,1,...,17} \draw[very thin,gray] (\x,-3pt)--(\x,3pt) node[above,font=\scriptsize\sffamily] {\x} ;
+		\foreach \y in {0,-1,...,-24} \draw[very thin,gray] (3pt,\y)--(-3pt,\y) node[left,font=\scriptsize\sffamily] {\y} ;
+		\PLpixelart[codes=123469,couleurs={Red,Brown,Yellow,Black,Blue,White},correction]{perroquet.csv}
+		\filldraw[Blue] (14,-1) circle[radius=1] ;
+		\filldraw[Yellow] (14,-1) circle[radius=0.8] ;
+		\draw[ForestGreen,very thick,<-] (15,-1) to[bend left=30] (18,-2) node[right,font=\scriptsize\sffamily] {rajouté en \TikZ} ;
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+%code tikz et pixelart
+\filldraw[Blue] (14,-1) circle[radius=1] ;
+\filldraw[Yellow] (14,-1) circle[radius=0.8] ;
+\draw[ForestGreen,very thick,<-] (15,-1) to[bend left=30] (18,-2) node[right,font=\scriptsize\sffamily] {rajouté en \TikZ} ;
+\end{codetex}
+
+\pagebreak
+
+\begin{codetex}[listing only]
+%codes avec ambiguïté
+
+\begin{filecontents*}[overwrite]{cap.csv}
+-,-,-,-,-,-,-,-,D,-,D,-,D,-,-,-,-,-,-,-,-,-
+-,D,D,-,-,-,-,D,D,D,D,D,D,-,-,D,D,D,D,-,-,-
+D,-,-,D,-,D,D,F,F,F,F,F,F,D,D,-,-,-,-,D,-,-
+-,D,-,-,D,F,F,F,-,-,F,F,F,F,F,D,-,D,D,-,-,-
+-,-,D,D,F,F,F,-,F,F,-,F,F,F,F,F,D,D,-,-,-,-
+-,-,-,D,F,F,F,F,F,F,F,F,F,F,F,F,D,-,-,-,-,-
+-,-,-,D,F,J,J,J,J,J,J,J,F,F,F,F,D,-,-,-,-,-
+-,-,-,D,J,-,-,-,J,-,-,-,J,J,F,F,D,-,-,-,-,-
+-,-,-,D,J,-,D,-,J,-,D,-,J,J,B,B,D,-,-,-,-,-
+-,-,-,D,J,-,-,-,J,-,-,-,J,J,B,B,D,-,-,-,-,-
+-,-,-,D,C,J,J,J,J,J,J,J,J,C,C,C,D,-,-,-,-,-
+-,-,-,D,C,C,C,C,C,C,C,C,C,C,C,D,D,D,-,-,-,-
+-,-,-,D,C,C,C,D,D,D,D,D,D,C,D,A,A,A,D,-,-,-
+-,-,-,D,F,C,C,C,C,C,C,C,C,D,A,-,-,-,A,D,-,-
+-,-,-,D,F,C,F,C,C,C,C,F,D,A,-,A,A,A,-,A,D,-
+-,-,D,C,F,F,F,F,C,C,F,D,A,-,A,F,F,F,A,-,A,D
+-,-,D,C,F,F,F,F,F,F,F,D,A,-,A,F,-,F,A,-,A,D
+-,-,D,A,D,-,A,-,A,-,A,D,A,-,A,F,F,F,A,-,A,D
+-,-,-,D,D,-,A,-,A,-,A,-,D,A,-,A,A,A,-,A,D,-
+-,-,-,-,-,D,D,F,D,D,D,D,F,D,A,-,-,-,A,D,-,-
+-,-,-,-,-,-,D,A,D,-,-,D,-,-,D,A,A,A,D,-,-,-
+-,-,-,-,-,-,D,D,D,-,-,D,D,D,D,D,D,D,-,-,-,-
+\end{filecontents*}
+
+\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+	\PLpixelart[codes=ABCDFJ,symboles={1,2,3,4,6,10},symb,style=\tiny\sffamily]{cap.csv}
+\end{tikzpicture}
+
+\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+	\PLpixelart[codes=ABCDFJ,couleurs={Red,Brown,Yellow,Black,Blue,Gray},correction]{cap.csv}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\begin{filecontents*}[overwrite]{cap.csv}
+-,-,-,-,-,-,-,-,D,-,D,-,D,-,-,-,-,-,-,-,-,-
+-,D,D,-,-,-,-,D,D,D,D,D,D,-,-,D,D,D,D,-,-,-
+D,-,-,D,-,D,D,F,F,F,F,F,F,D,D,-,-,-,-,D,-,-
+-,D,-,-,D,F,F,F,-,-,F,F,F,F,F,D,-,D,D,-,-,-
+-,-,D,D,F,F,F,-,F,F,-,F,F,F,F,F,D,D,-,-,-,-
+-,-,-,D,F,F,F,F,F,F,F,F,F,F,F,F,D,-,-,-,-,-
+-,-,-,D,F,J,J,J,J,J,J,J,F,F,F,F,D,-,-,-,-,-
+-,-,-,D,J,-,-,-,J,-,-,-,J,J,F,F,D,-,-,-,-,-
+-,-,-,D,J,-,D,-,J,-,D,-,J,J,B,B,D,-,-,-,-,-
+-,-,-,D,J,-,-,-,J,-,-,-,J,J,B,B,D,-,-,-,-,-
+-,-,-,D,C,J,J,J,J,J,J,J,J,C,C,C,D,-,-,-,-,-
+-,-,-,D,C,C,C,C,C,C,C,C,C,C,C,D,D,D,-,-,-,-
+-,-,-,D,C,C,C,D,D,D,D,D,D,C,D,A,A,A,D,-,-,-
+-,-,-,D,F,C,C,C,C,C,C,C,C,D,A,-,-,-,A,D,-,-
+-,-,-,D,F,C,F,C,C,C,C,F,D,A,-,A,A,A,-,A,D,-
+-,-,D,C,F,F,F,F,C,C,F,D,A,-,A,F,F,F,A,-,A,D
+-,-,D,C,F,F,F,F,F,F,F,D,A,-,A,F,-,F,A,-,A,D
+-,-,D,A,D,-,A,-,A,-,A,D,A,-,A,F,F,F,A,-,A,D
+-,-,-,D,D,-,A,-,A,-,A,-,D,A,-,A,A,A,-,A,D,-
+-,-,-,-,-,D,D,F,D,D,D,D,F,D,A,-,-,-,A,D,-,-
+-,-,-,-,-,-,D,A,D,-,-,D,-,-,D,A,A,A,D,-,-,-
+-,-,-,-,-,-,D,D,D,-,-,D,D,D,D,D,D,D,-,-,-,-
+\end{filecontents*}
+
+\begin{center}
+	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+		\PLpixelart[codes=ABCDFJ,symboles={1,2,3,4,6,10},symb,style=\tiny\sffamily]{cap.csv}
+	\end{tikzpicture}
+	~~
+	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+		\PLpixelart[codes=ABCDFJ,couleurs={Red,Brown,Yellow,Black,Blue,Gray},correction]{cap.csv}
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\newpage
+
+\section{SudoMaths, en \TikZ}\label{sudomaths}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+L'idée est de \textit{proposer} un environnement \TikZ, une commande permettant de tracer des grilles de SudoMaths.
+
+L'environnement créé, lié à \TikZ, trace la grille de SudoMaths (avec les blocs démarqués), et peut la remplir avec une liste d'éléments.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+%grille classique non remplie, avec légendes H et V
+%les {} non nécessaires pour préciser que les cases seront "vides"
+\PLsudomaths{}
+\end{codetex}
+
+\begin{codesortie}
+\PLsudomaths{}
+\end{codesortie}
+
+\begin{codeinfo}
+La commande \ctex{PLsudomaths} crée donc la grille (remplie ou non), dans un environnement \TikZ, c'est \textit{c'est tout} ! 
+
+\smallskip
+
+Si on veut exploiter le tracé de la grille, on peut utiliser l'\textit{environnement} \ctex{PLenvsudomaths} dans lequel on peut rajouter toute commande en \TikZ{} !
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%grille "toute seule"
+\PLsudomaths[<options>]{<liste>}
+
+%grille avec ajout de code
+\begin{PLenvsudomaths}[<options>]{<grille>}
+	<commandes tikz> ;
+\end{PLenvsudomaths}
+\end{codetex}
+
+\pagebreak
+
+\subsection{Clés et options}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{epaisseurg} pour gérer l'épaisseur des traits épais ; \hfill~défaut \Cle{1.5pt}
+	\item la clé \Cle{epaisseur} pour gérer l'épaisseur des traits fins ; \hfill~défaut \Cle{0.5pt}
+	\item la clé \Cle{unite} qui est l'unité graphique de la figure ; \hfill~défaut \Cle{1cm}
+	\item la clé \Cle{couleurcase} pour la couleur (éventuelles) des cases ; \hfill~défaut \Cle{LightBlue!50}
+	\item la clé \Cle{couleurtexte} pour gérer la couleur du label des cases ; \hfill~défaut \Cle{blue}
+	\item la clé \Cle{nbcol} qui est le nombre de colonnes ; \hfill~défaut \Cle{9}
+	\item la clé \Cle{nbsubcol} qui est le nombre de sous-colonnes ; \hfill~défaut \Cle{3}
+	\item la clé \Cle{nblig} qui est le nombre de lignes ; \hfill~défaut \Cle{9}
+	\item la clé \Cle{nbsublig} qui est le nombre de sous-colonnes ; \hfill~défaut \Cle{3}
+	\item la clé \Cle{police} qui formatte le label des cases ; \hfill~défaut \Cle{\textbackslash{}normalfont\textbackslash{}normalsize}
+	\item le booléen \Cle{legendes} qui affiche ou non les légendes (H et V) des cases ; \hfill~défaut \Cle{true}
+	\item la clé \Cle{policeleg} qui formatte le label des légendes ; \hfill~défaut \Cle{\textbackslash{}normalfont\textbackslash{}normalsize}
+	\item la clé \Cle{listelegv} qui est la liste de la légende verticale ; \hfill~défaut \Cle{ABCD...WXYZ}
+	\item la clé \Cle{listelegh} qui est la liste de la légende horizontale ; \hfill~défaut \Cle{abcd...wxyz}
+	\item la clé \Cle{decallegende} qui est le décalage de la légende par rapport à la grille. \hfill~défaut \Cle{0.45}
+\end{itemize}
+\end{codecles}
+
+\begin{codeinfo}
+La liste éventuelle des éléments à rentrer dans le tableau est traitée par le package \ctex{listofitems}, et se présente sous la forme suivante : \ctex{ / / / ... / / § / / / ... / / § ... § / / / ... / / }
+
+\smallskip
+
+Il peut donc être intéressant de \textit{déclarer} la liste au préalable pour simplifier la saisie de la commande !
+\end{codeinfo}
+
+\begin{codeinfo}
+La \Cle{couleurcase} est gérée -- en interne -- par le caractère \ctex{*} qui permet de préciser qu'on veut que la case soit coloriée.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%grille 6x6 avec blocs 2x3, avec coloration de cases (présentée sous forme de "cases")
+\def\grilleSuMa{%
+	(a)* / (b)* /      /      / (c)* / (d)* §%
+	(e)* /      /      / (f)* / (g)* / (h)* §%
+	     /      / (i)* /      /      / (j)* §%
+	     /      / (k)* /      / (l)* / (m)* §%
+	(n)* /      / (o)* /      /      / (p)* §%
+	     /      /      / (q)* /      /      §%
+}
+
+\PLsudomaths[unite=0.75cm,nbcol=6,nbsubcol=2,nblig=6,nbsublig=3,police=\small\bfseries\ttfamily,%
+	couleurtexte=red,couleurcase=yellow!50,legendes=false]{\grilleSuMa}
+\end{codetex}
+
+\begin{codesortie}
+\def\grilleSuMa{%
+	(a)* / (b)* /      /      / (c)* / (d)* §%
+	(e)* /      /      / (f)* / (g)* / (h)* §%
+	/      / (i)* /      /      / (j)* §%
+	/      / (k)* /      / (l)* / (m)* §%
+	(n)* /      / (o)* /      /      / (p)* §%
+	/      /      / (q)* /      /      §%
+}
+
+\PLsudomaths[unite=0.75cm,nbcol=6,nbsubcol=2,nblig=6,nbsublig=3,police=\small\bfseries\ttfamily,couleurtexte=red,couleurcase=yellow!50,legendes=false]{\grilleSuMa}
+\end{codesortie}
+
+\pagebreak
+
+\begin{codeinfo}
+La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0\,;\,0)$ et $(\text{nbcol}\,;\,-\text{nblig})$, de sorte que les labels des cases sont situés au nœuds de coordonnées $(x,5\,;\,-y,5)$.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%grille classique avec coloration de cases et commande tikz
+%graduations rajoutées pour la lecture des coordonnées
+\def\grilleSuMaB{%
+	*/////4///§%
+	/*///3////§%
+	//*//////§%
+	///*/////§%
+	////*////§%
+	/////*///§%
+	//5*/////*/§%
+	/////B///*§%
+	*///9////Q/§%
+}
+
+\begin{PLenvsudomaths}[%
+		unite=0.66cm,police=\footnotesize\bfseries\ttfamily,couleurcase=ForestGreen!50,%
+		listelegv=QSDFGHJKL,listelegh=poiuytrez]{\grilleSuMaB}
+	\draw[red,very thick,<-] (7.5,-4.5) to[bend right] ++ (4,-1) node[right] {code rajouté...} ;
+\end{PLenvsudomaths}
+\end{codetex}
+
+\begin{codesortie}
+\def\grilleSuMaB{%
+	*/////4///§%
+	/*///3////§%
+	//*//////§%
+	///*/////§%
+	////*////§%
+	/////*///§%
+	//5*/////*/§%
+	/////B///*§%
+	*///9////Q/§%
+}
+
+\begin{PLenvsudomaths}[%
+		unite=0.66cm,police=\footnotesize\bfseries\ttfamily,couleurcase=ForestGreen!50,%
+		listelegv=QSDFGHJKL,listelegh=poiuytrez]{\grilleSuMaB}
+	\draw[red,very thick,<-] (7.5,-4.5) to[bend right] ++ (4,-1) node[right] {code rajouté pour montrer la case \textsf{Ge}} ;
+	\foreach \x in {0,1,...,9} \draw[lightgray] (\x,-9) node[below,font=\scriptsize\ttfamily] {\x} ;
+	\foreach \y in {-1,-2,...,-9} \draw[lightgray] (9,\y) node[right,font=\scriptsize\ttfamily] {\y} ;
+	\draw[lightgray] (9,0) node[right,font=\scriptsize\ttfamily] {~0} ;
+\end{PLenvsudomaths}
+\end{codesortie}
+
+\newpage
+
 \section{Historique}
+
+{\small \bverb|v1.2.7|~:~~~~Ajout de commandes pour des calculs de probabilités (page \pageref{calcprobas})
+
+{\small \bverb|v1.2.6|~:~~~~Ajout d'un environnement pour des SudoMaths (page \pageref{sudomaths})
+
+{\small \bverb|v1.2.5|~:~~~~Ajout de commandes pour des boîtes à moustaches (page \pageref{boiteamoustaches})
+
+{\small \bverb|v1.2.4|~:~~~~Correction de quelques bugs mineurs, et mise à jour de la doc
+
+{\small \bverb|v1.2.3|~:~~~~Commandes pour du code python "simple", sans compilation particulière (page \pageref{pythonsimple})
+
+{\small \bverb|v1.2.2|~:~~~~Commandes pour travailler sur des stats à 2 variables (page \pageref{statsdeuxvars})
+
+{\small \bverb|v1.2.1|~:~~~~Amélioration de la gestion du csv pour Pixelart
+
+{\small \bverb|v1.2  |~:~~~~Correction d'un méchant bug sur Pixelart
+
+{\small \bverb|v1.1.9|~:~~~~Pixelart en \TikZ{} (page \pageref{pixelart})
 
 {\small \bverb|v1.1.8|~:~~~~Style "Mainlevée" basique pour \TikZ
 
