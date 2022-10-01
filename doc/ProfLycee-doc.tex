@@ -18,6 +18,10 @@
 \usepackage[group-minimum-digits=4]{siunitx}
 \usepackage{fancyvrb}
 \usepackage{fancyhdr}
+\usepackage{multicol}
+\makeatletter
+	\@addtoreset{section}{part}
+\makeatother
 %fancy
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
@@ -272,7 +276,9 @@ Des commandes pour effectuer des calculs de probas (lois binomiale, exponentiell
 
 \newpage
 
-\section{Introduction}
+\part{Introduction}
+
+\section{Le package ProfLycee}
 
 \subsection{\og Philosophie \fg{} du package}
 
@@ -358,6 +364,8 @@ Les options précédentes sont cumulables, et, pour info, elles conditionnent le
 	\item \ctex{\textbackslash RequirePackage[outputdir=build]\{minted\}}
 \end{itemize}
 \end{codeinfo}
+
+\section{Compléments}
 
 \subsection{Le système de \og clés/options \fg}
 
@@ -447,6 +455,8 @@ En dehors de cela, ce sont des tests multiples et variés qui permettront de dé
 
 \newpage
 
+\part{Outils pour l'analyse}
+
 \section{L'outil \og splinetikz \fg}
 
 \subsection{Courbe d'interpolation}
@@ -465,11 +475,7 @@ On va utiliser les notions suivantes pour paramétrer le tracé \og automatique 
 Pour déclarer les paramètres :
 %
 \begin{itemize}
-	\item liste des points de contrôle par : \verb|liste=x1/y1/d1§x2/y2/d2§...|
-	\begin{itemize}
-		\item il faut au-moins deux points ;
-		\item avec les points \pverb|(xi;yi)| et \vverb|f'(xi)=di|.
-	\end{itemize}
+	\item liste des points de contrôle (minimum 2 !!) par : \verb|liste=x1/y1/d1§x2/y2/d2§...| avec les points \pverb|(xi;yi)| et \vverb|f'(xi)=di| ;
 	\item coefficients de contrôle par \verb|coeffs=...| :
 	\begin{itemize}
 		\item \averb|coeffs=x| pour mettre tous les coefficients à x ;
@@ -499,7 +505,7 @@ Certains paramètres peuvent être gérés directement dans la commande \ctex{\t
 	\item l'épaisseur de la courbe par la \textsf{clé} \Cle{epaisseur} ;\hfill{}défaut \Cle{1.25pt}
 	\item du style supplémentaire pour la courbe peut être rajouté, grâce à la \textsf{clé} \Cle{style=} ;\hfill{}défaut \Cle{vide}
 	\item les coefficients de \textit{compensation} gérés par la \textsf{clé} \Cle{coeffs} ;\hfill{}défaut \Cle{3}
-	\item les points de contrôle ne sont pas affichés par défaut, mais la \textsf{clé booléenne} \Cle{affpoints} permet de les afficher ;\hfill{}défaut \Cle{true}
+	\item les points de contrôle non affichés par défaut, mais la \textsf{clé booléenne} \Cle{affpoints} permet de les afficher ;\hfill{}défaut \Cle{true}
 	\item la taille des points de contrôle est géré par la \textsf{clé} \Cle{taillepoints}.\hfill{}défaut \Cle{2pt}
 \end{itemize}
 \end{codecles}
@@ -764,6 +770,179 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 
 \newpage
 
+\section{Suites récurrentes et \og toile \fg}\label{recurr}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour tracer (en \TikZ) la \og toile \fg{} permettant d'obtenir -- graphiquement -- les termes d'une suite récurrente définie par une relation $u_{n+1}=f(u_n)$.
+
+\smallskip
+
+Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{recurrPL} pour afficher la \og toile \fg.
+\end{codeidee}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	...
+	\recurrPL[<clés>][<options du tracé>][<option supplémentaire des termes>]
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Plusieurs \Cle{arguments} (optionnels) sont disponibles :
+
+\begin{itemize}
+	\item le premier argument optionnel définit les \Cle{Clés} de la commande :
+	\begin{itemize}
+		\item la clé \Cle{fct} qui définit la fonction $f$ ;\hfill{}défaut \Cle{vide}
+		\item la clé \Cle{nom} qui est le \textit{nom} de la suite ;\hfill{}défaut \Cle{u}
+		\item la clé \Cle{no} qui est l'indice initial ;\hfill{}défaut \Cle{0}
+		\item la clé \Cle{uno} qui est la valeur du terme initial ;\hfill{}défaut \Cle{vide}
+		\item la clé \Cle{nb} qui est le nombre de termes à construire ;\hfill{}défaut \Cle{5}
+		\item la clé \Cle{poslabel} qui correspond au placement des labels par rapport à l'axe des abscisses ;\hfill{}défaut \Cle{below}
+		\item la clé \Cle{decallabel} qui correspond au décalage des labels par rapport aux abscisses ;\hfill{}défaut \Cle{6pt}
+		\item la clé \Cle{taillelabel} qui correspond à la taille des labels ;\hfill{}défaut \Cle{small}
+		\item un booléen \Cle{afftermes} qui permet d'afficher les termes de la suite sur l'axe $(Ox)$.\hfill{}défaut \Cle{true}
+	\end{itemize}
+	\item le deuxième argument optionnel concerne les \Cle{options} du tracé de l'\textit{escalier} en \textit{langage \TikZ} ;
+	
+	\hfill{}défaut \Cle{thick,color=magenta} ;
+	\item le troisième argument optionnel concerne les \Cle{options} du tracé des termes en \textit{langage \TikZ}.
+	
+	\hfill{}défaut \Cle{dotted}.
+\end{itemize}
+\end{codecles}
+
+\begin{codeinfo}
+Il est à noter que le \textsf{code} n'est pas autonome, et doit être intégré dans un environnement \ctex{tikzpicture}.
+
+\smallskip
+
+L'utilisateur est donc libre de définir ses styles pour l'affichage des éléments de son graphique, et il est libre également de rajouter des éléments en plus du tracé de la \textit{toile} !
+
+\smallskip
+
+La macro ne permet -- pour le moment -- ni de tracer la bissectrice, ni de tracer la courbe$\ldots$
+
+En effet, il y aurait trop d'options pour ces deux éléments, et l'idée est quand même de conserver une commande \textit{simple} ! Donc l'utilisateur se chargera de tracer et de personnaliser sa courbe et sa bissectrice !
+\end{codeinfo}
+
+\subsection{Exemples}
+
+\begin{codeinfo}
+On va tracer la \textit{toile} des 4 premiers termes de la suite récurrente $\begin{dcases} u_1 = 1 \\ u_{n+1} = \sqrt{5u_n}+1 \text{ pour tout entier } n \geqslant 1\end{dcases}$.
+\end{codeinfo}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\def\x{1.5cm}\def\y{1.5cm}
+\def\xmin{0}\def\xmax{10}\def\xgrille{1}\def\xgrilles{0.5}
+\def\ymin{0}\def\ymax{8}\def\ygrille{1}\def\ygrilles{0.5}
+%axes et grilles
+\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.6pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
+\draw[line width=1.5pt,->,darkgray] (\xmin,0)--(\xmax,0) ;
+\draw[line width=1.5pt,->,darkgray] (0,\ymin)--(0,\ymax) ;
+\foreach \x in {0,1,...,9} {\draw[darkgray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
+\foreach \y in {0,1,...,7} {\draw[darkgray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
+%fonction définie et réutilisable
+\def\f{sqrt(5*\x)+1}
+%toile
+\recurrPL[fct={\f},no=1,uno=1,nb=4,decallabel=4pt]
+%éléments supplémentaires
+\draw[very thick,blue,domain=0:8,samples=250] plot (\x,{\f}) ;
+\draw[very thick,ForestGreen,domain=0:8,samples=2] plot (\x,\x) ;
+\end{codetex}
+
+\begin{codeinfo}
+Peut-être que -- ultérieurement -- des options \textit{booléennes} seront disponibles pour un tracé \textit{générique} de la courbe et de la bissectrice, mais pour le moment la \textsf{macro} ne fait \textit{que} l'escalier.
+\end{codeinfo}
+
+\subsection{Influence des paramètres}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}[x=4cm,y=3cm]
+	%axes + grilles + graduations
+	...
+	%fonction
+	\def\f{-0.25*\x*\x+\x}
+	%tracés
+	\begin{scope}
+		\clip (0,0) rectangle (2.5,1.25) ;
+		\draw[line width=1.25pt,blue,domain=0:2.5,samples=200] plot (\x,{\f}) ;
+	\end{scope}
+	\recurrPL[fct={\f},no=0,uno=2,nb=5,poslabel=above right,decallabel=0pt]
+\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}[x=4cm,y=3cm]
+	\draw[xstep=0.25,ystep=0.25,line width=0.3pt,lightgray!50] (0,0) grid (2.5,1.25);
+	\draw[thick,->] (0,0)--(2.5,0) ;
+	\draw[thick,->] (0,0)--(0,1.25) ;
+	\foreach \x in {0,1,2}
+	\draw[line width=1.25pt] (\x,4pt) -- (\x,-4pt) node[below] {\num{\x}} ;
+	\foreach \y in {0,0.5,1.0}
+	\draw[line width=1.25pt] (4pt,\y) -- (-4pt,\y) node[left] {\num{\y}} ;
+	\draw[line width=1.25pt,red](0,0) -- (1.25,1.25) ;
+	%fonction
+	\def\f{-0.25*\x*\x+\x}
+	%tracés
+	\begin{scope}
+			\clip (0,0) rectangle (2.5,1.25) ;
+			\draw[line width=1.25pt,blue,domain=0:2.5,samples=200] plot (\x,{\f}) ;
+		\end{scope}
+	\recurrPL[fct={\f},no=0,uno=2,nb=5,poslabel=above right,decallabel=0pt]
+\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}[x=5cm,y=1.5cm]
+			...
+			\def\f{-0.25*\x*\x+\x}
+			\recurrPL%
+				[fct={\f},no=0,uno=1,nb=7,poslabel=above right,decallabel=0pt,afftermes=false]%
+				[line width=1.25pt,ForestGreen,densely dashed][]
+			\draw[line width=1.25pt,blue,domain=0:2.25,samples=2] plot(\x,{\x});
+			\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
+		\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}[x=5cm,y=1.5cm]
+		%axes et grille
+		\draw[xstep=0.5,ystep=0.25,line width=0.3pt,lightgray!50] (0,0) grid (2.5,2.25);
+		\draw[thick,->] (0,0)--(2.5,0) ;
+		\draw[thick,->] (0,0)--(0,2.25) ;
+		\foreach \x in {0,0.5,...,2}
+			\draw[line width=1.25pt] (\x,4pt) -- (\x,-4pt) node[below] {\num{\x}};
+		\foreach \y in {0,0.5,...,2}
+			\draw[line width=1.25pt] (4pt,\y) -- (-4pt,\y) node[left] {\num{\y}};
+		%fonction
+		\def\f{1+1/\x}
+		%tracés
+		\recurrPL[fct={\f},no=0,uno=1,nb=7,poslabel=above right,decallabel=0pt,afftermes=false][line width=1.25pt,ForestGreen,densely dashed][]
+		\draw[line width=1.25pt,blue,domain=0:2.25,samples=2] plot(\x,{\x});
+		\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\newpage
+
+\part{Présentation de codes}
+
 \section{L'outil \og Calcul Formel \fg}
 
 \subsection{Introduction}
@@ -832,8 +1011,7 @@ Une fois les paramètres déclarés, il faut créer les différentes lignes, gr�
 Les (quelques) \Cle{Clés} disponibles sont :
 
 \begin{itemize}
-	\item \Cle{hc} : hauteur de la ligne de commande d'entrée ;\hfill{}défaut \Cle{0.75}
-	\item \Cle{hr} : hauteur de la ligne de commande de sortie ;\hfill{}défaut \Cle{0.75}
+	\item \Cle{hc} et \Cle{hr}: hauteur de la ligne de commande d'entrée et de sortie ;\hfill{}défaut \Cle{0.75}
 	\item deux \textsf{arguments}, celui de la commande d'entrée et celui de la commande de sortie.
 \end{itemize}
 %
@@ -853,34 +1031,34 @@ Chaque argument \textsf{COMMANDE} \& \textsf{RÉSULTAT} peut être formaté (niv
 Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
 
 \begin{center}
-	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
+	\begin{tikzpicture}[x=0.7cm,y=0.5cm,line width=1pt]
 	\paramCF[larg=12cm,couleur=lightgray,esplg=12pt,menu=false]
 	\ligneCF{}{}
 	\ligneCF[hc=1,hr=1.25]{}{}
 	%explications
 	\foreach \noeud in {01,11,21,31,41,51,02,12,22,32,42,52}
-		\draw[blue] (A\noeud) node[font=\ttfamily] {A\noeud} ;
+		\draw[blue] (A\noeud) node[font=\footnotesize\ttfamily] {A\noeud} ;
 \end{tikzpicture}
 \end{center}
 
 \begin{center}
-	\begin{tikzpicture}[x=1cm,y=1cm,line width=1pt]
+	\begin{tikzpicture}[x=0.7cm,y=0.7cm,line width=1pt]
 	\paramCF[titre=true,larg=12cm,esplg=10pt,premcol=0.5,hpremcol=0.7,couleur=lightgray]
 	\ligneCF{COMMANDE 1}{RÉSULTAT 1}
 	\ligneCF[hc=0.85,hr=1.05]{COMMANDE 2}{RÉSULTAT 2}
 	%explications
-	\draw[CadetBlue,<->] ($(A22) + (0,-12pt)$) -- ($(A52) + (0,-12pt)$) node[midway,below,font=\sffamily] {\Cle{larg}} ;
-	\draw[CadetBlue,<->] ($(A51) + (12pt,0)$) -- ($(A32) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{esplg}} ;
-	\draw[CadetBlue,<->] ($(A02) + (0,2pt)$) -- ($(A02) + (0,2pt) + ({-\CFpremcol},0) $) node[midway,above,font=\sffamily] {\Cle{premcol}} ;
-	\draw[CadetBlue,<->] ($(A02) + ({-\CFpremcol},0) + (-2pt,0)$) -- ($(A02) + ({-\CFpremcol},{-\CFhpremcol}) +(-2pt,0)$) node[midway,left,font=\sffamily] {\Cle{hpremcol}} ;
-	\draw[CadetBlue,<->] ($(A31) + (12pt,0)$) -- ($(A41) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hc}} ;
-	\draw[CadetBlue,<->] ($(A41) + (12pt,0)$) -- ($(A51) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hr}} ;
-	\draw[CadetBlue,<->] ($(A32) + (12pt,0)$) -- ($(A42) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hc}} ;
-	\draw[CadetBlue,<->] ($(A42) + (12pt,0)$) -- ($(A52) + (12pt,0)$) node[midway,right,font=\sffamily] {\Cle{hr}} ;
-	\draw[CadetBlue,->] ($(A12) + (0,-12pt)$) to[bend left=10] ($(A12) + (0,-12pt) + (-18pt,-12pt)$) node[below left,font=\sffamily] {\Cle{couleur}} ;
-	\draw[CadetBlue,->] ($(A52) + (-0.65,0.25)$) to[bend left=10] ($(A52) + (-0.65,0.25) + (-18pt,12pt)$) node[inner sep=0pt,above left=1pt,font=\sffamily] {\Cle{menu}} ;
-	\draw[CadetBlue,->] ($(A12) + (16pt,0)$) to[bend left=10] ($(A12) + (16pt,0) + (18pt,-12pt)$) node[inner sep=0pt,below right=1pt,font=\sffamily] {\Cle{sep}} ;
-	\draw[CadetBlue,->] ($(A01) + (8pt,2pt) + (0,1em)$) to[bend left=10] ($(A01) + (8pt,2pt) + (0,1em) + (-18pt,12pt)$) node[inner sep=0pt,above=1pt,font=\sffamily] {\Cle{titre} \& \Cle{tailletitre} \& \Cle{labeltitre}} ;
+	\draw[CadetBlue,<->] ($(A22) + (0,-12pt)$) -- ($(A52) + (0,-12pt)$) node[midway,below,font=\footnotesize\sffamily] {\Cle{larg}} ;
+	\draw[CadetBlue,<->] ($(A51) + (12pt,0)$) -- ($(A32) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{esplg}} ;
+	\draw[CadetBlue,<->] ($(A02) + (0,2pt)$) -- ($(A02) + (0,2pt) + ({-\CFpremcol},0) $) node[midway,above,font=\footnotesize\sffamily] {\Cle{premcol}} ;
+	\draw[CadetBlue,<->] ($(A02) + ({-\CFpremcol},0) + (-2pt,0)$) -- ($(A02) + ({-\CFpremcol},{-\CFhpremcol}) +(-2pt,0)$) node[midway,left,font=\footnotesize\sffamily] {\Cle{hpremcol}} ;
+	\draw[CadetBlue,<->] ($(A31) + (12pt,0)$) -- ($(A41) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{hc}} ;
+	\draw[CadetBlue,<->] ($(A41) + (12pt,0)$) -- ($(A51) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{hr}} ;
+	\draw[CadetBlue,<->] ($(A32) + (12pt,0)$) -- ($(A42) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{hc}} ;
+	\draw[CadetBlue,<->] ($(A42) + (12pt,0)$) -- ($(A52) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{hr}} ;
+	\draw[CadetBlue,->] ($(A12) + (0,-12pt)$) to[bend left=10] ($(A12) + (0,-12pt) + (-18pt,-12pt)$) node[below left,font=\footnotesize\sffamily] {\Cle{couleur}} ;
+	\draw[CadetBlue,->] ($(A52) + (-0.65,0.25)$) to[bend left=10] ($(A52) + (-0.65,0.25) + (-18pt,12pt)$) node[inner sep=0pt,above left=1pt,font=\footnotesize\sffamily] {\Cle{menu}} ;
+	\draw[CadetBlue,->] ($(A12) + (16pt,0)$) to[bend left=10] ($(A12) + (16pt,0) + (18pt,-12pt)$) node[inner sep=0pt,below right=1pt,font=\footnotesize\sffamily] {\Cle{sep}} ;
+	\draw[CadetBlue,->] ($(A01) + (8pt,2pt) + (0,1em)$) to[bend left=10] ($(A01) + (8pt,2pt) + (0,1em) + (-18pt,12pt)$) node[inner sep=0pt,above=1pt,font=\footnotesize\sffamily] {\Cle{titre} \& \Cle{tailletitre} \& \Cle{labeltitre}} ;
 \end{tikzpicture}
 \end{center}
 \end{codeinfo}
@@ -1096,7 +1274,7 @@ Compte tenu de la \textit{relative complexité} pour gérer les options (par par
 Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une base \textit{pré}existante !
 \end{codeinfo}
 
-\subsection{Présentation de code Python via pythontex}
+\subsection{Présentation de code Python via pythontex}\label{pythontex}
 
 \begin{codeidee}
 L'environnement \ctex{\textbackslash envcodepythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
@@ -1150,9 +1328,7 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \end{envcodepythontex}
 \end{codesortie}
 
-\newpage
-
-\subsection{Présentation de code Python via minted}
+\subsection{Présentation de code Python via minted}\label{pytminted}
 
 \begin{codeinfo}
 Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment python (il nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18}).
@@ -1272,7 +1448,7 @@ Les \Cle{Clés} disponibles sont :
 
 \newpage
 
-\section{Pseudo-Code}
+\section{Pseudo-Code}\label{pseudocode}
 
 \subsection{Introduction}
 
@@ -1389,7 +1565,7 @@ m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
 
 \newpage
 
-\section{Terminal Windows/UNiX/OSX}
+\section{Terminal Windows/UNiX/OSX}\label{terms}
 
 \subsection{Introduction}
 
@@ -1510,7 +1686,7 @@ PING ctan.org (5.35.249.60) 56(84) bytes of data.
 
 \newpage
 
-\section{Cartouche Capytale}
+\section{Cartouche Capytale}\label{capytale}
 
 \subsection{Introduction}
 
@@ -1571,7 +1747,9 @@ Le \textsf{cartouche} peut être \og cliquable \fg{} grâce à \ctex{href}.
 
 \newpage
 
-\section{Pavé droit \og simple \fg{}}
+\part{Outils pour la géométrie}
+
+\section{Pavé droit \og simple \fg}\label{pave}
 
 \subsection{Introduction}
 
@@ -1613,7 +1791,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 
 \begin{codetex}[tikz lower]
 %code tikz
-\pavePL[cube,largeur=3]
+\pavePL[cube,largeur=2]
 \end{codetex}
 
 \begin{codeinfo}
@@ -1658,7 +1836,7 @@ Le code crée les nœuds relatifs aux sommets, et les nomme comme les sommets, c
 
 \newpage
 
-\section{Tétraèdre \og simple \fg{}}
+\section{Tétraèdre \og simple \fg}\label{tetra}
 
 \subsection{Introduction}
 
@@ -1774,325 +1952,9 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 
 \newpage
 
-\section{Fractions, ensembles}
-
-\subsection{Fractions}
-
-\begin{codeidee}
-L'idée est d'obtenir une commande pour \textit{simplifier} un calcul sous forme de fraction irréductible.
-\end{codeidee}
-
-\begin{codetex}[listing only]
-\convertfraction[<option>]{<argument>}
-\end{codetex}
-
-\begin{codecles}
-Peu d'options pour ces commandes :
-
-\begin{itemize}
-	\item le premier argument, optionnel, permet de spécifier le mode de sortie de la fraction \textsf{[t]} pour \textsf{tfrac} et \textsf{[d]} pour \textsf{dfrac} ;
-	\item le second, mandataire, est le \textsf{calcul} ou la \textsf{division} à convertir.
-\end{itemize}
-
-À noter que la macro est dans un bloc \textsf{ensuremath} donc les \textsf{\$\ldots\$} ne sont pas nécessaires.
-\end{codecles}
-
-\begin{codetex}[listing only]
-\convertfraction{111/2145}
-\convertfraction{111/3}
-$\frac{111}{2145}=\convertfraction{111/2145}$
-$\frac{3}{15}=\convertfraction[]{3/15}$
-$\tfrac{3}{15}=\convertfraction[t]{3/15}$                   #formatage en \tfrac
-$\dfrac{3}{15}=\convertfraction[d]{3/15}$                   #formatage en \dfrac
-$\dfrac{0,42}{0,015}=\convertfraction[d]{0.42/0.015}$
-$\dfrac{0,41}{0,015}=\convertfraction[d]{0.41/0.015}$
-$\dfrac{1}{7}+\dfrac{3}{8}=\convertfraction[d]{1/7+3/8}$
-$\convertfraction[d]{1+1/2}$
-$\convertfraction{0.1/0.7+30/80}$
-\end{codetex}
-
-\begin{codesortie}
-\convertfraction{111/2145}
-
-\smallskip
-
-\convertfraction{111/3}
-
-\smallskip
-
-$\frac{111}{2145}=\convertfraction{111/2145}$
-
-\smallskip
-
-$\frac{3}{15}=\convertfraction[]{3/15}$
-
-\smallskip
-
-$\tfrac{3}{15}=\convertfraction[t]{3/15}$
-
-\smallskip
-
-$\dfrac{3}{15}=\convertfraction[d]{3/15}$
-
-\smallskip
-
-$\dfrac{0,42}{0,015}=\convertfraction[d]{0.42/0.015}$
-
-\smallskip
-
-$\dfrac{0,41}{0,015}=\convertfraction[d]{0.41/0.015}$
-
-\smallskip
-
-$\dfrac{1}{7}+\dfrac{3}{8}=\convertfraction[d]{1/7+3/8}$
-
-\smallskip
-
-$\convertfraction[d]{1+1/2}$
-
-\smallskip
-
-$\convertfraction{0.1/0.7+30/80}$
-\end{codesortie}
-
-\begin{codeinfo}
-A priori le package \ctex{xint} permet de s'en sortir pour des calculs \og simples \fg, je ne garantis pas que tout calcul ou toute division donne un résultat \textit{satisfaisant} !
-\end{codeinfo}
-
-\pagebreak
-
-\subsection{Ensembles}
-
-\begin{codeidee}
-L'idée est d'obtenir une commande pour simplifier l'écriture d'un ensemble d'éléments, en laissant gérer les espaces.
-
-Les délimiteurs de l'ensemble créé sont toujours \textsf{\{~~\}}.
-\end{codeidee}
-
-\begin{codetex}[listing only]
-\ensPL[<clés>]{<liste>}
-\end{codetex}
-
-\begin{codecles}
-Peu d'options pour ces commandes :
-
-\begin{itemize}
-	\item le premier argument, optionnel, permet de spécifier les \Cle{Clés} :
-	\begin{itemize}
-		\item clé \Cle{sep} qui correspond au délimiteur des éléments de l'ensemble ; \hfill{}défaut \Cle{;}
-		\item clé \Cle{option} qui est un code (par exemple \textsf{strut}\dots) inséré avant les éléments ;\hfill{}défaut \Cle{vide}
-		\item un booléen \Cle{mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct};\hfill{}défaut \Cle{true}
-	\end{itemize}
-	\item le second, mandataire, est la \textsf{liste} des éléments, séparés par \textsf{/}.
-\end{itemize}
-\end{codecles}
-
-\begin{codetex}[listing only]
-$\ensPL{a/b/c/d/e}$
-$\ensPL[mathpunct=false]{a/b/c/d/e}$
-$\ensPL[sep={,}]{a/b/c/d/e}$
-$\ensPL[option={\strut}]{a/b/c/d/e}$                             % \strut pour "augmenter" un peu la hauteur des {}
-$\ensPL{ \frac{1}{1+\frac{1}{3}} / b / c / d / \frac{1}{2} }$
-\end{codetex}
-
-\begin{codesortie}
-$\ensPL{a/b/c/d/e}$
-
-\smallskip
-
-$\ensPL[mathpunct=false]{a/b/c/d/e}$
-
-\smallskip
-
-$\ensPL[sep={,}]{a/b/c/d/e}$
-
-\smallskip
-
-$\ensPL[option={\strut}]{a/b/c/d/e}$
-
-\smallskip
-
-$\ensPL{ \displaystyle\frac{1}{1+\frac{1}{3}} / b / c / d / \displaystyle\frac{1}{2} }$
-\end{codesortie}
-
-\begin{codeinfo}
-Attention cependant au comportement de la commande avec des éléments en mode \textsf{mathématique}, ceux-ci peuvent générer une erreur si \textsf{displaystyle} n'est pas utilisé\ldots
-\end{codeinfo}
-
-\newpage
-
-\section{Suites récurrentes et \og toile \fg}
-
-\subsection{Idée}
-
-\begin{codeidee}
-L'idée est d'obtenir une commande pour tracer (en \TikZ) la \og toile \fg{} permettant d'obtenir -- graphiquement -- les termes d'une suite récurrente définie par une relation $u_{n+1}=f(u_n)$.
-
-\smallskip
-
-Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{recurrPL} pour afficher la \og toile \fg.
-\end{codeidee}
-
-\subsection{Commandes}
-
-\begin{codetex}[listing only]
-...
-\begin{tikzpicture}[<options>]
-	...
-	\recurrPL[<clés>][<options du tracé>][<option supplémentaire des termes>]
-	...
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codecles}
-Plusieurs \Cle{arguments} (optionnels) sont disponibles :
-
-\begin{itemize}
-	\item le premier argument optionnel définit les \Cle{Clés} de la commande :
-	\begin{itemize}
-		\item la clé \Cle{fct} qui définit la fonction $f$ ;\hfill{}défaut \Cle{vide}
-		\item la clé \Cle{nom} qui est le \textit{nom} de la suite ;\hfill{}défaut \Cle{u}
-		\item la clé \Cle{no} qui est l'indice initial ;\hfill{}défaut \Cle{0}
-		\item la clé \Cle{uno} qui est la valeur du terme initial ;\hfill{}défaut \Cle{vide}
-		\item la clé \Cle{nb} qui est le nombre de termes à construire ;\hfill{}défaut \Cle{5}
-		\item la clé \Cle{poslabel} qui correspond au placement des labels par rapport à l'axe des abscisses ;\hfill{}défaut \Cle{below}
-		\item la clé \Cle{decallabel} qui correspond au décalage des labels par rapport aux abscisses ;\hfill{}défaut \Cle{6pt}
-		\item la clé \Cle{taillelabel} qui correspond à la taille des labels ;\hfill{}défaut \Cle{small}
-		\item un booléen \Cle{afftermes} qui permet d'afficher les termes de la suite sur l'axe $(Ox)$.\hfill{}défaut \Cle{true}
-	\end{itemize}
-	\item le deuxième argument optionnel concerne les \Cle{options} du tracé de l'\textit{escalier} en \textit{langage \TikZ} ;
-	
-	\hfill{}défaut \Cle{thick,color=magenta} ;
-	\item le troisième argument optionnel concerne les \Cle{options} du tracé des termes en \textit{langage \TikZ}.
-	
-	\hfill{}défaut \Cle{dotted}.
-\end{itemize}
-\end{codecles}
-
-\begin{codeinfo}
-Il est à noter que le \textsf{code} n'est pas autonome, et doit être intégré dans un environnement \ctex{tikzpicture}.
-
-\smallskip
-
-L'utilisateur est donc libre de définir ses styles pour l'affichage des éléments de son graphique, et il est libre également de rajouter des éléments en plus du tracé de la \textit{toile} !
-
-\smallskip
-
-La macro ne permet -- pour le moment -- ni de tracer la bissectrice, ni de tracer la courbe$\ldots$
-
-En effet, il y aurait trop d'options pour ces deux éléments, et l'idée est quand même de conserver une commande \textit{simple} ! Donc l'utilisateur se chargera de tracer et de personnaliser sa courbe et sa bissectrice !
-\end{codeinfo}
-
-\subsection{Exemples}
-
-\begin{codeinfo}
-On va tracer la \textit{toile} des 4 premiers termes de la suite récurrente $\begin{dcases} u_1 = 1 \\ u_{n+1} = \sqrt{5u_n}+1 \text{ pour tout entier } n \geqslant 1\end{dcases}$.
-\end{codeinfo}
-
-\begin{codetex}[tikz lower]
-%code tikz
-\def\x{1.5cm}\def\y{1.5cm}
-\def\xmin{0}\def\xmax{10}\def\xgrille{1}\def\xgrilles{0.5}
-\def\ymin{0}\def\ymax{8}\def\ygrille{1}\def\ygrilles{0.5}
-%axes et grilles
-\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.6pt,lightgray!50] (\xmin,\ymin) grid (\xmax,\ymax);
-\draw[line width=1.5pt,->,darkgray] (\xmin,0)--(\xmax,0) ;
-\draw[line width=1.5pt,->,darkgray] (0,\ymin)--(0,\ymax) ;
-\foreach \x in {0,1,...,9} {\draw[darkgray,line width=1.5pt] (\x,4pt) -- (\x,-4pt) ;}
-\foreach \y in {0,1,...,7} {\draw[darkgray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
-%fonction définie et réutilisable
-\def\f{sqrt(5*\x)+1}
-%toile
-\recurrPL[fct={\f},no=1,uno=1,nb=4,decallabel=4pt]
-%éléments supplémentaires
-\draw[very thick,blue,domain=0:8,samples=250] plot (\x,{\f}) ;
-\draw[very thick,ForestGreen,domain=0:8,samples=2] plot (\x,\x) ;
-\end{codetex}
-
-\begin{codeinfo}
-Peut-être que -- ultérieurement -- des options \textit{booléennes} seront disponibles pour un tracé \textit{générique} de la courbe et de la bissectrice, mais pour le moment la \textsf{macro} ne fait \textit{que} l'escalier.
-\end{codeinfo}
-
-\subsection{Influence des paramètres}
-
-\begin{codetex}[listing only]
-\begin{center}
-	\begin{tikzpicture}[x=4cm,y=3cm]
-	%axes + grilles + graduations
-	...
-	%fonction
-	\def\f{-0.25*\x*\x+\x}
-	%tracés
-	\begin{scope}
-		\clip (0,0) rectangle (2.5,1.25) ;
-		\draw[line width=1.25pt,blue,domain=0:2.5,samples=200] plot (\x,{\f}) ;
-	\end{scope}
-	\recurrPL[fct={\f},no=0,uno=2,nb=5,poslabel=above right,decallabel=0pt]
-\end{tikzpicture}
-\end{center}
-\end{codetex}
-
-\begin{codesortie}
-\begin{center}
-	\begin{tikzpicture}[x=4cm,y=3cm]
-	\draw[xstep=0.25,ystep=0.25,line width=0.3pt,lightgray!50] (0,0) grid (2.5,1.25);
-	\draw[thick,->] (0,0)--(2.5,0) ;
-	\draw[thick,->] (0,0)--(0,1.25) ;
-	\foreach \x in {0,1,2}
-	\draw[line width=1.25pt] (\x,4pt) -- (\x,-4pt) node[below] {\num{\x}} ;
-	\foreach \y in {0,0.5,1.0}
-	\draw[line width=1.25pt] (4pt,\y) -- (-4pt,\y) node[left] {\num{\y}} ;
-	\draw[line width=1.25pt,red](0,0) -- (1.25,1.25) ;
-	%fonction
-	\def\f{-0.25*\x*\x+\x}
-	%tracés
-	\begin{scope}
-		\clip (0,0) rectangle (2.5,1.25) ;
-		\draw[line width=1.25pt,blue,domain=0:2.5,samples=200] plot (\x,{\f}) ;
-	\end{scope}
-	\recurrPL[fct={\f},no=0,uno=2,nb=5,poslabel=above right,decallabel=0pt]
-\end{tikzpicture}
-\end{center}
-\end{codesortie}
-
-\begin{codetex}[listing only]
-\begin{center}
-	\begin{tikzpicture}[x=5cm,y=1.5cm]
-		...
-		\def\f{-0.25*\x*\x+\x}
-		\recurrPL%
-			[fct={\f},no=0,uno=1,nb=7,poslabel=above right,decallabel=0pt,afftermes=false]%
-			[line width=1.25pt,ForestGreen,densely dashed][]
-		\draw[line width=1.25pt,blue,domain=0:2.25,samples=2] plot(\x,{\x});
-		\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
-	\end{tikzpicture}
-\end{center}
-\end{codetex}
-
-\begin{codesortie}
-\begin{center}
-	\begin{tikzpicture}[x=5cm,y=1.5cm]
-		%axes et grille
-		\draw[xstep=0.5,ystep=0.25,line width=0.3pt,lightgray!50] (0,0) grid (2.5,2.25);
-		\draw[thick,->] (0,0)--(2.5,0) ;
-		\draw[thick,->] (0,0)--(0,2.25) ;
-		\foreach \x in {0,0.5,...,2}
-			\draw[line width=1.25pt] (\x,4pt) -- (\x,-4pt) node[below] {\num{\x}};
-		\foreach \y in {0,0.5,...,2}
-			\draw[line width=1.25pt] (4pt,\y) -- (-4pt,\y) node[left] {\num{\y}};
-		%fonction
-		\def\f{1+1/\x}
-		%tracés
-		\recurrPL[fct={\f},no=0,uno=1,nb=7,poslabel=above right,decallabel=0pt,afftermes=false][line width=1.25pt,ForestGreen,densely dashed][]
-		\draw[line width=1.25pt,blue,domain=0:2.25,samples=2] plot(\x,{\x});
-		\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
-	\end{tikzpicture}
-\end{center}
-\end{codesortie}
-
-\newpage
-
-\section{Cercle trigo}
+%\newpage
+%
+\section{Cercle trigo}\label{cercletrigo}
 
 \subsection{Idée}
 
@@ -2143,32 +2005,32 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande :
 \begin{codetex}[listing only]
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
-		\cercletrigoPL[rayon=2.5,affvaleurs=false,decal=8pt]
-	\end{tikzpicture}
+			\cercletrigoPL[rayon=2.5,affvaleurs=false,decal=8pt]
+		\end{tikzpicture}
 	~~~~
 	\begin{tikzpicture}[line join=bevel]
-		\cercletrigoPL[rayon=2.5,affangles=false]
-	\end{tikzpicture}
+			\cercletrigoPL[rayon=2.5,affangles=false]
+		\end{tikzpicture}
 	~~~~
 	\begin{tikzpicture}[line join=bevel]
-		\cercletrigoPL[rayon=2.5,moinspi=false,couleurfond=orange!15]
-	\end{tikzpicture}
+			\cercletrigoPL[rayon=2.5,moinspi=false,couleurfond=orange!15]
+		\end{tikzpicture}
 \end{center}
 \end{codetex}
 
 \begin{codesortie}
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
-		\cercletrigoPL[rayon=2.5,affvaleurs=false,decal=8pt]
-	\end{tikzpicture}
+			\cercletrigoPL[rayon=2.5,affvaleurs=false,decal=8pt]
+		\end{tikzpicture}
 	~~~~
 	\begin{tikzpicture}[line join=bevel]
-		\cercletrigoPL[rayon=2.5,affangles=false]
-	\end{tikzpicture}
+			\cercletrigoPL[rayon=2.5,affangles=false]
+		\end{tikzpicture}
 	~~~~
 	\begin{tikzpicture}[line join=bevel]
-		\cercletrigoPL[rayon=2.5,moinspi=false,couleurfond=orange!15,taillevaleurs=\tiny]
-	\end{tikzpicture}
+			\cercletrigoPL[rayon=2.5,moinspi=false,couleurfond=orange!15,taillevaleurs=\tiny]
+		\end{tikzpicture}
 \end{center}
 \end{codesortie}
 
@@ -2234,209 +2096,7 @@ Les \Cle{Clés} pour cette possibilité sont :
 
 \newpage
 
-\section{Petits schémas pour le signe d'une fonction affine ou d'un trinôme}
-
-\subsection{Idée}
-
-\begin{codeidee}
-L'idée est d'obtenir une commande pour tracer (en \TikZ) un petit schéma pour \textit{visualiser} le signe d'une fonction affine ou d'un trinôme.
-
-Le code est très largement inspiré de celui du package \ctex{tnsana} même si la philosophie est légèrement différente.
-
-\smallskip
-
-Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{aidesignePL} pour afficher le schéma.
-\end{codeidee}
-
-\begin{codetex}[tikz lower]
-%code tikz
-\aidesignePL
-\end{codetex}
-
-\subsection{Commandes}
-
-\begin{codetex}[listing only]
-...
-\begin{tikzpicture}[<options>]
-	...
-	\aidesignePL[<clés>]
-	...
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codetex}[listing only]
-... {\tikz[<options>] \aidesignePL[<clés>]}...
-\end{codetex}
-
-\begin{codecles}
-Plusieurs \Cle{Clés} sont disponibles pour cette commande :
-
-\begin{itemize}
-	\item la clé \Cle{code} qui permet de définir le type d'expression (voir en-dessous) ;\hfill{}défaut \Cle{da+}
-	\item la clé \Cle{couleur} qui donne la couleur de la représentation ;\hfill{}défaut \Cle{red}
-	\item la clé \Cle{racines} qui définit la ou les racines ;\hfill{}défaut \Cle{2}
-	\item la clé \Cle{largeur} qui est la largeur du schéma ;\hfill{}défaut \Cle{2}
-	\item la clé \Cle{hauteur} qui est la hauteur du schéma ;\hfill{}défaut \Cle{1}
-	\item un booléen \Cle{cadre} qui affiche un cadre autour du schéma.\hfill{}défaut \Cle{true}
-\end{itemize}
-\end{codecles}
-
-\begin{codecles}
-Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou \textsf{p} comme parabole) puis les éléments caractéristiques (\textsf{a+} pour $a>0$, \textsf{d0} pour $\Delta=0$, etc) :
-
-\begin{itemize}
-	\item \Cle{code=da+} := une droite croissante ;
-	\item \Cle{code=da-} := une droite décroissante ;
-	\item \Cle{code=pa+d+} := une parabole \textit{souriante} avec deux racines ;
-	\item etc
-\end{itemize}
-\end{codecles}
-
-\pagebreak
-
-\begin{codetex}[listing only]
-	\begin{center}
-		\begin{tikzpicture}
-			\aidesignePL[code=da+,racines=-4]
-		\end{tikzpicture}
-		~~~~
-		\begin{tikzpicture}
-			\aidesignePL[code=da-,racines={h},couleur=blue,largeur=3,cadre=false]
-		\end{tikzpicture}
-	\end{center}
-	%
-	\begin{center}
-		\begin{tikzpicture}
-			\aidesignePL[code=pa+d+,racines={1/2},couleur=orange]
-		\end{tikzpicture}
-		~~~~
-		\begin{tikzpicture}
-			\aidesignePL[code=pa+d-,couleur=ForestGreen]
-		\end{tikzpicture}
-		~~~~
-		\begin{tikzpicture}
-			\aidesignePL[code=pa+d0,racines={5},couleur=purple]
-		\end{tikzpicture}
-	\end{center}
-	%
-	\begin{center}
-		\begin{tikzpicture}
-			\aidesignePL[code=pa-d+,racines={-3/0},couleur=yellow]
-		\end{tikzpicture}
-		~~~~
-		\begin{tikzpicture}
-			\aidesignePL[code=pa-d-,couleur=cyan]
-		\end{tikzpicture}
-		~~~~
-		\begin{tikzpicture}
-			\aidesignePL[code=pa-d0,racines={-1},couleur=magenta]
-		\end{tikzpicture}
-	\end{center}
-\end{codetex}
-
-\begin{codesortie}
-\begin{center}
-	\begin{tikzpicture}
-		\aidesignePL[code=da+,racines=-4]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\aidesignePL[code=da-,racines={h},couleur=blue,largeur=3,cadre=false]
-	\end{tikzpicture}
-\end{center}
-%
-\begin{center}
-	\begin{tikzpicture}
-		\aidesignePL[code=pa+d+,racines={1/2},couleur=orange]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\aidesignePL[code=pa+d-,couleur=ForestGreen]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\aidesignePL[code=pa+d0,racines={5},couleur=purple]
-	\end{tikzpicture}
-\end{center}
-%
-\begin{center}
-	\begin{tikzpicture}
-		\aidesignePL[code=pa-d+,racines={-3/0},couleur=yellow]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\aidesignePL[code=pa-d-,couleur=cyan]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\aidesignePL[code=pa-d0,racines={-1},couleur=magenta]
-	\end{tikzpicture}
-\end{center}
-\end{codesortie}
-
-\begin{codetex}[tikz lower]
-%code tikz
-	\aidesignePL[largeur=3.5,hauteur=1.5,code=da-,racines=\tfrac{-b}{a},couleur=Plum]
-\end{codetex}
-
-\subsection{Intégration avec tkz-tab}
-
-\begin{codeidee}
-Ces schémas peuvent être de plus utilisés, via la commande \ctex{aidesignetkztabPL} pour illustrer les signes obtenus dans un tableau de signes présentés grâce au package \ctex{tkz-tab}.
-
-Pour des raisons internes, le fonctionnement de la commande \ctex{aidesignetkztabPL} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour que la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
-\end{codeidee}
-
-\begin{codetex}[listing only]
-\begin{tikzpicture}
-	%commandes tkztab
-	\aidesignetkztabPL[<options>]{<numligne>}[<echelle>][<décalage horizontal>]
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codecles}
-Les \Cle{Clés} pour le premier argument optionnel sont les mêmes que pour la version \textit{initiale} de la commande précédente.
-
-En ce qui concerne les autres arguments :
-
-\begin{itemize}
-	\item le deuxième argument, mandataire, est le numéro de la ligne à côté de laquelle placer le schéma ;
-	\item le troisième argument, optionnel et valant \Cle{0.85} par défaut, est l'échelle à appliquer sur l'ensemble du schéma (à ajuster en fonction de la hauteur de la ligne) ;
-	\item le quatrième argument, optionnel et valant \Cle{1.5} par défait, est lié à l'écart horizontal entre le bord de la ligne du tableau et le schéma.
-\end{itemize}
-
-À noter que si l'un des arguments optionnels (le n°3 et/ou le n°4) sont utilisés, il vaut mieux préciser les 2 !
-\end{codecles}
-
-\begin{codetex}[listing only]
-\begin{center}
-	\begin{tikzpicture}
-		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
-		\tkzTabLine{,+,t,+,z,-,}
-		\tkzTabLine{,-,z,+,t,+,}
-		\tkzTabLine{,-,z,+,z,-,}
-		\aidesignetkztabPL[code=da-,racines={2,5},couleur=blue]{1}
-		\aidesignetkztabPL[code=da+,racines={-2},couleur=purple]{2}
-		\aidesignetkztabPL[code=pa-d+,racines={-2/2,5},couleur=orange]{3}[0.85][2]
-	\end{tikzpicture}
-\end{center}
-\end{codetex}
-
-\begin{codesortie}
-\begin{center}
-	\begin{tikzpicture}
-		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
-		\tkzTabLine{,+,t,+,z,-,}
-		\tkzTabLine{,-,z,+,t,+,}
-		\tkzTabLine{,-,z,+,z,-,}
-		\aidesignetkztabPL[code=da-,racines={2,5},couleur=blue]{1}
-		\aidesignetkztabPL[code=da+,racines={-2},couleur=purple]{2}
-		\aidesignetkztabPL[code=pa-d+,racines={-2/2,5},couleur=orange]{3}[0.85][2]
-	\end{tikzpicture}
-\end{center}
-\end{codesortie}
-
-\newpage
+\part{Outils pour les probabilités et les statistiques}\label{reglin}
 
 \section{Paramètres d'une régression linéaire par la méthode des moindres carrés}
 
@@ -2490,6 +2150,9 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 \PLreglin{\LLX}{\LLY}
+\end{codetex}
+
+\begin{codetex}[listing only]
 %vérif des calculs (noms non modifiables...)
 Liste des X := \showitems\LX.
 Liste des Y := \showitems\LY.
@@ -2596,8 +2259,6 @@ Le coefficient de corrélation linéaire est $r=\arrond[4]{\TESTr}$, et son carr
 \hfill~\includegraphics[height=3cm]{./graphics/pl-doc-stats_d}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_e}\hfill~
 \end{codeinfo}
 
-\pagebreak
-
 \subsection{Intégration dans un environnement \TikZ}
 
 \begin{codeinfo}
@@ -2693,8 +2354,6 @@ La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des
 	\end{axis}
 \end{tikzpicture}
 \end{codesortie}
-
-\pagebreak
 
 \begin{codeinfo}
 IL existe également une commande auxiliaire, \ctex{PLreglinpts} pour afficher le nuage de points avec quelques options, dans un environnement \TikZ{} classique (sans \textsf{pgfplot})\ldots
@@ -3554,7 +3213,362 @@ $P(15\leqslant X\leqslant25) \approx \numPbinomC[10]{100}{0.02}{15}{25} \approx 
 
 \newpage
 
-\section{Conversions binaire/hexadécimal/décimal}
+\part{Outils divers et variés}
+
+\section{Fractions, ensembles}
+
+\subsection{Fractions}\label{convfrac}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour \textit{simplifier} un calcul sous forme de fraction irréductible.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\convertfraction[<option>]{<argument>}
+\end{codetex}
+
+\begin{codecles}
+Peu d'options pour ces commandes :
+
+\begin{itemize}
+\item le premier argument, optionnel, permet de spécifier le mode de sortie de la fraction \textsf{[t]} pour \textsf{tfrac} et \textsf{[d]} pour \textsf{dfrac} ;
+\item le second, mandataire, est le \textsf{calcul} ou la \textsf{division} à convertir.
+\end{itemize}
+
+À noter que la macro est dans un bloc \textsf{ensuremath} donc les \textsf{\$\ldots\$} ne sont pas nécessaires.
+\end{codecles}
+
+\begin{codetex}[listing only]
+\convertfraction{111/2145}
+\convertfraction{111/3}
+$\frac{111}{2145}=\convertfraction{111/2145}$
+$\frac{3}{15}=\convertfraction[]{3/15}$
+$\tfrac{3}{15}=\convertfraction[t]{3/15}$                   %formatage en \tfrac
+$\dfrac{3}{15}=\convertfraction[d]{3/15}$                   %formatage en \dfrac
+$\dfrac{0,42}{0,015}=\convertfraction[d]{0.42/0.015}$
+$\dfrac{0,41}{0,015}=\convertfraction[d]{0.41/0.015}$
+$\dfrac{1}{7}+\dfrac{3}{8}=\convertfraction[d]{1/7+3/8}$
+$\convertfraction[d]{1+1/2}$
+$\convertfraction{0.1/0.7+30/80}$
+\end{codetex}
+
+\begin{codesortie}
+\begin{multicols}{2}
+\convertfraction{111/2145}
+
+\smallskip
+
+\convertfraction{111/3}
+
+\smallskip
+
+$\frac{111}{2145}=\convertfraction{111/2145}$
+
+\smallskip
+
+$\frac{3}{15}=\convertfraction[]{3/15}$
+
+\smallskip
+
+$\tfrac{3}{15}=\convertfraction[t]{3/15}$
+
+\smallskip
+
+$\dfrac{3}{15}=\convertfraction[d]{3/15}$
+
+\smallskip
+
+$\dfrac{0,42}{0,015}=\convertfraction[d]{0.42/0.015}$
+
+\smallskip
+
+$\dfrac{0,41}{0,015}=\convertfraction[d]{0.41/0.015}$
+
+\smallskip
+
+$\dfrac{1}{7}+\dfrac{3}{8}=\convertfraction[d]{1/7+3/8}$
+
+\smallskip
+
+$\convertfraction[d]{1+1/2}$
+
+\smallskip
+
+$\convertfraction{0.1/0.7+30/80}$
+\end{multicols}
+
+~
+\end{codesortie}
+
+\begin{codeinfo}
+A priori le package \ctex{xint} permet de s'en sortir pour des calculs \og simples \fg, je ne garantis pas que tout calcul ou toute division donne un résultat \textit{satisfaisant} !
+\end{codeinfo}
+
+\pagebreak
+
+\subsection{Ensembles}\label{ensembles}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour simplifier l'écriture d'un ensemble d'éléments, en laissant gérer les espaces.
+
+Les délimiteurs de l'ensemble créé sont toujours \textsf{\{~~\}}.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\ensPL[<clés>]{<liste>}
+\end{codetex}
+
+\begin{codecles}
+Peu d'options pour ces commandes :
+
+\begin{itemize}
+\item le premier argument, optionnel, permet de spécifier les \Cle{Clés} :
+\begin{itemize}
+	\item clé \Cle{sep} qui correspond au délimiteur des éléments de l'ensemble ; \hfill{}défaut \Cle{;}
+	\item clé \Cle{option} qui est un code (par exemple \textsf{strut}\dots) inséré avant les éléments ;\hfill{}défaut \Cle{vide}
+	\item un booléen \Cle{mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct};\hfill{}défaut \Cle{true}
+\end{itemize}
+\item le second, mandataire, est la \textsf{liste} des éléments, séparés par \textsf{/}.
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+$\ensPL{a/b/c/d/e}$
+$\ensPL[mathpunct=false]{a/b/c/d/e}$
+$\ensPL[sep={,}]{a/b/c/d/e}$
+$\ensPL[option={\strut}]{a/b/c/d/e}$                      % \strut pour "augmenter" un peu la hauteur des {}
+$\ensPL{ \frac{1}{1+\frac{1}{3}} / b / c / d / \frac{1}{2} }$
+\end{codetex}
+
+\begin{codesortie}
+$\ensPL{a/b/c/d/e}$
+
+\smallskip
+
+$\ensPL[mathpunct=false]{a/b/c/d/e}$
+
+\smallskip
+
+$\ensPL[sep={,}]{a/b/c/d/e}$
+
+\smallskip
+
+$\ensPL[option={\strut}]{a/b/c/d/e}$
+
+\smallskip
+
+$\ensPL{ \displaystyle\frac{1}{1+\frac{1}{3}} / b / c / d / \displaystyle\frac{1}{2} }$
+\end{codesortie}
+
+\begin{codeinfo}
+Attention cependant au comportement de la commande avec des éléments en mode \textsf{mathématique}, ceux-ci peuvent générer une erreur si \textsf{displaystyle} n'est pas utilisé\ldots
+\end{codeinfo}
+
+\newpage
+
+\section{Petits schémas pour le signe d'une fonction affine ou d'un trinôme}\label{aidesigne}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour tracer (en \TikZ) un petit schéma pour \textit{visualiser} le signe d'une fonction affine ou d'un trinôme.
+
+Le code est très largement inspiré de celui du package \ctex{tnsana} même si la philosophie est légèrement différente.
+
+\smallskip
+
+Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{aidesignePL} pour afficher le schéma.
+\end{codeidee}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\aidesignePL
+\end{codetex}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	...
+	\aidesignePL[<clés>]
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codetex}[listing only]
+... {\tikz[<options>] \aidesignePL[<clés>]}...
+\end{codetex}
+
+\begin{codecles}
+Plusieurs \Cle{Clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{code} qui permet de définir le type d'expression (voir en-dessous) ;\hfill{}défaut \Cle{da+}
+	\item la clé \Cle{couleur} qui donne la couleur de la représentation ;\hfill{}défaut \Cle{red}
+	\item la clé \Cle{racines} qui définit la ou les racines ;\hfill{}défaut \Cle{2}
+	\item la clé \Cle{largeur} qui est la largeur du schéma ;\hfill{}défaut \Cle{2}
+	\item la clé \Cle{hauteur} qui est la hauteur du schéma ;\hfill{}défaut \Cle{1}
+	\item un booléen \Cle{cadre} qui affiche un cadre autour du schéma.\hfill{}défaut \Cle{true}
+\end{itemize}
+\end{codecles}
+
+\begin{codecles}
+Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou \textsf{p} comme parabole) puis les éléments caractéristiques (\textsf{a+} pour $a>0$, \textsf{d0} pour $\Delta=0$, etc) :
+
+\begin{itemize}
+	\item \Cle{code=da+} := une droite croissante ;
+	\item \Cle{code=da-} := une droite décroissante ;
+	\item \Cle{code=pa+d+} := une parabole \textit{souriante} avec deux racines ;
+	\item etc
+\end{itemize}
+\end{codecles}
+
+\pagebreak
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=da+,racines=-4]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=da-,racines={h},couleur=blue,largeur=3,cadre=false]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d+,racines={1/2},couleur=orange]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d-,couleur=ForestGreen]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d0,racines={5},couleur=purple]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d+,racines={-3/0},couleur=yellow]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d-,couleur=cyan]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d0,racines={-1},couleur=magenta]
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=da+,racines=-4]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=da-,racines={h},couleur=blue,largeur=3,cadre=false]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d+,racines={1/2},couleur=orange]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d-,couleur=ForestGreen]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa+d0,racines={5},couleur=purple]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d+,racines={-3/0},couleur=yellow]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d-,couleur=cyan]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\aidesignePL[code=pa-d0,racines={-1},couleur=magenta]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\aidesignePL[largeur=3.5,hauteur=1.5,code=da-,racines=\tfrac{-b}{a},couleur=Plum]
+\end{codetex}
+
+\subsection{Intégration avec tkz-tab}
+
+\begin{codeidee}
+Ces schémas peuvent être de plus utilisés, via la commande \ctex{aidesignetkztabPL} pour illustrer les signes obtenus dans un tableau de signes présentés grâce au package \ctex{tkz-tab}.
+
+Pour des raisons internes, le fonctionnement de la commande \ctex{aidesignetkztabPL} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour que la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}
+	%commandes tkztab
+	\aidesignetkztabPL[<options>]{<numligne>}[<echelle>][<décalage horizontal>]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Les \Cle{Clés} pour le premier argument optionnel sont les mêmes que pour la version \textit{initiale} de la commande précédente.
+
+En ce qui concerne les autres arguments :
+
+\begin{itemize}
+	\item le deuxième argument, mandataire, est le numéro de la ligne à côté de laquelle placer le schéma ;
+	\item le troisième argument, optionnel et valant \Cle{0.85} par défaut, est l'échelle à appliquer sur l'ensemble du schéma (à ajuster en fonction de la hauteur de la ligne) ;
+	\item le quatrième argument, optionnel et valant \Cle{1.5} par défait, est lié à l'écart horizontal entre le bord de la ligne du tableau et le schéma.
+\end{itemize}
+
+À noter que si l'un des arguments optionnels (le n°3 et/ou le n°4) sont utilisés, il vaut mieux préciser les 2 !
+\end{codecles}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}
+		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
+		\tkzTabLine{,+,t,+,z,-,}
+		\tkzTabLine{,-,z,+,t,+,}
+		\tkzTabLine{,-,z,+,z,-,}
+		\aidesignetkztabPL[code=da-,racines={2,5},couleur=blue]{1}
+		\aidesignetkztabPL[code=da+,racines={-2},couleur=purple]{2}
+		\aidesignetkztabPL[code=pa-d+,racines={-2/2,5},couleur=orange]{3}[0.85][2]
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}
+		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
+		\tkzTabLine{,+,t,+,z,-,}
+		\tkzTabLine{,-,z,+,t,+,}
+		\tkzTabLine{,-,z,+,z,-,}
+		\aidesignetkztabPL[code=da-,racines={2,5},couleur=blue]{1}
+		\aidesignetkztabPL[code=da+,racines={-2},couleur=purple]{2}
+		\aidesignetkztabPL[code=pa-d+,racines={-2/2,5},couleur=orange]{3}[0.85][2]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\section{Conversions binaire/hexadécimal/décimal}\label{conversions}
 
 \subsection{Idée}
 
@@ -3758,7 +3772,7 @@ $\PLconvtodec[zeros=false,basedep=16]{AC0DC}$
 
 \newpage
 
-\section{Style \og main levée \fg{} en \TikZ}
+\section{Style \og main levée \fg{} en \TikZ}\label{mainlevee}
 
 \subsection{Idée}
 
@@ -3826,6 +3840,8 @@ Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -
 \end{codesortie}
 
 \newpage
+
+\part{Jeux et récréations}
 
 \section{PixelART via un fichier csv, en \TikZ}\label{pixelart}
 
@@ -4313,7 +4329,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \newpage
 
-\section{Historique}
+\part{Historique}
 
 {\small \bverb|v1.2.7|~:~~~~Ajout de commandes pour des calculs de probabilités (page \pageref{calcprobas})
 
@@ -4333,37 +4349,37 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v1.1.9|~:~~~~Pixelart en \TikZ{} (page \pageref{pixelart})
 
-{\small \bverb|v1.1.8|~:~~~~Style "Mainlevée" basique pour \TikZ
+{\small \bverb|v1.1.8|~:~~~~Style "Mainlevée" basique pour \TikZ (page \pageref{mainlevee})
 
-{\small \bverb|v1.1.7|~:~~~~Conversions bin/hex/dec (basées sur \ctex{xintbinhex}) avec quelques détails
+{\small \bverb|v1.1.7|~:~~~~Conversions bin/hex/dec (basées sur \ctex{xintbinhex}) avec quelques détails (page \pageref{conversions})
 
-{\small \bverb|v1.1.6|~:~~~~Ajout d'une commande \textsf{PLreglin} pour déterminer les paramètres d'une régression linéaire par moindres carrés
+{\small \bverb|v1.1.6|~:~~~~Ajout d'une commande \textsf{PLreglin} pour déterminer les paramètres d'une régression linéaire par moindres carrés (page \pageref{reglin})
 
-{\small \bverb|v1.1.5|~:~~~~Ajout de deux commandes \textsf{aidesignePL} et \textsf{aidesignetkztabPL} pour, en \TikZ, créer des petits schémas \og de signe \fg
+{\small \bverb|v1.1.5|~:~~~~Ajout de deux commandes \textsf{aidesignePL} et \textsf{aidesignetkztabPL} pour, en \TikZ, créer des petits schémas \og de signe \fg{} (page \pageref{aidesigne})
 
-{\small \bverb|v1.1.4|~:~~~~Ajout d'une commande \textsf{cercletrigoPL} pour, en \TikZ, créer facilement un cercle trigo avec \textit{options}
+{\small \bverb|v1.1.4|~:~~~~Ajout d'une commande \textsf{cercletrigoPL} pour, en \TikZ, créer facilement un cercle trigo avec \textit{options} (page \pageref{cercletrigo})
 
-{\small \bverb|v1.1.3|~:~~~~Ajout des commandes \textsf{convertfraction}, \textsf{ensPL} et \textsf{recurrPL}
+{\small \bverb|v1.1.3|~:~~~~Ajout des commandes \textsf{convertfraction}, \textsf{ensPL} et \textsf{recurrPL} (pages \pageref{convfrac}, \pageref{ensembles} et \pageref{recurr})
 
 {\small \bverb|v1.1.1|~:~~~~Modification mineure de l'environnement \textsf{ligneCF} (calcul formel), avec prise de charge de la taille du texte !
 
-{\small \bverb|v1.1.0|~:~~~~Ajout d'une commande \textsf{tetraPL} pour créer des tétraèdres (avec nœuds) en \TikZ
+{\small \bverb|v1.1.0|~:~~~~Ajout d'une commande \textsf{tetraPL} pour créer des tétraèdres (avec nœuds) en \TikZ{} (page \pageref{tetra})
 
-{\small \bverb|v1.0.9|~:~~~~Ajout d'une commande \textsf{pavePL} pour créer des pavés droits (avec nœuds) en \TikZ
+{\small \bverb|v1.0.9|~:~~~~Ajout d'une commande \textsf{pavePL} pour créer des pavés droits (avec nœuds) en \TikZ{} (page \pageref{pave})
 
-{\small \bverb|v1.0.8|~:~~~~Ajout d'une commande \textsf{liencapytale} pour créer des cartouches de lien "comme capytale"
+{\small \bverb|v1.0.8|~:~~~~Ajout d'une commande \textsf{liencapytale} pour créer des cartouches de lien "comme capytale"{} (page \pageref{capytale})
 
 {\small \bverb|v1.0.7|~:~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire \textsf{./build}
 
 {\small \bverb|v1.0.6|~:~~~~Ajout d'une option \textsf{nominted} pour ne pas charger \ctex{minted} (pas besoin de compiler avec \textsf{shell-escape})
 
-{\small \bverb|v1.0.5|~:~~~~Ajout d'un environnement pour Python (minted)
+{\small \bverb|v1.0.5|~:~~~~Ajout d'un environnement pour Python (minted) (page \pageref{pytminted})
 
-{\small \bverb|v1.0.4|~:~~~~Ajout des environnements pour Terminal (win, osx, unix)
+{\small \bverb|v1.0.4|~:~~~~Ajout des environnements pour Terminal (win, osx, unix) (page \pageref{terms})
 
-{\small \bverb|v1.0.3|~:~~~~Ajout des environnements pour PseudoCode
+{\small \bverb|v1.0.3|~:~~~~Ajout des environnements pour PseudoCode (page \pageref{pseudocode})
 
-{\small \bverb|v1.0.2|~:~~~~Ajout des environnements pour Python (pythontex)
+{\small \bverb|v1.0.2|~:~~~~Ajout des environnements pour Python (pythontex) (page \pageref{pythontex})
 
 {\small \bverb|v1.0.1|~:~~~~Modification mineure liée au chargement de \ctex{xcolor}
 
