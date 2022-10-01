@@ -1,15 +1,25 @@
 # ProfLycee
-Package, sans prétention, pour quelques commandes LaTeX utiles au lycée !
+Package, sans aucune prétention, pour quelques commandes LaTeX potentiellement utiles au lycée !
 
 Pour le moment :
 
-- deux macros pour créer, dans un environnement TikZ, des courbes d'interpolations et des tangentes ;
-- deux macros pour configurer un environnement de Calcul Formel et pour créer les lignes ;
-- un environnement pour présenter du code python (via pythontex) ;
-- un environnement pour exécuter du code python et présenter le résultat dans une <i>console</i> ;
-- des environnements pour présenter un "émuler" un terminal WIN/UNiX/OSX ;
-- une macro pour simuler un cartouche de type "capytale".
-- deux macros pour créer, dans un environnement TikZ, un pavé droit ou un tétraèdre.
+- Quelques commandes pour des courbes lisses avec gestion des extrema et des dérivées.
+- Quelques commandes pour simuler une fenêtre de logiciel de calcul formel, en TikZ.
+- Quelques environnements (tcbox) pour présenter du code python ou pseudocode.
+- Quelques environnements (tcbox) pour présenter des commandes dans un terminal (win ou mac ou linux).
+- Un cartouche (tcbox) pour présenter des codes de partage capytale.
+- Une commande pour tracer un pavé en droit, en TikZ, avec création des nœuds liés aux sommets.
+- Une commande pour simplifier des calculs sous forme fractionnaire.
+- Une commande pour simplifier l’écriture d’un ensemble, avec espaces « automatiques ».
+- Une commande pour créer, en TikZ, la toile pour une suite récurrente.
+- Une commande pour créer, en TikZ, un cercle trigo avec options.
+- Une commande pour afficher un petit schéma, en TikZ, sur le signe d’une fonction affine ou d’un trinôme.
+- Deux commandes pour, en TikZ, créer des petits schémas « de signe ».
+- Une commande pour travailler sur les statistiques à deux variables (algébriques et graphiques).
+- Quelques commandes pour convertir bin/dec/hex avec certains détails.
+- Une commande pour, en TikZ, créer un pixelart avec correction éventuelle.
+- Une commande pour, en TikZ, créer un SudoMaths non forcément 9×9.
+- Des commandes pour effectuer des calculs de probabilités avec des lois classiques.
 
 ## Courbe d'interpolation
 
