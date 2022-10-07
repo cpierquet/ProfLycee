@@ -40,6 +40,7 @@
 	ylabel near ticks
 }
 \usepackage{tkz-tab}
+\tikzstyle{every picture}+=[remember picture]
 \usepackage{listofitems}
 \usepackage{xintexpr}
 \usepackage{codehigh}
@@ -61,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.2.7}
-\def\PLdate{1\ier{} Octobre 2022}
+\def\PLversion{1.3.1}
+\def\PLdate{7 Octobre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -3049,7 +3050,7 @@ Les commandes sont de deux natures :
 	\item des commandes pour formater le résultat de \ctex{xintexpr}, grâce à \ctex{siunitx}.
 \end{itemize}
 
-De ce fait, les options de \ctex{siunitx} de l'utilisateur affecterons les formatage du résultat, la commande va \og forcer \fg{} les arrondis et l'écriture scientifique.
+De ce fait, les options de \ctex{siunitx} de l'utilisateur affecterons les formatages du résultat, la commande va \og forcer \fg{} les arrondis et l'écriture scientifique.
 \end{codeinfo}
 
 \subsection{Calculs \og simples \fg}
@@ -3772,6 +3773,97 @@ $\PLconvtodec[zeros=false,basedep=16]{AC0DC}$
 
 \newpage
 
+\section{Conversion \og présentée \fg{} d'un nombre en décimal}\label{convrestes}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de proposer une \og présentation \fg{} par divisions euclidiennes pour la conversion d'un entier donné en base 10 dans une base quelconque.
+
+\smallskip
+
+Les commandes de la section précédente donne \textit{juste} les résultats, dans cette section il y a en plus la présentation de la conversion.
+
+\smallskip
+
+La commande utilise -- par défaut -- du code \TikZ{} en mode \ctex{overlay}, donc on pourra déclarer -- si ce n'est pas fait -- dans le préambule, la commande qui suit.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+...
+\tikzstyle{every picture}+=[remember picture]
+...
+\end{codetex}
+
+\subsection{Code et clés}
+
+\begin{codetex}[]
+%conversion basique
+\PLconvDepuisDec{78}{2}
+\end{codetex}
+
+\begin{codeinfo}
+La \og tableau \fg, qui est géré par \ctex{array} est inséré dans un \ctex{ensuremath}, donc les \ctex{\$...\$} ne sont pas utiles.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\PLconvDepuisDec[<options>]{<nombre en base 10>}{<base d'arrivée>}
+\end{codetex}
+
+\begin{codecles}
+Quelques options pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{couleur} pour la couleur du \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{red}
+	\item la clé \Cle{decalh} pour gérer le décalage H du \og rectangle \fg{}, qui peut être donné soit sous la forme \Cle{esp} ou soit sous la forme \Cle{espgauche/espdroite}; \hfill{}défaut \Cle{2pt}
+	\item la clé \Cle{decalv} pour le décalage vertical du \og rectangle \fg{} ; \hfill{}défaut \Cle{3pt}
+	\item la clé \Cle{noeud} pour le préfixe du nœud du premier et du dernier reste (pour utilisation en \TikZ) ; \hfill{}défaut \Cle{EEE}
+	\item le booléen \Cle{rect} pour afficher ou non le \og rectangle \fg{} des restes. \hfill{}défaut \Cle{true}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+%conversion avec changement de couleur
+\PLconvDepuisDec[couleur=DarkBlue]{45}{2}
+
+%conversion sans le rectangle
+Par divisions euclidiennes successives, \PLconvDepuisDec[rect=false]{54}{3}.
+
+%conversion avec gestion du decalh pour le placement précis du rectangle
+\PLconvDepuisDec[couleur=Goldenrod,decalh=6pt/2pt]{1012}{16}
+
+%conversion avec nœud personnalisé et réutilisation
+\PLconvDepuisDec[couleur=ForestGreen,noeud=TEST]{100}{9}
+\begin{tikzpicture}
+	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\PLconvDepuisDec[couleur=DarkBlue]{45}{2}
+
+\medskip
+
+Par divisions euclidiennes successives, \PLconvDepuisDec[rect=false]{54}{3}.
+
+\medskip
+
+\PLconvDepuisDec[couleur=Goldenrod,decalh=6pt/2pt]{1012}{16}
+
+\medskip
+
+On obtient donc \PLconvDepuisDec[couleur=ForestGreen,noeud=TEST]{100}{9}
+\begin{tikzpicture}
+	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
+\end{tikzpicture}
+
+\vspace{1.5cm}
+
+~
+\end{codesortie}
+
+\newpage
+
 \section{Style \og main levée \fg{} en \TikZ}\label{mainlevee}
 
 \subsection{Idée}
@@ -3919,6 +4011,9 @@ C,A,B,D
 \begin{tikzpicture}%avec correction
 	\PLpixelart[codes=ABCD,couleurs={Black,Green,Yellow,Red},correction]{basique.csv}
 \end{tikzpicture}
+\begin{tikzpicture}%avec correction sans bordure
+	\PLpixelart[codes=ABCD,couleurs={Black,Green,Yellow,Red},correction,bordcases=false]{basique.csv}
+\end{tikzpicture}
 \end{codetex}
 
 \begin{codesortie}
@@ -3940,18 +4035,23 @@ C,A,B,D
 	\end{tabular}
 \end{center}
 
-\hfill\begin{tikzpicture}
+\hfill\begin{tikzpicture}[scale=0.9]
 	%avec lettres
 	\PLpixelart[codes=ABCD,style=\large\sffamily]{basique.csv}
 \end{tikzpicture}
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=0.9]
 	%avec chiffres
 	\PLpixelart[codes=ABCD,symboles={45,22,1,7},symb,style=\large\sffamily]{basique.csv}
 \end{tikzpicture}
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=0.9]
 	%avec correction
 	\PLpixelart[codes=ABCD,couleurs={Black,Green,Yellow,Red},correction]{basique.csv}
-\end{tikzpicture}\hfill~
+\end{tikzpicture}
+\begin{tikzpicture}[scale=0.9]
+	%avec correction
+	\PLpixelart[codes=ABCD,couleurs={Black,Green,Yellow,Red},correction,bordcases=false]{basique.csv}
+\end{tikzpicture}
+\hfill~
 \end{codesortie}
 
 \begin{codeinfo}
@@ -3979,6 +4079,7 @@ Quelques \Cle{Clés} sont nécessaires au bon fonctionnement de la commande :
 	\item la clé \Cle{symboles} qui contient la \textsf{liste éventuelles} des caractères alternatifs à afficher dans les cases ;
 	\item la clé booléenne \Cle{correction} qui permet de colorier le PixelART ;\hfill{}défaut \Cle{false}
 	\item la clé booléenne \Cle{symb} qui permet d'afficher les caractères \textit{alternatifs} ;\hfill{}défaut \Cle{false}
+	\item la clé booléenne \Cle{bordcases} qui permet d'afficher les bords des cases de la correction ;\hfill{}défaut \Cle{true}
 	\item la clé \Cle{style} qui permet de spécifier le style des caractères. \hfill{}défaut \Cle{scriptsize}
 \end{itemize}
 \end{codecles}
@@ -4331,6 +4432,14 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
+{\small \bverb|v1.3.1|~:~~~~Ajout d'une option pour ne pas afficher les bordures des corrections de pixelart (page \pageref{pixelart})
+
+{\small \bverb|v1.3.0|~:~~~~Commande pour présenter une conversion depuis la base 10 (page \pageref{convrestes})
+
+{\small \bverb|v1.2.9|~:~~~~Correction des commandes avec simplekv
+
+{\small \bverb|v1.2.8|~:~~~~Ajout d'une librairie \TikZ{} oubliée, et remise en forme de la documentation
+
 {\small \bverb|v1.2.7|~:~~~~Ajout de commandes pour des calculs de probabilités (page \pageref{calcprobas})
 
 {\small \bverb|v1.2.6|~:~~~~Ajout d'un environnement pour des SudoMaths (page \pageref{sudomaths})
@@ -4353,25 +4462,25 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v1.1.7|~:~~~~Conversions bin/hex/dec (basées sur \ctex{xintbinhex}) avec quelques détails (page \pageref{conversions})
 
-{\small \bverb|v1.1.6|~:~~~~Ajout d'une commande \textsf{PLreglin} pour déterminer les paramètres d'une régression linéaire par moindres carrés (page \pageref{reglin})
+{\small \bverb|v1.1.6|~:~~~~Ajout d'une commande pour déterminer les paramètres d'une régression linéaire par moindres carrés (page \pageref{reglin})
 
-{\small \bverb|v1.1.5|~:~~~~Ajout de deux commandes \textsf{aidesignePL} et \textsf{aidesignetkztabPL} pour, en \TikZ, créer des petits schémas \og de signe \fg{} (page \pageref{aidesigne})
+{\small \bverb|v1.1.5|~:~~~~Ajout de deux commandes pour, en \TikZ, créer des petits schémas \og de signe \fg{} (page \pageref{aidesigne})
 
-{\small \bverb|v1.1.4|~:~~~~Ajout d'une commande \textsf{cercletrigoPL} pour, en \TikZ, créer facilement un cercle trigo avec \textit{options} (page \pageref{cercletrigo})
+{\small \bverb|v1.1.4|~:~~~~Ajout d'une commande pour, en \TikZ, créer facilement un cercle trigo avec \textit{options} (page \pageref{cercletrigo})
 
-{\small \bverb|v1.1.3|~:~~~~Ajout des commandes \textsf{convertfraction}, \textsf{ensPL} et \textsf{recurrPL} (pages \pageref{convfrac}, \pageref{ensembles} et \pageref{recurr})
+{\small \bverb|v1.1.3|~:~~~~Ajout des commandes pour fractions, ensembles et récurrence (pages \pageref{convfrac}, \pageref{ensembles} et \pageref{recurr})
 
-{\small \bverb|v1.1.1|~:~~~~Modification mineure de l'environnement \textsf{ligneCF} (calcul formel), avec prise de charge de la taille du texte !
+{\small \bverb|v1.1.1|~:~~~~Modification mineure de l'environnement calcul formel, avec prise de charge de la taille du texte
 
-{\small \bverb|v1.1.0|~:~~~~Ajout d'une commande \textsf{tetraPL} pour créer des tétraèdres (avec nœuds) en \TikZ{} (page \pageref{tetra})
+{\small \bverb|v1.1.0|~:~~~~Ajout d'une commande pour créer des tétraèdres (avec nœuds) en \TikZ{} (page \pageref{tetra})
 
-{\small \bverb|v1.0.9|~:~~~~Ajout d'une commande \textsf{pavePL} pour créer des pavés droits (avec nœuds) en \TikZ{} (page \pageref{pave})
+{\small \bverb|v1.0.9|~:~~~~Ajout d'une commande pour créer des pavés droits (avec nœuds) en \TikZ{} (page \pageref{pave})
 
-{\small \bverb|v1.0.8|~:~~~~Ajout d'une commande \textsf{liencapytale} pour créer des cartouches de lien "comme capytale"{} (page \pageref{capytale})
+{\small \bverb|v1.0.8|~:~~~~Ajout d'une commande pour créer des cartouches de lien "comme capytale" (page \pageref{capytale})
 
-{\small \bverb|v1.0.7|~:~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire \textsf{./build}
+{\small \bverb|v1.0.7|~:~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire externe
 
-{\small \bverb|v1.0.6|~:~~~~Ajout d'une option \textsf{nominted} pour ne pas charger \ctex{minted} (pas besoin de compiler avec \textsf{shell-escape})
+{\small \bverb|v1.0.6|~:~~~~Ajout d'une option \textsf{nominted} pour ne pas charger (pas besoin de compiler avec \textsf{shell-escape})
 
 {\small \bverb|v1.0.5|~:~~~~Ajout d'un environnement pour Python (minted) (page \pageref{pytminted})
 
