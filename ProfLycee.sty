@@ -3,7 +3,11 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/10/01 v1.2.7 - Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/10/07 v1.3.1 - Aide pour l'utilisation de LaTeX en lycee]
+% 1.3.1	Ajout d'une option pour ne pas afficher les bords des cases en pixelart
+% 1.3.0	Ajout d'une commande pour mettre en forme une conversion depuis la base 10
+% 1.2.9	Correction d'une incompatibilité avec simplekv (clés vides...)
+% 1.2.8	Correction de l'oubli d'une librairie tikz et remise en forme de la documentation
 % 1.2.7	Calculs de probas pour des lois classiques
 % 1.2.6	Ajout d'un environnement tikz pour des sudomaths personnalisés
 % 1.2.5	Ajout d'une commande pour des boites à moustaches, en tikz
@@ -83,6 +87,8 @@
 \usetikzlibrary{decorations.markings}
 \usetikzlibrary{arrows,arrows.meta}
 \usetikzlibrary{babel}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{decorations.pathmorphing}
 %tcolorbox
 \RequirePackage[most]{tcolorbox}
 %divers
@@ -123,14 +129,14 @@
 }
 
 \setKVdefault[spline]{%
-	liste=,%
+	spline={},%
 	width=1.25pt,%
 	couleur=red,%
 	coeffs=3,%
 	couleurpoints=black,%
 	taillepoints=2pt,%
 	affpoints=false,%
-	style=
+	style={}
 }
 
 \newcommand\splinetikz[1][]{%
@@ -190,11 +196,11 @@
 }
 
 \setKVdefault[tgte]{
-	liste=,%
+	liste={},%
 	width=1.25pt,%
 	couleur=red,%
 	xl=0.5,xr=0.5,%
-	style=,%
+	style={},%
 	point=1
 }
 
@@ -923,13 +929,13 @@
 
 \setKVdefault[kvensemble]{%
 	sep={;},%
-	option=,%
-	mathpunct=true
+	mathpunct=true,%
+	option={}
 }
 
 \newcommand\ensPL[2][1]{%
-	\useKVdefault[kvensemble]
-	\setKV[kvensemble]{#1}
+	\useKVdefault[kvensemble]%
+	\setKV[kvensemble]{#1}%
 	\ifboolKV[kvensemble]{mathpunct}%
 		{\left\lbrace \PLensopt{} \mathpunct{} \StrSubstitute{#2}{/}{\mathpunct{}{\PLenssep}\mathpunct{}} \mathpunct{} \right\rbrace}%
 		{\left\lbrace \PLensopt{} \StrSubstitute{#2}{/}{{\PLenssep}} \right\rbrace}
@@ -1565,7 +1571,8 @@
 \setKVdefault[pixelarttkz]{%
 	style=\scriptsize,%
 	correction=false,%
-	symb=false
+	symb=false,%
+	bordcases=true
 }
 
 \newcommand\PLpixelart[2][]{%
@@ -1583,7 +1590,10 @@
 					\xintifboolexpr{\pixcnt>0}%
 					{%
 						\itemtomacro\LCPA[\pixcnt]\pixcol%
-						\draw[fill=\pixcol] ({\n-0.5},{-\thecsvrow+0.5}) rectangle ({\n+0.5},{-\thecsvrow-0.5}) ;%
+						\ifboolKV[pixelarttkz]{bordcases}%
+							{\draw[fill=\pixcol] ({\n-0.5},{-\thecsvrow+0.5}) rectangle ({\n+0.5},{-\thecsvrow-0.5}) ;}%
+							{\filldraw[\pixcol] ({\n-0.5},{-\thecsvrow+0.5}) rectangle ({\n+0.5},{-\thecsvrow-0.5}) ;}%
+						%
 					}%
 					{}
 				}
@@ -1762,7 +1772,7 @@
 	police=\normalsize\normalfont,%
 	labelx=$x$,%
 	labely=$y$,%
-	afflabel=,%
+	afflabel=z,%
 	poslabelx=right,%
 	poslabely=above,%
 	echellefleche=1,%
@@ -2328,6 +2338,64 @@
 	{%
 		\num[minimum-decimal-digits=#2]{\xintFloatToDecimal{\xintFloatToDecimal{\xintfloateval{round(exp(-#3*\BorneInf)-exp(-#3*\BorneSup),#2)}}}}
 	}
+}
+
+%===============CONVFROMDEC============ OK !!
+\newcommand\PLnoeud[2]{\tikz[remember picture,baseline=(#1.base)]\node[shape=rectangle,inner sep=0pt](#1){#2};}
+\ExplSyntaxOn
+\newcommand\convertbasedixtobase[2]{%
+	\int_to_Base:nn {#1}{#2}
+}
+\ExplSyntaxOff
+
+\defKV[convfromten]{%
+	couleur=\def\PLConvCouleur{#1},%
+	decalh=\def\PLConvDecalH{#1},%
+	decalv=\def\PLConvDecalV{#1},%
+	noeud=\def\PLConvNoeud{#1}
+}
+
+\setKVdefault[convfromten]{%
+	couleur=red,%
+	decalh=2pt,%
+	decalv=3pt,%
+	rect=true,%
+	noeud=EEE
+}
+
+\newcommand\PLconvDepuisDec[3][]{%
+	\useKVdefault[convfromten]%
+	\setKV[convfromten]{#1}%
+	\xdef\ValRes{\xintDecToHex{#2}}%
+	\xdef\ValA{#2}\xdef\ValB{#3}%
+	\xdef\ValTMP{#2}%
+	\xdef\ValMU{\inteval{#3-1}}%
+	\ensuremath{%
+		\left\lbrace\begin{array}{@{\,}r@{\;=\;}l@{\;+\;}r}
+			%1ere division
+			\xdef\ValQ{\fpeval{trunc(\ValTMP/#3,0)}}\xdef\ValR{\fpeval{\ValTMP-#3*\ValQ}}
+			\num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\PLnoeud{\PLConvNoeud1}{\num{\ValR}}%
+			\xdef\ValTMP{\ValQ}%
+			\whiledo {\ValTMP > \ValMU}%
+			{%
+				\xdef\ValQ{\fpeval{trunc(\ValTMP/#3,0)}}\xdef\ValR{\fpeval{\ValTMP-#3*\ValQ}}%
+				\\ \num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\num{\ValR}
+				\xdef\ValTMP{\ValQ}%
+			}
+			%dernière
+			\xdef\ValQ{\fpeval{trunc(\ValTMP/#3,0)}}\xdef\ValR{\fpeval{\ValTMP-#3*\ValQ}}%
+			\\ \num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\PLnoeud{\PLConvNoeud2}{\num{\ValR}}
+		\end{array} \right| \Rightarrow \num{#2}_{10}=\convertbasedixtobase{#2}{#3}_{#3}}
+	\ifboolKV[convfromten]{rect}%
+	{%
+		\IfSubStr{\PLConvDecalH}{/}%
+			{\StrCut{\PLConvDecalH}{/}{\PLConvDecalHg}{\PLConvDecalHd}}%
+			{\def\PLConvDecalHg{\PLConvDecalH}\def\PLConvDecalHd{\PLConvDecalH}}
+		\begin{tikzpicture}
+			\draw[overlay,rounded corners=4pt,\PLConvCouleur,thick] ($(\PLConvNoeud1.north west)+(-\PLConvDecalHg,\PLConvDecalV)$) rectangle ($(\PLConvNoeud2.south east)+(\PLConvDecalHd,-\PLConvDecalV)$) ;
+			\draw[overlay,rounded corners=4pt,\PLConvCouleur,thick,->,>=latex] ($(\PLConvNoeud2.east)+(\PLConvDecalHd,0)$)--++(0,{0.75\baselineskip}) ;
+		\end{tikzpicture}
+	}{}
 }
 
 \endinput
