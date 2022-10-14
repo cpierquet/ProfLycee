@@ -8,6 +8,7 @@
 \usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
 \usepackage[upright]{fourier}
 \usepackage[scaled=0.875]{helvet}
 \renewcommand\ttdefault{lmtt}
@@ -62,8 +63,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.3.1}
-\def\PLdate{7 Octobre 2022}
+\def\PLversion{1.3.4}
+\def\PLdate{14 Octobre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -82,6 +83,9 @@
 
 \newtcblisting{codetex}[1][]{%
 	colback=white,colframe=red!75!black,title={\small \faCode} Code \LaTeX,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
+
+\newtcolorbox{codeattention}[1][]{%
+	colback=Yellow!50,colframe=Yellow!50!Black,title={\small \faBomb} Attention,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
 
 \newtcolorbox{codesortie}[1][]{%
 	colback=white,colframe=red!75!black,title={\small \faArrowAltCircleRight[regular]} Sortie \LaTeX,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
@@ -239,6 +243,8 @@ Une commande pour, en \TikZ, créer un SudoMaths non forcément $9\times9$.
 
 Des commandes pour effectuer des calculs de probas (lois binomiale, exponentielle, de Poisson, normale).
 
+Une commande pour, en \TikZ, créer des arbres de probas \og classiques \fg.
+
 \vspace{1.5cm}
 
 \hfill{}\textit{Merci à Anne pour ses retours et sa relecture !}
@@ -335,9 +341,9 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 
 \subsection{Options du package}
 
-\begin{codeinfo}
+\begin{codeattention}
 Par défaut, \ctex{minted} est chargé et donc la compilation nécessite d'utiliser \textsf{shell-escape}. Cependant, si vous ne \underline{souhaitez pas} utiliser les commandes nécessitant \ctex{minted} vous pouvez charger le package \ctex{ProfLycee} avec l'option \Cle{nominted}.
-\end{codeinfo}
+\end{codeattention}
 
 \begin{codetex}[listing only]
 ...
@@ -2097,9 +2103,9 @@ Les \Cle{Clés} pour cette possibilité sont :
 
 \newpage
 
-\part{Outils pour les probabilités et les statistiques}\label{reglin}
+\part{Outils pour les statistiques}
 
-\section{Paramètres d'une régression linéaire par la méthode des moindres carrés}
+\section{Paramètres d'une régression linéaire par la méthode des moindres carrés}\label{reglin}
 
 \subsection{Idée}
 
@@ -3027,6 +3033,8 @@ Sachant que la hauteur par défaut est de 1, il est -- a priori -- intéressant 
 
 \newpage
 
+\part{Outils pour les probabilités}
+
 \section{Calculs de probabilités}\label{calcprobas}
 
 \subsection{Introduction}
@@ -3038,7 +3046,9 @@ L'idée est de proposer des commandes permettant de calculer des probabilités a
 	\item binomiale ;
 	\item normale ;
 	\item exponentielle ;
-	\item de Poisson
+	\item de Poisson ;
+	\item géométrique ;
+	\item hypergéométrique.
 \end{itemize}
 \end{codeidee}
 
@@ -3057,15 +3067,26 @@ De ce fait, les options de \ctex{siunitx} de l'utilisateur affecterons les forma
 
 \begin{codetex}[listing only]
 %loi binomiale B(n,p)
-\calcPbinomP{n}{p}{k}         %P(X=k)
-\calcPbinomC{n}{p}{a}{b}      %P(a<=X<=b)
+\calcPbinomP{n}{p}{k}             %P(X=k)
+\calcPbinomC{n}{p}{a}{b}          %P(a<=X<=b)
+
 %loi de Poisson P (l)
-\calcPpoissP{l}{k}            %P(X=k)
-\calcPpoissC{l}{a}{b}         %P(a<=X<=b)
+\calcPpoissP{l}{k}                %P(X=k)
+\calcPpoissC{l}{a}{b}             %P(a<=X<=b)
+
+%loi géométrique G (p)
+\calcPgeomP{p}{k}                 %P(X=k)
+\calcPgeomC{l}{a}{b}              %P(a<=X<=b)
+
+%loi hypergéométrique H (N,n,m)
+\calcPhypergeomP{N}{n}{m}{k}      %P(X=k)
+\calcPhypergeomP{N}{n}{m}{a}{b}   %P(a<=X<=b)
+
 %loi normale N(m,s)
-\calcPnormC{m}{s}{a}{b}       %P(a<=X<=b)
+\calcPnormC{m}{s}{a}{b}           %P(a<=X<=b)
+
 %loi exponentielle E(l)
-\calcPexpoC{l}{a}{b}          %P(a<=X<=b)
+\calcPexpoC{l}{a}{b}              %P(a<=X<=b)
 \end{codetex}
 
 \begin{codecles}
@@ -3080,24 +3101,25 @@ Pour les probabilités cumulées, on peut utiliser \ctex{*} comme borne ($a$ ou 
 % X -> B(5,0.4)
 $P(X=3) \approx \calcPbinomP{5}{0.4}{3}$.
 $P(X\leqslant1) \approx \calcPbinomC{5}{0.4}{*}{1}$.
+
 % X -> B(100,0.02)
 $P(X=10) \approx \calcPbinomP{100}{0.02}{10}$.
 $P(15\leqslant X\leqslant25) \approx \calcPbinomC{100}{0.02}{15}{25}$.
+
 % Y -> P(5)
 $P(Y=3) \approx \calcPpoissP{5}{3}$.
 $P(Y\geqslant2) \approx \calcPpoissC{5}{2}{*}$.
-% X -> N(0,1)
-$P(X\leqslant1) \approx \calcPnormC{0}{1}{*}{1}$.
-$P(-1,96\leqslant Z\leqslant1,96) \approx \calcPnormC{0}{1}{-1.96}{1.96}$.
-% X -> N(550,30)
-$P(Y\geqslant600) \approx \calcPnormC{550}{30}{600}{*}$.
-$P(500\leqslant Y\leqslant600) \approx \calcPnormC{550}{30}{500}{600}$.
-% Z -> E(0.001)
-$P(Z\geqslant400) \approx \calcPexpoC{0.001}{400}{*}$.
-$P(300\leqslant Z\leqslant750) \approx \calcPexpoC{0.001}{300}{750}$.
+
+% T -> G(0.5)
+$P(T=100) \approx \calcPgeomP{0.5}{3}$.
+$P(T\leqslant5) \approx \calcPgeomC{0.5}{*}{5}$.
+
+% W -> H(50,10,5)
+$P(W=4) \approx \calcPhypergeomP{50}{10}{5}{4}$.
+$P(1\leqslant W\leqslant3) \approx \calcPhypergeomP{50}{10}{5}{1}{3}$.
 \end{codetex}
 
-\begin{codesortie}
+\begin{codesortie}[listing only]
 $\bullet~~~~X \hookrightarrow \mathcal{B}(5\,;\,0,4)$ :\\
 $P(X=3) \approx \calcPbinomP{5}{0.4}{3}$.\\
 $P(X\leqslant1) \approx \calcPbinomC{5}{0.4}{*}{1}$.
@@ -3116,6 +3138,32 @@ $P(Y\geqslant2) \approx \calcPpoissC{5}{2}{*}$.
 
 \medskip
 
+$\bullet~~~~T \hookrightarrow \mathcal{G}_{0,5}$ :\\
+$P(T=3) \approx \calcPgeomP{0.5}{3}$.\\
+$P(T\leqslant5) \approx \calcPgeomC{0.5}{*}{5}$.
+
+\medskip
+
+$\bullet~~~~W \hookrightarrow \mathcal{H}(50\,;\,10\,;\,5)$ :\\
+$P(W=4) \approx \calcPhypergeomP{50}{10}{5}{4}$.\\
+$P(1\leqslant W\leqslant3) \approx \calcPhypergeomC{50}{10}{5}{1}{3}$.
+\end{codesortie}
+
+\begin{codetex}[listing only]
+% X -> N(0,1)
+$P(X\leqslant1) \approx \calcPnormC{0}{1}{*}{1}$.
+$P(-1,96\leqslant Z\leqslant1,96) \approx \calcPnormC{0}{1}{-1.96}{1.96}$.
+
+% X -> N(550,30)
+$P(Y\geqslant600) \approx \calcPnormC{550}{30}{600}{*}$.
+$P(500\leqslant Y\leqslant600) \approx \calcPnormC{550}{30}{500}{600}$.
+
+% Z -> E(0.001)
+$P(Z\geqslant400) \approx \calcPexpoC{0.001}{400}{*}$.
+$P(300\leqslant Z\leqslant750) \approx \calcPexpoC{0.001}{300}{750}$.
+\end{codetex}
+
+\begin{codesortie}
 $\bullet~~~~X \hookrightarrow \mathcal{N}(0\,;\,1)$ :\\
 $P(X\leqslant1) \approx \calcPnormC{0}{1}{*}{1}$.\\
 $P(-1,96\leqslant Z\leqslant1,96) \approx \calcPnormC{0}{1}{-1.96}{1.96}$.
@@ -3169,11 +3217,22 @@ Les commandes sont dans ce cas préfixées par \ctex{num} au lieu de \ctex{calc}
 %loi binomiale B(n,p)
 \numPbinomP(*)[prec]{n}{p}{k}         %P(X=k)
 \numPbinomC(*)[prec]{n}{p}{a}{b}      %P(a<=X<=b)
+
 %loi de Poisson P (l)
 \numPpoissP(*)[prec]{l}{k}            %P(X=k)
 \numPpoissC(*)[prec]{l}{a}{b}         %P(a<=X<=b)
+
+%loi géométrique G (p)
+\numPgeomP{p}{k}                      %P(X=k)
+\numPgeomC{l}{a}{b}                   %P(a<=X<=b)
+
+%loi hypergéométrique H (N,n,m)
+\numPhypergeomP{N}{n}{m}{k}           %P(X=k)
+\numPhypergeomC{N}{n}{m}{a}{b}        %P(a<=X<=b)
+
 %loi normale N(m,s)
 \numPnormC(*)[prec]{m}{s}{a}{b}       %P(a<=X<=b)
+
 %loi exponentielle E(l)
 \numPexpoC(*)[prec]{l}{a}{b}          %P(a<=X<=b)
 \end{codetex}
@@ -3194,6 +3253,15 @@ $P(500\leqslant Y\leqslant600) \approx \numPnormC[4]{550}{30}{500}{600}$.
 % X -> B(100,0.02)
 $P(X=10) \approx \numPbinomP[7]{100}{0.02}{10} \approx \numPbinomP*[7]{100}{0.02}{10}$.
 $P(15\leqslant X\leqslant25) \approx \numPbinomC[10]{100}{0.02}{15}{25} \approx \numPbinomC*[10]{100}{0.02}{15}{25}$.
+% H -> H(50,10,5)
+$P(W=4) \approx \numPhypergeomP[5]{50}{10}{5}{4}$.
+$P(1\leqslant W\leqslant3) \approx \numPhypergeomC[4]{50}{10}{5}{1}{3}$.
+% Z-> E(0,001)$ :
+$P(Z\geqslant400) \approx \numPexpoC{0.001}{400}{*}$.
+$P(300\leqslant Z\leqslant750) \approx \numPexpoC{0.001}{300}{750}$.
+% T -> P(5)
+$P(T=3) \approx \numPpoissP{5}{3}$.
+$P(T\geqslant2) \approx \numPpoissC[4]{5}{2}{*}$.
 \end{codetex}
 
 \begin{codesortie}
@@ -3210,7 +3278,265 @@ $\bullet~~~~X \hookrightarrow \mathcal{B}(100\,;\,0,02)$ :
 $P(X=10) \approx \numPbinomP[7]{100}{0.02}{10} \approx \numPbinomP*[7]{100}{0.02}{10}$.
 
 $P(15\leqslant X\leqslant25) \approx \numPbinomC[10]{100}{0.02}{15}{25} \approx \numPbinomC*[10]{100}{0.02}{15}{25}$.
+
+\medskip
+
+$\bullet~~~~W \hookrightarrow \mathcal{H}(50\,;\,10\,;\,5)$ :
+
+$P(W=4) \approx \numPhypergeomP[5]{50}{10}{5}{4}$.
+
+$P(1\leqslant W\leqslant3) \approx \numPhypergeomC[4]{50}{10}{5}{1}{3}$.
+
+\medskip
+
+$\bullet~~~~Z \hookrightarrow \mathcal{E}_{0,001}$ :
+
+$P(Z\geqslant400) \approx \numPexpoC{0.001}{400}{*}$.
+
+$P(300\leqslant Z\leqslant750) \approx \numPexpoC{0.001}{300}{750}$.
+
+\medskip
+
+$\bullet~~~~T \hookrightarrow \mathcal{P}_5$ :
+
+$P(T=3) \approx \numPpoissP{5}{3}$.
+
+$P(T\geqslant2) \approx \numPpoissC[4]{5}{2}{*}$.
 \end{codesortie}
+
+\begin{codeinfo}
+\hfill~\includegraphics[height=3cm]{./graphics/pl-doc-probas_a}~~\includegraphics[height=3cm]{./graphics/pl-doc-probas_c}~~\includegraphics[height=3cm]{./graphics/pl-doc-probas_e}~~\includegraphics[height=3cm]{./graphics/pl-doc-probas_f}\hfill~
+\end{codeinfo}
+
+\newpage
+
+\section{Arbres de probabilités \og classiques \fg}\label{arbresprobas}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+L'idée est de proposer des commandes pour créer des arbres de probabilités classiques (et homogènes), en \TikZ, de format :
+
+\begin{itemize}
+	\item $2\times2$ ou $2\times3$ ;
+	\item $3\times2$ ou $3\times3$.
+\end{itemize}
+
+Les (deux) commandes sont donc liées à un environnement \ctex{tikzpicture}, et elles créent les nœuds de l'arbre, pour exploitation ultérieure éventuelle.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+%commande simple pour tracé de l'arbre
+\PLarbre[<options>]{<donnees>}
+
+%environnement pour tracé et exploitation éventuelle
+\begin{PLenvarbre}[<options>]{<donnees>}
+	<code tikz supplémentaire>
+\end{PLenvarbre}
+\end{codetex}
+
+\subsection{Options et arguments}
+
+\begin{codeinfo}
+Les \Cle{donnees} seront à préciser sous forme \ctex{<sommet1>/<proba1>/<position1>,<sommet2>/<proba2>/<position2>,...} avec comme \og sens de lecture \fg{} de la gauche vers la droite puis du haut vers le bas (on balaye les \textit{sous-arbres}), avec comme possibilités :
+
+\begin{itemize}
+	\item une donnée \Cle{<proba>} peuvent être laissé vide ;
+	\item une donnée \Cle{<position>} peut valoir \Cle{above} (au-dessus), \Cle{below} (en-dessous) ou être laissée \Cle{vide} (sur).
+\end{itemize}
+\end{codeinfo}
+
+\begin{codecles}
+Quelques \Cle{Clés} (communes) pour les deux commandes :
+
+\begin{itemize}
+	\item la clé \Cle{unite} pour préciser l'unité de l'environnement \TikZ{} ; \hfill~défaut \Cle{1cm}
+	\item la clé \Cle{espniv} pour l'espace (H) entre les étages ; \hfill~défaut \Cle{3.25}
+	\item la clé \Cle{espfeuille} pour l'espace (V) entre les feuilles ; \hfill~défaut \Cle{1}
+	\item la clé \Cle{type} pour le format, parmi \Cle{2x2} ou \Cle{2x3} ou \Cle{3x2} ou  \Cle{3x3} ; \hfill~défaut \Cle{2x2}
+	\item la clé \Cle{police} pour la police des nœuds ; \hfill~défaut \Cle{\textbackslash{}normalfont\textbackslash{}normalsize}
+	\item la clé \Cle{policeprobas} pour la police des probas ; \hfill~défaut \Cle{\textbackslash{}normalfont\textbackslash{}small}
+	\item le booléen \Cle{inclineprobas} pour incliner les probas ; \hfill~défaut \Cle{true}
+	\item le booléen \Cle{fleche} pour afficher une flèche sur les branches ; \hfill~défaut \Cle{false}
+	\item la clé \Cle{styletrait} pour les branches, en langage \TikZ{} ; \hfill~défaut \Cle{vide}
+	\item la clé \Cle{eptrait} pour l'épaisseur des branches, en langage \TikZ{} ; \hfill~défaut \Cle{semithick}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\def\ArbreDeuxDeux{
+	$A$/\num{0.5}/,
+		$B$/\num{0.4}/,
+		$\overline{B}$/.../,
+	$\overline{A}$/.../,
+		$B$/.../,
+		$\overline{B}$/$\frac{1}{3}$/
+}
+
+\PLarbre{\ArbreDeuxDeux}
+
+%des éléménts, en gris, ont été rajoutés pour illustrer certaines options
+\end{codetex}
+
+\begin{codesortie}
+\begin{PLenvarbre}{$A$/\num{0.5}/,$B$/\num{0.4}/,$\overline{B}$/.../,$\overline{A}$/.../,$B$/.../,$\overline{B}$/$\frac{1}{3}$/}
+	\draw[lightgray] (R) node[left,font=\ttfamily\small] {(R)} ;
+	\draw[lightgray] (A11) node[below,font=\ttfamily\small] {(A11)} ;
+	\draw[lightgray] (A12) node[below,font=\ttfamily\small] {(A12)} ;
+	\draw[lightgray] (A21) node[below,font=\ttfamily\small] {(A21)} ;
+	\draw[lightgray] (A22) node[below,font=\ttfamily\small] {(A22)} ;
+	\draw[lightgray] (A23) node[below,font=\ttfamily\small] {(A23)} ;
+	\draw[lightgray] (A24) node[below,font=\ttfamily\small] {(A24)} ;
+	\draw[lightgray,<->] (0,-4) -- (3.25,-4) node[midway,below,font=\ttfamily\small] {espniv} ;
+	\draw[lightgray,<->] (3.25,-4) -- (6.5,-4) node[midway,below,font=\ttfamily\small] {espniv} ;
+	\draw[lightgray,<->] (7,0) -- (7,-1) node[midway,right,font=\ttfamily\small] {espfeuille} ;
+	\draw[lightgray,<->] (7,-1) -- (7,-2) node[midway,right,font=\ttfamily\small] {espfeuille} ;
+	\draw[lightgray,<->] (7,-2) -- (7,-3) node[midway,right,font=\ttfamily\small] {espfeuille} ;
+\end{PLenvarbre}
+\end{codesortie}
+
+\begin{codeinfo}
+Les nœuds crées par les commandes sont :
+
+\begin{itemize}
+	\item \ctex{R} pour la racine ;
+	\item \ctex{A1x} pour les nœuds du 1\up{er} niveau (de haut en bas) ;
+	\item  \ctex{A2x} pour les nœuds du 2\up{d} niveau (de haut en bas).
+\end{itemize}
+\end{codeinfo}
+
+\subsection{Exemples complémentaires}
+
+\begin{codetex}[listing only]
+\def\ArbreTroisDeux{
+	$A_1$/\num{0.5}/above,
+		$B$/\num{0.4}/above,
+		$\overline{B}$/.../below,
+	$A_2$/.../above,
+		$B$/.../above,
+		$\overline{B}$/$\frac{1}{3}$/below,
+	$A_3$/.../below,
+		$B$/.../above,
+		$\overline{B}$/$\frac{4}{15}$/below
+}
+
+\begin{PLenvarbre}[type=3x2,fleche,espniv=5,espfeuille=1.25]{\ArbreTroisDeux}
+	\draw[ForestGreen,->] (A24)--($(A24)+(2.5,0)$) node[right,font=\sffamily] {code tikz rajouté} ;
+\end{PLenvarbre}
+\end{codetex}
+
+\begin{codesortie}
+\begin{PLenvarbre}[type=3x2,fleche,espniv=5,espfeuille=1.25]{$A_1$/\num{0.5}/above,$B$/\num{0.4}/above,$\overline{B}$/.../below,$A_2$/.../above,$B$/.../above,$\overline{B}$/$\frac{1}{3}$/below,$A_3$/.../below,$B$/.../above,$\overline{B}$/$\frac{4}{15}$/below}
+	\draw[ForestGreen,->] (A24)--($(A24)+(2.5,0)$) node[right,font=\sffamily] {code tikz rajouté} ;
+\end{PLenvarbre}
+\end{codesortie}
+
+\begin{codetex}[listing only]
+\def\ArbreDeuxTrois{
+	$A$/\num{0.05}/above,
+		$B_1$/\num{0.4}/above,
+		$B_2$/\num{0.35}/,
+		$B_3$//below,
+	$\overline{A}$/.../below,
+		$B_1$/$\frac{2}{15}$/above,
+		$B_2$/.../,
+		$B_3$/$\frac{1}{3}$/below
+}
+\PLarbre[type=2x3,inclineprobas=false,espfeuille=1.15]{\ArbreDeuxTrois}
+
+\def\ArbreTroisTrois{
+	$A_1$/\num{0.05}/,
+		$B_1$/{1/3}/,
+		$B_2$/{1/3}/,
+		$B_3$/{1/3}/,
+	$A_2$/\num{0.80}/,
+		$B_1$/{1/3}/,
+		$B_2$/{1/3}/,
+		$B_3$/{1/3}/,
+	$A_3$/\num{0.15}/,
+		$B_1$/{1/3}/,
+		$B_2$/{1/3}/,
+		$B_3$/{1/3}/
+}
+
+\PLarbre[type=3x3,styletrait={densely dashed},espfeuille=0.7,policeprobas=\scriptsize,police=\small]{\ArbreTroisTrois}
+\end{codetex}
+
+\begin{codesortie}
+\PLarbre[type=2x3,inclineprobas=false,espfeuille=1.15]{$A$/\num{0.05}/above,$B_1$/\num{0.4}/above,$B_2$/\num{0.35}/,$B_3$//below,$\overline{A}$/.../below,$B_1$/$\frac{2}{15}$/above,$B_2$/.../,$B_3$/$\frac{1}{3}$/below}
+~~
+\PLarbre[type=3x3,styletrait={densely dashed},espfeuille=0.7,policeprobas=\scriptsize,police=\small]{$A_1$/\num{0.05}/,$B_1$/{1/3}/,$B_2$/{1/3}/,$B_3$/{1/3}/,$A_2$/\num{0.80}/,$B_1$/{1/3}/,$B_2$/{1/3}/,$B_3$/{1/3}/,$A_3$/\num{0.15}/,$B_1$/{1/3}/,$B_2$/{1/3}/,$B_3$/{1/3}/}
+\end{codesortie}
+
+\newpage
+
+\section{Petits schémas pour des probabilités continues}\label{schemasprobas}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de proposer des commandes pour illustrer, sous forme de schémas en \TikZ, des probabilités avec des lois continues (normales et exponentielles).
+
+\smallskip
+
+Ces \og schémas \fg{} peuvent être insérés en tant que graphique explicatif, ou bien en tant que petite illustration rapide !
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\LoiNormaleGraphe[options]<options tikz>{m}{s}{a}{b}
+
+\LoiExpoGraphe[options]<options tikz>{l}{a}{b}
+\end{codetex}
+
+\begin{codesortie}
+\hfill\LoiNormaleGraphe{100}{20}{80}{120}\hspace{3cm}\LoiExpoGraphe{0.001}{250}{1500}\hfill~
+\end{codesortie}
+
+\begin{codecles}
+Les probabilités \textit{illustrables} sont donc des probabilités \textbf{C}umulées ($P(a\leqslant X\leqslant b)$).
+
+\smallskip
+
+On peut utiliser \ctex{*} comme borne ($a$ ou $b$), pour les probabilités du type $P(X\leqslant b)$ et $P(X \geqslant a)$.
+\end{codecles}
+
+\subsection{Commandes et options}
+
+\begin{codecles}
+Quelques \Cle{Clés} sont disponibles pour ces commandes :
+
+\begin{itemize}
+	\item la clé \Cle{CouleurAire} pour l'aire sous la courbe ; \hfill{}défaut \Cle{LightGray}
+	\item la clé \Cle{CouleurCourbe} pour la courbe ; \hfill{}défaut \Cle{red}
+	\item la clé \Cle{Largeur} qui sera la largeur (en cm) du graphique ; \hfill{}défaut \Cle{2}
+	\item la clé \Cle{Hauteur} qui sera la hauteur (en cm) du graphique ; \hfill{}défaut \Cle{1}
+	\item un booléen \Cle{AfficheM} qui affiche la moyenne ; \hfill{}défaut \Cle{true}
+	\item un booléen \Cle{AfficheCadre} qui affiche un cadre pour délimiter le schéma. \hfill{}défaut \Cle{true}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}
+Avec centrage vertical sur l'axe des abscisses :
+\LoiNormaleGraphe[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>{1000}{100}{950}{*}
+
+\medskip
+
+\LoiNormaleGraphe[Largeur=4,Hauteur=2]{150}{12.5}{122}{160}
+
+\medskip
+
+Avec centrage vertical :
+\LoiNormaleGraphe[Largeur=5,Hauteur=2.5]<baseline=(current bounding box.center)>{200}{5}{204}{*}
+
+\medskip
+
+Avec centrage vertical sur l'axe des abscisses :
+\LoiExpoGraphe[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>{0.05}{*}{32}
+
+\medskip
+
+\LoiExpoGraphe[Largeur=4,Hauteur=2]{0.00025}{5000}{*}
+\end{codetex}
 
 \newpage
 
@@ -3687,8 +4013,8 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 
 \begin{itemize}
 	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
-	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4 ; \hfill{}défaut \Cle{true}
-	\item la clé \Cle{trait} qui permet de modifier l'épaisseur du crochet. \hfill{}défaut \Cle{0.5pt}
+	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4. \hfill{}défaut \Cle{true}
+	%\item la clé \Cle{trait} qui permet de modifier l'épaisseur du crochet. \hfill{}défaut \Cle{0.5pt}
 \end{itemize}
 
 Le formatage est géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
@@ -3697,8 +4023,6 @@ Le formatage est géré par le package \ctex{sinuitx}, le mieux est de positionn
 \begin{codetex}[listing only]
 %conversion avec détails et affichage de la base
 $\PLconvbinhex{110011111}$
-%conversion avec détails et affichage, et modif taille crochet
-$\PLconvbinhex[trait=1.5pt]{110011111}$
 %conversion sans détails et affichage de la base
 $\PLconvbinhex[details=false]{110011111}$
 %conversion sans détails et sans affichage de la base
@@ -3707,8 +4031,6 @@ $\PLconvbinhex[affbase=false,details=false]{110011111}$
 
 \begin{codesortie}
 $\PLconvbinhex{110011111}$
-
-$\PLconvbinhex[trait=1.5pt]{110011111}$
 
 $\PLconvbinhex[details=false]{110011111}$
 
@@ -3818,7 +4140,8 @@ Quelques options pour cette commande :
 	\item la clé \Cle{decalh} pour gérer le décalage H du \og rectangle \fg{}, qui peut être donné soit sous la forme \Cle{esp} ou soit sous la forme \Cle{espgauche/espdroite}; \hfill{}défaut \Cle{2pt}
 	\item la clé \Cle{decalv} pour le décalage vertical du \og rectangle \fg{} ; \hfill{}défaut \Cle{3pt}
 	\item la clé \Cle{noeud} pour le préfixe du nœud du premier et du dernier reste (pour utilisation en \TikZ) ; \hfill{}défaut \Cle{EEE}
-	\item le booléen \Cle{rect} pour afficher ou non le \og rectangle \fg{} des restes. \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{rect} pour afficher ou non le \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{couleurres} pour afficher ou non la conversion en couleur (identique au rectangle). \hfill{}défaut \Cle{false}
 \end{itemize}
 \end{codecles}
 
@@ -3833,7 +4156,7 @@ Par divisions euclidiennes successives, \PLconvDepuisDec[rect=false]{54}{3}.
 \PLconvDepuisDec[couleur=Goldenrod,decalh=6pt/2pt]{1012}{16}
 
 %conversion avec nœud personnalisé et réutilisation
-\PLconvDepuisDec[couleur=ForestGreen,noeud=TEST]{100}{9}
+\PLconvDepuisDec[couleur=ForestGreen,couleurres,noeud=TEST]{100}{9}.
 \begin{tikzpicture}
 	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
 \end{tikzpicture}
@@ -3852,7 +4175,7 @@ Par divisions euclidiennes successives, \PLconvDepuisDec[rect=false]{54}{3}.
 
 \medskip
 
-On obtient donc \PLconvDepuisDec[couleur=ForestGreen,noeud=TEST]{100}{9}
+On obtient donc \PLconvDepuisDec[couleur=ForestGreen,couleurres,noeud=TEST]{100}{9}.
 \begin{tikzpicture}
 	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
 \end{tikzpicture}
@@ -4025,14 +4348,12 @@ C,A,B,D
 \end{filecontents*}
 
 \begin{center}
-	\renewcommand\arraystretch{1.25}
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		\multicolumn{4}{|c|}{Notice} \\ \hline
-		A & B & C & D \\ \hline
-		45 & 22 & 1 & 7 \\ \hline
-		Noir & Vert & Jaune & Rouge \\ \hline
-	\end{tabular}
+	\begin{tblr}{colspec={*{4}{Q[1.25cm,c,m]}},hlines,vlines,rows={1.15em}}
+		\SetCell[c=4]{c} Notice & & & \\
+		A & B & C & D \\
+		45 & 22 & 1 & 7 \\
+		Noir & Vert & Jaune & Rouge \\
+	\end{tblr}
 \end{center}
 
 \hfill\begin{tikzpicture}[scale=0.9]
@@ -4157,13 +4478,18 @@ Les symboles affichés dans les cases sont situés aux nœuds de coordonnées $(
 \end{filecontents*}
 
 \begin{center}
-	\renewcommand\arraystretch{1.25}
-	\begin{tabular}{|c|c|c|c|c|c|}
-		\hline
-		\multicolumn{6}{|c|}{Notice} \\ \hline
-		1 & 2 & 3 & 5 & 6 & 9 \\ \hline
-		Rouge & Marron & Jaune & Noir & Bleu & Blanc \\ \hline
-	\end{tabular}
+	\begin{tblr}{colspec={*{6}{Q[1.25cm,c,m]}},hlines,vlines,rows={1.15em}}
+		\SetCell[c=6]{c} Notice & & & & &  \\
+		1 & 2 & 3 & 5 & 6 & 9 \\
+		Rouge & Marron & Jaune & Noir & Bleu & Blanc \\
+	\end{tblr}
+%	\renewcommand\arraystretch{1.25}
+%	\begin{tabular}{|c|c|c|c|c|c|}
+%		\hline
+%		\multicolumn{6}{|c|}{Notice} \\ \hline
+%		1 & 2 & 3 & 5 & 6 & 9 \\ \hline
+%		Rouge & Marron & Jaune & Noir & Bleu & Blanc \\ \hline
+%	\end{tabular}
 \end{center}
 
 \begin{center}
@@ -4432,11 +4758,19 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
+{\small \bverb|v1.3.4|~:~~~~Ajout de petits schémas, en \TikZ{}, de lois normales et exponentielles (page \pageref{schemasprobas})
+
+{\small \bverb|      |~:~~~~Calculs de probas avec les lois géométriques et hypergéométriques (page \pageref{calcprobas})
+	
+{\small \bverb|v1.3.3|~:~~~~Ajout d'un environnement pour des arbres de probas classiques, en \TikZ{} (page \pageref{arbresprobas})
+	
+{\small \bverb|v1.3.2|~:~~~~Correction d'un bug sur les conversions bintohex avec lualatex (page \pageref{conversions})
+
 {\small \bverb|v1.3.1|~:~~~~Ajout d'une option pour ne pas afficher les bordures des corrections de pixelart (page \pageref{pixelart})
 
 {\small \bverb|v1.3.0|~:~~~~Commande pour présenter une conversion depuis la base 10 (page \pageref{convrestes})
 
-{\small \bverb|v1.2.9|~:~~~~Correction des commandes avec simplekv
+{\small \bverb|v1.2.9|~:~~~~Correction des commandes avec \textsf{simplekv}
 
 {\small \bverb|v1.2.8|~:~~~~Ajout d'une librairie \TikZ{} oubliée, et remise en forme de la documentation
 
@@ -4460,7 +4794,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v1.1.8|~:~~~~Style "Mainlevée" basique pour \TikZ (page \pageref{mainlevee})
 
-{\small \bverb|v1.1.7|~:~~~~Conversions bin/hex/dec (basées sur \ctex{xintbinhex}) avec quelques détails (page \pageref{conversions})
+{\small \bverb|v1.1.7|~:~~~~Conversions bin/hex/dec (basées sur \textsf{xintbinhex}) avec quelques détails (page \pageref{conversions})
 
 {\small \bverb|v1.1.6|~:~~~~Ajout d'une commande pour déterminer les paramètres d'une régression linéaire par moindres carrés (page \pageref{reglin})
 
@@ -4482,15 +4816,15 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v1.0.6|~:~~~~Ajout d'une option \textsf{nominted} pour ne pas charger (pas besoin de compiler avec \textsf{shell-escape})
 
-{\small \bverb|v1.0.5|~:~~~~Ajout d'un environnement pour Python (minted) (page \pageref{pytminted})
+{\small \bverb|v1.0.5|~:~~~~Ajout d'un environnement pour Python (\textsf{minted}) (page \pageref{pytminted})
 
 {\small \bverb|v1.0.4|~:~~~~Ajout des environnements pour Terminal (win, osx, unix) (page \pageref{terms})
 
 {\small \bverb|v1.0.3|~:~~~~Ajout des environnements pour PseudoCode (page \pageref{pseudocode})
 
-{\small \bverb|v1.0.2|~:~~~~Ajout des environnements pour Python (pythontex) (page \pageref{pythontex})
+{\small \bverb|v1.0.2|~:~~~~Ajout des environnements pour Python (\textsf{pythontex}) (page \pageref{pythontex})
 
-{\small \bverb|v1.0.1|~:~~~~Modification mineure liée au chargement de \ctex{xcolor}
+{\small \bverb|v1.0.1|~:~~~~Modification mineure liée au chargement de \textsf{xcolor}
 
 {\small \bverb|v1.0  |~:~~~~Version initiale}
 
