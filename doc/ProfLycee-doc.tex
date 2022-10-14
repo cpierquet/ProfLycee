@@ -915,7 +915,7 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 \begin{center}
 	\begin{tikzpicture}[x=5cm,y=1.5cm]
 			...
-			\def\f{-0.25*\x*\x+\x}
+			\def\f{1+1/\x}
 			\recurrPL%
 				[fct={\f},no=0,uno=1,nb=7,poslabel=above right,decallabel=0pt,afftermes=false]%
 				[line width=1.25pt,ForestGreen,densely dashed][]
@@ -1095,7 +1095,7 @@ Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code Pyth
 \subsection{Présentation de code Python grâce à listings}
 
 \begin{codeidee}
-L'environnement \ctex{\textbackslash envcodepython} (chargé par \ctex{ProfLycee} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
+L'environnement \ctex{\textbackslash envcodepython} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -1269,11 +1269,11 @@ Le {package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. O
 \end{itemize}
 \end{codeidee}
 
-\begin{codeinfo}
+\begin{codeattention}
 \textbf{Attention : }il faut dans ce cas une compilation en plusieurs étapes, comme par exemple \textsf{pdflatex puis pythontex puis pdflatex} !
 
 Voir par exemple \url{http://lesmathsduyeti.fr/fr/informatique/latex/pythontex/} !
-\end{codeinfo}
+\end{codeattention}
 
 \begin{codeinfo}
 Compte tenu de la \textit{relative complexité} pour gérer les options (par paramètres/clés\ldots) des \textit{tcbox} et des \textit{fancyvrb}, le style est \og fixé \fg{} tel quel, et seules la taille et la position de la \textit{tcbox} sont modifiables. Si toutefois vous souhaitez personnaliser davantage, il faudra prendre le code correspondant et appliquer vos modifications !
@@ -1284,7 +1284,7 @@ Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une b
 \subsection{Présentation de code Python via pythontex}\label{pythontex}
 
 \begin{codeidee}
-L'environnement \ctex{\textbackslash envcodepythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
+L'environnement \ctex{\textbackslash envcodepythontex} est donc lié à \ctex{pythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -3341,7 +3341,7 @@ Les (deux) commandes sont donc liées à un environnement \ctex{tikzpicture}, et
 Les \Cle{donnees} seront à préciser sous forme \ctex{<sommet1>/<proba1>/<position1>,<sommet2>/<proba2>/<position2>,...} avec comme \og sens de lecture \fg{} de la gauche vers la droite puis du haut vers le bas (on balaye les \textit{sous-arbres}), avec comme possibilités :
 
 \begin{itemize}
-	\item une donnée \Cle{<proba>} peuvent être laissé vide ;
+	\item une donnée \Cle{<proba>} peut être laissé vide ;
 	\item une donnée \Cle{<position>} peut valoir \Cle{above} (au-dessus), \Cle{below} (en-dessous) ou être laissée \Cle{vide} (sur).
 \end{itemize}
 \end{codeinfo}
@@ -3991,7 +3991,7 @@ $\PLconvdecbin[affbase=false]{415}$
 $\PLconvdecbin*[affbase=false]{415}$
 \end{codesortie}
 
-\subsection{Conversion hexadécimal vers binaire}
+\subsection{Conversion binaire vers hexadécimal}
 
 \begin{codeinfo}
 L'idée est ici de présenter la conversion, grâce à la conversion \og directe \fg{} par blocs de 4 chiffres :
