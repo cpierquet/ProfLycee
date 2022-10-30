@@ -3,7 +3,9 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/10/14 v1.3.4 - Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/10/18 v1.3.6 - Aide pour l'utilisation de LaTeX en lycee]
+% 1.3.6	Ajout d'un "générateur" de trinômes (ou mise en forme basique)
+% 1.3.5	Correction de bugs sur les calculs de probas (loi géométrique)
 % 1.3.4	Ajout des calculs de probas geomtriques et hypergeometriques + petits schémas probas
 % 1.3.3	Ajout de commandes pour des arbres de probas classiques, en tikz
 % 1.3.2	Correction d'une commande liée à la conversion bintohex (suppression clé trait)
@@ -2247,7 +2249,7 @@
 \newcommand\calcPgeomC[3]{%pab
 	\def\BorneInf{#2}\def\BorneSup{#3}
 	\ifthenelse{\equal{#2}{*}}%
-		{\def\BorneInf{0}}
+		{\def\BorneInf{1}}
 		{}
 	\ifthenelse{\equal{#3}{*}}%
 		{\def\BorneSup{\fpeval{trunc(1/#1*10,0)}}}
@@ -2352,7 +2354,7 @@
 \NewDocumentCommand{\numPgeomC}{ s O{3} m m m }{%*=sci,2=prec,3=p,4=a,5=b
 	\def\BorneInf{#4}\def\BorneSup{#5}
 	\ifthenelse{\equal{#4}{*}}%
-		{\def\BorneInf{0}}
+		{\def\BorneInf{1}}
 		{}
 	\ifthenelse{\equal{#5}{*}}%
 		{\def\BorneSup{\fpeval{trunc(1/#3*10,0)}}}
@@ -2986,6 +2988,109 @@
 		\draw[thick,->,>=stealth] (0,-0.15)--(0,0.85) ;
 		\draw[thick,domain=0:3.8,samples=100,\GRPHPROBcoulcbe] plot (\x,{0.7*\densexpo{\x}}) ;
 	\end{tikzpicture}
+}
+
+%===============TRINOMEALEA============== OK!
+\setKVdefault[trinomealea]{%
+	Alea=false,%
+	Anegatif=true
+}
+
+\NewDocumentCommand\EcritureTrinome{ O{} m m m }{%
+	\useKVdefault[trinomealea]%
+	\setKV[trinomealea]{#1}%
+	\ifboolKV[trinomealea]{Alea}%
+	{%
+		\xdef\Coeffa{\fpeval{randint(#2)}}\xdef\Coeffb{\fpeval{randint(#3)}}\xdef\Coeffc{\fpeval{randint(#4)}}%
+		\xdef\AleaSigneA{\fpeval{randint(1,2)}}%
+		\ifboolKV[trinomealea]{Anegatif}%
+			{\xintifboolexpr{\AleaSigneA == 1}{\def\TriSigneA{}}{\def\TriSigneA{-}}}%
+			{\def\TriSigneA{}}%forcément a>0
+	}%
+	{%
+		\xdef\Coeffa{#2}\xdef\Coeffb{#3}\xdef\Coeffc{#4}%
+		\def\TriSigneA{}%
+	}%
+	\def\TriPartieA{\num{\TriSigneA\Coeffa} x^2}%
+	\xintifboolexpr{\Coeffa == 1}%
+		{\def\TriPartieA{x^2}}{}%
+	\xintifboolexpr{\Coeffa == -1}%
+		{\def\TriPartieA{-x^2}}{}%
+	\def\TriPartieB{\num[print-implicit-plus]{\Coeffb}x}%
+	\xintifboolexpr{\Coeffb == 0}%
+		{\def\TriPartieB{}}{}%
+	\xintifboolexpr{\Coeffb == 1}%
+		{\def\TriPartieB{+x}}{}%
+	\xintifboolexpr{\Coeffb == -1}%
+		{\def\TriPartieB{-x}}{}%
+	\xintifboolexpr{\Coeffc == 0}%
+		{\def\TriPartieC{}}{\def\TriPartieC{\num[print-implicit-plus]{\Coeffc}}}%
+	%formatage
+	\ensuremath{\TriPartieA\TriPartieB\TriPartieC}%
+}
+
+
+%=================PRESPGCD=============== OK!
+\DeclareMathOperator{\PLpgcd}{PGCD}
+\defKV[prespgcd]{%
+	Couleur=\def\PLPGCDCouleur{#1},%
+	DecalRect=\def\PLPGCDDecal{#1},%
+	Noeud=\def\PLPGCDNoeud{#1}
+}
+
+\setKVdefault[prespgcd]{%
+	Couleur=red,%
+	DecalRect=2pt,%
+	Rectangle=true,%
+	Noeud=FFF,%
+	CouleurResultat=false,%
+	AfficheConclusion=true,%
+	AfficheDelimiteurs=true
+}
+
+\newcommand\PresentationPGCD[3][]{%
+	\useKVdefault[prespgcd]%
+	\setKV[prespgcd]{#1}%
+	\xdef\respgcd{\xinteval{gcd(#2,#3)}}
+	\xdef\ValA{#2}\xdef\ValB{#3}%on stocke les valeurs du départ
+	\ensuremath{%
+		\ifboolKV[prespgcd]{AfficheDelimiteurs}%
+		{\left\lbrace}%
+		{}%
+		\begin{array}{@{\,}r@{\;=\;}l@{\;+\;}r}
+			%1ère division
+			\xdef\ValQ{\fpeval{trunc(\ValA/\ValB,0)}}\xdef\ValR{\fpeval{\ValA-\ValB*\ValQ}}
+			\num{\ValA}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}%
+			\xintifboolexpr{\ValR == \respgcd}%
+			{\PLnoeud{\PLPGCDNoeud1}{\num{\ValR}}}%noeud si c'est le pgcd
+			{\num{\ValR}}%
+			\xdef\ValA{\ValB}\xdef\ValB{\ValR}%nouvelles valeurs
+			\whiledo {\ValR > 0}%
+			{%
+				\xdef\ValQ{\fpeval{trunc(\ValA/\ValB,0)}}\xdef\ValR{\fpeval{\ValA-\ValB*\ValQ}}%
+				\\%
+				\num{\ValA}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}%
+				\xintifboolexpr{\ValR == \respgcd}%
+				{\PLnoeud{\PLPGCDNoeud1}{\num{\ValR}}}%noeud si c'est le pgcd
+				{\num{\ValR}}%
+				\xdef\ValA{\ValB}\xdef\ValB{\ValR}%nouvelles valeurs
+			}%
+		\end{array}%
+		\ifboolKV[prespgcd]{AfficheDelimiteurs}%
+		{\right|}%
+		{}%
+		\ifboolKV[prespgcd]{AfficheConclusion}%
+		{%
+			\Rightarrow \PLpgcd\left(\num{#2}\mathpunct{};\num{#3}\right)=\ifboolKV[prespgcd]{CouleurResultat}{\mathcolor{\PLPGCDCouleur}{\num{\respgcd}}}{\num{\respgcd}}%
+		}%
+		{}%
+	}%
+	\ifboolKV[prespgcd]{Rectangle}%
+	{%
+		\begin{tikzpicture}
+			\draw[overlay,rounded corners=4pt,\PLPGCDCouleur,thick] ($(\PLPGCDNoeud1.north west)+(-\PLPGCDDecal,\PLPGCDDecal)$) rectangle ($(\PLPGCDNoeud1.south east)+(\PLPGCDDecal,-\PLPGCDDecal)$) ;
+		\end{tikzpicture}%
+	}{}%
 }
 
 \endinput
