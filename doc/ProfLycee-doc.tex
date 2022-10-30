@@ -33,6 +33,8 @@
 \usepackage{graphics}
 \usepackage{hvlogos}
 \usepackage{simplekv}
+\usepackage{menukeys}
+\let\tab\relax
 \usepackage{tabto}
 \usepackage{pgf,pgfplots}
 \pgfplotsset{
@@ -63,8 +65,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.3.4}
-\def\PLdate{14 Octobre 2022}
+\def\PLversion{1.3.6}
+\def\PLdate{18 Octobre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -308,7 +310,7 @@ Le {package} \ctex{ProfLycee} charge les {packages} :
 	\item \ctex{xcolor} avec les options \textsf{[table,svgnames]} ;
 	\item \ctex{tikz}, \ctex{pgf}, \ctex{xfp} ;
 	\item \ctex{xparse}, \ctex{xkeyval}, \ctex{xstring}, \ctex{simplekv} ;
-	\item \ctex{listofitems}, \ctex{xintexpr} et \ctex{xintbinhex} ;
+	\item \ctex{listofitems}, \ctex{xintexpr} , \ctex{xintbinhex} et \ctex{xintgcd};
 	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{tcolorbox}.
 \end{itemize}
 \end{codeinfo}
@@ -354,7 +356,11 @@ Par défaut, \ctex{minted} est chargé et donc la compilation nécessite d'utili
 \begin{codeinfo}
 En compilant (notamment avec les packages \ctex{minted} et \ctex{pythontex}) on peut spécifier des répertoires particuliers pour les (ou des) fichiers auxiliaires.
 
-Avec l'option \Cle{build}, l'utilisateur a la possibilité de placer les fichiers temporaires de \ctex{minted} et \ctex{pythontex} dans un répertoire \textsf{build} du répertoire courant.
+Avec l'option \Cle{build}, l'utilisateur a la possibilité de placer les fichiers temporaires de \ctex{minted} et \ctex{pythontex} dans un répertoire \menu{build} du répertoire courant.
+
+\smallskip
+
+Dans ce cas il vaut mieux créer au préalable le répertoire \menu{build} avant de compiler un fichier !
 \end{codeinfo}
 
 \begin{codetex}[listing only]
@@ -505,7 +511,7 @@ Pour déclarer les paramètres :
 \end{codetex}
 
 \begin{codecles}
-Certains paramètres peuvent être gérés directement dans la commande \ctex{\textbackslash splinetikz} :
+Certains paramètres peuvent être gérés directement dans la commande \ctex{splinetikz} :
 %
 \begin{itemize}
 	\item la couleur de la courbe par la \textsf{clé} \Cle{couleur} ;\hfill{}défaut \Cle{red}
@@ -637,7 +643,7 @@ On peut dans ce cas \textit{jouer} sur les coefficients de cette portion pour \t
 Le plus \og simple \fg{} est donc:
 %
 \begin{itemize}
-	\item de déclarer la liste des points de contrôle, grâce à \ctex{\textbackslash def\textbackslash LISTE\{x1/y1:d1§x2/y2/d2§...\}} ;
+	\item de déclarer la liste des points de contrôle, grâce à \ctex{\textbackslash def\textbackslash LISTE\{x1/y1/d1§x2/y2/d2§...\}} ;
 	\item de  saisir la commande \ctex{\textbackslash splinetikz[liste=\textbackslash LISTE]} ;
 	\item d'ajuster les options et coefficients en fonction du rendu !
 \end{itemize}
@@ -650,11 +656,11 @@ Le plus \og simple \fg{} est donc:
 \subsection{Définitions}
 
 \begin{codeidee}
-En parallèle de l'outil \ctex{\textbackslash splinetikz}, il existe l'outil \ctex{\textbackslash tangentetikz} qui va permettre de tracer des tangentes à l'aide de la liste de points précédemment définie pour l'outil \ctex{\textbackslash splinetikz}.
+En parallèle de l'outil \ctex{splinetikz}, il existe l'outil \ctex{tangentetikz} qui va permettre de tracer des tangentes à l'aide de la liste de points précédemment définie pour l'outil \ctex{splinetikz}.
 
 \smallskip
 
-NB : il peut fonctionner indépendamment de l'outil \ctex{\textbackslash splinetikz} puisque la liste des points de travail est gérée de manière autonome !
+NB : il peut fonctionner indépendamment de l'outil \ctex{splinetikz} puisque la liste des points de travail est gérée de manière autonome !
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -1003,7 +1009,7 @@ Les \Cle{Clés} disponibles sont :
 \subsection{La commande \og ligneCF \fg}
 
 \begin{codeinfo}
-Une fois les paramètres déclarés, il faut créer les différentes lignes, grâce à la \ctex{\textbackslash ligneCF}.
+Une fois les paramètres déclarés, il faut créer les différentes lignes, grâce à la \ctex{ligneCF}.
 \end{codeinfo}
 
 \begin{codetex}[listing only]
@@ -1085,7 +1091,7 @@ Le package \ctex{listings} ne nécessite pas de compilation particulière, au co
 \end{codeinfo}
 
 \begin{codeinfo}
-Le style utilisé pour formater le code Python n'est pas modifiable. Il donne un rendu proche de celui des packages commes \ctex{pythontex} ou \ctex{minted}.
+Le style utilisé pour formater le code Python n'est pas modifiable. Il donne un rendu proche de celui des packages comme \ctex{pythontex} ou \ctex{minted}.
 
 \smallskip
 
@@ -1095,7 +1101,7 @@ Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code Pyth
 \subsection{Présentation de code Python grâce à listings}
 
 \begin{codeidee}
-L'environnement \ctex{\textbackslash envcodepython} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
+L'environnement \ctex{envcodepython} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -1141,7 +1147,7 @@ Si cette méthode est utilisée, il ne faut oublier de charger le package \ctex{
 \begin{codetex}[listing only]
 \begin{envcodepython}{} %les {}, même vides, sont nécessaires (bug avec # sinon !)
 #environnement par défaut
-nb = int(input("Saisir un entier Python positif"))
+nb = int(input("Saisir un entier positif"))
 if (nb %7 == 0) :
 	print(f"{nb} est bien divisible par 7")
 #endif
@@ -1154,7 +1160,7 @@ def f(x) :
 \begin{codesortie}
 \begin{envcodepython}{}
 #environnement par défaut
-nb = int(input("Saisir un entier Python positif"))
+nb = int(input("Saisir un entier positif"))
 if (nb %7 == 0) :
 	print(f"{nb} est bien divisible par 7")
 #endif
@@ -1284,7 +1290,7 @@ Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une b
 \subsection{Présentation de code Python via pythontex}\label{pythontex}
 
 \begin{codeidee}
-L'environnement \ctex{\textbackslash envcodepythontex} est donc lié à \ctex{pythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
+L'environnement \ctex{envcodepythontex} est donc lié à \ctex{pythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -1342,7 +1348,7 @@ Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex}
 \end{codeinfo}
 
 \begin{codeidee}
-L'environnement \ctex{\textbackslash envcodepythonminted} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style (\textit{minted}) particulier.
+L'environnement \ctex{envcodepythonminted} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style (\textit{minted}) particulier.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -1398,7 +1404,7 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \begin{codeidee}
 \ctex{pythontex} permet également de \textit{simuler} (en exécutant également !) du code python dans une \textit{console}.
 
-C'est l'environnement \ctex{\textbackslash envconsolepythontex} qui permet de le faire.
+C'est l'environnement \ctex{envconsolepythontex} qui permet de le faire.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -1466,7 +1472,7 @@ Le {package} \ctex{listings} permet d'insérer et de présenter du code, et avec
 \subsection{Présentation de Pseudo-Code}
 
 \begin{codeidee}
-L'environnement \ctex{\textbackslash envpseudocode} permet de présenter du (pseudo-code) dans une \ctex{tcolorbox}.
+L'environnement \ctex{envpseudocode} permet de présenter du (pseudo-code) dans une \ctex{tcolorbox}.
 \end{codeidee}
 
 \begin{codeinfo}
@@ -1551,7 +1557,7 @@ Il s'agit ici de présenter une version \og clé en main \fg{}.
 \begin{codeinfo}
 Le style \ctex{listings} utilisé par la commande a l'option \Cle{mathescape} activé, et accessible grâce aux délimiteurs \Cle{(*...*)}.
 
-Cela permet d'insérer du code \LaTeX{} dans l'environnement \ctex{\textbackslash envpseudocode} (attention au fontes de rendu par contre !).
+Cela permet d'insérer du code \LaTeX{} dans l'environnement \ctex{envpseudocode} (attention au fontes de rendu par contre !).
 \end{codeinfo}
 
 \begin{codetex}[listing only]
@@ -2363,7 +2369,7 @@ La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des
 \end{codesortie}
 
 \begin{codeinfo}
-IL existe également une commande auxiliaire, \ctex{PLreglinpts} pour afficher le nuage de points avec quelques options, dans un environnement \TikZ{} classique (sans \textsf{pgfplot})\ldots
+Il existe également une commande auxiliaire, \ctex{PLreglinpts} pour afficher le nuage de points avec quelques options, dans un environnement \TikZ{} classique (sans \textsf{pgfplot})\ldots
 \end{codeinfo}
 
 \begin{codetex}[listing only]
@@ -2708,9 +2714,9 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 Il existe, de manière marginale, quelques commandes complémentaires qui ne seront pas trop détaillées mais qui sont présentes dans l'introduction :
 
 \begin{itemize}
-	\item \ctex{\textbackslash{}PLfenetre} qui restreint les tracés à la fenêtre (utile pour des courbes qui \textit{débordent}) ;
-	\item \ctex{\textbackslash{}PLfenetresimple} qui permet d'automatiser le tracé des grilles/axes/graduations dans leurs versions par défaut, avec peu de paramétrages ;
-	\item \ctex{\textbackslash{}PLorigine} pour rajouter le libellé de l'origine si non affiché par les axes.
+	\item \ctex{PLfenetre} qui restreint les tracés à la fenêtre (utile pour des courbes qui \textit{débordent}) ;
+	\item \ctex{PLfenetresimple} qui permet d'automatiser le tracé des grilles/axes/graduations dans leurs versions par défaut, avec peu de paramétrages ;
+	\item \ctex{PLorigine} pour rajouter le libellé de l'origine si non affiché par les axes.
 \end{itemize}
 \end{codeinfo}
 
@@ -2735,7 +2741,7 @@ Il existe, de manière marginale, quelques commandes complémentaires qui ne ser
 \end{codetex}
 
 \begin{codecles}
-Cette commande, liée à la commande \ctex{\textbackslash{}PLreglin} permet de représenter le nuage de points associé aux deux listes, avec les \Cle{clés} suivantes :
+Cette commande, liée à la commande \ctex{PLreglin} permet de représenter le nuage de points associé aux deux listes, avec les \Cle{clés} suivantes :
 
 \begin{itemize}
 	\item \Cle{taille} qui est la taille des points du nuage ; \hfill~défaut \Cle{2pt}
@@ -2784,7 +2790,7 @@ Cette commande, liée à la commande \ctex{\textbackslash{}PLreglin} permet de r
 \end{codetex}
 
 \begin{codecles}
-Cette commande permet de rajouter le point moyen du nuage, calculé par la commande \ctex{\textbackslash{}PLreglin}, avec les \Cle{clés} :
+Cette commande permet de rajouter le point moyen du nuage, calculé par la commande \ctex{PLreglin}, avec les \Cle{clés} :
 
 \begin{itemize}
 	\item \Cle{police}, comme précédemment ; \hfill~défaut \Cle{\textbackslash{}normalsize\textbackslash{}normalfont} ;
@@ -3341,8 +3347,8 @@ Les (deux) commandes sont donc liées à un environnement \ctex{tikzpicture}, et
 Les \Cle{donnees} seront à préciser sous forme \ctex{<sommet1>/<proba1>/<position1>,<sommet2>/<proba2>/<position2>,...} avec comme \og sens de lecture \fg{} de la gauche vers la droite puis du haut vers le bas (on balaye les \textit{sous-arbres}), avec comme possibilités :
 
 \begin{itemize}
-	\item une donnée \Cle{<proba>} peut être laissé vide ;
-	\item une donnée \Cle{<position>} peut valoir \Cle{above} (au-dessus), \Cle{below} (en-dessous) ou être laissée \Cle{vide} (sur).
+	\item une donnée \Cle{proba} peut être laissée vide ;
+	\item une donnée \Cle{position} peut valoir \Cle{above} (au-dessus), \Cle{below} (en-dessous) ou être laissée \Cle{vide} (sur).
 \end{itemize}
 \end{codeinfo}
 
@@ -3515,11 +3521,17 @@ Quelques \Cle{Clés} sont disponibles pour ces commandes :
 \end{itemize}
 \end{codecles}
 
+\begin{codeinfo}
+Les commandes sont donc des environnements \TikZ, sans possibilité de \og rajouter \fg{} des éléments. Ces petis \textit{schémas} sont donc vraiment dédiés à \textit{montrer} rapidement une probabilité continue, sans fioriture.
+\end{codeinfo}
+
 \begin{codetex}
 Avec centrage vertical sur l'axe des abscisses :
 \LoiNormaleGraphe[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>{1000}{100}{950}{*}
+\end{codetex}
 
-\medskip
+\begin{codetex}
+Avec quelques modifications :
 
 \LoiNormaleGraphe[Largeur=4,Hauteur=2]{150}{12.5}{122}{160}
 
@@ -3536,6 +3548,396 @@ Avec centrage vertical sur l'axe des abscisses :
 \medskip
 
 \LoiExpoGraphe[Largeur=4,Hauteur=2]{0.00025}{5000}{*}
+\end{codetex}
+
+\subsection{Remarques et compléments}
+
+\begin{codeinfo}
+Pour le moment, seules les lois (continues) exponentielles et normales sont disponibles, peut-être que d'autres lois seront ajoutées, mais il ne me semble pas très pertinent de proposer des schémas similaires pour des lois discrètes, qui ont des \textit{représentations} assez variables\ldots
+\end{codeinfo}
+
+\newpage
+
+\part{Outils pour l'arithmétique}
+
+\section{Conversions binaire/hexadécimal/décimal}\label{conversions}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de \textit{compléter} les possibilités offertes par le package \ctex{xintbinhex}, en mettant en forme quelques conversions :
+
+\begin{itemize}
+	\item décimal en binaire avec blocs de 4 chiffres en sortie ;
+	\item conversion binaire ou hexadécimal en décimal avec écriture polynomiale.
+\end{itemize}
+\end{codeidee}
+
+\begin{codeinfo}
+Le package \ctex{xintbinhex} est la base de ces macros, puisqu'il permet de faire des conversions directes !
+
+\smallskip
+
+Les macros présentées ici ne font que les intégrer dans un environnement adapté à une correction ou une présentation !
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\xintDecToHex{100}
+\xintDecToBin{51}
+\xintHexToDec{A4C}
+\xintBinToDec{110011}
+\xintBinToHex{11111111}
+\xintHexToBin{ACDC}
+\xintCHexToBin{3F}
+\end{codetex}
+
+\begin{codesortie}
+\xintDecToHex{100}
+
+\xintDecToBin{51}
+
+\xintHexToDec{A4C}
+
+\xintBinToDec{110011}
+
+\xintBinToHex{11111111}
+
+\xintHexToBin{ACDC}
+
+\xintCHexToBin{3F}
+\end{codesortie}
+
+\subsection{Conversion décimal vers binaire}
+
+\begin{codetex}[listing only]
+\PLconvdecbin(*)[<clés>]{<nombre>}
+\end{codetex}
+
+\begin{codecles}
+Concernant la commande en elle même, peu de paramétrage :
+
+\begin{itemize}
+	\item la version \textit{étoilée} qui permet de ne pas afficher de zéros avant pour \og compléter \fg{} ;
+	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
+	\item l'argument, mandataire, est le nombre entier à convertir.
+\end{itemize}
+
+Le formatage est géré par \ctex{sinuitx}, le mieux est donc de positionner la commande dans un environnement mathématique.
+
+\smallskip
+
+Les nombres écrits en binaire sont, par défaut, présentés en bloc(s) de 4 chiffres.
+\end{codecles}
+
+\begin{codetex}[listing only]
+% Conversion avec affichage de la base et par bloc de 4
+$\PLconvdecbin{415}$
+% Conversion avec affichage de la base et sans forcément des blocs de 4
+$\PLconvdecbin*{415}$
+% Conversion sans affichage de la base et par bloc de 4
+$\PLconvdecbin[affbase=false]{415}$
+% Conversion sans affichage de la base et sans forcément des blocs de 4
+$\PLconvdecbin*[affbase=false]{415}$
+\end{codetex}
+
+\begin{codesortie}
+$\PLconvdecbin{415}$
+
+\smallskip
+
+$\PLconvdecbin*{415}$
+
+\smallskip
+
+$\PLconvdecbin[affbase=false]{415}$
+
+\smallskip
+
+$\PLconvdecbin*[affbase=false]{415}$
+\end{codesortie}
+
+\subsection{Conversion binaire vers hexadécimal}
+
+\begin{codeinfo}
+L'idée est ici de présenter la conversion, grâce à la conversion \og directe \fg{} par blocs de 4 chiffres :
+
+\begin{itemize}
+	\item la macro rajoute éventuellement les zéros pour compléter ;
+	\item elle découpe par blocs de 4 chiffres binaires ;
+	\item elle présente la conversion de chacun des blocs de 4 chiffres binaires ;
+	\item elle affiche la conversion en binaire.
+\end{itemize}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\PLconvbinhex[<clés>]{<nombre>}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4. \hfill{}défaut \Cle{true}
+	%\item la clé \Cle{trait} qui permet de modifier l'épaisseur du crochet. \hfill{}défaut \Cle{0.5pt}
+\end{itemize}
+
+Le formatage est géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
+\end{codecles}
+
+\begin{codetex}[listing only]
+%conversion avec détails et affichage de la base
+$\PLconvbinhex{110011111}$
+%conversion sans détails et affichage de la base
+$\PLconvbinhex[details=false]{110011111}$
+%conversion sans détails et sans affichage de la base
+$\PLconvbinhex[affbase=false,details=false]{110011111}$
+\end{codetex}
+
+\begin{codesortie}
+$\PLconvbinhex{110011111}$
+
+$\PLconvbinhex[details=false]{110011111}$
+
+$\PLconvbinhex[affbase=false,details=false]{110011111}$
+\end{codesortie}
+
+\pagebreak
+
+\subsection{Conversion binaire ou hexadécimal en décimal}
+
+\begin{codeinfo}
+L'idée est ici de présenter la conversion, grâce à l'écriture polynômiale :
+
+\begin{itemize}
+	\item écrit la somme des puissances ;
+	\item convertir si besoin les \textit{chiffres} hexadécimal ;
+	\item peut ne pas afficher les monômes de coefficient 0.
+\end{itemize}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\PLconvtodec[<clés>]{<nombre>}
+\end{codetex}
+
+\begin{codecles}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{basedep} qui est la base de départ (2 ou 16 !) ; \hfill{}défaut \Cle{2}
+	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4 ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{zeros} qui affiche les chiffres 0 dans la somme. \hfill{}défaut \Cle{true}
+\end{itemize}
+
+Le formatage est toujours géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
+\end{codecles}
+
+\begin{codetex}[listing only]
+%conversion 16->10 avec détails et affichage de la base et zéros
+$\PLconvtodec[basedep=16]{19F}$
+%conversion 2->10 avec détails et affichage de la base et zéros
+$\PLconvtodec{110011}$
+%conversion 2->10 avec détails et affichage de la base et sans zéros
+$\PLconvtodec[zeros=false]{110011}$
+%conversion 16->10 sans détails et affichage de la base et avec zéros
+$\PLconvtodec[basedep=16,details=false]{AC0DC}$
+%conversion 16->10 avec détails et sans affichage de la base et sans zéros
+$\PLconvtodec[zeros=false,basedep=16]{AC0DC}$
+\end{codetex}
+
+\begin{codesortie}
+$\PLconvtodec[basedep=16]{19F}$
+
+$\PLconvtodec{110011}$
+
+$\PLconvtodec[zeros=false]{110011}$
+
+$\PLconvtodec[basedep=16,details=false]{AC0DC}$
+
+$\PLconvtodec[zeros=false,basedep=16]{AC0DC}$
+\end{codesortie}
+
+\newpage
+
+\section{Conversion \og présentée \fg{} d'un nombre en décimal}\label{convrestes}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de proposer une \og présentation \fg{} par divisions euclidiennes pour la conversion d'un entier donné en base 10 dans une base quelconque.
+
+\smallskip
+
+Les commandes de la section précédente donne \textit{juste} les résultats, dans cette section il y a en plus la présentation de la conversion.
+
+\smallskip
+
+La commande utilise -- par défaut -- du code \TikZ{} en mode \ctex{overlay}, donc on pourra déclarer -- si ce n'est pas fait -- dans le préambule, la commande qui suit.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+...
+\tikzstyle{every picture}+=[remember picture]
+...
+\end{codetex}
+
+\subsection{Code et clés}
+
+\begin{codetex}[]
+%conversion basique
+\PLconvDepuisDec{78}{2}
+\end{codetex}
+
+\begin{codeinfo}
+La \og tableau \fg, qui est géré par \ctex{array} est inséré dans un \ctex{ensuremath}, donc les \ctex{\$...\$} ne sont pas utiles.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\PLconvDepuisDec[<options>]{<nombre en base 10>}{<base d'arrivée>}
+\end{codetex}
+
+\begin{codecles}
+Quelques options pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{couleur} pour la couleur du \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{red}
+	\item la clé \Cle{decalh} pour gérer le décalage H du \og rectangle \fg{}, qui peut être donné soit sous la forme \Cle{esp} ou soit sous la forme \Cle{espgauche/espdroite}; \hfill{}défaut \Cle{2pt}
+	\item la clé \Cle{decalv} pour le décalage vertical du \og rectangle \fg{} ; \hfill{}défaut \Cle{3pt}
+	\item la clé \Cle{noeud} pour le préfixe du nœud du premier et du dernier reste (pour utilisation en \TikZ) ; \hfill{}défaut \Cle{EEE}
+	\item le booléen \Cle{rect} pour afficher ou non le \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{couleurres} pour afficher ou non la conversion en couleur (identique au rectangle). \hfill{}défaut \Cle{false}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+%conversion avec changement de couleur
+\PLconvDepuisDec[couleur=DarkBlue]{45}{2}
+
+%conversion sans le rectangle
+Par divisions euclidiennes successives, \PLconvDepuisDec[rect=false]{54}{3}.
+
+%conversion avec gestion du decalh pour le placement précis du rectangle
+\PLconvDepuisDec[couleur=Goldenrod,decalh=6pt/2pt]{1012}{16}
+
+%conversion avec nœud personnalisé et réutilisation
+\PLconvDepuisDec[couleur=ForestGreen,couleurres,noeud=TEST]{100}{9}.
+\begin{tikzpicture}
+	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\PLconvDepuisDec[couleur=DarkBlue]{45}{2}
+
+\medskip
+
+Par divisions euclidiennes successives, \PLconvDepuisDec[rect=false]{54}{3}.
+
+\medskip
+
+\PLconvDepuisDec[couleur=Goldenrod,decalh=6pt/2pt]{1012}{16}
+
+\medskip
+
+On obtient donc \PLconvDepuisDec[couleur=ForestGreen,couleurres,noeud=TEST]{100}{9}.
+\begin{tikzpicture}
+	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
+\end{tikzpicture}
+
+\vspace{1.5cm}
+
+~
+\end{codesortie}
+
+\newpage
+
+\section{Algorithme d'Euclide pour le PGCD}\label{prespgcd}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de proposer une \og présentation \fg{} de l'algorithme d'Euclide pour le calcul du PGCD de deux entiers.
+
+Le package \ctex{xintgcd} permet déjà de le faire, il s'agit ici de travailler sur la \textit{mise en forme} avec alignement des restes.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\PresentationPGCD[<options>]{a}{b}
+\end{codetex}
+
+\begin{codetex}[listing only]
+...
+\tikzstyle{every picture}+=[remember picture]
+...
+\PresentationPGCD{150}{27}
+\end{codetex}
+
+\begin{codesortie}
+\PresentationPGCD{150}{27}
+\end{codesortie}
+
+\begin{codeattention}
+La mise en valeur du dernier reste non nul est géré par du code \TikZ, en mode \ctex{overlay}, donc il faut bien penser à déclarer dans le préambule :
+
+\hspace{5mm}\ctex{\textbackslash{}tikzstyle\{every picture\}+=[remember picture]}
+\end{codeattention}
+
+\subsection{Options et clés}
+
+\begin{codecles}
+Quelques options disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{Couleur} qui correspond à la couleur pour la mise en valeur ; \hfill{}défaut \Cle{red}
+	\item la clé \Cle{DecalRect} qui correspond à l'écartement du rectangle de mise en valeur ; \hfill{}défaut \Cle{2pt}
+	\item le booléen \Cle{Rectangle} qui gère l'affichage ou non du rectangle de mise ne valeur ; \hfill{}défaut \Cle{true}
+	\item la clé \Cle{Noeud} qui gère le préfixe du nom du nœud \TikZ{} du rectangle (pour exploitation ultérieure) ; \hfill{}défaut \Cle{FFF}
+	\item le booléen \Cle{CouleurResultat} pour mettre ou non en couleur de PGCD ; \hfill{}défaut \Cle{false}
+	\item le booléen \Cle{AfficheConclusion} pour afficher ou non la conclusion ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{AfficheDelimiteurs} pour afficher ou non les délimiteurs (accolade gauche et trait droit). \hfill{}défaut \Cle{true}
+\end{itemize}
+
+\medskip
+
+Le rectangle de mise en valeur est donc un nœud \TikZ{} qui sera nommé, par défaut \ctex{FFF1}.
+
+\medskip
+
+La présentation est dans un environnement \ctex{ensuremath} donc les \ctex{\$...\$} ne sont pas indispensables.
+\end{codecles}
+
+\begin{codetex}[]
+\PresentationPGCD[CouleurResultat]{150}{27}
+\end{codetex}
+
+\pagebreak
+
+\begin{codetex}[]
+\PresentationPGCD[CouleurResultat,Couleur=ForestGreen]{1250}{450}.
+
+\PresentationPGCD[CouleurResultat,Couleur=DarkBlue]{13500}{2500}.
+
+\PresentationPGCD[Rectangle=false]{420}{540}.
+
+\medskip
+
+D'après l'algorithme d'Euclide, on a $\left| \PresentationPGCD[Couleur=LightSkyBlue,AfficheConclusion=false,AfficheDelimiteurs=false]{123456789}{9876} \right.$
+\begin{tikzpicture}
+	\draw[overlay,LightSkyBlue,thick,<-] (FFF1.east) to[bend right] ++ (2cm,0.75cm) node[right] {dernier reste non nul} ;
+\end{tikzpicture}
+\end{codetex}
+
+\subsection{Compléments}
+
+\begin{codeinfo}
+La présentation des divisions euclidiennes est gérée par un tableau du type \ctex{array}, avec alignement vertical de symboles \ctex{=} et \ctex{+}.
+
+Par défaut, les délimiteurs choisis sont donc l'accolade gauche et le trait droit, mais la clé booléenne \Cle{AfficheDelimiteurs=false} permet de choisir des délimiteurs différents.
+\end{codeinfo}
+
+\begin{codetex}[]
+$\left[ \PresentationPGCD[AfficheConclusion=false,AfficheDelimiteurs=false]{1234}{5} \right]$
 \end{codetex}
 
 \newpage
@@ -3562,7 +3964,7 @@ Peu d'options pour ces commandes :
 \item le second, mandataire, est le \textsf{calcul} ou la \textsf{division} à convertir.
 \end{itemize}
 
-À noter que la macro est dans un bloc \textsf{ensuremath} donc les \textsf{\$\ldots\$} ne sont pas nécessaires.
+À noter que la macro est dans un bloc \ctex{ensuremath} donc les \ctex{\$...\$} ne sont pas nécessaires.
 \end{codecles}
 
 \begin{codetex}[listing only]
@@ -3895,296 +4297,6 @@ En ce qui concerne les autres arguments :
 \end{center}
 \end{codesortie}
 
-\section{Conversions binaire/hexadécimal/décimal}\label{conversions}
-
-\subsection{Idée}
-
-\begin{codeidee}
-L'idée est de \textit{compléter} les possibilités offertes par le package \ctex{xintbinhex}, en mettant en forme quelques conversions :
-
-\begin{itemize}
-	\item décimal en binaire avec blocs de 4 chiffres en sortie ;
-	\item conversion binaire ou hexadécimal en décimal avec écriture polynomiale.
-\end{itemize}
-\end{codeidee}
-
-\begin{codeinfo}
-Le package \ctex{xintbinhex} est la base de ces macros, puisqu'il permet de faire des conversions directes !
-
-\smallskip
-
-Les macros présentées ici ne font que les intégrer dans un environnement adapté à une correction ou une présentation !
-\end{codeinfo}
-
-\begin{codetex}[listing only]
-\xintDecToHex{100}
-\xintDecToBin{51}
-\xintHexToDec{A4C}
-\xintBinToDec{110011}
-\xintBinToHex{11111111}
-\xintHexToBin{ACDC}
-\xintCHexToBin{3F}
-\end{codetex}
-
-\begin{codesortie}
-\xintDecToHex{100}
-
-\xintDecToBin{51}
-
-\xintHexToDec{A4C}
-
-\xintBinToDec{110011}
-
-\xintBinToHex{11111111}
-
-\xintHexToBin{ACDC}
-
-\xintCHexToBin{3F}
-\end{codesortie}
-
-\subsection{Conversion décimal vers binaire}
-
-\begin{codetex}[listing only]
-\PLconvdecbin(*)[<clés>]{<nombre>}
-\end{codetex}
-
-\begin{codecles}
-Concernant la commande en elle même, peu de paramétrage :
-
-\begin{itemize}
-	\item la version \textit{étoilée} qui permet de ne pas afficher de zéros avant pour \og compléter \fg{} ;
-	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
-	\item l'argument, mandataire, est le nombre entier à convertir.
-\end{itemize}
-
-Le formatage est géré par \ctex{sinuitx}, le mieux est donc de positionner la commande dans un environnement mathématique.
-
-\smallskip
-
-Les nombres écrits en binaire sont, par défaut, présentés en bloc(s) de 4 chiffres.
-\end{codecles}
-
-\begin{codetex}[listing only]
-% Conversion avec affichage de la base et par bloc de 4
-$\PLconvdecbin{415}$
-% Conversion avec affichage de la base et sans forcément des blocs de 4
-$\PLconvdecbin*{415}$
-% Conversion sans affichage de la base et par bloc de 4
-$\PLconvdecbin[affbase=false]{415}$
-% Conversion sans affichage de la base et sans forcément des blocs de 4
-$\PLconvdecbin*[affbase=false]{415}$
-\end{codetex}
-
-\begin{codesortie}
-$\PLconvdecbin{415}$
-
-\smallskip
-
-$\PLconvdecbin*{415}$
-
-\smallskip
-
-$\PLconvdecbin[affbase=false]{415}$
-
-\smallskip
-
-$\PLconvdecbin*[affbase=false]{415}$
-\end{codesortie}
-
-\subsection{Conversion binaire vers hexadécimal}
-
-\begin{codeinfo}
-L'idée est ici de présenter la conversion, grâce à la conversion \og directe \fg{} par blocs de 4 chiffres :
-
-\begin{itemize}
-	\item la macro rajoute éventuellement les zéros pour compléter ;
-	\item elle découpe par blocs de 4 chiffres binaires ;
-	\item elle présente la conversion de chacun des blocs de 4 chiffres binaires ;
-	\item elle affiche la conversion en binaire.
-\end{itemize}
-\end{codeinfo}
-
-\begin{codetex}[listing only]
-\PLconvbinhex[<clés>]{<nombre>}
-\end{codetex}
-
-\begin{codecles}
-Quelques \Cle{clés} sont disponibles pour cette commande :
-
-\begin{itemize}
-	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
-	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4. \hfill{}défaut \Cle{true}
-	%\item la clé \Cle{trait} qui permet de modifier l'épaisseur du crochet. \hfill{}défaut \Cle{0.5pt}
-\end{itemize}
-
-Le formatage est géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
-\end{codecles}
-
-\begin{codetex}[listing only]
-%conversion avec détails et affichage de la base
-$\PLconvbinhex{110011111}$
-%conversion sans détails et affichage de la base
-$\PLconvbinhex[details=false]{110011111}$
-%conversion sans détails et sans affichage de la base
-$\PLconvbinhex[affbase=false,details=false]{110011111}$
-\end{codetex}
-
-\begin{codesortie}
-$\PLconvbinhex{110011111}$
-
-$\PLconvbinhex[details=false]{110011111}$
-
-$\PLconvbinhex[affbase=false,details=false]{110011111}$
-\end{codesortie}
-
-\pagebreak
-
-\subsection{Conversion binaire ou hexadécimal en décimal}
-
-\begin{codeinfo}
-L'idée est ici de présenter la conversion, grâce à l'écriture polynômiale :
-
-\begin{itemize}
-	\item écrit la somme des puissances ;
-	\item convertir si besoin les \textit{chiffres} hexadécimal ;
-	\item peut ne pas afficher les monômes de coefficient 0.
-\end{itemize}
-\end{codeinfo}
-
-\begin{codetex}[listing only]
-\PLconvtodec[<clés>]{<nombre>}
-\end{codetex}
-
-\begin{codecles}
-Quelques \Cle{clés} sont disponibles pour cette commande :
-
-\begin{itemize}
-	\item la clé \Cle{basedep} qui est la base de départ (2 ou 16 !) ; \hfill{}défaut \Cle{2}
-	\item le booléen \Cle{affbase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
-	\item le booléen \Cle{details} qui permet d'afficher ou le détail par bloc de 4 ; \hfill{}défaut \Cle{true}
-	\item le booléen \Cle{zeros} qui affiche les chiffres 0 dans la somme. \hfill{}défaut \Cle{true}
-\end{itemize}
-
-Le formatage est toujours géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
-\end{codecles}
-
-\begin{codetex}[listing only]
-%conversion 16->10 avec détails et affichage de la base et zéros
-$\PLconvtodec[basedep=16]{19F}$
-%conversion 2->10 avec détails et affichage de la base et zéros
-$\PLconvtodec{110011}$
-%conversion 2->10 avec détails et affichage de la base et sans zéros
-$\PLconvtodec[zeros=false]{110011}$
-%conversion 16->10 sans détails et affichage de la base et avec zéros
-$\PLconvtodec[basedep=16,details=false]{AC0DC}$
-%conversion 16->10 avec détails et sans affichage de la base et sans zéros
-$\PLconvtodec[zeros=false,basedep=16]{AC0DC}$
-\end{codetex}
-
-\begin{codesortie}
-$\PLconvtodec[basedep=16]{19F}$
-
-$\PLconvtodec{110011}$
-
-$\PLconvtodec[zeros=false]{110011}$
-
-$\PLconvtodec[basedep=16,details=false]{AC0DC}$
-
-$\PLconvtodec[zeros=false,basedep=16]{AC0DC}$
-\end{codesortie}
-
-\newpage
-
-\section{Conversion \og présentée \fg{} d'un nombre en décimal}\label{convrestes}
-
-\subsection{Idée}
-
-\begin{codeidee}
-L'idée est de proposer une \og présentation \fg{} par divisions euclidiennes pour la conversion d'un entier donné en base 10 dans une base quelconque.
-
-\smallskip
-
-Les commandes de la section précédente donne \textit{juste} les résultats, dans cette section il y a en plus la présentation de la conversion.
-
-\smallskip
-
-La commande utilise -- par défaut -- du code \TikZ{} en mode \ctex{overlay}, donc on pourra déclarer -- si ce n'est pas fait -- dans le préambule, la commande qui suit.
-\end{codeidee}
-
-\begin{codetex}[listing only]
-...
-\tikzstyle{every picture}+=[remember picture]
-...
-\end{codetex}
-
-\subsection{Code et clés}
-
-\begin{codetex}[]
-%conversion basique
-\PLconvDepuisDec{78}{2}
-\end{codetex}
-
-\begin{codeinfo}
-La \og tableau \fg, qui est géré par \ctex{array} est inséré dans un \ctex{ensuremath}, donc les \ctex{\$...\$} ne sont pas utiles.
-\end{codeinfo}
-
-\begin{codetex}[listing only]
-\PLconvDepuisDec[<options>]{<nombre en base 10>}{<base d'arrivée>}
-\end{codetex}
-
-\begin{codecles}
-Quelques options pour cette commande :
-
-\begin{itemize}
-	\item la clé \Cle{couleur} pour la couleur du \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{red}
-	\item la clé \Cle{decalh} pour gérer le décalage H du \og rectangle \fg{}, qui peut être donné soit sous la forme \Cle{esp} ou soit sous la forme \Cle{espgauche/espdroite}; \hfill{}défaut \Cle{2pt}
-	\item la clé \Cle{decalv} pour le décalage vertical du \og rectangle \fg{} ; \hfill{}défaut \Cle{3pt}
-	\item la clé \Cle{noeud} pour le préfixe du nœud du premier et du dernier reste (pour utilisation en \TikZ) ; \hfill{}défaut \Cle{EEE}
-	\item le booléen \Cle{rect} pour afficher ou non le \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{true}
-	\item le booléen \Cle{couleurres} pour afficher ou non la conversion en couleur (identique au rectangle). \hfill{}défaut \Cle{false}
-\end{itemize}
-\end{codecles}
-
-\begin{codetex}[listing only]
-%conversion avec changement de couleur
-\PLconvDepuisDec[couleur=DarkBlue]{45}{2}
-
-%conversion sans le rectangle
-Par divisions euclidiennes successives, \PLconvDepuisDec[rect=false]{54}{3}.
-
-%conversion avec gestion du decalh pour le placement précis du rectangle
-\PLconvDepuisDec[couleur=Goldenrod,decalh=6pt/2pt]{1012}{16}
-
-%conversion avec nœud personnalisé et réutilisation
-\PLconvDepuisDec[couleur=ForestGreen,couleurres,noeud=TEST]{100}{9}.
-\begin{tikzpicture}
-	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codesortie}
-\PLconvDepuisDec[couleur=DarkBlue]{45}{2}
-
-\medskip
-
-Par divisions euclidiennes successives, \PLconvDepuisDec[rect=false]{54}{3}.
-
-\medskip
-
-\PLconvDepuisDec[couleur=Goldenrod,decalh=6pt/2pt]{1012}{16}
-
-\medskip
-
-On obtient donc \PLconvDepuisDec[couleur=ForestGreen,couleurres,noeud=TEST]{100}{9}.
-\begin{tikzpicture}
-	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
-\end{tikzpicture}
-
-\vspace{1.5cm}
-
-~
-\end{codesortie}
-
 \newpage
 
 \section{Style \og main levée \fg{} en \TikZ}\label{mainlevee}
@@ -4256,6 +4368,69 @@ Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -
 
 \newpage
 
+\section{Écriture d'un trinôme, trinôme aléatoire}\label{trinome}
+
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de proposer une commande pour écrire, sous forme développée réduite, un trinôme en fonction de ses coefficients $a$, $b$ et $c$ (avec $a\neq0$), avec la gestion des coefficients nuls ou égaux à $\pm1$.
+
+\smallskip
+
+En combinant avec le package \ctex{xfp} et fonction de générateur d'entiers aléatoires, on peut de ce fait proposer une commande pour générer aléatoirement des trinômes à coefficients entiers (pour des fiches d'exercices par exemple).
+
+\smallskip
+
+L'affichage des monômes est géré par le package \ctex{siunitx} et le tout est dans un environnement \ctex{ensuremath}.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\EcritureTrinome[<options>]{a}{b}{c}
+\end{codetex}
+
+\begin{codetex}[]
+\EcritureTrinome{1}{7}{0}\\
+\EcritureTrinome{1.5}{7.3}{2.56}\\
+\EcritureTrinome{-1}{0}{12}\\
+\EcritureTrinome{-1}{-5}{0}
+\end{codetex}
+
+\subsection{Clés et options}
+
+\begin{codecles}
+Quelques clés et options sont disponibles :
+
+\begin{itemize}
+	\item la clé booléenne \Cle{Alea} pour autoriser les coefficients aléatoires (voir plus bas pour la syntaxe) ;\hfill{}défaut \Cle{false}
+	\item la clé booléenne \Cle{Anegatif} pour autoriser $a$ à être négatif.\hfill{}défaut \Cle{true}
+\end{itemize}
+\end{codecles}
+
+\begin{codeinfo}
+La clé \Cle{Alea} va modifier la manière de saisir les coefficients, il suffira dans ce cas de  préciser les bornes, sous la forme \ctex{valmin,valmax}, de chacun des coefficients. C'est ensuite le package \ctex{xfp} qui va se charger de générer les coefficients.
+\end{codeinfo}
+
+\begin{codetex}[sidebyside]
+Avec $a$ entre 1 et 5 (et signe aléatoire) puis $b$ entre $-2$ et 7 puis $c$ entre $-10$ et 20 :
+
+$f(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$\\
+$g(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$\\
+$h(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$
+
+\medskip
+
+Avec $a$ entre 1 et 10 (forcément positif) puis $b$ entre $-2$ et 2 puis $c$ entre 0 et 4 :
+
+\EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}
+
+\EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}
+
+\EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}
+\end{codetex}
+
+\newpage
+
 \part{Jeux et récréations}
 
 \section{PixelART via un fichier csv, en \TikZ}\label{pixelart}
@@ -4320,7 +4495,6 @@ L'option \Cle{csvii} permet de passer l'appel au package en version \LaTeXe.
 \begin{filecontents*}[overwrite]{basique.csv}
 A,B,C,D
 A,B,D,C
-B,A,C,D
 B,A,D,C
 C,A,B,D
 \end{filecontents*}
@@ -4758,6 +4932,12 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
+{\small \bverb|v1.3.6|~:~~~~Présentation de l'algorithme d'Euclide pour le PGCD (page \pageref{prespgcd})
+
+{\small \bverb|      |~:~~~~Affichage d'un trinôme par coefficients, aléatoires ou non (page \pageref{trinome})
+
+{\small \bverb|v1.3.5|~:~~~~Correction d'un bug avec la loi géométrique (page \pageref{calcprobas})
+	
 {\small \bverb|v1.3.4|~:~~~~Ajout de petits schémas, en \TikZ{}, de lois normales et exponentielles (page \pageref{schemasprobas})
 
 {\small \bverb|      |~:~~~~Calculs de probas avec les lois géométriques et hypergéométriques (page \pageref{calcprobas})
@@ -4788,7 +4968,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v1.2.1|~:~~~~Amélioration de la gestion du csv pour Pixelart
 
-{\small \bverb|v1.2  |~:~~~~Correction d'un méchant bug sur Pixelart
+{\small \bverb|v1.2.0|~:~~~~Correction d'un \textit{méchant} bug sur Pixelart
 
 {\small \bverb|v1.1.9|~:~~~~Pixelart en \TikZ{} (page \pageref{pixelart})
 
