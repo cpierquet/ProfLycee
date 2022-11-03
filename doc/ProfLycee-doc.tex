@@ -1,18 +1,24 @@
 % !TeX TXS-program:compile = txs:///arara
-% arara: pdflatex: {shell: yes, synctex: no, interaction: batchmode}
+% arara: lualatex: {shell: yes, synctex: no, interaction: batchmode}
 % arara: pythontex: {rerun: modified} if found('pytxcode', 'PYTHONTEX#py')
-% arara: pdflatex: {shell: yes, synctex: no, interaction: batchmode} if found('pytxcode', 'PYTHONTEX#py')
-% arara: pdflatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
+% arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('pytxcode', 'PYTHONTEX#py')
+% arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass{article}
 \usepackage[french]{babel}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath,amssymb}
-\usepackage[upright]{fourier}
-\usepackage[scaled=0.875]{helvet}
-\renewcommand\ttdefault{lmtt}
-\usepackage[scaled=0.875]{cabin}
+\usepackage{iftex,ifpdf,ifxetex,ifluatex}
+\ifpdftex
+	\usepackage[utf8]{inputenc}
+	\usepackage[T1]{fontenc}
+	\usepackage[upright]{fourier}
+	\usepackage[scaled=0.875]{helvet}
+	\renewcommand\ttdefault{lmtt}
+	\usepackage[scaled=0.875]{cabin}
+	\usepackage{amsmath,amssymb}
+\fi
+\ifluatex
+	\RequirePackage[math-style=french,bold-style=ISO]{fourier-otf}
+\fi
 \usepackage[build]{ProfLycee}
 \usepackage{tkz-euclide}
 \usetikzlibrary{hobby}
@@ -65,8 +71,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.3.6}
-\def\PLdate{18 Octobre 2022}
+\def\PLversion{1.3.7}
+\def\PLdate{2 Novembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -311,7 +317,8 @@ Le {package} \ctex{ProfLycee} charge les {packages} :
 	\item \ctex{tikz}, \ctex{pgf}, \ctex{xfp} ;
 	\item \ctex{xparse}, \ctex{xkeyval}, \ctex{xstring}, \ctex{simplekv} ;
 	\item \ctex{listofitems}, \ctex{xintexpr} , \ctex{xintbinhex} et \ctex{xintgcd};
-	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{tcolorbox}.
+	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{tcolorbox} ;
+	\item \ctex{piton} et \ctex{pythontex}
 \end{itemize}
 \end{codeinfo}
 
@@ -452,6 +459,10 @@ En ce qui concerne les codes \textsf{python} et/ou \textsf{pseudocode}, il faudr
 \end{itemize}
 \end{codeinfo}
 
+\begin{codeattention}
+Certains commandes ou environnements nécessitent une compilation spécifique, qui seront indiquées clairement dans la documentation !
+\end{codeattention}
+
 \subsection{Problèmes éventuels\ldots}
 
 \begin{codeinfo}
@@ -466,11 +477,163 @@ Certains packages ont une fâcheuse tendance à être tatillons sur leurs option
 En dehors de cela, ce sont des tests multiples et variés qui permettront de détecter d'éventuels bugs !
 \end{codeinfo}
 
+\vfill
+
+\hfill{\Huge $\leftrightsquigarrow$ Bonne(s) découverte(s) $\leftrightsquigarrow$}\hfill~
+
+\vfill
+
+\newpage
+
+\part{Liste des commandes, par thème}
+
+\begin{codetex}[listing only]
+%courbe d'interpolation, tangente, dans un environnement tikz
+\splinetikz[<options>]
+\tangentetikz[<options>]
+
+%toile pour une suite récurrente, dans un environnement tikz
+\recurrPL[<clés>][<options du tracé>][<option supplémentaire des termes>]
+
+%présentation type calcul formel, dans un environnement tikz
+\paramCF[<options>]
+\ligneCF[<options>]{<commande>}{<résultat>}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%présentation de code Python
+\begin{envcodepython}(*)[<largeur>]{<commandes tcbox>}...\end{envcodepython}
+\envcodepythonfichier(*)[<largeur>]{<commandes tcbox<}{<script>}
+\begin{envcodepiton}[<options>]...\end{envcodepiton}
+\begin{envcodepythontex}[<options>]...\end{envcodepythontex}
+\begin{envcodepythonminted}(*)[<largeur>][<options>]...\end{envcodepythonminted}
+
+%console Python
+\begin{envconsolepythontex}[<options>]...\end{envconsolepythontex}
+
+%présentation de pseudocode
+\begin{envpseudocode}(*)[<largeur>][<options>]...\end{envpseudocode}
+
+%terminal OS
+\begin{PLtermwin}[<largeur>]{<clés>}[<options>]...\end{PLtermwin}
+\begin{PLtermunix}[<largeur>]{<clés>}[<options>]...\end{PLtermunix}
+\begin{PLtermosx}[<largeur>]{<clés>}[<options>]...\end{PLtermosx}
+
+%code Capytale
+\liencapytale(*)[<options<]{<code capytale>}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%pavé et tétraèdre, dans un environnement tikz
+\pavePL[<options>]
+\tetraPL[<options>]
+
+%cercle trigo, dans un environnement tikz
+\cercletrigoPL[<clés>]
+\end{codetex}
+
+\begin{codetex}[listing only]
+%paramètres d'une régression linéaire, nuage de points
+\PLreglin[<clés>]{<listeX>}{<listeY>}
+\PLreglinpts[<clés>]{<listeX>}{<listeY>}
+
+%stats à 2 variables, dans un environnement tikz
+\PLgrilletikz[<options>][<options grille ppale>][<options grille second.>]
+\PLaxestikz[<options>]
+\PLaxextikz[<options>]{<valeurs>} \PLaxeytikz[<options>]{<valeurs>}
+\PLfenetre
+\PLfenetresimple<options axe Ox>{liste abscisses}<options axe Oy>{liste ordonnées}
+\PLnuagepts[<options>]{<listeX>}{<listeY>}
+\PLnuageptmoy[<options>]
+\PLcourbe[<options>]{<formule>}{<domaine>}
+
+%boîte à moustaches, dans un environnement tikz
+\PLboitemoust[<options>]
+\PLboitemoustaxe[<options>]
+\end{codetex}
+
+\begin{codetex}[listing only]
+%loi binomiale B(n,p)
+\calcPbinomP{n}{p}{k}
+\calcPbinomC{n}{p}{a}{b}
+\numPbinomP(*)[prec]{n}{p}{k}
+\numPbinomC(*)[prec]{n}{p}{a}{b}
+
+%loi de Poisson P (l)
+\calcPpoissP{l}{k}
+\calcPpoissC{l}{a}{b}
+\numPpoissP(*)[prec]{l}{k}
+\numPpoissC(*)[prec]{l}{a}{b}
+
+%loi géométrique G (p)
+\calcPgeomP{p}{k}
+\calcPgeomC{l}{a}{b}
+\numPgeomP{p}{k}
+\numPgeomC{l}{a}{b}
+
+%loi hypergéométrique H (N,n,m)
+\calcPhypergeomP{N}{n}{m}{k}
+\calcPhypergeomP{N}{n}{m}{a}{b}
+\numPhypergeomP{N}{n}{m}{k}
+\numPhypergeomC{N}{n}{m}{a}{b}
+
+%loi normale N(m,s)
+\calcPnormC{m}{s}{a}{b}
+\numPnormC(*)[prec]{m}{s}{a}{b}
+
+%loi exponentielle E(l)
+\calcPexpoC{l}{a}{b}
+\numPexpoC(*)[prec]{l}{a}{b}
+
+%arbres de probas
+\PLarbre[<options>]{<donnees>}
+\begin{PLenvarbre}[<options>]{<donnees>}...\end{PLenvarbre}
+
+%schémas lois continues
+\LoiNormaleGraphe[options]<options tikz>{m}{s}{a}{b}
+\LoiExpoGraphe[options]<options tikz>{l}{a}{b}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%conversions
+\PLconvdecbin(*)[<clés>]{<nombre>}
+\PLconvbinhex[<clés>]{<nombre>}
+\PLconvtodec[<clés>]{<nombre>}
+\PLconvDepuisDec[<options>]{<nombre en base 10>}{<base d'arrivée>}
+
+%PGCD présenté
+\PresentationPGCD[<options>]{a}{b}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%conversion en fraction
+\convertfraction[<option>]{<argument>}
+
+%ensemble d'éléments
+\ensPL[<clés>]{<liste>}
+
+%schémas pour le signe affine/trinôme, dans un environnement tikz
+\aidesignePL[<clés>]
+\aidesignetkztabPL[<options>]{<numligne>}[<echelle>][<décalage horizontal>]
+
+%trinôme, trinôme aléatoire
+\EcritureTrinome[<options>]{a}{b}{c}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%pixelart, dans un environnement tikz
+\PLpixelart[<clés>]{<fichier>.csv}
+
+%sudomaths
+\PLsudomaths[<options>]{<liste>}.
+\begin{PLenvsudomaths}[<options>]{<grille>}...\end{PLenvsudomaths}
+\end{codetex}
+
 \newpage
 
 \part{Outils pour l'analyse}
 
-\section{L'outil \og splinetikz \fg}
+\section{L'outil \og \textbackslash{}splinetikz \fg}
 
 \subsection{Courbe d'interpolation}
 
@@ -504,22 +667,21 @@ Pour déclarer les paramètres :
 \begin{codetex}[listing only]
 \begin{tikzpicture}
 	...
-	\splinetikz[liste=...,coeffs=...,affpoints=...,couleur=...,epaisseur=...,%
-	            taillepoints=...,couleurpoints=...,style=...]
+	\splinetikz[<options>]
 	...
 \end{tikzpicture}
 \end{codetex}
 
 \begin{codecles}
-Certains paramètres peuvent être gérés directement dans la commande \ctex{splinetikz} :
+Certains paramètres et \Cle{clés} peuvent être gérés directement dans la commande \ctex{splinetikz} :
 %
 \begin{itemize}
-	\item la couleur de la courbe par la \textsf{clé} \Cle{couleur} ;\hfill{}défaut \Cle{red}
-	\item l'épaisseur de la courbe par la \textsf{clé} \Cle{epaisseur} ;\hfill{}défaut \Cle{1.25pt}
-	\item du style supplémentaire pour la courbe peut être rajouté, grâce à la \textsf{clé} \Cle{style=} ;\hfill{}défaut \Cle{vide}
-	\item les coefficients de \textit{compensation} gérés par la \textsf{clé} \Cle{coeffs} ;\hfill{}défaut \Cle{3}
-	\item les points de contrôle non affichés par défaut, mais la \textsf{clé booléenne} \Cle{affpoints} permet de les afficher ;\hfill{}défaut \Cle{true}
-	\item la taille des points de contrôle est géré par la \textsf{clé} \Cle{taillepoints}.\hfill{}défaut \Cle{2pt}
+	\item la couleur de la courbe par la {clé} \Cle{couleur} ;\hfill{}défaut \Cle{red}
+	\item l'épaisseur de la courbe par la {clé} \Cle{epaisseur} ;\hfill{}défaut \Cle{1.25pt}
+	\item du style supplémentaire pour la courbe peut être rajouté, grâce à la {clé} \Cle{style} ;\hfill{}défaut \Cle{vide}
+	\item les coefficients de \textit{compensation} gérés par la {clé} \Cle{coeffs} ;\hfill{}défaut \Cle{3}
+	\item les points de contrôle , affichés ou non par la {clé booléenne} \Cle{affpoints} ;\hfill{}défaut \Cle{false}
+	\item la taille des points de contrôle est géré par la {clé} \Cle{taillepoints}.\hfill{}défaut \Cle{2pt}
 \end{itemize}
 \end{codecles}
 
@@ -578,8 +740,6 @@ Avec des explications utiles à la compréhension :
 	\end{tikzpicture}
 \end{center}
 \end{codeinfo}
-
-\newpage
 
 \subsection{Avec une gestion plus fine des \og coefficients \fg}
 
@@ -651,7 +811,7 @@ Le plus \og simple \fg{} est donc:
 
 \newpage
 
-\section{L'outil \og tangentetikz \fg{}}
+\section{L'outil \og \textbackslash{}tangentetikz \fg{}}
 
 \subsection{Définitions}
 
@@ -666,7 +826,7 @@ NB : il peut fonctionner indépendamment de l'outil \ctex{splinetikz} puisque la
 \begin{codetex}[listing only]
 \begin{tikzpicture}
 	...
-	\tangentetikz[liste=...,couleur=...,epaisseur=...,xl=...,xr=...,style=...,point=...]
+	\tangentetikz[<options>]
 	...
 \end{tikzpicture}
 \end{codetex}
@@ -801,7 +961,7 @@ Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur déf
 ...
 \begin{tikzpicture}[<options>]
 	...
-	\recurrPL[<clés>][<options du tracé>][<option supplémentaire des termes>]
+	\recurrPL[<clés>][<options du tracé>][<options supplémentaires des termes>]
 	...
 \end{tikzpicture}
 \end{codetex}
@@ -972,7 +1132,7 @@ Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{cap
 À la manière du {package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes sont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
 \end{codeidee}
 
-\subsection{La commande \og paramCF \fg}
+\subsection{La commande \og \textbackslash{}paramCF \fg}
 
 \begin{codeinfo}
 La première chose à définir est l'ensemble des paramètres \textit{globaux} de la fenêtre de calcul formel, à l'aide de \Cle{Clés}.
@@ -981,7 +1141,7 @@ La première chose à définir est l'ensemble des paramètres \textit{globaux} d
 \begin{codetex}[listing only]
 ...
 \begin{tikzpicture}[...]
-	\paramCF[.......]
+	\paramCF[<options>]
 	...
 \end{tikzpicture}
 \end{codetex}
@@ -1006,7 +1166,7 @@ Les \Cle{Clés} disponibles sont :
 \end{itemize}
 \end{codecles}
 
-\subsection{La commande \og ligneCF \fg}
+\subsection{La commande \og \textbackslash{}ligneCF \fg}
 
 \begin{codeinfo}
 Une fois les paramètres déclarés, il faut créer les différentes lignes, grâce à la \ctex{ligneCF}.
@@ -1014,8 +1174,8 @@ Une fois les paramètres déclarés, il faut créer les différentes lignes, gr�
 
 \begin{codetex}[listing only]
 \begin{tikzpicture}[...]
-	\paramCF[.......]
-	\ligneCF[...]
+	\paramCF[<options>]
+	\ligneCF[<options>]
 	...
 \end{tikzpicture}
 \end{codetex}
@@ -1078,34 +1238,36 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 
 \newpage
 
-\section{Code Python \og simple \fg}\label{pythonsimple}
+\section{Code Python \og simple \fg{} via le package listings}\label{pythonsimple}
 
 \subsection{Introduction}
 
 \begin{codeidee}
-Le {package} \ctex{listings} permet d'insérer et de formater du code, notamment du code Python. En \textit{partenariat} avec \ctex{tcolorbox}, on peut donc présenter \textit{joliment} du code python !
+Le {package} \ctex{listings} permet d'insérer et de formater du code, notamment du code Python.
+
+En \textit{partenariat} avec \ctex{tcolorbox}, on peut donc présenter \textit{joliment} du code python !
 \end{codeidee}
 
 \begin{codeinfo}
-Le package \ctex{listings} ne nécessite pas de compilation particulière, au contraire d'autres (comme \ctex{pythontex} ou \ctex{minted}) qui seront présentés à la section suivante.
+Le package \ctex{listings} ne nécessite pas de compilation particulière, au contraire d'autres (comme \ctex{pythontex} ou \ctex{minted} ou \ctex{piton}) qui seront présentés ultérieurement.
 \end{codeinfo}
 
 \begin{codeinfo}
-Le style utilisé pour formater le code Python n'est pas modifiable. Il donne un rendu proche de celui des packages comme \ctex{pythontex} ou \ctex{minted}.
+Le style utilisé pour formater le code Python n'est pas modifiable. Il donne un rendu proche de celui des packages comme \ctex{pythontex} ou \ctex{minted} ou \ctex{piton}.
 
 \smallskip
 
-Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code Python (via les sections suivantes), le rendu peut être légèrement différent.
+Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code Python (via les \textit{méthodes} suivantes), le rendu pourra être légèrement différent.
 \end{codeinfo}
 
-\subsection{Présentation de code Python grâce à listings}
+\subsection{Commande et options}
 
 \begin{codeidee}
 L'environnement \ctex{envcodepython} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
 \end{codeidee}
 
 \begin{codetex}[listing only]
-\begin{envcodepython}(*)[largeur]{commandes tcbox}
+\begin{envcodepython}(*)[<largeur>]{<commandes tcbox>}
 ...
 \end{envcodepython}
 \end{codetex}
@@ -1120,9 +1282,9 @@ Plusieurs \Cle{arguments} sont disponibles :
 \end{itemize}
 \end{codecles}
 
-\begin{codeinfo}
+\begin{codeattention}
 Les environnements \ctex{DeclareTCBListing} créés par \ctex{tcolorbox} et \ctex{listings} ne sont pas compatibles avec les options \Cle{gobble} (pour supprimer les tabulations d'environnement), donc il faut bien penser à \og aligner \fg{} le code à gauche, pour éviter des tabulations non esthétiques !
-\end{codeinfo}
+\end{codeattention}
 
 \subsection{Insertion via un fichier \og externe \fg}
 
@@ -1139,7 +1301,7 @@ Si cette méthode est utilisée, il ne faut oublier de charger le package \ctex{
 \begin{codetex}[listing only]
 \usepackage{scontents} %si script déclaré dans le fichier tex
 ...
-\envcodepythonfichier(*)[largeur]{commandes tcbox}{<script>}
+\envcodepythonfichier(*)[<largeur>]{<commandes tcbox>}{<script>}
 \end{codetex}
 
 \subsection{Exemples}
@@ -1261,7 +1423,114 @@ def trace_parabole_tableaux():
 
 \newpage
 
-\section{Code \& Console Python, version Pythontex ou Minted}
+\section{Code Python via le package piton}\label{pythonpiton}
+
+\subsection{Introduction}
+
+\begin{codeinfo}
+Le package \ctex{piton} permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
+
+\smallskip
+
+En \textit{partenariat} avec \ctex{tcolorbox}, on peut avoir une présentation de code Python !
+\end{codeinfo}
+
+\begin{codeattention}
+Le package \ctex{piton} nécessite donc obligatoirement l’emploi de \LuaLaTeX{} !
+\end{codeattention}
+
+\subsection{Présentation de code Python}
+
+\begin{codetex}[listing only]
+\begin{envcodepiton}[<options>]
+...
+...
+\end{envcodepiton}
+\end{codetex}
+
+\begin{codeattention}
+Les environnements créés par \ctex{piton} et \ctex{tcolorbox} ne sont -- a priori -- pas compatibles avec les options de type \Cle{gobble} (pour supprimer les tabulations d'environnement), donc il faut bien penser à \og aligner \fg{} le code à gauche, pour éviter des tabulations non esthétiques !
+\end{codeattention}
+
+\begin{codecles}
+Plusieurs \Cle{clés} sont disponibles :
+
+\begin{itemize}
+	\item la clé booléenne \Cle{Lignes} pour afficher ou non les numéros de lignes ; \hfill{}défaut \Cle{true}
+	\item la clé \Cle{Largeur} qui correspond à la largeur de la \ctex{tcbox} ; \hfill{}défaut \Cle{\textbackslash linewidth}
+	\item la clé \Cle{Alignement} qui paramètre l'alignement de la \ctex{tcbox}. \hfill{}défaut \Cle{center}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\begin{envcodepiton}
+#environnement piton avec numéros de ligne, pleine largeur
+def f(x) :
+	"""fonction qui renvoie le carré d'un réel"""
+	return x**2
+\end{envcodepiton}
+\end{codetex}
+
+\begin{codesortie}
+\begin{envcodepiton}
+#environnement piton avec numéros de ligne, pleine largeur
+def f(x) :
+	"""fonction qui renvoie le carré d'un réel"""
+	return x**2
+\end{envcodepiton}
+\end{codesortie}
+
+\pagebreak
+
+\begin{codetex}[listing only]
+\begin{envcodepiton}[Lignes=false,Largeur=15cm]
+#sans numéro, de largeur 15cm
+def f(x) :
+	"""fonction qui renvoie le carré d'un réel"""
+	return x**2
+\end{envcodepiton}
+
+\begin{envcodepiton}[Alignement=flush right,Largeur=13cm]
+#avec numéros, de largeur 13cm, aligné à droite
+def f(x) :
+	"""fonction qui renvoie le carré d'un réel"""
+	return x**2
+\end{envcodepiton}
+
+\begin{envcodepiton}[Alignement=flush left,Largeur=11cm]
+#avec numéros, de largeur 11cm, aligné à gauche
+def f(x) :
+	"""fonction qui renvoie le carré d'un réel"""
+	return x**2
+\end{envcodepiton}
+\end{codetex}
+
+\begin{codesortie}
+\begin{envcodepiton}[Lignes=false,Largeur=15cm]
+#sans numéro, de largeur 15cm
+def f(x) :
+	"""fonction qui renvoie le carré d'un réel"""
+	return x**2
+\end{envcodepiton}
+
+\begin{envcodepiton}[Alignement=flush right,Largeur=13cm]
+#avec numéros, de largeur 13cm, aligné à droite
+def f(x) :
+	"""fonction qui renvoie le carré d'un réel"""
+	return x**2
+\end{envcodepiton}
+
+\begin{envcodepiton}[Alignement=flush left,Largeur=11cm]
+#avec numéros, de largeur 11cm, aligné à gauche
+def f(x) :
+	"""fonction qui renvoie le carré d'un réel"""
+	return x**2
+\end{envcodepiton}
+\end{codesortie}
+
+\pagebreak
+
+\section{Code \& Console Python, via les packages Pythontex ou Minted}
 
 \subsection{Introduction}
 
@@ -1269,9 +1538,9 @@ def trace_parabole_tableaux():
 Le {package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
 
 \begin{itemize}
-	\item présenter du code python ;
-	\item exécuter du code python dans un environnement type \og console \fg{} ;
-	\item charger du code python, et éventuellement l'utiliser dans la console.
+	\item présenter du code Python ;
+	\item exécuter du code Python dans un environnement type \og console \fg{} ;
+	\item charger du code Python, et éventuellement l'utiliser dans la console.
 \end{itemize}
 \end{codeidee}
 
@@ -1287,14 +1556,14 @@ Compte tenu de la \textit{relative complexité} pour gérer les options (par par
 Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une base \textit{pré}existante !
 \end{codeinfo}
 
-\subsection{Présentation de code Python via pythontex}\label{pythontex}
+\subsection{Présentation de code Python grâce au package pythontex}\label{pythontex}
 
 \begin{codeidee}
 L'environnement \ctex{envcodepythontex} est donc lié à \ctex{pythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
 \end{codeidee}
 
 \begin{codetex}[listing only]
-\begin{envcodepythontex}[largeur=...,centre=...,lignes=...]
+\begin{envcodepythontex}[<options>]
 ...
 \end{envcodepythontex}
 \end{codetex}
@@ -1341,18 +1610,18 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \end{envcodepythontex}
 \end{codesortie}
 
-\subsection{Présentation de code Python via minted}\label{pytminted}
+\subsection{Présentation de code Python via le package minted}\label{pytminted}
 
 \begin{codeinfo}
-Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment python (il nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18}).
+Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment Python.
 \end{codeinfo}
 
-\begin{codeidee}
-L'environnement \ctex{envcodepythonminted} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style (\textit{minted}) particulier.
-\end{codeidee}
+\begin{codeattention}
+Le package \ctex{minted} nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18} !
+\end{codeattention}
 
 \begin{codetex}[listing only]
-\begin{envcodepythonminted}(*)[largeur][options]
+\begin{envcodepythonminted}(*)[<largeur>][<options>]
 ...
 \end{envcodepythonminted}
 \end{codetex}
@@ -1408,7 +1677,7 @@ C'est l'environnement \ctex{envconsolepythontex} qui permet de le faire.
 \end{codeidee}
 
 \begin{codetex}[listing only]
-\begin{envconsolepythontex}[largeur=...,centre=...,label=...]
+\begin{envconsolepythontex}[<options>]
 ...
 \end{envconsolepythontex}
 \end{codetex}
@@ -1447,6 +1716,11 @@ Les \Cle{Clés} disponibles sont :
 	#console Python(tex) centrée sans label
 	table = [[1,2],[3,4]]
 	table[0][0]
+	
+	tableau = [[randint(1,20) for j in range(0,6)] for i in range(0,3)]
+	tableau
+	len(tableau), len(tableau[0])
+	tableau[1][4]
 \end{envconsolepythontex}
 \end{codetex}
 
@@ -1456,8 +1730,17 @@ Les \Cle{Clés} disponibles sont :
 	#console Python(tex) centrée sans label
 	table = [[1,2],[3,4]]
 	table[0][0]
+	
+	tableau = [[randint(1,20) for j in range(0,6)] for i in range(0,3)]
+	tableau
+	len(tableau), len(tableau[0])
+	tableau[1][4]
 \end{envconsolepythontex}
 \end{codesortie}
+
+\begin{codeinfo}
+Le package \ctex{pythontex} peut donc servir à présenter du code Python, comme \ctex{minted} ou \ctex{piton}, sa particularité est toutefois de pouvoir \textit{exécuter} du code Python pour une présentation de type \textit{console}.
+\end{codeinfo}
 
 \newpage
 
@@ -1475,12 +1758,12 @@ Le {package} \ctex{listings} permet d'insérer et de présenter du code, et avec
 L'environnement \ctex{envpseudocode} permet de présenter du (pseudo-code) dans une \ctex{tcolorbox}.
 \end{codeidee}
 
-\begin{codeinfo}
+\begin{codeattention}
 De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gérer le paramètre \textit{autogobble}, donc il faudra être vigilant quant à la position du code (pas de tabulation en fait\ldots)
-\end{codeinfo}
+\end{codeattention}
 
 \begin{codetex}[listing only]
-\begin{envpseudocode}(*)[largeur][options]
+\begin{envpseudocode}(*)[<largeur>][<options>]
 %attention à l'indentation, gobble ne fonctionne pas...
 ...
 \end{envpseudocode}
@@ -1541,7 +1824,7 @@ FinPour
 \begin{codeinfo}
 À l'instar de packages existants, la \textit{philosophie} ici est de laisser l'utilisateur gérer \textit{son} langage pseudo-code.
 
-J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique ou de mise en évidence de mots clés, uniquement un formatage libre de pseudo-code.
+J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique ou de mise en évidence de mots clés, uniquement un formatage basique de pseudo-code.
 \end{codeinfo}
 
 \begin{codeidee}
@@ -1555,7 +1838,7 @@ Il s'agit ici de présenter une version \og clé en main \fg{}.
 \end{codeidee}
 
 \begin{codeinfo}
-Le style \ctex{listings} utilisé par la commande a l'option \Cle{mathescape} activé, et accessible grâce aux délimiteurs \Cle{(*...*)}.
+Le style \ctex{listings} utilisé par la commande a l'option \Cle{mathescape} activée, et accessible grâce aux délimiteurs \Cle{(*...*)}.
 
 Cela permet d'insérer du code \LaTeX{} dans l'environnement \ctex{envpseudocode} (attention au fontes de rendu par contre !).
 \end{codeinfo}
@@ -1592,24 +1875,24 @@ L'idée de base vient du {package} \ctex{termsim}, mais ici la gestion du \texts
 \smallskip
 
 Le \textsf{contenu} est géré par le package \ctex{listings}, sans langage particulier, et donc sans coloration syntaxique particulière.
-
-\smallskip
-
-Comme pour le pseudo-code, pas d'\textsf{autogobble}, donc commandes à aligner à gauche !
 \end{codeidee}
+
+\begin{codeattention}
+Comme pour le pseudo-code, pas d'\textsf{autogobble}, donc commandes à aligner à gauche !
+\end{codeattention}
 
 \subsection{Commandes}
 
 \begin{codetex}[listing only]
-\begin{PLtermwin}[largeur]{titre=...}[options]
+\begin{PLtermwin}[<largeur>]{<titre=...>}[<options>]
 ...
 \end{PLtermwin}
 
-\begin{PLtermunix}[largeur]{titre=...}[options]
+\begin{PLtermunix}[<largeur>]{<titre=...>}[<options>]
 ...
 \end{PLtermunix}
 
-\begin{PLtermosx}[largeur]{titre=...}[options]
+\begin{PLtermosx}[<largeur>]{<titre=...>}[<options>]
 ...
 \end{PLtermosx}
 \end{codetex}
@@ -1710,7 +1993,7 @@ L'idée est d'obtenir des \textsf{cartouches} tels que \textsf{Capytale} les pr�
 \subsection{Commandes}
 
 \begin{codetex}[listing only]
-\liencapytale(*)[options]{code}
+\liencapytale(*)[<options>]{<code capytale>}
 \end{codetex}
 
 \begin{codecles}
@@ -1719,7 +2002,7 @@ Peu d'options pour ces commandes :
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de  passer de la police \Cle{sffamily} à la police \Cle{ttfamily}, et donc dépendante des fontes du document ;
 	\item le deuxième, optionnel, permet de rajouter des caractères après le code (comme un \textsf{espace}) ;\hfill{}défaut \Cle{vide}
-	\item le troisième, mandataire, est le \textsf{code} à afficher.
+	\item le troisième, mandataire, est le \textsf{code capytale} à afficher.
 \end{itemize}
 \end{codecles}
 
@@ -1774,7 +2057,7 @@ L'idée est d'obtenir un pavé droit, dans un environnement \TikZ, avec les nœu
 
 \begin{codetex}[listing only]
 ...
-\begin{tikzpicture}[<options>]
+\begin{tikzpicture}[<options tikz>]
 	\pavePL[<options>]
 	...
 \end{tikzpicture}
@@ -1861,7 +2144,7 @@ L'idée est d'obtenir un tétraèdre, dans un environnement \TikZ, avec les nœu
 
 \begin{codetex}[listing only]
 ...
-\begin{tikzpicture}[<options>]
+\begin{tikzpicture}[<options tikz>]
 	\tetraPL[<options>]
 	...
 \end{tikzpicture}
@@ -1988,7 +2271,7 @@ Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur déf
 
 \begin{codetex}[listing only]
 ...
-\begin{tikzpicture}[<options>]
+\begin{tikzpicture}[<options tikz>]
 	...
 	\cercletrigoPL[<clés>]
 	...
@@ -2280,32 +2563,11 @@ La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des
 
 \begin{codetex}[listing only]
 \begin{tikzpicture}
-	\begin{axis}[/pgf/number format/.cd,
-		use comma,xmin = 1992, xmax = 2012,ymin = 1640, ymax = 1730,width = 0.7\textwidth,
-		height = 0.35\textwidth,xtick distance = 2,ytick distance = 10,grid = both,
-		minor tick num = 1,major grid style = {lightgray},minor grid style = {lightgray!25},
-		xlabel = {\small Année ($x$)},ylabel = {\small Altitude du glacier (en m) ($y$)},
-		x tick label style={/pgf/number format/.cd, set thousands separator={}},
-		y tick label style={/pgf/number format/.cd, set thousands separator={}},
-		legend cell align = {left},legend pos = north east]
+	\begin{axis}[<options des axes, non présentées ici...>]
 		\addplot[teal, only marks] table{
 			X Y
-			1994 1718
-			1995 1710
-			1996 1708
-			1997 1700
-			1998 1698
-			1999 1697
-			2000 1691
-			2001 1688
-			2002 1683
-			2004 1679
-			2005 1671
-			2006 1670
-			2007 1663
-			2008 1661
-			2009 1656
-			2010 1649
+			1994 1718 1995 1710 1996 1708 1997 1700 1998 1698 1999 1697 2000 1691 2001 1688
+			2002 1683 2004 1679 2005 1671 2006 1670 2007 1663 2008 1661 2009 1656 2010 1649
 		};
 		\def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 		\def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
@@ -4416,16 +4678,12 @@ Avec $a$ entre 1 et 5 (et signe aléatoire) puis $b$ entre $-2$ et 7 puis $c$ en
 
 $f(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$\\
 $g(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$\\
-$h(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$
-
-\medskip
+$h(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$\\
 
 Avec $a$ entre 1 et 10 (forcément positif) puis $b$ entre $-2$ et 2 puis $c$ entre 0 et 4 :
 
-\EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}
-
-\EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}
-
+\EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}\\
+\EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}\\
 \EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}
 \end{codetex}
 
@@ -4931,6 +5189,10 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v1.3.7|~:~~~~Commandes pour du code python via piton, en compilation \LuaLaTeX{} (page \pageref{pythonpiton})
+
+{\small \bverb|      |~:~~~~Corrections et modifications mineures de la documentation
 
 {\small \bverb|v1.3.6|~:~~~~Présentation de l'algorithme d'Euclide pour le PGCD (page \pageref{prespgcd})
 

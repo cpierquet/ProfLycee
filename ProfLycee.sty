@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/10/18 v1.3.6 - Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/11/02 v1.3.7 - Aide pour l'utilisation de LaTeX en lycee]
+% 1.3.7	Ajout d'un environnement simplifié pour du code python via piton
 % 1.3.6	Ajout d'un "générateur" de trinômes (ou mise en forme basique)
 % 1.3.5	Correction de bugs sur les calculs de probas (loi géométrique)
 % 1.3.4	Ajout des calculs de probas geomtriques et hypergeometriques + petits schémas probas
@@ -99,6 +100,7 @@
 %divers
 \RequirePackage{ifluatex}
 %python
+\RequirePackage{piton}
 \RequirePackage{fancyvrb}
 \RequirePackage[gobble=auto]{pythontex}
 \setpythontexlistingenv{pythont} %pour ne pas télescoper lstlistings (?)
@@ -572,6 +574,31 @@
 	\IfBooleanTF{#1}{stylepythonlstnolineos}{stylepythonlstlineos},
 	width=#2,#3,
 	listing file={#4}}
+
+%=========PYTHONPITON========== OK !!
+\defKV[envpiton]{%
+	Largeur=\def\CODPITlargeur{#1},%
+	Alignement=\def\CODPITalign{#1}
+}
+
+\setKVdefault[envpiton]{%
+	Largeur=\linewidth,%
+	Alignement=center,%
+	Lignes=true
+}
+
+\NewPitonEnvironment{envcodepiton}{ O{} }%
+	{%
+		\useKVdefault[envpiton]%
+		\setKV[envpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
+		\ifboolKV[envpiton]{Lignes}%si lignes=true
+			{\PitonOptions{left-margin=12.75pt,line-numbers}}%
+			{\PitonOptions{}}%
+		\begin{tcolorbox}[stylepythontex,leftupper=8pt,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontlower=\small,\CODPITalign]
+	}%
+	{%
+		\end{tcolorbox}%
+	}
 
 %=========PSEUDOCODE=========== OK !!
 %language pseudocode listings
