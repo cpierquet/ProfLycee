@@ -3,9 +3,7 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/11/04 2.0.0 Aide pour l'utilisation de LaTeX en lycee]
-% 2.0.0	Refonte des commandes, des options, et de la documentation !!!
-% ------------------------------------------------------------------
+\ProvidesPackage{ProfLycee-old}[2022/11/02 v1.3.7 - Aide pour l'utilisation de LaTeX en lycee]
 % 1.3.7	Ajout d'un environnement simplifié pour du code python via piton
 % 1.3.6	Ajout d'un "générateur" de trinômes (ou mise en forme basique)
 % 1.3.5	Correction de bugs sur les calculs de probas (loi géométrique)
@@ -46,8 +44,8 @@
 % 1.0	Version initiale
 
 %------Option(s)
-\newif\if@nonshellescape \@nonshellescapefalse
-\DeclareOption{nonshellescape}{\@nonshellescapetrue}
+\newif\if@nominted \@nomintedfalse
+\DeclareOption{nominted}{\@nomintedtrue}
 \newif\if@build \@buildfalse
 \DeclareOption{build}{\@buildtrue}
 \newif\if@csvii \@csviifalse
@@ -109,23 +107,12 @@
 \if@build
 	\setpythontexoutputdir{./build/pythontex-files-\jobname} %essai de modif pythontex répertoire build
 \fi
-%shellescape
-\if@nonshellescape
-	%on ne charge pas minted et la librairie tcbox
-\else
-	\if@build
-		%on charge minted avec le répertoire build
-		\RequirePackage[outputdir=build]{minted}
-	\fi
-	%on charge minted via la librairie tcbox
-	\tcbuselibrary{minted}
-\fi
 
 %---------------SPLINES----------------------
 %------commande utile pour extraire des infos d'une liste
 \newcommand\extractcoeff[2]{% #1=liste & #2=numero
 	\setsepchar{§}%
-	\readlist*\lcoeffs{#1}
+	\readlist\lcoeffs{#1}
 	\ifnum \lcoeffslen=1
 		\def\COEFFA{#1}
 		\def\COEFFB{#1}
@@ -139,31 +126,33 @@
 
 %------splines en tikz avec ..controls
 \defKV[spline]{%
-	Epaisseur=\def\SPLepaisseur{#1},%
-	Couleur=\def\SPLcouleur{#1},%
-	Coeffs=\def\SPLcoeffs{#1},%
-	CouleurPoints=\def\SPLcouleurpoints{#1},%
-	TaillePoints=\def\SPLtaillepoints{#1},%
-	Style=\def\SPLstyle{#1}
+	liste=\def\SPLliste{#1},%
+	width=\def\SPLepaisseur{#1},%
+	couleur=\def\SPLcouleur{#1},%
+	coeffs=\def\SPLcoeffs{#1},%
+	couleurpoints=\def\SPLcouleurpoints{#1},%
+	taillepoints=\def\SPLtaillepoints{#1},%
+	style=\def\SPLstyle{#1}
 }
 
 \setKVdefault[spline]{%
-	Epaisseur=1.25pt,%
-	Couleur=red,%
-	Coeffs=3,%
-	CouleurPoints=black,%
-	TaillePoints=2pt,%
-	AffPoints=false,%
-	Style={}
+	spline={},%
+	width=1.25pt,%
+	couleur=red,%
+	coeffs=3,%
+	couleurpoints=black,%
+	taillepoints=2pt,%
+	affpoints=false,%
+	style={}
 }
 
-\newcommand\SplineTikz[2][]{%
+\newcommand\splinetikz[1][]{%
 	\useKVdefault[spline]
 	\setKV[spline]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%on lit la liste des points/nbderivés et on stocke dans \listepoints
 	\setsepchar[.]{§./}%
-	\readlist*\SPLlistepoints{#2}%
-	\def\SPLnbsplines{\inteval{\SPLlistepointslen-1}}%
+	\readlist\SPLlistepoints\SPLliste
+	\def\SPLnbsplines{\inteval{\SPLlistepointslen-1}}
 	%si uniquement deux points, pas de boucle...
 	\ifnum \SPLlistepointslen=2
 		%extraction des coeffs de compensation
@@ -191,7 +180,7 @@
 			\draw[line width=\SPLepaisseur,\SPLcouleur,\SPLstyle] (\xa,\ya) ..controls +({atan \fprimea}:{(\xb-\xa)/\COEFFA}) and +({-180 + atan \fprimeb}:{(\xb-\xa)/\COEFFB}).. (\xb,\yb) ;%
 		}
 	\fi
-	\ifboolKV[spline]{AffPoints}%on affiche les points de contrôle
+	\ifboolKV[spline]{affpoints}%on affiche les points de contrôle
 	{%
 		\foreach \i in {1,2,...,\SPLlistepointslen}{%
 			\itemtomacro\SPLlistepoints[\i,1]\xa
@@ -204,27 +193,29 @@
 
 %------tangente(s) en TikZ, avec point/dérivée ou liste points/dérivées
 \defKV[tgte]{%
-	Epaisseur=\def\TGTepaisseur{#1},%
-	Couleur=\def\TGTcouleur{#1},%
+	liste=\def\TGTliste{#1},%
+	width=\def\TGTepaisseur{#1},%
+	couleur=\def\TGTcouleur{#1},%
 	xl=\def\TGTXL{#1},%
 	xr=\def\TGTXR{#1},%
-	Style=\def\TGTstyle{#1},%
-	Point=\def\TGTnumpt{#1}
+	style=\def\TGTstyle{#1},%
+	point=\def\TGTnumpt{#1}
 }
 
 \setKVdefault[tgte]{
-	Epaisseur=1.25pt,%
-	Couleur=red,%
+	liste={},%
+	width=1.25pt,%
+	couleur=red,%
 	xl=0.5,xr=0.5,%
-	Style={},%
-	Point=1
+	style={},%
+	point=1
 }
 
-\newcommand\TangenteTikz[2][]{%
+\newcommand\tangentetikz[1][]{%
 	\useKVdefault[tgte]%
 	\setKV[tgte]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\setsepchar[.]{§./}%
-	\readlist*\TGTlistepoints{#2}%
+	\readlist\TGTlistepoints\TGTliste
 	\itemtomacro\TGTlistepoints[\TGTnumpt,1]\xa
 	\itemtomacro\TGTlistepoints[\TGTnumpt,2]\ya
 	\itemtomacro\TGTlistepoints[\TGTnumpt,3]\fprimea
@@ -237,43 +228,37 @@
 \newcounter{CFnum}
 %def des clés
 \defKV[paramfenxcas]{%
-	Largeur=\def\CFlarg{#1},%
-	EspaceLg=\def\CFesplg{#1},%
-	PremCol=\def\CFpremcol{#1},%
-	HautPremCol=\def\CFhpremcol{#1},%
-	Taille=\def\CFtaille{#1},%
-	Couleur=\def\CFcouleur{#1},%
-	TailleTitre=\def\CFtailletitre{#1},%
-	CouleurCmd=\def\CFcoulcmd{#1},%
-	CouleurRes=\def\CFcoulres{#1},%
-	PosCmd=\def\CFposcmd{#1},%
-	PosRes=\def\CFposres{#1},%
-	LabelTitre=\def\CFlabeltitre{#1}%
+	larg=\def\CFlarg{#1},%
+	esplg=\def\CFesplg{#1},%
+	premcol=\def\CFpremcol{#1},%
+	hpremcol=\def\CFhpremcol{#1},%
+	taille=\def\CFtaille{#1},%
+	couleur=\def\CFcouleur{#1},%
+	tailletitre=\def\CFtailletitre{#1},%
+	couleurcmd=\def\CFcoulcmd{#1},%
+	couleurres=\def\CFcoulres{#1},%
+	poscmd=\def\CFposcmd{#1},%
+	posres=\def\CFposres{#1},%
+	labeltitre=\def\CFlabeltitre{#1}%
 }
 \setKVdefault[paramfenxcas]{%
-	Largeur=16,EspaceLg=2pt,PremCol=0.3,HautPremCol=0.4,%
-	Couleur=darkgray,Menu=true,Titre=false,TailleTitre=\normalsize,Taille=\normalsize,%
-	Sep=true,PosRes=centre,PosCmd=gauche,%
-	CouleurCmd=red,CouleurRes=blue,%
-	LabelTitre={Résultats obtenus avec un logiciel de Calcul Formel}%
-}
-
-\newcommand\CalculFormelParametres[1][]{%
+	larg=16,esplg=2pt,premcol=0.3,hpremcol=0.4,%
+	couleur=darkgray,menu=true,titre=false,tailletitre=\normalsize,taille=\normalsize,%
+	sep=true,posres=centre,poscmd=gauche,%
+	couleurcmd=red,couleurres=blue,%
+	labeltitre={Résultats obtenus avec un logiciel de Calcul Formel}}
+\newcommand\paramCF[1][]{%
 	\setcounter{CFnum}{0}
 	\useKVdefault[paramfenxcas]%
 	\setKV[paramfenxcas]{#1}% on paramètres les nouvelles clés et on les simplifie
 }
 %def des clés
 \defKV[paramlgxcas]{%
-	HautCmd=\def\CFhle{#1},%
-	HautRes=\def\CFhlr{#1}
+	hc=\def\CFhle{#1},%
+	hr=\def\CFhlr{#1}
 }
-\setKVdefault[paramlgxcas]{%
-	HautCmd=0.75,%
-	HautRes=0.75
-}
-
-\newcommand\CalculFormelLigne[3][]{%
+\setKVdefault[paramlgxcas]{hc=0.75,hr=0.75}
+\newcommand\ligneCF[3][]{%
 	\addtocounter{CFnum}{1}
 	\def\CFL{\theCFnum}
 	\def\CFLA{\inteval{\CFL-1}}%
@@ -309,7 +294,7 @@
 		{\draw (C3\CFL) node[left,\CFcoulcmd,font=\CFtaille] {#2} ;}
 		{}
 	%LA LIGNE DE SÉPARATION
-	\ifboolKV[paramfenxcas]{Sep}%si sep=true
+	\ifboolKV[paramfenxcas]{sep}%si sep=true
 		{\draw[\CFcouleur] (A1\CFL) -- (A4\CFL);}
 		{}
 	%LE RÉSULTAT
@@ -322,42 +307,42 @@
 	\IfStrEq{\CFposres}{right}%si posrep=right
 		{\draw (R3\CFL) node[left,\CFcoulres,font=\CFtaille] {#3} ;}
 		{}
-	\ifboolKV[paramfenxcas]{Sep}%si sep=true
+	\ifboolKV[paramfenxcas]{sep}%si sep=true
 		{\draw[\CFcouleur] (A1\CFL) -- (A4\CFL);}%
 		{}
 	%LE PETIT NUMÉRO
 	\draw[\CFcouleur] (A0\CFL) rectangle ++ ({-\CFpremcol},{-\CFhpremcol}) node[\CFcouleur,midway,font=\small\sffamily\bfseries] {\CFL} ;
 	%LE RECTANGLE "MENU"
-	\ifboolKV[paramfenxcas]{Menu}%si menu=true
+	\ifboolKV[paramfenxcas]{menu}%si menu=true
 		{\draw[\CFcouleur,fill=\CFcouleur!25] (A5\CFL) rectangle ++ (-0.65,0.25) node[black,midway,font=\tiny\sffamily\bfseries] {MENU} ;}%
 		{}
 	%LE BLOC "TITRE"
-	\ifboolKV[paramfenxcas]{Titre}%si titre=true
+	\ifboolKV[paramfenxcas]{titre}%si titre=true
 		{\draw[\CFcouleur,fill=lightgray!25,rounded corners] ($(A01) + (0,2pt)$) rectangle ++ ($({\CFlarg},2em)$) node[ForestGreen!50!\CFcouleur,midway,font=\CFtailletitre\ttfamily\bfseries] {\CFlabeltitre};}
 		{}
 }
 
 %=========CONSOLEPYTHON=========== OK !!
 \defKV[envpythonconsole]{%
-	Largeur=\def\CSPYlargeur{#1},%
-	Centre=\testboolKV{#1}
+	largeur=\def\CSPYlargeur{#1},%
+	centre=\testboolKV{#1}
 		{\def\hookcenterpre{\begin{center}}\def\hookcenterpost{\end{center}}}
 		{\def\hookcenterpre{\begin{flushleft}}\def\hookcenterpost{\end{flushleft}}}
 }
 
 \setKVdefault[envpythonconsole]{%
-	Largeur=\linewidth,%
-	Centre=true,%
-	Label=true
+	largeur=\linewidth,%
+	centre=true,%
+	label=true
 }
 
-\newenvironment{ConsolePythontex}[1][]{%
+\newenvironment{envconsolepythontex}[1][]{%
 	\useKVdefault[envpythonconsole]%
 	\setKV[envpythonconsole]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\VerbatimEnvironment
 	\hookcenterpre
 	\begin{minipage}{\CSPYlargeur}
-		\ifboolKV[envpythonconsole]{Label}%si label
+		\ifboolKV[envpythonconsole]{label}%si sep=true
 		{\begin{pyconsole}[][%
 				framesep=3mm,frame=single,fontsize=\footnotesize,framerule=1pt,rulecolor=\color{ForestGreen},label={[\scriptsize Début de la console python]\scriptsize Fin de la console python}]}%
 		{\begin{pyconsole}[][%
@@ -371,16 +356,16 @@
 
 %=========CODEPYTHONTEX=========== OK!!
 \defKV[envpythonverb]{%
-	Largeur=\def\CODPYlargeur{#1},%
-	Centre=\testboolKV{#1}
+	largeur=\def\CODPYlargeur{#1},%
+	centre=\testboolKV{#1}
 		{\def\verbcenterpre{\begin{center}}\def\verbcenterpost{\end{center}}}
 		{\def\verbcenterpre{}\def\verbcenterpost{}}
 }
 
 \setKVdefault[envpythonverb]{%
-	Largeur=\linewidth,%
-	Centre=true,%
-	Lignes=true
+	largeur=\linewidth,%
+	centre=true,%
+	lignes=true
 }
 
 \tcbset{stylepythontex/.style={%
@@ -426,27 +411,38 @@
 	width=#1,stylepythonnolineos
 }
 
-\newenvironment{CodePythontex}[1][]{%
+\newenvironment{envcodepythontex}[1][]{%
 	\useKVdefault[envpythonverb]%
 	\setKV[envpythonverb]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\VerbatimEnvironment
 	\verbcenterpre
-	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+	\ifboolKV[envpythonverb]{lignes}%si lignes=true
 		{\begin{tcpythontexcode}[\CODPYlargeur]}
 		{\begin{tcpythontexcodeno}[\CODPYlargeur]}
-	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+	\ifboolKV[envpythonverb]{lignes}%si lignes=true
 		{\begin{pyverbatim}[][fontsize=\footnotesize,numbers=left,numbersep=10pt,commandchars=\\\{\},mathescape]}
 		{\begin{pyverbatim}[][numbers=none,numbersep=0pt,fontsize=\footnotesize,commandchars=\\\{\},mathescape]}
 		}
 		{
 	\end{pyverbatim}
-	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+	\ifboolKV[envpythonverb]{lignes}%si lignes=true
 		{\end{tcpythontexcode}}
 		{\end{tcpythontexcodeno}}
 	\verbcenterpost
 }
 
 %=========PYTHONMINTED========= OK !!
+\if@nominted
+	%on ne charge pas minted et la librairie tcbox
+\else
+	\if@build
+		%on charge minted avec le répertoire build
+		\RequirePackage[outputdir=build]{minted}
+	\fi
+	%on charge minted via la librairie tcbox
+	\tcbuselibrary{minted}
+\fi
+
 \tcbset{pytmintedno/.style={%
 	listing engine=minted,minted style=colorful,
 	minted language=python,listing only,
@@ -461,7 +457,7 @@
 	}
 }
 
-\DeclareTCBListing{CodePythonMinted}{ s O{12cm} O{} }{% étoilée sans numéro, taille puis option...
+\DeclareTCBListing{envcodepythonminted}{ s O{12cm} O{} }{% étoilée sans numéro, taille puis option...
 	\IfBooleanTF{#1}{pytmintedno}{pytminted},
 	enhanced,width=#2,#3,
 	colframe=Green,colback=ForestGreen!5,%
@@ -569,12 +565,12 @@
 	}
 }
 
-\DeclareTCBListing{CodePythonLst}{ s O{\linewidth} m }{% * off pour numéros de lignes + {largeur} + <options tcbox>
+\DeclareTCBListing{envcodepython}{ s O{\linewidth} m }{% * off pour numéros de lignes + {largeur} + <options tcbox>
 	\IfBooleanTF{#1}{stylepythonlstnolineos}{stylepythonlstlineos},
 	width=#2,#3
 }
 
-\NewTCBInputListing{\CodePythonLstFichier}{ s O{\linewidth} m m }{
+\NewTCBInputListing{\envcodepythonfichier}{ s O{\linewidth} m m }{
 	\IfBooleanTF{#1}{stylepythonlstnolineos}{stylepythonlstlineos},
 	width=#2,#3,
 	listing file={#4}}
@@ -591,7 +587,7 @@
 	Lignes=true
 }
 
-\NewPitonEnvironment{CodePiton}{ O{} }%
+\NewPitonEnvironment{envcodepiton}{ O{} }%
 	{%
 		\useKVdefault[envpiton]%
 		\setKV[envpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
@@ -662,7 +658,7 @@
 	\newcommand\algomathttPL[1]{\mathtt{#1}}
 \fi
 
-\DeclareTCBListing{PseudoCode}{ s O{12cm} !O{} }{% étoilée sans numéro, taille puis option...
+\DeclareTCBListing{envpseudocode}{ s O{12cm} !O{} }{% étoilée sans numéro, taille puis option...
 	width=#2,#3,
 	stylepseudocodePL,
 	listing only,listing engine=listings,
@@ -707,7 +703,7 @@
 	}
 }
 
-\setKVdefault[fakeTERMwin]{Titre={Terminal Windows}}
+\setKVdefault[fakeTERMwin]{titre={Terminal Windows}}
 
 \newcommand\PLcommandeswin{%
 	\begin{tikzpicture}[thick,scale=0.66]
@@ -719,11 +715,11 @@
 	\restoreKV[fakeTERMwin]
 	\setKV[fakeTERMwin]{#1}
 	\begin{tblr}{colsep=0pt,rowsep=0pt,width=\linewidth,colspec={X[l]r}}
-		{\footnotesize\faTerminal}~~\useKV[fakeTERMwin]{Titre} & \PLcommandeswin \\ %
+		{\footnotesize\faTerminal}~~\useKV[fakeTERMwin]{titre} & \PLcommandeswin \\ %
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalWin}{ O{\linewidth} m !O{} }{%[taille] puis {Titre=...} puis [option]
+\DeclareTCBListing{PLtermwin}{ O{\linewidth} m !O{} }{%[taille] puis {titre=...} puis [option]
 	PLfaketermwin,title={\termwintitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -764,17 +760,17 @@
 	}
 }
 
-\setKVdefault[fakeTERMnux]{Titre={Terminal UNiX}}
+\setKVdefault[fakeTERMnux]{titre={Terminal UNiX}}
 
 \newcommand\termnuxtitre[1][]{%
 	\restoreKV[fakeTERMnux]
 	\setKV[fakeTERMnux]{#1}
 	\begin{tblr}{colsep=0pt,rowsep=0pt,width=\linewidth,colspec={lX[c]r}}
-		\PLUbuntuWhite~~\PLUbuntuWhite~~\PLUbuntuWhite & \vphantom{p}\useKV[fakeTERMnux]{Titre} & \PLUbuntuMin~~\PLUbuntuMax~~\PLUbuntuClose \\
+		\PLUbuntuWhite~~\PLUbuntuWhite~~\PLUbuntuWhite & \vphantom{p}\useKV[fakeTERMnux]{titre} & \PLUbuntuMin~~\PLUbuntuMax~~\PLUbuntuClose \\
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalUnix}{ O{\linewidth} m !O{} }{%[taille] puis {Titre=...} puis [option]
+\DeclareTCBListing{PLtermunix}{ O{\linewidth} m !O{} }{%[taille] puis {titre=...} puis [option]
 	PLtermlinux,title={\termnuxtitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -820,11 +816,11 @@
 	\restoreKV[fakeTERMosx]
 	\setKV[fakeTERMosx]{#1}
 	\begin{tblr}{colsep=0pt,rowsep=0pt,width=\linewidth,colspec={lX[c]r}}
-		\PLOSXRed~\PLOSXOrange~\PLOSXGreen & \vphantom{p}\useKV[fakeTERMosx]{Titre} & \PLOSXLG~\PLOSXLG~\PLOSXLG \\
+		\PLOSXRed~\PLOSXOrange~\PLOSXGreen & \vphantom{p}\useKV[fakeTERMosx]{titre} & \PLOSXLG~\PLOSXLG~\PLOSXLG \\
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalOSX}{ O{\linewidth} m !O{} }{%[taille] puis {Titre=...} puis [option]
+\DeclareTCBListing{PLtermosx}{ O{\linewidth} m !O{} }{%[taille] puis {titre=...} puis [option]
 	PLfaketermosx,title={\termosxtitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -834,42 +830,42 @@
 %============CartoucheCapytale========= OK !!
 \definecolor{vertcapyt}{rgb}{0.0,0.5,0.0}
 %\definecolor{vertcapyt}{HTML}{008000}
-\DeclareTotalTCBox{\CartoucheCapytale}{ s O{} m }
+\DeclareTotalTCBox{\liencapytale}{ s O{} m }
 	{enhanced,size=fbox,on line,arc=3pt,colback=vertcapyt,colframe=vertcapyt,fontupper=\IfBooleanTF{#1}{\ttfamily}{\sffamily}\bfseries,colupper=white}%
 	{#3#2~{\scriptsize\faLink}}
 
 %============PaveDroitTikZ============= OK !!
 \defKV[paramspave]{%
-	Largeur=\xdef\PFPaveLg{#1},%
-	Profondeur=\xdef\PFPavePf{#1},%
-	Hauteur=\xdef\PFPaveHt{#1},%
-	Angle=\xdef\PFPaveAngl{#1},%
-	Fuite=\xdef\PFPaveFuite{#1},%
-	Sommets=\def\PFPaveSommets{#1},%
-	Epaisseur=\xdef\PFPaveThick{#1}
+	largeur=\xdef\PFPaveLg{#1},%
+	profondeur=\xdef\PFPavePf{#1},%
+	hauteur=\xdef\PFPaveHt{#1},%
+	angle=\xdef\PFPaveAngl{#1},%
+	fuite=\xdef\PFPaveFuite{#1},%
+	sommets=\def\PFPaveSommets{#1},%
+	epaisseur=\xdef\PFPaveThick{#1}
 }
 \setKVdefault[paramspave]{%
-	Aff=false,%
-	Plein=false,%
-	Largeur=2,%
-	Profondeur=1,%
-	Hauteur=1.25,%
-	Angle=30,%
-	Fuite=0.5,%
-	Epaisseur=thick,%
-	Sommets=A§B§C§D§E§F§G§H,%
-	Cube=false
+	aff=false,%
+	plein=false,%
+	largeur=2,%
+	profondeur=1,%
+	hauteur=1.25,%
+	angle=30,%
+	fuite=0.5,%
+	epaisseur=thick,%
+	sommets=A§B§C§D§E§F§G§H,%
+	cube=false
 }
 
-\newcommand\PaveTikz[1][]{%
+\newcommand\pavePL[1][]{%
 	\useKVdefault[paramspave]%
 	\setKV[paramspave]{#1}%
-	\ifboolKV[paramspave]{Cube}
+	\ifboolKV[paramspave]{cube}
 	{\xdef\PFPavePf{\PFPaveLg}%
 		\xdef\PFPaveHt{\PFPaveLg}}
 	{}
 	\setsepchar{§}%
-	\readlist*\PFListeSommets\PFPaveSommets
+	\readlist\PFListeSommets\PFPaveSommets
 	\itemtomacro\PFListeSommets[1]\PaveA
 	\itemtomacro\PFListeSommets[2]\PaveB
 	\itemtomacro\PFListeSommets[3]\PaveC
@@ -887,11 +883,11 @@
 	\coordinate (\PaveF) at ($(\PaveB) + (0,{\PFPaveHt})$) ;
 	\coordinate (\PaveG) at ($(\PaveC) + (0,{\PFPaveHt})$) ;
 	\coordinate (\PaveH) at ($(\PaveD) + (0,{\PFPaveHt})$) ;
-	\ifboolKV[paramspave]{Aff}
+	\ifboolKV[paramspave]{aff}
 		{\draw (\PaveA) node[below left] {\PaveA} ;
 			\draw (\PaveB) node[below right] {\PaveB} ;
 			\draw (\PaveC) node[above right] {\PaveC} ;
-			\ifboolKV[paramspave]{Plein}
+			\ifboolKV[paramspave]{plein}
 				{}
 				{\draw (\PaveD) node[above left] {\PaveD} ;}
 				\draw (\PaveE) node[below left] {\PaveE} ;
@@ -902,7 +898,7 @@
 	\draw[\PFPaveThick] (\PaveA)--(\PaveB)--(\PaveF)--(\PaveE)--cycle
 	                    (\PaveB)--(\PaveC)--(\PaveG)--(\PaveF)--cycle
 	                    (\PaveG)--(\PaveH)--(\PaveE) ;
-	\ifboolKV[paramspave]{Plein}
+	\ifboolKV[paramspave]{plein}
 		{}
 		{\draw[dashed,\PFPaveThick] (\PaveA)--(\PaveD)--(\PaveC)
 		                            (\PaveD)--(\PaveH) ;}
@@ -910,31 +906,31 @@
 
 %============TétraèdreTikZ============= OK !!
 \defKV[paramstetra]{%
-	Largeur=\xdef\PFTetraLg{#1},%
-	Profondeur=\xdef\PFTetraPf{#1},%
-	Hauteur=\xdef\PFTetraHt{#1},%
-	Alpha=\xdef\PFTetraAlpha{#1},%
-	Beta=\xdef\PFTetraBeta{#1},%
-	Sommets=\def\PFTetraSommets{#1},%
-	Epaisseur=\xdef\PFTetraThick{#1}
+	largeur=\xdef\PFTetraLg{#1},%
+	profondeur=\xdef\PFTetraPf{#1},%
+	hauteur=\xdef\PFTetraHt{#1},%
+	alpha=\xdef\PFTetraAlpha{#1},%
+	beta=\xdef\PFTetraBeta{#1},%
+	sommets=\def\PFTetraSommets{#1},%
+	epaisseur=\xdef\PFTetraThick{#1}
 }
 \setKVdefault[paramstetra]{%
-	Aff=false,%
-	Plein=false,%
-	Largeur=4,%
-	Profondeur=1.25,%
-	Hauteur=3,%
-	Alpha=40,%
-	Beta=60,%
-	Epaisseur=thick,%
-	Sommets=A§B§C§D,%
+	aff=false,%
+	plein=false,%
+	largeur=4,%
+	profondeur=1.25,%
+	hauteur=3,%
+	alpha=40,%
+	beta=60,%
+	epaisseur=thick,%
+	sommets=A§B§C§D,%
 }
 
-\newcommand\TetraedreTikz[1][]{%
+\newcommand\tetraPL[1][]{%
 	\useKVdefault[paramstetra]%
 	\setKV[paramstetra]{#1}%
 	\setsepchar{§}%
-	\readlist*\PFListeSommets\PFTetraSommets
+	\readlist\PFListeSommets\PFTetraSommets
 	\itemtomacro\PFListeSommets[1]\TetraA
 	\itemtomacro\PFListeSommets[2]\TetraB
 	\itemtomacro\PFListeSommets[3]\TetraC
@@ -944,7 +940,7 @@
 	\coordinate (\TetraB) at ($(\TetraA) + ({-\PFTetraAlpha}:{\PFTetraPf})$) ;
 	\coordinate (\TetraC) at ({\PFTetraLg},0) ;
 	\coordinate (\TetraD) at ($(\TetraA) + ({\PFTetraBeta}:{\PFTetraHt})$) ;
-	\ifboolKV[paramstetra]{Aff}
+	\ifboolKV[paramstetra]{aff}
 	{\draw (\TetraA) node[left] {\TetraA} ;
 		\draw (\TetraB) node[below] {\TetraB} ;
 		\draw (\TetraC) node[right] {\TetraC} ;
@@ -952,33 +948,33 @@
 		{}%on affiche rien
 	\draw[\PFTetraThick] (\TetraA)--(\TetraD)--(\TetraC)--(\TetraB)--cycle
 						(\TetraD)--(\TetraB) ;
-	\ifboolKV[paramstetra]{Plein}
+	\ifboolKV[paramstetra]{plein}
 		{}
 		{\draw[dashed,\PFTetraThick] (\TetraA)--(\TetraC) ;}
 }
 
 %============EnsembleList============== OK !!
 \defKV[kvensemble]{%
-	Sep=\def\PLenssep{#1},%
-	Option=\def\PLensopt{#1}
+	sep=\def\PLenssep{#1},%
+	option=\def\PLensopt{#1}
 }
 
 \setKVdefault[kvensemble]{%
-	Sep={;},%
-	Mathpunct=true,%
-	Option={}
+	sep={;},%
+	mathpunct=true,%
+	option={}
 }
 
-\newcommand\EcritureEnsemble[2][1]{%
+\newcommand\ensPL[2][1]{%
 	\useKVdefault[kvensemble]%
 	\setKV[kvensemble]{#1}%
-	\ifboolKV[kvensemble]{Mathpunct}%
+	\ifboolKV[kvensemble]{mathpunct}%
 		{\left\lbrace \PLensopt{} \mathpunct{} \StrSubstitute{#2}{/}{\mathpunct{}{\PLenssep}\mathpunct{}} \mathpunct{} \right\rbrace}%
 		{\left\lbrace \PLensopt{} \StrSubstitute{#2}{/}{{\PLenssep}} \right\rbrace}
 }
 
 %===============SimplFrac============== OK !!
-\DeclareDocumentCommand\ConversionFraction{ O{} m }{% argument optionnel [d ou t] puis argument mandataire {calcul ou fraction}
+\DeclareDocumentCommand\convertfraction{ O{} m }{% argument optionnel [d ou t] puis argument mandataire {calcul ou fraction}
 	\def\calculargument{\xintPRaw{\xintIrr{\xinteval{#2}}}}%on calcule et on transforme en A/B
 	\IfSubStr{\calculargument}{/}%on teste si le symbole / apparaît
 	{%si oui := fraction
@@ -994,97 +990,97 @@
 
 %================CabWeb================ OK !!
 \defKV[webrecurr]{%
-	Fct=\def\PLRecurfct{#1},%
-	Nom=\def\PLRecurnom{#1},%
-	No=\def\PLRecurno{#1},%
-	Nb=\def\PLRecurnb{#1},%
-	Uno=\def\PLRecuruno{#1},%
-	PosLabel=\def\PLRecurposlab{#1},%
-	DecalLabel=\def\PLRecuroffset{#1},%
-	TailleLabel=\def\PLRecurlabelsize{#1}
+	fct=\def\PLRecurfct{#1},%
+	nom=\def\PLRecurnom{#1},%
+	no=\def\PLRecurno{#1},%
+	nb=\def\PLRecurnb{#1},%
+	uno=\def\PLRecuruno{#1},%
+	poslabel=\def\PLRecurposlab{#1},%
+	decallabel=\def\PLRecuroffset{#1},%
+	taillelabel=\def\PLRecurlabelsize{#1},%
 }
 
 \setKVdefault[webrecurr]{
-	No=0,%
-	Nom=u,%
-	Nb=5,%
-	AffTermes=true,%
-	PosLabel=below,%
-	DecalLabel=6pt,%
-	TailleLabel=\small
+	no=0,%
+	nom=u,%
+	nb=5,%
+	afftermes=true,%
+	poslabel=below,%
+	decallabel=6pt,%
+	taillelabel=\small
 }
 
 %\newcommand\recurr[1][]{%
-\NewDocumentCommand\ToileRecurrence{ O{} O{thick,color=magenta} O{dotted} }{
-	%<clés> + <style cabweb> + <style supplémentaire pointillés>
-	\useKVdefault[webrecurr]%
-	\setKV[webrecurr]{#1}% on paramètres les nouvelles clés et on les simplifie
-	\foreach \i [remember=\i as \x (initially \PLRecuruno)] in {1,...,\PLRecurnb}{%
-		\def\y{\fpeval{\PLRecurfct}}
-		%test de la position courbe / bissectrice ?
-		\ifnum \i=1
-			\newdimen \X
-			\newdimen \Y
-			\X = \x pt
-			\Y = \y pt
-			\ifdim \Y < \X
-				\draw[#2] (\x,\y)--(\y,\y) ;
+	\NewDocumentCommand\recurrPL{ O{} O{thick,color=magenta} O{dotted} }{
+		%<clés> + <style cabweb> + <style supplémentaire pointillés>
+		\useKVdefault[webrecurr]%
+		\setKV[webrecurr]{#1}% on paramètres les nouvelles clés et on les simplifie
+		\foreach \i [remember=\i as \x (initially \PLRecuruno)] in {1,...,\PLRecurnb}{%
+			\def\y{\fpeval{\PLRecurfct}}
+			%test de la position courbe / bissectrice ?
+			\ifnum \i=1
+				\newdimen \X
+				\newdimen \Y
+				\X = \x pt
+				\Y = \y pt
+				\ifdim \Y < \X
+					\draw[#2] (\x,\y)--(\y,\y) ;
+				\else
+					\draw[#2] (\x,\x)--(\x,\y)--(\y,\y) ;
+				\fi
 			\else
 				\draw[#2] (\x,\x)--(\x,\y)--(\y,\y) ;
 			\fi
-		\else
-			\draw[#2] (\x,\x)--(\x,\y)--(\y,\y) ;
-		\fi
-		\ifboolKV[webrecurr]{AffTermes}
-			{\def\indice{\fpeval{\i+\PLRecurno-1}}
-		 \draw[#2,#3] (\x,\y)--(\x,0) node[\PLRecurposlab=\PLRecuroffset,font=\PLRecurlabelsize]{$\PLRecurnom_\indice$};}
-			{}
-		\def\i{\fpeval{\y}}%
+			\ifboolKV[webrecurr]{afftermes}
+				{\def\indice{\fpeval{\i+\PLRecurno-1}}
+				 \draw[#2,#3] (\x,\y)--(\x,0) node[\PLRecurposlab=\PLRecuroffset,font=\PLRecurlabelsize]{$\PLRecurnom_\indice$};}
+				{}
+			\def\i{\fpeval{\y}}%
+		}
 	}
-}
 
 %================CercleTrigo=========== OK !!
 \defKV[cercletrigo]{%
-	Rayon=\def\PLcerclerayon{#1},%
-	Epaisseur=\def\PLcerclethick{#1},%
-	EpaisseurSol=\def\PLcerclesolthick{#1},%
-	Marge=\def\PLcerclemarge{#1},%
-	TailleValeurs=\def\PLcerclevaleurs{#1},%
-	TailleAngles=\def\PLcercleangles{#1},%
-	CouleurFond=\def\PLcerclefond{#1},%
-	Decal=\def\PLcercledecal{#1},%
+	rayon=\def\PLcerclerayon{#1},%
+	epaisseur=\def\PLcerclethick{#1},%
+	epaisseursol=\def\PLcerclesolthick{#1},%
+	marge=\def\PLcerclemarge{#1},%
+	taillevaleurs=\def\PLcerclevaleurs{#1},%
+	tailleangles=\def\PLcercleangles{#1},%
+	couleurfond=\def\PLcerclefond{#1},%
+	decal=\def\PLcercledecal{#1},%
 	cos=\def\PLcerclevalcos{#1},%
 	sin=\def\PLcerclevalsin{#1},%
-	CouleurSol=\def\PLcerclecoleq{#1}
+	couleursol=\def\PLcerclecoleq{#1}
 }
 
 \setKVdefault[cercletrigo]{
-	Rayon=3,%
-	Marge=0.25,%
-	Decal=10pt,%
-	Epaisseur=thick,%
-	EpaisseurSol=very thick,%
-	AffAngles=true,%
-	AffTraits=true,%
-	AffValeurs=true,%
-	MoinsPi=true,%
-	TailleValeurs=\scriptsize,%
-	TailleAngles=\footnotesize,%
-	CouleurFond=white,%
-	Equationcos=false,%
-	Equationsin=false,%
+	rayon=3,%
+	marge=0.25,%
+	decal=10pt,%
+	epaisseur=thick,%
+	epaisseursol=very thick,%
+	affangles=true,%
+	afftraits=true,%
+	affvaleurs=true,%
+	moinspi=true,%
+	taillevaleurs=\scriptsize,%
+	tailleangles=\footnotesize,%
+	couleurfond=white,%
+	equationcos=false,%
+	equationsin=false,%
 	cos=45,%
 	sin=30,%
-	CouleurSol=blue
+	couleursol=blue
 }
 
-\newcommand\CercleTrigo[1][]{%
+\newcommand\cercletrigoPL[1][]{%
 	\useKVdefault[cercletrigo]
 	\setKV[cercletrigo]{#1}
 	\tikzset{PLval/.style={inner sep=1pt,font=\PLcerclevaleurs,fill=\PLcerclefond}}
 	\tikzset{PLagl/.style={inner sep=1pt,font=\PLcercleangles,fill=\PLcerclefond}}
 	%valeurs remarquables
-	\ifboolKV[cercletrigo]{AffAngles}
+	\ifboolKV[cercletrigo]{affangles}
 		{%valeursdudessus
 		\draw ({\PLcerclerayon},0) node[above right=2pt,font=\PLcercleangles] {0} ;
 		\draw ($(30:{\PLcerclerayon})+(30:\PLcercledecal)$) node[PLagl] {$\tfrac{\pi}{6}$} ;
@@ -1097,14 +1093,14 @@
 		\draw ($(120:{\PLcerclerayon})+(120:\PLcercledecal)$) node[PLagl] {$\tfrac{2\pi}{3}$} ;
 		\draw ($(30:{\PLcerclerayon})+(30:\PLcercledecal)$) node[PLagl] {$\tfrac{\pi}{6}$} ;
 		%valeursdudessous
-		\draw ($(-30:{\PLcerclerayon})+(-30:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{MoinsPi}{-}{11}\pi}{6}$} ;
-		\draw ($(-45:{\PLcerclerayon})+(-45:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{MoinsPi}{-}{7}\pi}{4}$} ;
-		\draw ($(-60:{\PLcerclerayon})+(-60:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{MoinsPi}{-}{5}\pi}{3}$} ;
-		\draw (0,{-\PLcerclerayon}) node[below right=2pt,PLagl] {$\tfrac{\ifboolKV[cercletrigo]{MoinsPi}{-}{3}\pi}{2}$} ;
-		\draw ($(-120:{\PLcerclerayon})+(-120:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{MoinsPi}{-2}{4}\pi}{3}$} ;
-		\draw ($(-135:{\PLcerclerayon})+(-135:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{MoinsPi}{-3}{5}\pi}{4}$} ;
-		\draw ($(-150:{\PLcerclerayon})+(-150:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{MoinsPi}{-5}{7}\pi}{6}$} ;
-		\ifboolKV[cercletrigo]{MoinsPi}
+		\draw ($(-30:{\PLcerclerayon})+(-30:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-}{11}\pi}{6}$} ;
+		\draw ($(-45:{\PLcerclerayon})+(-45:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-}{7}\pi}{4}$} ;
+		\draw ($(-60:{\PLcerclerayon})+(-60:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-}{5}\pi}{3}$} ;
+		\draw (0,{-\PLcerclerayon}) node[below right=2pt,PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-}{3}\pi}{2}$} ;
+		\draw ($(-120:{\PLcerclerayon})+(-120:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-2}{4}\pi}{3}$} ;
+		\draw ($(-135:{\PLcerclerayon})+(-135:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-3}{5}\pi}{4}$} ;
+		\draw ($(-150:{\PLcerclerayon})+(-150:\PLcercledecal)$) node[PLagl] {$\tfrac{\ifboolKV[cercletrigo]{moinspi}{-5}{7}\pi}{6}$} ;
+		\ifboolKV[cercletrigo]{moinspi}
 			{\draw ({-\PLcerclerayon},0) node[below left=2pt,PLagl] {$-\pi$} ;}
 			{\draw ({\PLcerclerayon},0) node[below right=2pt,PLagl] {$2\pi$} ;}
 		}%
@@ -1115,7 +1111,7 @@
 	\draw[\PLcerclethick] (0,0) circle[radius=\PLcerclerayon] ;
 	\draw (0,0) node[below left=2pt,PLval] {0} ;
 	%equations
-	\ifboolKV[cercletrigo]{Equationcos}
+	\ifboolKV[cercletrigo]{equationcos}
 		{%traitsdeconstructioncos
 		\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon) -- (135:\PLcerclerayon)
 										  (-135:\PLcerclerayon) -- (45:\PLcerclerayon)
@@ -1127,7 +1123,7 @@
 		\filldraw[\PLcerclecoleq] ({\PLcerclevalcos}:\PLcerclerayon) circle[radius=2pt] ({-\PLcerclevalcos}:\PLcerclerayon) circle[radius=2pt] ;%
 		}
 		{}
-	\ifboolKV[cercletrigo]{Equationsin}
+	\ifboolKV[cercletrigo]{equationsin}
 		{%traitsdeconstructioncos
 		\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon) -- (135:\PLcerclerayon)
 										  (-135:\PLcerclerayon) -- (45:\PLcerclerayon)
@@ -1140,7 +1136,7 @@
 		}
 		{}
 	%valeurs
-	\ifboolKV[cercletrigo]{AffValeurs}
+	\ifboolKV[cercletrigo]{affvaleurs}
 		{%
 		\draw ({0.5*\PLcerclerayon},0) node[below=2pt,PLval] {$\tfrac{1}{2}$} ;
 		\draw ({-0.5*\PLcerclerayon},0) node[below=2pt,PLval] {$-\tfrac{1}{2}$} ;
@@ -1157,7 +1153,7 @@
 		}%
 		{}
 	%valeurs remarquables en dernier
-	\ifboolKV[cercletrigo]{AffTraits}
+	\ifboolKV[cercletrigo]{afftraits}
 		{%
 		\draw[\PLcerclethick,dotted,gray] (-120:\PLcerclerayon) rectangle (60:\PLcerclerayon) ;
 		\draw[\PLcerclethick,dotted,gray] (-150:\PLcerclerayon) rectangle (30:\PLcerclerayon) ;
@@ -1174,20 +1170,20 @@
 
 %==================AideTds============= OK !!
 \defKV[aidetds]{%
-	Code=\def\tdsparam{#1},%
-	Couleur=\def\tdscouleur{#1},%
-	Racines=\def\tdsracine{#1},%
-	Largeur=\def\tdslarg{#1},%
-	Hauteur=\def\tdshaut{#1}
+	code=\def\tdsparam{#1},%
+	couleur=\def\tdscouleur{#1},%
+	racines=\def\tdsracine{#1},%
+	largeur=\def\tdslarg{#1},%
+	hauteur=\def\tdshaut{#1}
 }
 
 \setKVdefault[aidetds]{%
-	Code=da+,
-	Couleur=red,%
-	Largeur=2,%
-	Hauteur=1,%
-	Cadre=true,%
-	Racines=2
+	code=da+,
+	couleur=red,%
+	largeur=2,%
+	hauteur=1,%
+	cadre=true,%
+	racines=2
 }
 
 \NewDocumentCommand\schematdsaff{ s m m m m }{%pour les droites (interne)
@@ -1268,7 +1264,7 @@
 	{}
 }
 
-\newcommand\MiniSchemaSignes[1][]{%
+\newcommand\aidesignePL[1][]{%
 	\useKVdefault[aidetds]
 	\setKV[aidetds]{#1}
 	%simplification des codes
@@ -1281,7 +1277,7 @@
 	\IfEq{\tdsparam}{pa+d-}{\def\xcode{10}}{}
 	\IfEq{\tdsparam}{pa-d-}{\def\xcode{-10}}{}
 	%cadre si booléen true
-	\ifboolKV[aidetds]{Cadre}
+	\ifboolKV[aidetds]{cadre}
 		{\draw[lightgray] ({-0.5*\tdslarg},{-0.5*\tdshaut}) rectangle ({0.55*\tdslarg},{0.5*\tdshaut}) ;}
 		{}
 	%restriction de la petite fenêtre
@@ -1324,16 +1320,16 @@
 
 %pour l'interaction avec tkz-tab
 \defKV[aidetdstkz]{%
-	Echelle=\def\tdstkzscale{#1},%
-	Decal=\def\tdstkzoffset{#1}
+	echelle=\def\tdstkzscale{#1},%
+	decal=\def\tdstkzoffset{#1}
 }
 
 \setKVdefault[aidetdstkz]{%
-	Echelle=1,%
-	Decal=1.25
+	echelle=1,%
+	decal=1.25
 }
 
-\NewDocumentCommand\MiniSchemaSignesTkzTab{ o m O{0.85} O{1.5} }{%
+\NewDocumentCommand\aidesignetkztabPL{ o m O{0.85} O{1.5} }{%
 	%#1 = codeaidetikz
 	%#2 = numligne
 	%#3 = échelle
@@ -1342,31 +1338,31 @@
 	%\NoAutoSpacing
 	\coordinate (Z) at ($(T2#2)!.5!(T2\the\numexpr#2+1\relax)$) ;
 	%\shorthandon{:}\shorthandon{!}
-	\path (Z.east) + (#4,0) pic[right,scale=#3,every node/.style={scale=#3}] {code={\MiniSchemaSignes[#1]}} ;
+	\path (Z.east) + (#4,0) pic[right,scale=#3,every node/.style={scale=#3}] {code={\aidesignePL[#1]}} ;
 }
 
 %=============RegressionLinéaire======= OK !!
 %calcul des paramètres
 \defKV[coeffreglin]{%
-	NomCoeffa=\def\RegLinCoeffa{#1},%
-	NomCoeffb=\def\RegLinCoeffb{#1},%
-	NomCoeffr=\def\RegLinCoeffr{#1},%
-	NomCoeffrd=\def\RegLinCoeffrd{#1},%
-	NomXmin=\def\RegLinCoeffXmin{#1},%
-	NomXmax=\def\RegLinCoeffXmax{#1}
+	nomcoeffa=\def\RegLinCoeffa{#1},%
+	nomcoeffb=\def\RegLinCoeffb{#1},%
+	nomcoeffr=\def\RegLinCoeffr{#1},%
+	nomcoeffrd=\def\RegLinCoeffrd{#1},%
+	nomxmin=\def\RegLinCoeffXmin{#1},%
+	nomxmax=\def\RegLinCoeffXmax{#1}
 }
 
 \setKVdefault[coeffreglin]{%
-	NomCoeffa=COEFFa,%
-	NomCoeffb=COEFFb,%
-	NomCoeffr=COEFFr,%
-	NomCoeffrd=COEFFrd,%
-	NomXmin=LXmin,%
-	NomXmax=LXmax
+	nomcoeffa=COEFFa,%
+	nomcoeffb=COEFFb,%
+	nomcoeffr=COEFFr,%
+	nomcoeffrd=COEFFrd,%
+	nomxmin=LXmin,%
+	nomxmax=LXmax
 }
 
-\newcommand\CalculsRegLin[3][]{%
-	\useKVdefault[coeffreglin]%
+\newcommand\PLreglin[3][]{
+	\useKVdefault[coeffreglin]
 	\setKV[coeffreglin]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%xmin et xmax
 	\expandafter\def\csname\RegLinCoeffXmin\endcsname{\fpeval{min(#2)}}
@@ -1416,20 +1412,20 @@
 
 %pour un nuage en TiKz
 \defKV[nuagereglin]{%
-	Couleur=\def\RegLinNuageCouleur{#1},%
-	Taille=\def\RegLinNuageTaille{#1},
+	couleur=\def\RegLinNuageCouleur{#1},%
+	taille=\def\RegLinNuageTaille{#1},
 	Ox=\def\RegLinNuageOx{#1},%
 	Oy=\def\RegLinNuageOy{#1},%
 }
 
 \setKVdefault[nuagereglin]{%
-	Couleur=teal,%
-	Taille=2pt,%
+	couleur=teal,%
+	taille=2pt,%
 	Ox=0,%
 	Oy=0
 }
 
-\newcommand\PointsRegLin[3][]{%
+\newcommand\PLreglinpts[3][]{%
 	\useKVdefault[nuagereglin]
 	\setKV[nuagereglin]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\def\xliste{#2}
@@ -1444,17 +1440,17 @@
 %=============ConversionsBases========= OK !!
 %dec->bin avec blocs de 4 chiffres
 \setKVdefault[CONVDECBIN]{%
-	AffBase=true
+	affbase=true
 }
-\NewDocumentCommand\ConversionDecBin{ s O{} m }{%
+\NewDocumentCommand\PLconvdecbin{ s O{} m }{%
 	\useKVdefault[CONVDECBIN]
 	\setKV[CONVDECBIN]{#2}% on paramètres les nouvelles clés et on les simplifie
 	\def\resbrut{\xintDecToBin{#3}}
 	\StrLen{\resbrut}[\nbchiffres]
 	\def\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}}
 	\IfBooleanTF{#1}
-		{\num{#3}\ifboolKV[CONVDECBIN]{AffBase}{_{10}}{}=\num[digit-group-size=4]{\resbrut}\ifboolKV[CONVDECBIN]{AffBase}{_{2}}{}}
-		{\num{#3}\ifboolKV[CONVDECBIN]{AffBase}{_{10}}{}=\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resbrut}\ifboolKV[CONVDECBIN]{AffBase}{_{2}}{}}
+		{\num{#3}\ifboolKV[CONVDECBIN]{affbase}{_{10}}{}=\num[digit-group-size=4]{\resbrut}\ifboolKV[CONVDECBIN]{affbase}{_{2}}{}}
+		{\num{#3}\ifboolKV[CONVDECBIN]{affbase}{_{10}}{}=\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resbrut}\ifboolKV[CONVDECBIN]{affbase}{_{2}}{}}
 }
 
 %bin->hexa avec blocs de 4 chiffres
@@ -1463,8 +1459,8 @@
 %}
 \setKVdefault[CONVBINHEX]{%
 	%trait=0.5pt,%
-	AffBase=true,%
-	Details=true
+	affbase=true,%
+	details=true
 }
 %bourrage de 0 avant
 \ExplSyntaxOn
@@ -1479,7 +1475,7 @@
 
 
 %la conversion complète
-\newcommand\ConversionBinHex[2][]{%
+\newcommand\PLconvbinhex[2][]{%
 	\useKVdefault[CONVBINHEX]
 	\setKV[CONVBINHEX]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\def\chbrut{#2}
@@ -1488,8 +1484,8 @@
 	\xdef\nbblocs{\fpeval{\nbgrp/4}} %nb de blocs
 	%on rajoute des zeros si besoin := OK
 	\xdef\resinter{\chbrut}
-	\num[digit-group-size=4]{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{2}}{}=
-	\ifboolKV[CONVBINHEX]{Details}{%
+	\num[digit-group-size=4]{\chbrut}\ifboolKV[CONVBINHEX]{affbase}{_{2}}{}=
+	\ifboolKV[CONVBINHEX]{details}{%
 	\ifnum\nbchiffres<\nbgrp
 		\xdef\nbz{\inteval{\nbgrp-\nbchiffres}}
 		\xdef\resinter{\PLstrzeros{\nbz}\chbrut}
@@ -1508,18 +1504,18 @@
 	\!=
 	}%
 	{}
-	\xintBinToHex{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{16}}{}
+	\xintBinToHex{\chbrut}\ifboolKV[CONVBINHEX]{affbase}{_{16}}{}
 }
 
 %bin/hexa/bin->dec avec écriture polynomiale
 \defKV[CONVTODEC]{%
-	BaseDep=\def\basedepart{#1}
+	basedep=\def\basedepart{#1}
 }
 \setKVdefault[CONVTODEC]{%
-	BaseDep=2,%
-	AffBase=true,%
-	Details=true,%
-	Zeros=true
+	basedep=2,%
+	affbase=true,%
+	details=true,%
+	zeros=true
 }
 
 \ExplSyntaxOn
@@ -1528,7 +1524,7 @@
 }
 \ExplSyntaxOff
 
-\newcommand\ConversionVersDec[2][]{%
+\newcommand\PLconvtodec[2][]{%
 	\useKVdefault[CONVTODEC]
 	\setKV[CONVTODEC]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\def\nbdepart{#2}
@@ -1537,15 +1533,15 @@
 	%si on est en base 16
 	\xintifboolexpr{\basedepart == 16}%
 	{%
-		\nbdepart\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
-		\ifboolKV[CONVTODEC]{Details}{%
+		\nbdepart\ifboolKV[CONVTODEC]{affbase}{_{\basedepart}}{} =
+		\ifboolKV[CONVTODEC]{details}{%
 			\xintHexToDec{\chiffre}\times\basedepart^{\inteval{\nbchiffres-1}}%
 			\newcount\cpt
 			\cpt2
 			\loop\ifnum \cpt<\inteval{\nbchiffres+1}
 				\def\puiss{\inteval{\nbchiffres-\cpt}}
 				\StrChar{\nbdepart}{\cpt}[\chiffre]
-				\ifboolKV[CONVTODEC]{Zeros}%
+				\ifboolKV[CONVTODEC]{zeros}%
 					{%
 						+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
 					}
@@ -1559,20 +1555,20 @@
 			=
 			}
 			{}
-		\num{\xintHexToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
+		\num{\xintHexToDec{\nbdepart}}\ifboolKV[CONVTODEC]{affbase}{_{10}}{}
 	}%
 	{}
 	\xintifboolexpr{\basedepart == 2}%
 	{%
-		\num[digit-group-size=4]{\nbdepart}\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
-		\ifboolKV[CONVTODEC]{Details}{%
+		\num[digit-group-size=4]{\nbdepart}\ifboolKV[CONVTODEC]{affbase}{_{\basedepart}}{} =
+		\ifboolKV[CONVTODEC]{details}{%
 			\chiffre\times\basedepart^{\inteval{\nbchiffres-1}}%
 			\newcount\cpt
 			\cpt2
 			\loop\ifnum \cpt<\inteval{\nbchiffres+1}
 				\def\puiss{\inteval{\nbchiffres-\cpt}}
 				\StrChar{\nbdepart}{\cpt}[\chiffre]
-				\ifboolKV[CONVTODEC]{Zeros}%
+				\ifboolKV[CONVTODEC]{zeros}%
 				{%
 					+\chiffre\times\basedepart^{\puiss}%
 				}
@@ -1586,27 +1582,27 @@
 			=
 			}
 			{}
-		\num{\xintBinToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
+		\num{\xintBinToDec{\nbdepart}}\ifboolKV[CONVTODEC]{affbase}{_{10}}{}
 	}%
 	{}
 }
 
-\newcommand\ConversionBaseDix[3][]{%1=options,%2=nb,%3=basedep ??
+\newcommand\PLconvversdix[3][]{%1=options,%2=nb,%3=basedep
 	\useKVdefault[CONVTODEC]
 	\setKV[CONVTODEC]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\def\NBdepart{#2}
 	\def\basedepart{#3}
 	\StrLen{\NBdepart}[\nbchiffres]
 	\StrChar{\NBdepart}{1}[\chiffre]
-	\NBdepart\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
-	\ifboolKV[CONVTODEC]{Details}{%
+	\NBdepart\ifboolKV[CONVTODEC]{affbase}{_{\basedepart}}{} =
+	\ifboolKV[CONVTODEC]{details}{%
 		\xintHexToDec{\chiffre}\times\basedepart^{\inteval{\nbchiffres-1}}%
 		\newcount\cpt
 		\cpt2
 		\loop\ifnum \cpt<\inteval{\nbchiffres+1}
 			\def\puiss{\inteval{\nbchiffres-\cpt}}
 			\StrChar{\NBdepart}{\cpt}[\chiffre]
-			\ifboolKV[CONVTODEC]{Zeros}%
+			\ifboolKV[CONVTODEC]{zeros}%
 				{%
 					+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
 				}
@@ -1620,7 +1616,7 @@
 		=
 		}
 		{}
-	\num{\convertbasetobasedix{#2}{#3}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
+	\num{\convertbasetobasedix{#2}{#3}}\ifboolKV[CONVTODEC]{affbase}{_{10}}{}
 }
 
 %==============MainLevée TikZ========== OK !!
@@ -1631,24 +1627,24 @@
 
 %==============PixelArt TikZ=========== OK !!
 \defKV[pixelarttkz]{%
-	Codes=\def\PATlettres{#1},%
-	Couleurs=\def\PATcouleurs{#1},%
-	Symboles=\def\PATchiffres{#1},%
-	Style=\def\PATtaille{#1}
+	codes=\def\PATlettres{#1},%
+	couleurs=\def\PATcouleurs{#1},%
+	symboles=\def\PATchiffres{#1},%
+	style=\def\PATtaille{#1}
 }
 
 \setKVdefault[pixelarttkz]{%
-	Style=\scriptsize,%
-	Correction=false,%
-	Symb=false,%
-	BordCases=true
+	style=\scriptsize,%
+	correction=false,%
+	symb=false,%
+	bordcases=true
 }
 
-\newcommand\PixelArtTikz[2][]{%
+\newcommand\PLpixelart[2][]{%
 	\useKVdefault[pixelarttkz]
 	\setKV[pixelarttkz]{#1}
 	%affichage du corrigé
-	\ifboolKV[pixelarttkz]{Correction}
+	\ifboolKV[pixelarttkz]{correction}
 	{%
 		\csvloop{file=#2,no head,command={%
 				\foreach \l [count=\n] in \csvline {%
@@ -1659,7 +1655,7 @@
 					\xintifboolexpr{\pixcnt>0}%
 					{%
 						\itemtomacro\LCPA[\pixcnt]\pixcol%
-						\ifboolKV[pixelarttkz]{BordCases}%
+						\ifboolKV[pixelarttkz]{bordcases}%
 							{\draw[fill=\pixcol] ({\n-0.5},{-\thecsvrow+0.5}) rectangle ({\n+0.5},{-\thecsvrow-0.5}) ;}%
 							{\filldraw[\pixcol] ({\n-0.5},{-\thecsvrow+0.5}) rectangle ({\n+0.5},{-\thecsvrow-0.5}) ;}%
 						%
@@ -1670,7 +1666,7 @@
 		}
 	}
 	{%
-		\ifboolKV[pixelarttkz]{Symb}
+		\ifboolKV[pixelarttkz]{symb}
 		{%affichage du pixelart versions chiffres si besoin
 			\csvloop{file=#2,no head,command={%
 					\foreach \l [count=\n] in \csvline {%
@@ -1732,23 +1728,23 @@
 
 %axeOx
 \defKV[PLaxextkz]{%
-	Epaisseur=\def\axexwidth{#1},%
-	Police=\def\axexfont{#1},%
-	HautGrad=\def\axextickwidth{#1},%
-	PosGrad=\def\axexposlabel{#1}
+	epaisseur=\def\axexwidth{#1},%
+	police=\def\axexfont{#1},%
+	hautgrad=\def\axextickwidth{#1},%
+	posgrad=\def\axexposlabel{#1}
 }
 
 \setKVdefault[PLaxextkz]{%
-	Epaisseur=1.25pt,%
-	Police=\normalsize\normalfont,%
-	PosGrad=below,%
-	HautGrad=4pt,%
-	AffGrad=true,%
-	AffOrigine=true,%
-	Annee=false
+	epaisseur=1.25pt,%
+	police=\normalsize\normalfont,%
+	posgrad=below,%
+	hautgrad=4pt,%
+	affgrad=true,%
+	afforigine=true,%
+	annee=false
 }
 
-\DeclareDocumentCommand\AxexTikz{ O{} m }{%
+\DeclareDocumentCommand\PLaxextikz{ O{} m }{%
 	\useKVdefault[PLaxextkz]
 	\setKV[PLaxextkz]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%formatage des années
@@ -1757,16 +1753,16 @@
 	{\def\axextickwidthA{\axextickwidth}\def\axextickwidthB{\axextickwidth}}
 	\foreach \x in {#2}{%
 		\draw[line width=\axexwidth] ({\x-\axexOx},{\axextickwidthA}) -- ({\x-\axexOx},{-\axextickwidthB})%
-		\ifboolKV[PLaxextkz]{AffGrad}%on affiche les graduations
+		\ifboolKV[PLaxextkz]{affgrad}%on affiche les graduations
 		{%
-			\ifboolKV[PLaxextkz]{AffOrigine}%si on demande d'afficher l'origine
+			\ifboolKV[PLaxextkz]{afforigine}%si on demande d'afficher l'origine
 			{node[\axexposlabel,font=\axexfont] 
-				{\ifboolKV[PLaxextkz]{Annee}%
+				{\ifboolKV[PLaxextkz]{annee}%
 					{\num[group-digits=none]{\x}}%
 					{\num[text-family-to-math=true,text-series-to-math=true]{\x}}%
 				}
 			}
-			{\xintifboolexpr{\x==\axexOx}{}{node[\axexposlabel,font=\axexfont] {\ifboolKV[PLaxextkz]{Annee}%
+			{\xintifboolexpr{\x==\axexOx}{}{node[\axexposlabel,font=\axexfont] {\ifboolKV[PLaxextkz]{annee}%
 						{\num[group-digits=none]{\x}}%
 						{\num[text-family-to-math=true,text-series-to-math=true]{\x}}%
 					}
@@ -1779,23 +1775,23 @@
 
 %axeOy
 \defKV[PLaxeytkz]{%
-	Epaisseur=\def\axeywidth{#1},%
-	Police=\def\axeyfont{#1},%
-	HautGrad=\def\axeytickwidth{#1},%
-	PosGrad=\def\axeyposlabel{#1}
+	epaisseur=\def\axeywidth{#1},%
+	police=\def\axeyfont{#1},%
+	hautgrad=\def\axeytickwidth{#1},%
+	posgrad=\def\axeyposlabel{#1}
 }
 
 \setKVdefault[PLaxeytkz]{%
-	Epaisseur=1.25pt,%
-	Police=\normalsize\normalfont,%
-	PosGrad=left,%
-	HautGrad=4pt,%
-	AffGrad=true,%
-	AffOrigine=true,%
-	Annee=false
+	epaisseur=1.25pt,%
+	police=\normalsize\normalfont,%
+	posgrad=left,%
+	hautgrad=4pt,%
+	affgrad=true,%
+	afforigine=true,%
+	annee=false
 }
 
-\DeclareDocumentCommand\AxeyTikz{ O{} m }{%
+\DeclareDocumentCommand\PLaxeytikz{ O{} m }{%
 	\useKVdefault[PLaxeytkz]
 	\setKV[PLaxeytkz]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\IfSubStr{\axeytickwidth}{/}
@@ -1803,16 +1799,16 @@
 	{\def\axeytickwidthA{\axeytickwidth}\def\axeytickwidthB{\axeytickwidth}}
 	\foreach \y in {#2}{%
 		\draw[line width=\axeywidth] ({\axeytickwidthA},{\y-\axeyOy}) -- ({-\axeytickwidthB},{\y-\axeyOy})%
-		\ifboolKV[PLaxeytkz]{AffGrad}%on affiche les graduations
+		\ifboolKV[PLaxeytkz]{affgrad}%on affiche les graduations
 		{%
-			\ifboolKV[PLaxeytkz]{AffOrigine}%si on demande d'afficher l'origine
+			\ifboolKV[PLaxeytkz]{afforigine}%si on demande d'afficher l'origine
 			{node[\axeyposlabel,font=\axeyfont] 
-				{\ifboolKV[PLaxeytkz]{Annee}%
+				{\ifboolKV[PLaxeytkz]{annee}%
 					{\num[group-digits=none]{\y}}%
 					{\num[text-family-to-math=true,text-series-to-math=true]{\y}}%
 				}
 			}
-			{\xintifboolexpr{\y==\axeyOy}{}{node[\axeyposlabel,font=\axeyfont] {\ifboolKV[PLaxeytkz]{Annee}%
+			{\xintifboolexpr{\y==\axeyOy}{}{node[\axeyposlabel,font=\axeyfont] {\ifboolKV[PLaxeytkz]{annee}%
 						{\num[group-digits=none]{\y}}%
 						{\num[text-family-to-math=true,text-series-to-math=true]{\y}}%
 					}
@@ -1825,30 +1821,30 @@
 
 %axes
 \defKV[PLaxestkz]{%
-	Epaisseur=\def\axeswidth{#1},%
-	Police=\def\axesfont{#1},%
-	Labelx=\def\axeslabelx{#1},%
-	Labely=\def\axeslabely{#1},%
-	PosLabelx=\def\axesposlabelx{#1},%
-	PosLabely=\def\axesposlabely{#1},%
-	EchelleFleche=\def\axesechellefleche{#1},%
-	TypeFleche=\def\axestypefleche{#1},%
-	AffLabel=\def\axesafflabel{#1}
+	epaisseur=\def\axeswidth{#1},%
+	police=\def\axesfont{#1},%
+	labelx=\def\axeslabelx{#1},%
+	labely=\def\axeslabely{#1},%
+	poslabelx=\def\axesposlabelx{#1},%
+	poslabely=\def\axesposlabely{#1},%
+	echellefleche=\def\axesechellefleche{#1},%
+	typefleche=\def\axestypefleche{#1},%
+	afflabel=\def\axesafflabel{#1}
 }
 
 \setKVdefault[PLaxestkz]{%
-	Epaisseur=1.25pt,%
-	Police=\normalsize\normalfont,%
-	Labelx=$x$,%
-	Labely=$y$,%
-	AffLabel=z,%
-	PosLabelx=right,%
-	PosLabely=above,%
-	EchelleFleche=1,%
-	TypeFleche=>
+	epaisseur=1.25pt,%
+	police=\normalsize\normalfont,%
+	labelx=$x$,%
+	labely=$y$,%
+	afflabel=z,%
+	poslabelx=right,%
+	poslabely=above,%
+	echellefleche=1,%
+	typefleche=>
 }
 
-\DeclareDocumentCommand\AxesTikz{ O{} }{%
+\DeclareDocumentCommand\PLaxestikz{ O{} }{%
 	\useKVdefault[PLaxestkz]
 	\setKV[PLaxestkz]{#1}%
 	%on affiche les deux axes
@@ -1856,67 +1852,67 @@
 	\draw[line width=\axeswidth,-{\axestypefleche[scale=\axesechellefleche]}] (0,{\ymin-\axeyOy}) -- (0,{\ymax-\axeyOy}) ;
 	%les labels éventuels
 	\IfSubStr{\axesafflabel}{x}%
-		{\draw ({\xmax-\axexOx},0) node[\axesposlabelx,font=\axesfont] {\axeslabelx} ;}
-		{}
+	{\draw ({\xmax-\axexOx},0) node[\axesposlabelx,font=\axesfont] {\axeslabelx} ;}
+	{}
 	\IfSubStr{\axesafflabel}{y}%
-		{\draw (0,{\ymax-\axeyOy}) node[\axesposlabely,font=\axesfont] {\axeslabely} ;}
-		{}
+	{\draw (0,{\ymax-\axeyOy}) node[\axesposlabely,font=\axesfont] {\axeslabely} ;}
+	{}
 }
 
 %fenêtre clippée
-\newcommand\FenetreTikz{%
+\newcommand\PLfenetre{%
 	\clip ({\xmin-\axexOx},{\ymin-\axeyOy}) rectangle ({\xmax-\axexOx},{\ymax-\axeyOy}) ;
 }
 
 %origine
 \defKV[PLaxesorig]{%
-	Police=\def\axesorfont{#1},%
-	Pos=\def\axesorpos{#1},%
-	Decal=\def\axesordecal{#1},%
-	Valeur=\def\axesorval{#1}
+	police=\def\axesorfont{#1},%
+	pos=\def\axesorpos{#1},%
+	decal=\def\axesordecal{#1},%
+	valeur=\def\axesorval{#1}
 }
 
 \setKVdefault[PLaxesorig]{%
-	Police=\normalsize\normalfont,%
-	Pos={below left},%
-	Decal=2pt,%
-	Valeur=0
+	police=\normalsize\normalfont,%
+	pos={below left},%
+	decal=2pt,%
+	valeur=0
 }
 
-\DeclareDocumentCommand\OrigineTikz{ O{} }{%
-	\useKVdefault[PLaxesorig]%
+\DeclareDocumentCommand\PLorigine{ O{} }{%
+	\useKVdefault[PLaxesorig]
 	\setKV[PLaxesorig]{#1}%
 	\draw (0,0) node[\axesorpos=\axesordecal,font=\axesorfont] {\axesorval} ;
 }
 
 %grilles
 \setKVdefault[PLgrillestkz]{%
-	Affp=true,%
-	Affs=true
+	affp=true,%
+	affs=true
 }
 
-\DeclareDocumentCommand\GrilleTikz{ O{} O{thin,lightgray} O{ultra thin,lightgray} }{%
+\DeclareDocumentCommand\PLgrilletikz{ O{} O{thin,lightgray} O{ultra thin,lightgray} }{%
 	\useKVdefault[PLgrillestkz]
 	\setKV[PLgrillestkz]{#1}%
-	\ifboolKV[PLgrillestkz]{Affs}
-		{\draw[xstep=\xgrilles,ystep=\ygrilles,#3] ({\xmin-\axexOx},{\ymin-\axeyOy}) grid ({\xmax-\axexOx},{\ymax-\axeyOy});}
-		{}
-	\ifboolKV[PLgrillestkz]{Affp}
-		{\draw[xstep=\xgrille,ystep=\ygrille,#2] ({\xmin-\axexOx},{\ymin-\axeyOy}) grid ({\xmax-\axexOx},{\ymax-\axeyOy});}
-		{}
+	\ifboolKV[PLgrillestkz]{affs}
+	{\draw[xstep=\xgrilles,ystep=\ygrilles,#3] ({\xmin-\axexOx},{\ymin-\axeyOy}) grid ({\xmax-\axexOx},{\ymax-\axeyOy});}
+	{}
+	\ifboolKV[PLgrillestkz]{affp}
+	{\draw[xstep=\xgrille,ystep=\ygrille,#2] ({\xmin-\axexOx},{\ymin-\axeyOy}) grid ({\xmax-\axexOx},{\ymax-\axeyOy});}
+	{}
 }
 
 %point(s) avec changement origines
 \defKV[PLpts]{%
-	Taille=\def\ptstaille{#1},%
-	Couleur=\def\ptscouleur{#1},%
-	Style=\def\ptsstyle{#1}
+	taille=\def\ptstaille{#1},%
+	couleur=\def\ptscouleur{#1},%
+	style=\def\ptsstyle{#1}
 }
 
 \setKVdefault[PLpts]{%
-	Taille=2pt,%
-	Couleur=blue,%
-	Style=o
+	taille=2pt,%
+	couleur=blue,%
+	style=o
 }
 
 \newcommand\PLnuagepoints[2][]{%
@@ -1939,7 +1935,7 @@
 	}
 }
 
-\newcommand\NuagePointsTikz[3][]{%
+\newcommand\PLnuagepts[3][]{%
 	\useKVdefault[PLpts]
 	\setKV[PLpts]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\def\xliste{#2}
@@ -1966,31 +1962,31 @@
 }
 
 \defKV[PLptmoy]{%
-	Police=\def\ptmoyfont{#1},%
-	Taille=\def\ptmoytaille{#1},%
-	Couleur=\def\ptmoycouleur{#1},%
-	Style=\def\ptmoystyle{#1},%
+	police=\def\ptmoyfont{#1},%
+	taille=\def\ptmoytaille{#1},%
+	couleur=\def\ptmoycouleur{#1},%
+	style=\def\ptmoystyle{#1},%
 	xg=\def\ptmoyx{#1},%
 	yg=\def\ptmoyy{#1},%
-	Nom=\def\ptmoynom{#1},%
-	Pos=\def\ptmoypos{#1},%
-	Decal=\def\ptmoydecal{#1},%
+	nom=\def\ptmoynom{#1},%
+	pos=\def\ptmoypos{#1},%
+	decal=\def\ptmoydecal{#1},%
 }
 
 \setKVdefault[PLptmoy]{%
-	Police=\normalsize\normalfont,%
-	Taille=4pt,%
-	Couleur=red,%
-	Style=x,%
+	police=\normalsize\normalfont,%
+	taille=4pt,%
+	couleur=red,%
+	style=x,%
 	xg=\LXmoy,%
 	yg=\LYmoy,%
-	Nom=G,%
-	Pos=above,%
-	Decal=0pt,%
-	AffNom=true
+	nom=G,%
+	pos=above,%
+	decal=0pt,%
+	affnom=true
 }
 
-\newcommand\PointMoyenTikz[1][]{%
+\newcommand\PLnuageptmoy[1][]{%
 	\useKVdefault[PLptmoy]
 	\setKV[PLptmoy]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\IfStrEq{\ptmoystyle}{o}%
@@ -2001,19 +1997,19 @@
 	}
 	{}
 	\IfStrEq{\ptmoystyle}{x}%
-		{\draw[\ptmoycouleur] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) pic {PLdotcross=\ptmoytaille/45} ;}
-		{}
+	{\draw[\ptmoycouleur] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) pic {PLdotcross=\ptmoytaille/45} ;}
+	{}
 	\IfStrEq{\ptmoystyle}{+}%
-		{\draw[\ptmoycouleur] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) pic {PLdotcross=\ptmoytaille/0} ;}
-		{}
-	\ifboolKV[PLptmoy]{AffNom}
-		{\draw ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) node[\ptmoypos={\ptmoytaille+\ptmoydecal},font=\ptmoyfont] {\ptmoynom} ;}
-		{}
+	{\draw[\ptmoycouleur] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) pic {PLdotcross=\ptmoytaille/0} ;}
+	{}
+	\ifboolKV[PLptmoy]{affnom}
+	{\draw ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) node[\ptmoypos={\ptmoytaille+\ptmoydecal},font=\ptmoyfont] {\ptmoynom} ;}
+	{}
 	
 }
 
 %courbe ?
-\newcommand\CourbeTikz[3][]{%
+\newcommand\PLcourbe[3][]{%
 	\setsepchar{:}%
 	\readlist\PLdomaine{#3}
 	\itemtomacro\PLdomaine[1]\PLDm
@@ -2025,22 +2021,22 @@
 }
 
 \setKVdefault[PLsimplewindow]{%
-	Axes=true,%
-	Grille=true,%
+	axes=true,%
+	grille=true,%
 }
 
-\DeclareDocumentCommand\FenetreSimpleTikz{ O{}  D<>{} m D<>{} m }{%
-	\useKVdefault[PLsimplewindow]%
+\DeclareDocumentCommand\PLfenetresimple{ O{}  D<>{} m D<>{} m }{%
+	\useKVdefault[PLsimplewindow]
 	\setKV[PLsimplewindow]{#1}% on paramètres les nouvelles clés et on les simplifie
-	\ifboolKV[PLsimplewindow]{Grille}%
-		{\GrilleTikz}%
-		{}%
-	\ifboolKV[PLsimplewindow]{Axes}%
-		{\AxesTikz\AxexTikz[#2]{#3}\AxeyTikz[#4]{#5}}%
-		{}%
+	\ifboolKV[PLsimplewindow]{grille}
+	{\PLgrilletikz}
+	{}
+	\ifboolKV[PLsimplewindow]{axes}
+	{\PLaxestikz\PLaxextikz[#2]{#3}\PLaxeytikz[#4]{#5}}
+	{}
 }
 
-\NewDocumentEnvironment{StatsTikz}{ O{} }
+\NewDocumentEnvironment{PLstats}{ O{} }
 {%
 	\begin{tikzpicture}[#1]
 	}%
@@ -2050,56 +2046,57 @@
 
 %=============BOITES MOUSTACHES======== OK !!
 \defKV[boiteamoustaches]{%
-	Couleur=\def\BaMCouleur{#1},%
-	Elevation=\def\BaMElevation{#1},%
-	Hauteur=\def\BaMHauteur{#1},%
-	Moyenne=\def\BaMMoyenne{#1},%
-	Epaisseur=\def\BaMEpaisseur{#1},%
-	Remplir=\def\BaMRemplissage{#1}
+	parametres=\def\BaMListe{#1},%
+	couleur=\def\BaMCouleur{#1},%
+	elevation=\def\BaMElevation{#1},%
+	hauteur=\def\BaMHauteur{#1},%
+	moyenne=\def\BaMMoyenne{#1},%
+	epaisseur=\def\BaMEpaisseur{#1},%
+	remplir=\def\BaMRemplissage{#1}
 }
 
 \setKVdefault[boiteamoustaches]{%
-	Couleur=black,%
-	Elevation=1,%
-	Hauteur=1,%
-	AffMoyenne=false,%
-	Epaisseur=thick,%
-	Pointilles=false,%
-	Valeurs=false,%
-	Remplir=white
+	couleur=black,%
+	elevation=1,%
+	hauteur=1,%
+	affmoyenne=false,%
+	epaisseur=thick,%
+	pointilles=false,%
+	valeurs=false,%
+	remplir=white
 }
 
 \defKV[boiteamoustachesaxe]{%
-	Min=\def\BaMAxeMin{#1},%
-	Max=\def\BaMAxeMax{#1},%
-	Elargir=\def\BaMAxeElarg{#1},%
-	Epaisseur=\def\BaMAxeEpaisseur{#1},%
-	Valeurs=\def\BaMAxeValeurs{#1}
+	min=\def\BaMAxeMin{#1},%
+	max=\def\BaMAxeMax{#1},%
+	elargir=\def\BaMAxeElarg{#1},%
+	epaisseur=\def\BaMAxeEpaisseur{#1},%
+	valeurs=\def\BaMAxeValeurs{#1}
 }
 
 \setKVdefault[boiteamoustachesaxe]{%
-	Elargir=0.05,%
-	Epaisseur=thick,%
-	AffValeurs=false
+	elargir=0.05,%
+	epaisseur=thick,%
+	affvaleurs=false
 }
 
-\newcommand\BoiteMoustachesAxe[1][]{
+\newcommand\PLboitemoustaxe[1][]{
 	\useKVdefault[boiteamoustachesaxe]
 	\setKV[boiteamoustachesaxe]{#1}
 	\def\BaMaxelargeur{\fpeval{\BaMAxeMax-\BaMAxeMin}}
 	\def\BaMaxexmin{\fpeval{\BaMAxeMin-\BaMAxeElarg*\BaMaxelargeur}}
 	\def\BaMaxexmax{\fpeval{\BaMAxeMax+\BaMAxeElarg*\BaMaxelargeur}}
 	\draw[\BaMAxeEpaisseur,->] (\BaMaxexmin,0) -- (\BaMaxexmax,0) ;
-	\ifboolKV[boiteamoustachesaxe]{AffValeurs}
-		{\foreach \x in \BaMAxeValeurs \draw[\BaMAxeEpaisseur] (\x,3pt)--(\x,-3pt) node[below=3pt] {\num{\x}} ;}
-		{}
+	\ifboolKV[boiteamoustachesaxe]{affvaleurs}
+	{\foreach \x in \BaMAxeValeurs \draw[\BaMAxeEpaisseur] (\x,3pt)--(\x,-3pt) node[below=3pt] {\num{\x}} ;}
+	{}
 }
 
-\newcommand\BoiteMoustaches[2][]{
+\newcommand\PLboitemoust[1][]{
 	\useKVdefault[boiteamoustaches]
 	\setKV[boiteamoustaches]{#1}
 	\setsepchar[.]{/}%
-	\readlist*\BaMListeparams{#2}%
+	\readlist*\BaMListeparams\BaMListe%
 	\itemtomacro\BaMListeparams[1]\BaMmin%
 	\itemtomacro\BaMListeparams[2]\BaMqu%
 	\itemtomacro\BaMListeparams[3]\BaMmed%
@@ -2108,10 +2105,10 @@
 	\draw[draw,\BaMEpaisseur,\BaMCouleur,fill=\BaMRemplissage] ({\BaMqu},{\BaMElevation-0.5*\BaMHauteur}) rectangle ({\BaMqt},{\BaMElevation+0.5*\BaMHauteur}) ;
 	\draw[\BaMEpaisseur,\BaMCouleur] (\BaMmin,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmin,{\BaMElevation+0.5*\BaMHauteur}) (\BaMmax,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmax,{\BaMElevation+0.5*\BaMHauteur}) (\BaMmed,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmed,{\BaMElevation+0.5*\BaMHauteur});
 	\draw[\BaMEpaisseur,\BaMCouleur] ({\BaMmin},{\BaMElevation})--({\BaMqu},{\BaMElevation}) ({\BaMqt},{\BaMElevation})--({\BaMmax},{\BaMElevation}) ;
-	\ifboolKV[boiteamoustaches]{AffMoyenne}
+	\ifboolKV[boiteamoustaches]{affmoyenne}
 	{\filldraw[\BaMCouleur] ({\BaMMoyenne},{\BaMElevation}) circle[radius=2.5pt] ;}
 	{}
-	\ifboolKV[boiteamoustaches]{Pointilles}
+	\ifboolKV[boiteamoustaches]{pointilles}
 	{
 		\draw[\BaMEpaisseur,densely dashed] (\BaMmin,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmin,0) ;
 		\draw[\BaMEpaisseur,densely dashed] (\BaMqu,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMqu,0) ;
@@ -2120,7 +2117,7 @@
 		\draw[\BaMEpaisseur,densely dashed] (\BaMmax,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmax,0) ;
 	}
 	{}
-	\ifboolKV[boiteamoustaches]{Valeurs}
+	\ifboolKV[boiteamoustaches]{valeurs}
 	{
 		\filldraw (\BaMmin,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmin}} ;
 		\filldraw (\BaMqu,0) circle[radius=2pt] node[below=4pt] {\num{\BaMqu}} ;
@@ -2133,41 +2130,41 @@
 
 %================SUDOMATHS============= OK !!
 \defKV[PLTIKZSUDOM]{%
-	CouleurTexte=\def\PLSMcoultexte{#1},%
-	Epaisseur=\def\PLSMepf{#1},%
-	Epaisseurg=\def\PLSMepg{#1},%
-	Unite=\def\PLSMunite{#1},%
-	CouleurCase=\def\PLSMcoulcase{#1},%
-	NbCol=\def\PLSMnbcol{#1},%
-	NbSubCol=\def\PLSMnbsubcol{#1},%
-	NbLig=\def\PLSMnblig{#1},%
-	NbSubLig=\def\PLSMnbsublig{#1},%
-	Police=\def\PLSMfonte{#1},%
-	PoliceLeg=\def\PLSMfonteleg{#1},%
-	ListeLegV=\def\PLSMlistelegv{#1},%
-	ListeLegH=\def\PLSMlistelegh{#1},%
-	DecalLegende=\def\PLSMdecalleg{#1}
+	couleurtexte=\def\PLSMcoultexte{#1},%
+	epaisseur=\def\PLSMepf{#1},%
+	epaisseurg=\def\PLSMepg{#1},%
+	unite=\def\PLSMunite{#1},%
+	couleurcase=\def\PLSMcoulcase{#1},%
+	nbcol=\def\PLSMnbcol{#1},%
+	nbsubcol=\def\PLSMnbsubcol{#1},%
+	nblig=\def\PLSMnblig{#1},%
+	nbsublig=\def\PLSMnbsublig{#1},%
+	police=\def\PLSMfonte{#1},%
+	policeleg=\def\PLSMfonteleg{#1},%
+	listelegv=\def\PLSMlistelegv{#1},%
+	listelegh=\def\PLSMlistelegh{#1},%
+	decallegende=\def\PLSMdecalleg{#1}
 }
 
 \setKVdefault[PLTIKZSUDOM]{%
-	Epaisseurg=1.5pt,%
-	Epaisseur=0.5pt,%
-	Unite=1cm,%
-	CouleurCase=LightBlue!50,%
-	CouleurTexte=blue,%
-	NbCol=9,%
-	NbSubCol=3,%
-	NbLig=9,%
-	NbSubLig=3,
-	Police=\normalfont\normalsize,%
-	PoliceLeg=\normalfont\sffamily,%
-	Legendes=true,%
-	ListeLegV=ABCDEFGHIJKLMNOPQRSTUVWXYZ,%
-	ListeLegH=abcdefghijklmnopqrstuvwxyz,%
-	DecalLegende=0.45
+	epaisseurg=1.5pt,%
+	epaisseur=0.5pt,%
+	unite=1cm,%
+	couleurcase=LightBlue!50,%
+	couleurtexte=blue,%
+	nbcol=9,%
+	nbsubcol=3,%
+	nblig=9,%
+	nbsublig=3,
+	police=\normalfont\normalsize,%
+	policeleg=\normalfont\sffamily,%
+	legendes=true,%
+	listelegv=ABCDEFGHIJKLMNOPQRSTUVWXYZ,%
+	listelegh=abcdefghijklmnopqrstuvwxyz,%
+	decallegende=0.45
 }
 
-\NewDocumentEnvironment{EnvSudoMaths}{ O{} m }
+\NewDocumentEnvironment{PLenvsudomaths}{ O{} m }
 	{
 	\useKVdefault[PLTIKZSUDOM]
 	\setKV[PLTIKZSUDOM]{#1}% on paramètres les nouvelles clés et on les simplifie
@@ -2204,7 +2201,7 @@
 		\draw[line width=\PLSMepf,xstep=1,ystep=1] (0,0) grid ({\PLSMnbcol},{-\PLSMnblig}) ;
 		\draw[line width=\PLSMepg,xstep=\larcolinter,ystep=\larliginter] (0,0) grid ({\PLSMnbcol},{-\PLSMnblig}) ;
 		%légendes
-		\ifboolKV[PLTIKZSUDOM]{Legendes}
+		\ifboolKV[PLTIKZSUDOM]{legendes}
 			{%
 				\foreach \i in {1,2,...,\PLSMnbcol}{\draw ({\i-0.5},{\PLSMdecalleg}) node[inner sep=0pt,outer sep=0pt,font=\PLSMfonteleg] {\strut\StrChar{\PLSMlistelegh}{\i}} ;}
 				\foreach \j in {1,2,...,\PLSMnblig}{\draw ({-\PLSMdecalleg},{0.5-\j}) node[inner sep=0pt,outer sep=0pt,font=\PLSMfonteleg] {\StrChar{\PLSMlistelegv}{\j}} ;}
@@ -2214,7 +2211,7 @@
 	\end{tikzpicture}
 	}
 
-\NewDocumentCommand\SudoMaths{ O{} m }{%
+\NewDocumentCommand\PLsudomaths{ O{} m }{%
 	\useKVdefault[PLTIKZSUDOM]
 	\setKV[PLTIKZSUDOM]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%calculs intermédiaires
@@ -2250,7 +2247,7 @@
 		\draw[line width=\PLSMepf,xstep=1,ystep=1] (0,0) grid ({\PLSMnbcol},{-\PLSMnblig}) ;
 		\draw[line width=\PLSMepg,xstep=\larcolinter,ystep=\larliginter] (0,0) grid ({\PLSMnbcol},{-\PLSMnblig}) ;
 		%légendes
-		\ifboolKV[PLTIKZSUDOM]{Legendes}
+		\ifboolKV[PLTIKZSUDOM]{legendes}
 		{%
 			\foreach \i in {1,2,...,\PLSMnbcol}{\draw ({\i-0.5},{\PLSMdecalleg}) node[inner sep=0pt,outer sep=0pt,font=\PLSMfonteleg] {\strut\StrChar{\PLSMlistelegh}{\i}} ;}
 			\foreach \j in {1,2,...,\PLSMnblig}{\draw ({-\PLSMdecalleg},{0.5-\j}) node[inner sep=0pt,outer sep=0pt,font=\PLSMfonteleg] {\StrChar{\PLSMlistelegv}{\j}} ;}
@@ -2260,10 +2257,10 @@
 
 %================LOISPROBAS============ OK !!
 %calculs "simples"
-\newcommand\CalcBinomP[3]{%npk
+\newcommand\calcPbinomP[3]{%npk
 	\xintFloatToDecimal{\xintfloateval{binomial(#1,#3)*#2^#3*(1-#2)^(#1-#3)}}
 }
-\newcommand\CalcBinomC[4]{%npab
+\newcommand\calcPbinomC[4]{%npab
 	\def\BorneInf{#3}\def\BorneSup{#4}
 	\ifthenelse{\equal{#3}{*}}%
 		{\def\BorneInf{0}}
@@ -2273,10 +2270,10 @@
 		{}
 	\xintFloatToDecimal{\xintfloateval{add(binomial(#1,i)*#2^i*(1-#2)^(#1-i), i=\BorneInf..\BorneSup)}}
 }
-\newcommand\CalcGeomP[2]{%pk
+\newcommand\calcPgeomP[2]{%pk
 	\xintFloatToDecimal{\xintfloateval{(1-#1)^(#2-1)*(#1)}}
 }
-\newcommand\CalcGeomC[3]{%pab
+\newcommand\calcPgeomC[3]{%pab
 	\def\BorneInf{#2}\def\BorneSup{#3}
 	\ifthenelse{\equal{#2}{*}}%
 		{\def\BorneInf{1}}
@@ -2286,10 +2283,10 @@
 		{}
 	\xintFloatToDecimal{\xintfloateval{add((1-#1)^(i-1)*(#1), i=\BorneInf..\BorneSup)}}
 }
-\newcommand\CalcHypergeomP[4]{%Nnmk
+\newcommand\calcPhypergeomP[4]{%Nnmk
 	\xintFloatToDecimal{\xintfloateval{binomial(#3,#4)*binomial(#1-#3,#2-#4)/binomial(#1,#2)}}
 }
-\newcommand\CalcHypergeomC[5]{%Nnmab
+\newcommand\calcPhypergeomC[5]{%Nnmab
 	\def\BorneInf{#4}\def\BorneSup{#5}
 	\ifthenelse{\equal{#4}{*}}%
 		{\def\BorneInf{0}}
@@ -2299,10 +2296,10 @@
 		{}
 	\xintFloatToDecimal{\xintfloateval{add(binomial(#3,i)*binomial(#1-#3,#2-i)/binomial(#1,#2), i=\BorneInf..\BorneSup)}}
 }
-\newcommand\CalcPoissP[2]{%lk
+\newcommand\calcPpoissP[2]{%lk
 	\xintFloatToDecimal{\xintfloateval{exp(-#1)*#1^#2/factorial(#2)}}
 }
-\newcommand\CalcPoissC[3]{%lab
+\newcommand\calcPpoissC[3]{%lab
 	\def\BorneInf{#2}\def\BorneSup{#3}
 	\ifthenelse{\equal{#2}{*}}%
 		{\def\BorneInf{0}}
@@ -2320,7 +2317,7 @@
 ((((((a_6*x+a_5)*x+a_4)*x+a_3)*x+a_2)*x+a_1)*x+1)**-16 ; % fin de définition de erfc(x)
 \xintdeffloatfunc Phi(z) := (z>=0)?{1 - 0.5 * erfc(rac2inv * z)}{0.5 * erfc(-rac2inv * z)};
 
-\newcommand\CalcNormC[4]{%msab
+\newcommand\calcPnormC[4]{%msab
 	%def des bornes de l'intervalle suivant l'absence de a ou de b...
 	\def\BorneInf{#3}\def\BorneSup{#4}
 	\ifthenelse{\equal{#3}{*}}%
@@ -2332,7 +2329,7 @@
 	\xintFloatToDecimal{\xintfloateval{Phi((\BorneSup-#1)/#2)-Phi((\BorneInf-#1)/#2)}}
 }
 %calculs "simples" fiabilite
-\newcommand\CalcExpoC[3]{%lab
+\newcommand\calcPexpoC[3]{%lab
 	\def\BorneInf{#2}\def\BorneSup{#3}
 	\ifthenelse{\equal{#2}{*}}%
 		{\def\BorneInf{0}}
@@ -2344,7 +2341,7 @@
 }
 
 %calculs formatés
-\NewDocumentCommand{\BinomP}{ s O{3} m m m }{%*=sci,2=prec,3=n,4=p,5=k
+\NewDocumentCommand{\numPbinomP}{ s O{3} m m m }{%*=sci,2=prec,3=n,4=p,5=k
 	\IfBooleanTF{#1}%
 	{%
 		\num[exponent-mode=scientific]{\xintFloatToDecimal{\xintfloateval{round(binomial(#3,#5)*#4^#5*(1-#4)^(#3-#5),#2)}}}
@@ -2354,7 +2351,7 @@
 	}
 }
 
-\NewDocumentCommand{\BinomC}{ s O{3} m m m m }{%*=sci,2=prec,3=n,4=p,5=a,6=b
+\NewDocumentCommand{\numPbinomC}{ s O{3} m m m m }{%*=sci,2=prec,3=n,4=p,5=a,6=b
 	\def\BorneInf{#5}\def\BorneSup{#6}
 	\ifthenelse{\equal{#5}{*}}%
 		{\def\BorneInf{0}}
@@ -2371,7 +2368,7 @@
 	}
 }
 
-\NewDocumentCommand{\GeomP}{ s O{3} m m }{%*=sci,2=prec,3=p,4=k
+\NewDocumentCommand{\numPgeomP}{ s O{3} m m }{%*=sci,2=prec,3=p,4=k
 	\IfBooleanTF{#1}%
 	{%
 		\num[exponent-mode=scientific]{\xintFloatToDecimal{\xintfloateval{round((1-#3)^(#4-1)*(#3),#2)}}}
@@ -2381,7 +2378,7 @@
 	}
 }
 
-\NewDocumentCommand{\GeomC}{ s O{3} m m m }{%*=sci,2=prec,3=p,4=a,5=b
+\NewDocumentCommand{\numPgeomC}{ s O{3} m m m }{%*=sci,2=prec,3=p,4=a,5=b
 	\def\BorneInf{#4}\def\BorneSup{#5}
 	\ifthenelse{\equal{#4}{*}}%
 		{\def\BorneInf{1}}
@@ -2398,7 +2395,7 @@
 	}
 }
 
-\NewDocumentCommand{\HypergeomP}{ s O{3} m m m m }{%*=sci,2=prec,3=N,4=n,5=m,6=k
+\NewDocumentCommand{\numPhypergeomP}{ s O{3} m m m m }{%*=sci,2=prec,3=N,4=n,5=m,6=k
 	\IfBooleanTF{#1}%
 	{%
 		\num[exponent-mode=scientific]{\xintFloatToDecimal{\xintfloateval{round(binomial(#5,#6)*binomial(#3-#5,#4-#6)/binomial(#3,#4),#2)}}}
@@ -2408,7 +2405,7 @@
 	}
 }
 
-\NewDocumentCommand{\HypergeomC}{ s O{3} m m m m m }{%*=sci,2=prec,3=N,4=n,5=m,6=a,7=b
+\NewDocumentCommand{\numPhypergeomC}{ s O{3} m m m m m }{%*=sci,2=prec,3=N,4=n,5=m,6=a,7=b
 	\def\BorneInf{#6}\def\BorneSup{#7}
 	\ifthenelse{\equal{#6}{*}}%
 		{\def\BorneInf{0}}
@@ -2425,7 +2422,7 @@
 	}
 }
 
-\NewDocumentCommand{\PoissonP}{ s O{3} m m }{%*=sci,2=prec,3=lbda,4=k
+\NewDocumentCommand{\numPpoissP}{ s O{3} m m }{%*=sci,2=prec,3=lbda,4=k
 	\IfBooleanTF{#1}%
 	{%
 		\num[exponent-mode=scientific]{\xintFloatToDecimal{\xintfloateval{round(exp(-#3)*#3^#4/factorial(#4),#2)}}}
@@ -2435,7 +2432,7 @@
 	}
 }
 
-\NewDocumentCommand{\PoissonC}{ s O{3} m m m }{%*=ing,2=prec,3=lbda,4=a,5=b
+\NewDocumentCommand{\numPpoissC}{ s O{3} m m m }{%*=ing,2=prec,3=lbda,4=a,5=b
 	\def\BorneInf{#4}\def\BorneSup{#5}
 	\ifthenelse{\equal{#4}{*}}%
 		{\def\BorneInf{0}}
@@ -2452,7 +2449,7 @@
 	}
 }
 
-\NewDocumentCommand{\NormaleC}{ s O{3} m m m m }{%
+\NewDocumentCommand{\numPnormC}{ s O{3} m m m m }{%
 	%*=ing,2=prec,3=mu,4=sigma,5=a,6=b
 	%def des bornes de l'intervalle suivant l'absence de a ou de b...
 	\def\BorneInf{#5}\def\BorneSup{#6}
@@ -2471,7 +2468,7 @@
 	}
 }
 
-\NewDocumentCommand{\ExpoC}{ s O{3} m m m }{%*=ing,2=prec,3=lbda,4=a,5=b
+\NewDocumentCommand{\numPexpoC}{ s O{3} m m m }{%*=ing,2=prec,3=lbda,4=a,5=b
 	\def\BorneInf{#4}\def\BorneSup{#5}
 	\ifthenelse{\equal{#4}{*}}%
 		{\def\BorneInf{0}}
@@ -2497,22 +2494,22 @@
 \ExplSyntaxOff
 
 \defKV[convfromten]{%
-	Couleur=\def\PLConvCouleur{#1},%
-	DecalH=\def\PLConvDecalH{#1},%
-	DecalV=\def\PLConvDecalV{#1},%
-	Noeud=\def\PLConvNoeud{#1}
+	couleur=\def\PLConvCouleur{#1},%
+	decalh=\def\PLConvDecalH{#1},%
+	decalv=\def\PLConvDecalV{#1},%
+	noeud=\def\PLConvNoeud{#1}
 }
 
 \setKVdefault[convfromten]{%
-	Couleur=red,%
-	DecalH=2pt,%
-	DecalV=3pt,%
-	Rect=true,%
-	Noeud=EEE,%
-	CouleurRes=false
+	couleur=red,%
+	decalh=2pt,%
+	decalv=3pt,%
+	rect=true,%
+	noeud=EEE,%
+	couleurres=false
 }
 
-\newcommand\ConversionDepuisBaseDix[3][]{%
+\newcommand\PLconvDepuisDec[3][]{%
 	\useKVdefault[convfromten]%
 	\setKV[convfromten]{#1}%
 	\xdef\ValRes{\xintDecToHex{#2}}%
@@ -2534,8 +2531,8 @@
 			%dernière
 			\xdef\ValQ{\fpeval{trunc(\ValTMP/#3,0)}}\xdef\ValR{\fpeval{\ValTMP-#3*\ValQ}}%
 			\\ \num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\PLnoeud{\PLConvNoeud2}{\num{\ValR}}
-		\end{array} \right| \Rightarrow \num{#2}_{10}=\ifboolKV[convfromten]{CouleurRes}{\mathcolor{\PLConvCouleur}{\convertbasedixtobase{#2}{#3}_{#3}}}{\convertbasedixtobase{#2}{#3}_{#3}}}%
-	\ifboolKV[convfromten]{Rect}%
+		\end{array} \right| \Rightarrow \num{#2}_{10}=\ifboolKV[convfromten]{couleurres}{\mathcolor{\PLConvCouleur}{\convertbasedixtobase{#2}{#3}_{#3}}}{\convertbasedixtobase{#2}{#3}_{#3}}}%
+	\ifboolKV[convfromten]{rect}%
 	{%
 		\IfSubStr{\PLConvDecalH}{/}%
 			{\StrCut{\PLConvDecalH}{/}{\PLConvDecalHg}{\PLConvDecalHd}}%
@@ -2549,30 +2546,30 @@
 
 %===============ARBRESPROBAS=========== OK !!
 \defKV[PLTIKZARBRE]{%
-	Unite=\def\PLAPunite{#1},%
-	EspaceNiveau=\def\PLAPespniv{#1},%
-	EspaceFeuille=\def\PLAPespfeuille{#1},%
-	Type=\def\PLAPtype{#1},%
-	Police=\def\PLAPfont{#1},%
-	PoliceProbas=\def\PLAPfontproba{#1},%
-	StyleTrait=\def\PLAPtypetrait{#1},%
-	EpaisseurTrait=\def\PLAPeptrait{#1}
+	unite=\def\PLAPunite{#1},%
+	espniv=\def\PLAPespniv{#1},%
+	espfeuille=\def\PLAPespfeuille{#1},%
+	type=\def\PLAPtype{#1},%
+	police=\def\PLAPfont{#1},%
+	policeprobas=\def\PLAPfontproba{#1},%
+	styletrait=\def\PLAPtypetrait{#1},%
+	eptrait=\def\PLAPeptrait{#1}
 }
 
 \setKVdefault[PLTIKZARBRE]{%
-	Unite=1cm,%
-	EspaceNiveau=3.25,%
-	EspaceFeuille=1,%
-	Type=2x2,%
-	Police=\normalfont\normalsize,%
-	PoliceProbas=\normalfont\small,%
-	InclineProbas=true,%
-	Fleche=false,%
-	StyleTrait={},%
-	EpaisseurTrait=semithick
+	unite=1cm,%
+	espniv=3.25,%
+	espfeuille=1,%
+	type=2x2,%
+	police=\normalfont\normalsize,%
+	policeprobas=\normalfont\small,%
+	inclineprobas=true,%
+	fleche=false,%
+	styletrait={},%
+	eptrait=semithick
 }
 
-\NewDocumentCommand\ArbreProbasTikz{ O{} m }{%1=options,2=libellés
+\NewDocumentCommand\PLarbre{ O{} m }{%1=options,2=libellés
 	\useKVdefault[PLTIKZARBRE]%
 	\setKV[PLTIKZARBRE]{#1}%
 	\setsepchar[.]{,./}%
@@ -2581,10 +2578,10 @@
 		%styles
 		\tikzstyle{noeud} = [font=\PLAPfont]
 		\tikzstyle{probas}= [font=\PLAPfontproba]
-		\ifboolKV[PLTIKZARBRE]{InclineProbas}
+		\ifboolKV[PLTIKZARBRE]{inclineprobas}
 			{\tikzstyle{PLetiquette}=[pos=0.525,sloped,fill=white]}
 			{\tikzstyle{PLetiquette}=[pos=0.525,fill=white]}
-		\ifboolKV[PLTIKZARBRE]{Fleche}
+		\ifboolKV[PLTIKZARBRE]{fleche}
 			{\tikzstyle{PLfleche}=[->,>=latex,\PLAPtypetrait,\PLAPeptrait]}
 			{\tikzstyle{PLfleche}=[\PLAPtypetrait,\PLAPeptrait]}
 		%arbre2x2
@@ -2757,7 +2754,7 @@
 	\end{tikzpicture}
 }
 
-\NewDocumentEnvironment{EnvArbreProbasTikz}{ O{} m }%1=options,2=libellés
+\NewDocumentEnvironment{PLenvarbre}{ O{} m }%1=options,2=libellés
 {
 	\useKVdefault[PLTIKZARBRE]
 	\setKV[PLTIKZARBRE]{#1}
@@ -2767,10 +2764,10 @@
 		%styles
 		\tikzstyle{noeud} = [font=\PLAPfont]
 		\tikzstyle{probas}= [font=\PLAPfontproba]
-		\ifboolKV[PLTIKZARBRE]{InclineProbas}
+		\ifboolKV[PLTIKZARBRE]{inclineprobas}
 			{\tikzstyle{PLetiquette}=[pos=0.525,sloped,fill=white]}
 			{\tikzstyle{PLetiquette}=[pos=0.525,fill=white]}
-		\ifboolKV[PLTIKZARBRE]{Fleche}
+		\ifboolKV[PLTIKZARBRE]{fleche}
 			{\tikzstyle{PLfleche}=[->,>=latex,\PLAPtypetrait,\PLAPeptrait]}
 			{\tikzstyle{PLfleche}=[\PLAPtypetrait,\PLAPeptrait]}
 		%arbre2x2
