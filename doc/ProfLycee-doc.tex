@@ -6,22 +6,10 @@
 
 \documentclass{article}
 \usepackage[french]{babel}
-\usepackage{iftex,ifpdf,ifxetex,ifluatex}
-\ifpdftex
-	\usepackage[utf8]{inputenc}
-	\usepackage[T1]{fontenc}
-	\usepackage[upright]{fourier}
-	\usepackage[scaled=0.875]{helvet}
-	\renewcommand\ttdefault{lmtt}
-	\usepackage[scaled=0.875]{cabin}
-	\usepackage{amsmath,amssymb}
-\fi
-\ifluatex
-	\usepackage{mathtools}
-	\usepackage{lualatex-math}
-	\usepackage{luatexbase}
-	\usepackage[math-style=french,bold-style=ISO]{fourier-otf}
-\fi
+\usepackage{mathtools}
+\usepackage{lualatex-math}
+\usepackage{luatexbase}
+\usepackage[math-style=french,bold-style=ISO]{fourier-otf}
 \usepackage{ProfLycee}
 \usepackage{tkz-euclide}
 \usetikzlibrary{hobby}
@@ -74,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{2.0.0}
-\def\PLdate{4 Novembre 2022}
+\def\PLversion{2.0.1}
+\def\PLdate{6 Novembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -125,9 +113,9 @@
 
 %petite vignette màj
 \newcommand\cmaj[1]{%
-	\IfStrEq{#1}{\PLversion}%
+	%\IfStrEq{#1}{\PLversion}%
 		{\tcbox[vignetteMaJ]{#1}\xspace}%
-		{}%
+		%{}%
 }
 
 %gestion de la fenêtre v2 directement dans le tikzpicture
@@ -340,7 +328,7 @@ Le {package} \ctex{ProfLycee} charge les {packages} :
 	\item \ctex{xparse}, \ctex{xkeyval}, \ctex{xstring}, \ctex{simplekv} ;
 	\item \ctex{listofitems}, \ctex{xintexpr} , \ctex{xintbinhex} et \ctex{xintgcd};
 	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{tcolorbox} ;
-	\item \ctex{piton} et \ctex{pythontex}
+	\item \ctex{piton} (uniquement si compilation en \LuaLaTeX{} !) et \ctex{pythontex}
 \end{itemize}
 \end{codeinfo}
 
@@ -1485,7 +1473,7 @@ def trace_parabole_tableaux():
 \subsection{Introduction}
 
 \begin{codeinfo}
-\cmaj{2.0.0} Le package \ctex{piton} permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
+\cmaj{2.0.0} Le package \ctex{piton} (compatible uniquement avec une compilation en \LuaLaTeX{} !) permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
 
 \smallskip
 
@@ -1494,6 +1482,8 @@ En \textit{partenariat} avec \ctex{tcolorbox}, on peut avoir une présentation d
 
 \begin{codeattention}
 Le package \ctex{piton} nécessite donc obligatoirement l’emploi de \LuaLaTeX{} !
+
+\cmaj{2.0.1} Ce package n'est chargé que si la compilation détectée est en \LuaLaTeX{} !
 \end{codeattention}
 
 \subsection{Présentation de code Python}
@@ -5248,7 +5238,9 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
-{\small \bverb|2022N.a|~:~~~~Refonte du code source avec modification des commandes}
+{\small \bverb|v 2.0.1|~:~~~~Chargement du package \textsf{piton} uniquement si compilation en \LuaLaTeX{} (page \pageref{pythonpiton})
+
+{\small \bverb|v 2.0.0|~:~~~~Refonte du code source avec modification des commandes}
 
 {\small \bverb|       |~:~~~~Refonte de la documentation}
 

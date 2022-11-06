@@ -6,20 +6,11 @@
 
 \documentclass{article}
 \usepackage[french]{babel}
-\usepackage{iftex,ifpdf,ifxetex,ifluatex}
-\ifpdftex
-	\usepackage[utf8]{inputenc}
-	\usepackage[T1]{fontenc}
-	\usepackage[upright]{fourier}
-	\usepackage[scaled=0.875]{helvet}
-	\renewcommand\ttdefault{lmtt}
-	\usepackage[scaled=0.875]{cabin}
-	\usepackage{amsmath,amssymb}
-\fi
-\ifluatex
-	\RequirePackage[math-style=french,bold-style=ISO]{fourier-otf}
-\fi
-\usepackage[build]{ProfLycee}
+\usepackage{mathtools}
+\usepackage{lualatex-math}
+\usepackage{luatexbase}
+\usepackage[math-style=french,bold-style=ISO]{fourier-otf}
+\usepackage{ProfLycee-old}
 \usepackage{tkz-euclide}
 \usetikzlibrary{hobby}
 \usepackage[group-minimum-digits=4]{siunitx}
@@ -71,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{1.3.7}
-\def\PLdate{2 Novembre 2022}
+\def\PLversion{1.3.8}
+\def\PLdate{6 Novembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -1428,7 +1419,7 @@ def trace_parabole_tableaux():
 \subsection{Introduction}
 
 \begin{codeinfo}
-Le package \ctex{piton} permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
+Le package \ctex{piton} (compatible uniquement avec une compilation en \LuaLaTeX{} !) permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
 
 \smallskip
 
@@ -1437,6 +1428,8 @@ En \textit{partenariat} avec \ctex{tcolorbox}, on peut avoir une présentation d
 
 \begin{codeattention}
 Le package \ctex{piton} nécessite donc obligatoirement l’emploi de \LuaLaTeX{} !
+
+Ce package n'est chargé que si la compilation détectée est en \LuaLaTeX{} !
 \end{codeattention}
 
 \subsection{Présentation de code Python}
@@ -5189,6 +5182,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v1.3.8|~:~~~~Chargement du package \textsf{piton} uniquement si compilation en \LuaLaTeX{} (page \pageref{pythonpiton})
 
 {\small \bverb|v1.3.7|~:~~~~Commandes pour du code python via piton, en compilation \LuaLaTeX{} (page \pageref{pythonpiton})
 
