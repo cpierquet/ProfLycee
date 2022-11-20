@@ -62,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{2.0.4}
-\def\PLdate{19 Novembre 2022}
+\def\PLversion{2.0.5}
+\def\PLdate{20 Novembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -1051,16 +1051,20 @@ On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.
 \subsection{Idées}
 
 \begin{codeidee}
-\cmaj{2.0.4} L'idée est de proposer des commandes pour effectuer des calculs avec des suites récurrentes du type $u_{n+1}=f\big(u_n\big)$ :
+\cmaj{2.0.3} L'idée est de proposer des commandes pour effectuer des calculs avec des suites récurrentes du type $u_{n+1}=f\big(u_n\big)$ :
 
 \begin{itemize}
-	\item calcul de termes avec formatage(s) éventuel(s) ;
+	\item calcul de termes avec possibilité d'arrondir ;
 	\item présentation de la conclusion de la recherche d'un seuil du type $u_n > S$ ou $u_n < S$.
 \end{itemize}
 \end{codeidee}
 
 \begin{codeattention}
 Le code pour le seuil ne trouve pas la solution (\ldots), il met \textit{juste} en forme et effectue quand même les calculs d'images.
+
+\smallskip
+
+\cmaj{2.0.5} Le choix a été fait de faire les calculs en mode \ctex{float} pour éviter les dépassements de capacité de \ctex{xint} liés aux boucles\ldots
 \end{codeattention}
 
 \begin{codetex}[listing only]
@@ -1080,9 +1084,7 @@ Plusieurs \Cle{Clés} sont disponibles pour la commande du calcul d'un terme :
 	\item la clé \Cle{No} qui est le rang initial de la suite ;
 	\item la clé \Cle{UNo} qui est le terme initial de la suite ;
 	\item la clé \Cle{Precision} qui précise l'arrondi éventuel ;\hfill{}défaut \Cle{3}
-	\item la clé \Cle{N} qui est l'indice du terme à calculer ;
-	\item la clé \Cle{Format} (parmi \Cle{Arrondi/Fraction/Decimal/BrutDecimal}) pour le format de sortie ;\hfill{}défaut \Cle{Arrondi}
-	\item la clé \Cle{OptionFrac} (parmi \Cle{d/t}) pour l'affichage de la fraction.\hfill{}défaut \Cle{}
+	\item la clé \Cle{N} qui est l'indice du terme à calculer.
 \end{itemize}
 
 \smallskip
@@ -1094,11 +1096,10 @@ L'argument mandataire est la fonction associée à la suite, en syntaxe \ctex{xi
 Avec $\begin{dcases} u_0 = 50 \\ u_{n+1}=\dfrac{1}{u_n+2} \end{dcases}$.
 
 On obtient $u_{10} \approx \CalculTermeRecurrence[No=0,UNo=50,N=10]{1/(x+2)}$.
-On obtient $u_{10} \approx \CalculTermeRecurrence[Precision=4,No=0,UNo=50,N=10]{1/(x+2)}$.
-On obtient $u_{10} = \CalculTermeRecurrence[Format=Fraction,OptionFrac=d,No=0,UNo=50,N=10]{1/(x+2)}$.
-On obtient $u_{10} \approx \CalculTermeRecurrence[Format=Decimal,No=0,UNo=50,N=10]{1/(x+2)}$.
-On obtient $u_{10} = \CalculTermeRecurrence[Format=Brut,No=0,UNo=50,N=10]{1/(x+2)}$.
-On obtient $u_{10} \approx \CalculTermeRecurrence[Format=BrutDecimal,No=0,UNo=50,N=10]{1/(x+2)}$.
+
+On obtient $u_{15} \approx \CalculTermeRecurrence[Precision=4,No=0,UNo=50,N=15]{1/(x+2)}$.
+
+On obtient $u_{20} \approx \CalculTermeRecurrence[Precision=6,No=0,UNo=50,N=20]{1/(x+2)}$.
 \end{codetex}
 
 \begin{codesortie}
@@ -1110,23 +1111,11 @@ On obtient $u_{10} \approx \CalculTermeRecurrence[No=0,UNo=50,N=10]{1/(x+2)}$ \h
 
 \smallskip
 
-On obtient $u_{10} \approx \CalculTermeRecurrence[Precision=4,No=0,UNo=50,N=10]{1/(x+2)}$  \hfill~avec choix de la précision.
+On obtient $u_{15} \approx \CalculTermeRecurrence[Precision=4,No=0,UNo=50,N=15]{1/(x+2)}$  \hfill~avec choix de la précision à $10^{-4}$.
 
 \smallskip
 
-On obtient $u_{10} = \CalculTermeRecurrence[Format=Fraction,OptionFrac=d,No=0,UNo=50,N=10]{1/(x+2)}$ \hfill~en fraction (si besoin et possible).
-
-\smallskip
-
-On obtient $u_{10} \approx \CalculTermeRecurrence[Format=Decimal,No=0,UNo=50,N=10]{1/(x+2)}$ \hfill~nombre décimal formaté.
-
-\smallskip
-
-On obtient $u_{10} = \CalculTermeRecurrence[Format=Brut,No=0,UNo=50,N=10]{1/(x+2)}$\hfill~sortie brute par \ctex{xint}.
-
-\smallskip
-
-On obtient $u_{10} \approx \CalculTermeRecurrence[Format=BrutDecimal,No=0,UNo=50,N=10]{1/(x+2)}$\hfill~sortie brute décimale par \ctex{xint}.
+On obtient $u_{20} \approx \CalculTermeRecurrence[Precision=6,No=0,UNo=50,N=20]{1/(x+2)}$ \hfill~avec choix de la précision à $10^{-6}$.
 \end{codesortie}
 
 \begin{codecles}
@@ -5427,6 +5416,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.0.5|~:~~~~Correction d'un bug avec les calculs de suites récurrentes (page \pageref{calcrecurr})
 
 {\small \bverb|v 2.0.4|~:~~~~Ajout d'une commande pour une présentation de solution par TVI (page \pageref{solutiontvi})
 

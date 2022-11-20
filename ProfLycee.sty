@@ -3,9 +3,10 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/11/19 2.0.4 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/11/20 2.0.5 Aide pour l'utilisation de LaTeX en lycee]
+% 2.0.5	Correction d'un bug avec les calculs en valeurx exactes avec les suites récurrentes...
 % 2.0.4	Ajout d'une commande pour présenter un balayage (TVI) + calculs suites récurrentes 
-% 2.0.3	Correction d'un bug avec les arbres 3x3
+% 2.0.3Correction d'un bug avec les arbres 3x3
 % 2.0.2	Ajout de l'option auto-margin sur piton
 % 2.0.1	Chargement de piton uniquement si lua...
 % 2.0.0	Refonte des commandes, des options, et de la documentation !!!
@@ -3152,7 +3153,7 @@
 	va=\def\DHTva{#1},%
 	vb=\def\DHTvb{#1},%
 	Precision=\def\DHTprec{#1},%
-	NomSol=\def\DHTnomsol{#1},
+	NomSol=\def\DHTnomsol{#1},%
 	Stretch=\def\DHTstretch{#1}
 }
 
@@ -3200,33 +3201,34 @@
 	No=\def\SRninit{#1},%
 	UNo=\def\SRuninit{#1},%
 	Precision=\def\SRprec{#1},%
-	N=\def\SRnfinal{#1},%
-	Format=\def\SRformat{#1},%
-	OptionFrac=\def\SRoptfrac{#1}
+	N=\def\SRnfinal{#1}
+	%Format=\def\SRformat{#1},%
+	%OptionFrac=\def\SRoptfrac{#1}
 }
 
 \setKVdefault[calculsuiterecur]{%
-	Precision=3,%
-	Format=Arrondi,%
-	OptionFrac={}
+	Precision=3
+	%Format=Arrondi,%
+	%OptionFrac={}
 }
 
-\NewDocumentCommand\CalculTermeRecurrence{ O{} m }{%
+\NewDocumentCommand\CalculTermeRecurrence{ O{} m }{%attention avec les calculs en exact :-(
 	\useKVdefault[calculsuiterecur]%
 	\setKV[calculsuiterecur]{#1}%
-	\xintdeffunc varfct(x) := #2 ;%
+	\xintdeffloatfunc varfct(x) := #2 ;%
 	\xdef\vartmp{\fpeval{\SRuninit}}%
 	\IfEq{\SRnfinal}{\inteval{\SRninit+1}}%
-		{\xdef\vartmp{\xinteval{varfct(\vartmp)}}}%
+		{\xdef\vartmp{\xintfloateval{varfct(\vartmp)}}}%
 		{%
 			\foreach \i in {1,2,...,\inteval{\SRnfinal-\SRninit}}%
-				{\xdef\vartmp{\xinteval{varfct(\vartmp)}}}%
+				{\xdef\vartmp{\xintfloateval{varfct(\vartmp)}}}%
 		}%
-	\IfStrEq{\SRformat}{Arrondi}{\num[minimum-decimal-digits=\SRprec]{\xintfloateval{round(\vartmp,\SRprec)}}}{}%
-	\IfStrEq{\SRformat}{Fraction}{\ConversionFraction[\SRoptfrac]{\xinteval{\vartmp}}}{}%
-	\IfStrEq{\SRformat}{Brut}{\xinteval{\vartmp}}{}%
-	\IfStrEq{\SRformat}{Decimal}{\num{\xintfloateval{\vartmp}}}{}%
-	\IfStrEq{\SRformat}{BrutDecimal}{\xintFloatToDecimal{\vartmp}}{}%
+	%\num[minimum-decimal-digits=\SRprec]{\xintfloateval{round(\vartmp,\SRprec)}}%
+	\num{\xintfloateval{round(\vartmp,\SRprec)}}%
+	%\IfStrEq{\SRformat}{Fraction}{\ConversionFraction[\SRoptfrac]{\xinteval{\vartmp}}}{}%
+	%\IfStrEq{\SRformat}{Brut}{\xinteval{\vartmp}}{}%
+	%\IfStrEq{\SRformat}{Decimal}{\num{\xintfloateval{\vartmp}}}{}%
+	%\IfStrEq{\SRformat}{BrutDecimal}{\xintFloatToDecimal{\vartmp}}{}%
 }
 
 \defKV[suiteseuil]{%
@@ -3241,7 +3243,7 @@
 
 \setKVdefault[suiteseuil]{%
 	NomSuite=u,%
-	Precision=2,%
+	Precision=3,%
 	Stretch=1.15,%
 	Balayage=false,%
 	Calculatrice=false,%
