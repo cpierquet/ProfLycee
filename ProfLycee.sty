@@ -3,14 +3,17 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/11/06 2.0.1 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/11/19 2.0.4 Aide pour l'utilisation de LaTeX en lycee]
+% 2.0.4	Ajout d'une commande pour présenter un balayage (TVI) + calculs suites récurrentes 
+% 2.0.3	Correction d'un bug avec les arbres 3x3
+% 2.0.2	Ajout de l'option auto-margin sur piton
 % 2.0.1	Chargement de piton uniquement si lua...
 % 2.0.0	Refonte des commandes, des options, et de la documentation !!!
 % ------------------------------------------------------------------
 % 1.3.7	Ajout d'un environnement simplifié pour du code python via piton
 % 1.3.6	Ajout d'un "générateur" de trinômes (ou mise en forme basique)
 % 1.3.5	Correction de bugs sur les calculs de probas (loi géométrique)
-% 1.3.4	Ajout des calculs de probas geomtriques et hypergeometriques + petits schémas probas
+% 1.3.4	Ajout des calculs de probas geométriques et hypergeometriques + petits schémas probas
 % 1.3.3	Ajout de commandes pour des arbres de probas classiques, en tikz
 % 1.3.2	Correction d'une commande liée à la conversion bintohex (suppression clé trait)
 % 1.3.1	Ajout d'une option pour ne pas afficher les bords des cases en pixelart
@@ -65,13 +68,14 @@
 \RequirePackage{ifthen}
 \RequirePackage{xparse}
 \RequirePackage{xkeyval}
-\RequirePackage{xfp}
+%\RequirePackage{xfp} %plus utile
 \RequirePackage{xstring}
 \RequirePackage{xintexpr}
 \RequirePackage{xintbinhex}
 \RequirePackage{simplekv}
 \RequirePackage{listofitems}
 \RequirePackage{tabularray}
+\RequirePackage{hvlogos}
 \RequirePackage{siunitx} %test avec v3
 \sisetup{%
   locale=FR,%
@@ -120,6 +124,23 @@
 	%on charge minted via la librairie tcbox
 	\tcbuselibrary{minted}
 \fi
+
+%-----------PRESENTATIONDECODES--------------
+\NewTCBListing{PresentationCode}{ O{ForestGreen} m }{%
+	sharp corners=downhill,enhanced,arc=12pt,skin=bicolor,%
+	colback=#1!5!white,colframe=#1!75!black,colbacklower=White,%
+	attach boxed title to top right={yshift=-\tcboxedtitleheight},title=Code \LaTeX,%
+	boxed title style={%
+		colframe=#1!75!black,colback=#1!15!white,%
+		,sharp corners=downhill,arc=12pt,%
+	},%
+	fonttitle=\color{#1!90!black}\itshape\ttfamily\footnotesize,%
+	listing options={%
+		style=tcblatex,basicstyle=\footnotesize\ttfamily,%
+		keywordstyle=\bfseries\color{Blue},tabsize=4,%
+	},%
+	#2
+}
 
 %---------------SPLINES----------------------
 %------commande utile pour extraire des infos d'une liste
@@ -597,7 +618,7 @@
 			\useKVdefault[envpiton]%
 			\setKV[envpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
 			\ifboolKV[envpiton]{Lignes}%si lignes=true
-				{\PitonOptions{left-margin=12.75pt,line-numbers}}%
+				{\PitonOptions{left-margin=auto,line-numbers}}%
 				{\PitonOptions{}}%
 			\begin{tcolorbox}[stylepythontex,leftupper=8pt,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontlower=\small,\CODPITalign]
 		}%
@@ -971,7 +992,7 @@
 	Option={}
 }
 
-\newcommand\EcritureEnsemble[2][1]{%
+\newcommand\EcritureEnsemble[2][]{%
 	\useKVdefault[kvensemble]%
 	\setKV[kvensemble]{#1}%
 	\ifboolKV[kvensemble]{Mathpunct}%
@@ -986,9 +1007,9 @@
 	{%si oui := fraction
 		\StrBefore{\calculargument}{/}[\numerateur]%on extrait le numérateur
 		\StrBehind{\calculargument}{/}[\denominateur]%on extrait le dénominateur
-		\ifblank{#1}{\ensuremath{\frac{\numerateur}{\denominateur}}}{}%si l'argument optionnel est vide
-		\IfStrEq{#1}{d}{\ensuremath{\dfrac{\numerateur}{\denominateur}}}{}%si l'arg opt est d
-		\IfStrEq{#1}{t}{\ensuremath{\tfrac{\numerateur}{\denominateur}}}{}%si l'arg opt est t
+		\ifblank{#1}{\ensuremath{\frac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'argument optionnel est vide
+		\IfStrEq{#1}{d}{\ensuremath{\dfrac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'arg opt est d
+		\IfStrEq{#1}{t}{\ensuremath{\tfrac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'arg opt est t
 	}{%si non := entier
 		\num{\calculargument}%on affiche l'entier, avec le package siunitx
 	}
@@ -2707,7 +2728,7 @@
 			\coordinate (R) at ({0*\PLAPespniv},{-4*\PLAPespfeuille}) ;
 			\node[noeud] (A11) at ({1*\PLAPespniv},{-1*\PLAPespfeuille}) {\PLARBREDONNES[1,1]};
 			\node[noeud] (A12) at ({1*\PLAPespniv},{-4*\PLAPespfeuille}) {\PLARBREDONNES[5,1]};
-			\node[noeud] (A13) at ({1*\PLAPespniv},{-7*\PLAPespfeuille}) {\PLARBREDONNES[10,1]};
+			\node[noeud] (A13) at ({1*\PLAPespniv},{-7*\PLAPespfeuille}) {\PLARBREDONNES[9,1]};
 			\node[noeud] (A21) at ({2*\PLAPespniv},{-0*\PLAPespfeuille}) {\PLARBREDONNES[2,1]};
 			\node[noeud] (A22) at ({2*\PLAPespniv},{-1*\PLAPespfeuille}) {\PLARBREDONNES[3,1]};
 			\node[noeud] (A23) at ({2*\PLAPespniv},{-2*\PLAPespfeuille}) {\PLARBREDONNES[4,1]};
@@ -2893,7 +2914,7 @@
 			\coordinate (R) at ({0*\PLAPespniv},{-4*\PLAPespfeuille}) ;
 			\node[noeud] (A11) at ({1*\PLAPespniv},{-1*\PLAPespfeuille}) {\PLARBREDONNES[1,1]};
 			\node[noeud] (A12) at ({1*\PLAPespniv},{-4*\PLAPespfeuille}) {\PLARBREDONNES[5,1]};
-			\node[noeud] (A13) at ({1*\PLAPespniv},{-7*\PLAPespfeuille}) {\PLARBREDONNES[10,1]};
+			\node[noeud] (A13) at ({1*\PLAPespniv},{-7*\PLAPespfeuille}) {\PLARBREDONNES[9,1]};
 			\node[noeud] (A21) at ({2*\PLAPespniv},{-0*\PLAPespfeuille}) {\PLARBREDONNES[2,1]};
 			\node[noeud] (A22) at ({2*\PLAPespniv},{-1*\PLAPespfeuille}) {\PLARBREDONNES[3,1]};
 			\node[noeud] (A23) at ({2*\PLAPespniv},{-2*\PLAPespfeuille}) {\PLARBREDONNES[4,1]};
@@ -3123,6 +3144,129 @@
 			\draw[overlay,rounded corners=4pt,\PLPGCDCouleur,thick] ($(\PLPGCDNoeud1.north west)+(-\PLPGCDDecal,\PLPGCDDecal)$) rectangle ($(\PLPGCDNoeud1.south east)+(\PLPGCDDecal,-\PLPGCDDecal)$) ;
 		\end{tikzpicture}%
 	}{}%
+}
+
+%================TVISOLUTION============= OK!
+\defKV[dichoto]{%
+	NomFct=\def\DHTnomfct{#1},%
+	va=\def\DHTva{#1},%
+	vb=\def\DHTvb{#1},%
+	Precision=\def\DHTprec{#1},%
+	NomSol=\def\DHTnomsol{#1},
+	Stretch=\def\DHTstretch{#1}
+}
+
+\setKVdefault[dichoto]{%
+	NomFct=f,%
+	Precision=2,%
+	NomSol=\alpha,%
+	Stretch=1.15,%
+	Balayage=false,%
+	Calculatrice=false,%
+	Majuscule=true
+}
+
+\newcommand\SolutionTVI[3][]{%
+	\useKVdefault[dichoto]%
+	\setKV[dichoto]{#1}%
+	\xintdeffloatfunc varfct(x) := #2 ;%
+	\ifboolKV[dichoto]{Balayage}{\ifboolKV[dichoto]{Majuscule}{P}{p}ar balayage, on obtient }{}%
+	\ifboolKV[dichoto]{Calculatrice}{\ifboolKV[dichoto]{Majuscule}{P}{p}ar calculatrice, on obtient }{}%
+	\ensuremath{%
+		\left\lbrace \begin{tblr}{stretch=\DHTstretch,colsep=1pt,rll}%
+			{\DHTnomfct}{\left( \num{\DHTva} \right)} &\approx \num[minimum-decimal-digits=\DHTprec]{\xintFloatToDecimal{\xintfloateval{round(varfct(\DHTva),\DHTprec)}}} & \xintifGt{\xintfloateval{varfct(\DHTva)-#3}}{0}{> \num{#3}}{< \num{#3}} \: \\ %
+			{\DHTnomfct}{\left( \num{\DHTvb} \right)} &\approx \num[minimum-decimal-digits=\DHTprec]{\xintFloatToDecimal{\xintfloateval{round(varfct(\DHTvb),\DHTprec)}}} & \xintifGt{\xintfloateval{varfct(\DHTvb)-#3}}{0}{> \num{#3}}{< \num{#3}} \:%
+		\end{tblr}%
+		\right|%
+		\Rightarrow%
+		\num{\DHTva} < \DHTnomsol < \num{\DHTvb}%
+	}%
+}
+
+%=================CALCSRECUR============= OK!
+\NewDocumentCommand\CalculInterneTermeRecurrence{ m m m m }{%pas forcément utile
+	\xintdeffloatfunc varfctrecur(x) := #1 ;%
+	\xdef\vartmp{#3}%
+	\IfEq{#4}{\inteval{#2+1}}%
+	{\xdef\vartmp{\xintfloateval{varfctrecur(\vartmp)}}}%
+	{%
+		\foreach \i in {1,2,...,\inteval{#4-#2}}%
+		{\xdef\vartmp{\xintfloateval{varfctrecur(\vartmp)}}}%
+	}%
+	\xintFloatToDecimal{\vartmp}%
+}
+
+\defKV[calculsuiterecur]{%
+	No=\def\SRninit{#1},%
+	UNo=\def\SRuninit{#1},%
+	Precision=\def\SRprec{#1},%
+	N=\def\SRnfinal{#1},%
+	Format=\def\SRformat{#1},%
+	OptionFrac=\def\SRoptfrac{#1}
+}
+
+\setKVdefault[calculsuiterecur]{%
+	Precision=3,%
+	Format=Arrondi,%
+	OptionFrac={}
+}
+
+\NewDocumentCommand\CalculTermeRecurrence{ O{} m }{%
+	\useKVdefault[calculsuiterecur]%
+	\setKV[calculsuiterecur]{#1}%
+	\xintdeffunc varfct(x) := #2 ;%
+	\xdef\vartmp{\fpeval{\SRuninit}}%
+	\IfEq{\SRnfinal}{\inteval{\SRninit+1}}%
+		{\xdef\vartmp{\xinteval{varfct(\vartmp)}}}%
+		{%
+			\foreach \i in {1,2,...,\inteval{\SRnfinal-\SRninit}}%
+				{\xdef\vartmp{\xinteval{varfct(\vartmp)}}}%
+		}%
+	\IfStrEq{\SRformat}{Arrondi}{\num[minimum-decimal-digits=\SRprec]{\xintfloateval{round(\vartmp,\SRprec)}}}{}%
+	\IfStrEq{\SRformat}{Fraction}{\ConversionFraction[\SRoptfrac]{\xinteval{\vartmp}}}{}%
+	\IfStrEq{\SRformat}{Brut}{\xinteval{\vartmp}}{}%
+	\IfStrEq{\SRformat}{Decimal}{\num{\xintfloateval{\vartmp}}}{}%
+	\IfStrEq{\SRformat}{BrutDecimal}{\xintFloatToDecimal{\vartmp}}{}%
+}
+
+\defKV[suiteseuil]{%
+	No=\def\SEUILindiceinit{#1},%
+	UNo=\def\SEUILtermeinit{#1},%
+	NomSuite=\def\SEUILnomsuite{#1},%
+	SolN=\def\SEUILn{#1},%
+	Precision=\def\SEUILprec{#1},%
+	Stretch=\def\SEUILstretch{#1},%
+	Sens=\def\SEUILsens{#1}
+}
+
+\setKVdefault[suiteseuil]{%
+	NomSuite=u,%
+	Precision=2,%
+	Stretch=1.15,%
+	Balayage=false,%
+	Calculatrice=false,%
+	Majuscule=true,%
+	Sens=>
+}
+
+\newcommand\SolutionSeuil[3][]{%1=options + %2 = fonction + %3 = seuil
+	\useKVdefault[suiteseuil]%
+	\setKV[suiteseuil]{#1}%
+	\def\SEUILnmu{\inteval{\SEUILn-1}}%
+	\IfEq{\SEUILsens}{>}%
+		{\def\SensDeb{\leqslant}\def\SensFin{>}}%
+		{\def\SensDeb{\geqslant}\def\SensFin{<}}%
+	\ifboolKV[suiteseuil]{Balayage}{\ifboolKV[suiteseuil]{Majuscule}{P}{p}ar balayage, on obtient }{}%
+	\ifboolKV[suiteseuil]{Calculatrice}{\ifboolKV[suiteseuil]{Majuscule}{P}{p}ar calculatrice, on obtient }{}%
+	\ensuremath{%
+		\left\lbrace \begin{tblr}{stretch=\SEUILstretch,colsep=1pt,rll}%
+			\SEUILnomsuite_{\SEUILnmu} &\approx \CalculTermeRecurrence[Precision=\SEUILprec,No=\SEUILindiceinit,UNo=\SEUILtermeinit,N=\SEUILnmu]{#2} & \SensDeb\num{#3} \: \\ %
+			\SEUILnomsuite_{\SEUILn} &\approx \CalculTermeRecurrence[Precision=\SEUILprec,No=\SEUILindiceinit,UNo=\SEUILtermeinit,N=\SEUILn]{#2} & \SensFin\num{#3} \: %
+		\end{tblr}%
+		\right|%
+		\Rightarrow%
+		n \geqslant \SEUILn%
+	}%
 }
 
 \endinput

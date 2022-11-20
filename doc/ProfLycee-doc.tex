@@ -6,11 +6,11 @@
 
 \documentclass{article}
 \usepackage[french]{babel}
+\usepackage{ProfLycee}
 \usepackage{mathtools}
 \usepackage{lualatex-math}
 \usepackage{luatexbase}
 \usepackage[math-style=french,bold-style=ISO]{fourier-otf}
-\usepackage{ProfLycee}
 \usepackage{tkz-euclide}
 \usetikzlibrary{hobby}
 \usepackage[group-minimum-digits=4]{siunitx}
@@ -62,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{2.0.1}
-\def\PLdate{6 Novembre 2022}
+\def\PLversion{2.0.4}
+\def\PLdate{19 Novembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -241,6 +241,8 @@ Une commande pour simplifier des calculs sous forme fractionnaire.
 
 Une commande pour simplifier l'écriture d'un ensemble, avec espaces \og automatiques \fg.
 
+Des commandes pour effectuer des calculs avec des suites récurrentes.
+
 Une commande pour créer, en \TikZ, la \textit{toile} pour une suite récurrente.
 
 Une commande pour créer, en \TikZ, un cercle trigo avec options.
@@ -328,7 +330,7 @@ Le {package} \ctex{ProfLycee} charge les {packages} :
 	\item \ctex{xparse}, \ctex{xkeyval}, \ctex{xstring}, \ctex{simplekv} ;
 	\item \ctex{listofitems}, \ctex{xintexpr} , \ctex{xintbinhex} et \ctex{xintgcd};
 	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{tcolorbox} ;
-	\item \ctex{piton} (uniquement si compilation en \LuaLaTeX{} !) et \ctex{pythontex}
+	\item \ctex{piton} (uniquement si compilation en \LuaLaTeX{} !) et \ctex{pythontex}.
 \end{itemize}
 \end{codeinfo}
 
@@ -342,9 +344,9 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 %exemple de chargement pour une compilation en (pdf)latex
 \documentclass{article}
 \usepackage[french]{babel}
+\usepackage{ProfLycee}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{ProfLycee}
 ...
 \end{codetex}
 
@@ -352,9 +354,9 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 %exemple de chargement pour une compilation en (xe/lua)latex
 \documentclass{article}
 \usepackage[french]{babel}
+\usepackage{ProfLycee}
 \usepackage{mathtools}
 \usepackage{fontspec}
-\usepackage{ProfLycee}
 ...
 \end{codetex}
 
@@ -418,7 +420,7 @@ Je préfère faire ces ajustements tant que le package est assez \textit{jeune} 
 
 \begin{codetex}[listing only]
 ...
-\usepackage[<options>]{ProfLycee-old}
+\usepackage[<options>]{ProfLycee-old} %nouveautés non disponibles par contre...
 ...
 \end{codetex}
 
@@ -533,18 +535,24 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \SplineTikz[<options>]{<liste>}
 \TangenteTikz[<options>]{<liste>}
 
-%toile pour une suite récurrente, dans un environnement tikz
+%Présentation d'une solution par balayage (TVI)
+\SolutionTVI[<options>]{<fonction>}{<valeur>}
+
+%Calculer le terme d'une suite récurrente simple, toile pour une suite récurrente simple
+\CalculTermeRecurrence[<options>]{<fonction associée>}
 \ToileRecurrence[<clés>][<options du tracé>][<option supplémentaire des termes>]
 
-%présentation type calcul formel, dans un environnement tikz
-\CalculFormelParametres[<options>]
-\CalculFormelLigne[<options>]{<commande>}{<résultat>}
+%Mise en forme de la conclusion d'un seuil
+\SolutionSeuil[<options>]{<fonction associée>}{<seuil>}
 \end{codetex}
 
 \begin{codetex}[listing only]
+%présentation type calcul formel, dans un environnement tikz
+\CalculFormelParametres[<options>]
+\CalculFormelLigne[<options>]{<commande>}{<résultat>}
+
 %présentation de code Python
 \begin{CodePythonLst}(*)[<largeur>]{<commandes tcbox>}...\end{CodePythonLst}
-\CodePythonLstFichier(*)[<largeur>]{<commandes tcbox<}{<script>}
 \begin{CodePiton}[<options>]...\end{CodePiton}
 \begin{CodePythontex}[<options>]...\end{CodePythontex}
 \begin{CodePythonMinted}(*)[<largeur>][<options>]...\end{CodePythonMinted}
@@ -985,6 +993,184 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 
 \newpage
 
+\section{Présentation d'une solution d'équation par balayage}\label{solutiontvi}
+
+\subsection{Idée}
+
+\begin{codeidee}
+\cmaj{2.0.4} L'idée est de présenter l'obtention d'une solution approchée d'équation par balayage, dans le cadre du TVI par exemple. Les calculs et tests sont effectués grâce au package \ctex{xinttools}, et le formatage par \ctex{tabularray} et \ctex{sinuitx}.
+\end{codeidee}
+
+\begin{codeattention}
+Le code ne trouve pas la solution, il met \textit{juste} en forme mais effectue quand même les calculs d'images et les tests.
+\end{codeattention}
+
+\begin{codetex}[listing only]
+\SolutionTVI[<options>]{<fonction>}{<valeur>}
+\end{codetex}
+
+\subsection{Clés et arguments}
+
+\begin{codecles}
+Plusieurs \Cle{Clés} sont disponibles pour cette commande, relative donc à une équation du type $f(x)=k$ :
+
+\begin{itemize}
+	\item la clé \Cle{NomFct} qui permet de spécifier le nom de la fonction ;\hfill{}défaut \Cle{f}
+	\item la clé \Cle{NomSol} qui permet de spécifier le nom de la fonction ;\hfill{}défaut \Cle{\textbackslash{}alpha}
+	\item les clés \Cle{va} et \Cle{vb} qui sont les bornes inférieure et supérieure de l'encadrement ;
+	\item la clé \Cle{Precision} qui est la précision des calculs pour les images ;\hfill{}défaut \Cle{2}
+	\item la clé \Cle{Stretch} qui permet d'espacer les lignes ;\hfill{}défaut \Cle{1.15}
+	\item les booléens \Cle{Balayage} ou \Cle{Calculatrice} pour afficher un texte en amont ;\hfill{}défaut \Cle{false}
+	\item le booléen  qui affiche un texte avant, en spécifiant la calculatrice ;\hfill{}défaut \Cle{false}
+	\item le booléen \Cle{Majuscule} qui affiche le texte avant, avec une majuscule au début ;\hfill{}défaut \Cle{true}
+\end{itemize}
+
+\smallskip
+
+Le premier argument mandataire est la fonction, en syntaxe \ctex{xint} et avec comme variable $x$, et le second la valeur de $k$.
+\end{codecles}
+
+\begin{codetex}[]
+Pour $f(x)=0$ avec $f(x)=x^2-2$. On obtient \SolutionTVI[va=1.414,vb=1.415,Precision=3]{x**2-2}{0}.
+\end{codetex}
+
+\begin{codetex}[]
+Avec $\varphi(t)=3t\,\rm{e}^{-0,5t+1}=5$,
+\SolutionTVI[Majuscule=false,Calculatrice,va=1.02,vb=1.03,NomFct=\varphi]{3*x*exp(-0.5*x+1)}{5}
+\end{codetex}
+
+\begin{codetex}[]
+On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.
+\SolutionTVI[Balayage,Stretch=1.5,va=4.48,vb=4.49,NomFct=g,Precision=4,NomSol={x_0}]{log(x)}{1.5}.
+\end{codetex}
+
+\newpage
+
+\section{Suites récurrentes simples}\label{calcrecurr}
+
+\subsection{Idées}
+
+\begin{codeidee}
+\cmaj{2.0.4} L'idée est de proposer des commandes pour effectuer des calculs avec des suites récurrentes du type $u_{n+1}=f\big(u_n\big)$ :
+
+\begin{itemize}
+	\item calcul de termes avec formatage(s) éventuel(s) ;
+	\item présentation de la conclusion de la recherche d'un seuil du type $u_n > S$ ou $u_n < S$.
+\end{itemize}
+\end{codeidee}
+
+\begin{codeattention}
+Le code pour le seuil ne trouve pas la solution (\ldots), il met \textit{juste} en forme et effectue quand même les calculs d'images.
+\end{codeattention}
+
+\begin{codetex}[listing only]
+%commande pour calculer et formater
+\CalculTermeRecurrence[<options>]{<fonction associée>}
+
+%mise en forme de la conclusion d'un seuil
+\SolutionSeuil[<options>]{<fonction associée>}{<seuil>}
+\end{codetex}
+
+\subsection{Clés et arguments}
+
+\begin{codecles}
+Plusieurs \Cle{Clés} sont disponibles pour la commande du calcul d'un terme :
+
+\begin{itemize}
+	\item la clé \Cle{No} qui est le rang initial de la suite ;
+	\item la clé \Cle{UNo} qui est le terme initial de la suite ;
+	\item la clé \Cle{Precision} qui précise l'arrondi éventuel ;\hfill{}défaut \Cle{3}
+	\item la clé \Cle{N} qui est l'indice du terme à calculer ;
+	\item la clé \Cle{Format} (parmi \Cle{Arrondi/Fraction/Decimal/BrutDecimal}) pour le format de sortie ;\hfill{}défaut \Cle{Arrondi}
+	\item la clé \Cle{OptionFrac} (parmi \Cle{d/t}) pour l'affichage de la fraction.\hfill{}défaut \Cle{}
+\end{itemize}
+
+\smallskip
+
+L'argument mandataire est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$.
+\end{codecles}
+
+\begin{codetex}[listing only]
+Avec $\begin{dcases} u_0 = 50 \\ u_{n+1}=\dfrac{1}{u_n+2} \end{dcases}$.
+
+On obtient $u_{10} \approx \CalculTermeRecurrence[No=0,UNo=50,N=10]{1/(x+2)}$.
+On obtient $u_{10} \approx \CalculTermeRecurrence[Precision=4,No=0,UNo=50,N=10]{1/(x+2)}$.
+On obtient $u_{10} = \CalculTermeRecurrence[Format=Fraction,OptionFrac=d,No=0,UNo=50,N=10]{1/(x+2)}$.
+On obtient $u_{10} \approx \CalculTermeRecurrence[Format=Decimal,No=0,UNo=50,N=10]{1/(x+2)}$.
+On obtient $u_{10} = \CalculTermeRecurrence[Format=Brut,No=0,UNo=50,N=10]{1/(x+2)}$.
+On obtient $u_{10} \approx \CalculTermeRecurrence[Format=BrutDecimal,No=0,UNo=50,N=10]{1/(x+2)}$.
+\end{codetex}
+
+\begin{codesortie}
+Avec $u_0 = 50$ et $u_{n+1}=\dfrac{1}{u_n+2}$.
+
+\smallskip
+
+On obtient $u_{10} \approx \CalculTermeRecurrence[No=0,UNo=50,N=10]{1/(x+2)}$ \hfill~sortie par défaut.
+
+\smallskip
+
+On obtient $u_{10} \approx \CalculTermeRecurrence[Precision=4,No=0,UNo=50,N=10]{1/(x+2)}$  \hfill~avec choix de la précision.
+
+\smallskip
+
+On obtient $u_{10} = \CalculTermeRecurrence[Format=Fraction,OptionFrac=d,No=0,UNo=50,N=10]{1/(x+2)}$ \hfill~en fraction (si besoin et possible).
+
+\smallskip
+
+On obtient $u_{10} \approx \CalculTermeRecurrence[Format=Decimal,No=0,UNo=50,N=10]{1/(x+2)}$ \hfill~nombre décimal formaté.
+
+\smallskip
+
+On obtient $u_{10} = \CalculTermeRecurrence[Format=Brut,No=0,UNo=50,N=10]{1/(x+2)}$\hfill~sortie brute par \ctex{xint}.
+
+\smallskip
+
+On obtient $u_{10} \approx \CalculTermeRecurrence[Format=BrutDecimal,No=0,UNo=50,N=10]{1/(x+2)}$\hfill~sortie brute décimale par \ctex{xint}.
+\end{codesortie}
+
+\begin{codecles}
+Plusieurs \Cle{Clés} sont disponibles pour la commande du seuil :
+
+\begin{itemize}
+	\item la clé \Cle{NomSuite} qui est le nom de la suite ;\hfill~défaut \Cle{u}
+	\item la clé \Cle{No} qui est le rang initial de la suite ;
+	\item la clé \Cle{UNo} qui est le terme initial de la suite ;
+	\item la clé \Cle{SolN} qui est la valeur de l'indice cherché ;
+	\item la clé \Cle{Precision} qui précise l'arrondi éventuel ;\hfill{}défaut \Cle{2}
+	\item la clé \Cle{Stretch} qui permet d'espacer les lignes ;\hfill{}défaut \Cle{1.15}
+	\item les booléens \Cle{Balayage} ou \Cle{Calculatrice} pour afficher un texte en amont ;\hfill{}défaut \Cle{false}
+	\item le booléen  qui affiche un texte avant, en spécifiant la calculatrice ;\hfill{}défaut \Cle{false}
+	\item le booléen \Cle{Majuscule} qui affiche le texte avant, avec une majuscule au début ;\hfill{}défaut \Cle{true}
+	\item la clé \Cle{Sens} (parmi \Cle{<} ou \Cle{>}) pour indiquer le type de seuil.\hfill{}défaut \Cle{>}
+\end{itemize}
+
+\smallskip
+
+Le premier argument mandataire est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$, et le second est le seuil à dépasser.
+\end{codecles}
+
+\begin{codetex}[]
+Avec $\begin{dcases} u_1 = 2 \\ u_{n+1}=1+\dfrac{1+u_n^2}{1+u_n} \end{dcases}$,
+on cherche $n$ tel que $u_n > 5$.\\
+\SolutionSeuil[Balayage,No=1,UNo=2,SolN=8]{1+(1+x**2)/(1+x)}{5}.\\
+\SolutionSeuil[Calculatrice,Precision=3,No=1,UNo=2,SolN=8]{1+(1+x**2)/(1+x)}{5}.\\
+\end{codetex}
+
+\subsection{Exemple d'utilisation}
+
+\begin{codetex}[]
+Avec $\begin{dcases} u_1 = 2 \\ u_{n+1}=1+\dfrac{1+u_n^2}{1+u_n} \end{dcases}$,
+on obtient le tableau de valeurs suivant : 
+\begin{tabular}{c|c}
+	$n$ & $u_n$ \\ \hline
+	1 & 2 \\
+	\xintFor* #1 in {\xintSeq{2}{8}} \do {#1 & \CalculTermeRecurrence[No=1,UNo=2,N=#1]{1+(1+x**2)/(1+x)} \\}
+\end{tabular}
+\end{codetex}
+
+\newpage
+
 \section{Suites récurrentes et \og toile \fg}\label{recurr}
 
 \subsection{Idée}
@@ -994,7 +1180,7 @@ L'idée est d'obtenir une commande pour tracer (en \TikZ) la \og toile \fg{} per
 
 \smallskip
 
-Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{recurrPL} pour afficher la \og toile \fg.
+Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{ToileRecurrence} pour afficher la \og toile \fg.
 \end{codeidee}
 
 \subsection{Commandes}
@@ -1176,7 +1362,7 @@ Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{cap
 À la manière du {package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes sont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
 \end{codeidee}
 
-\subsection{La commande \og \CalculFormelParametres \fg}
+\subsection{La commande \og CalculFormelParametres \fg}
 
 \begin{codeinfo}
 La première chose à définir est l'ensemble des paramètres \textit{globaux} de la fenêtre de calcul formel, à l'aide de \Cle{Clés}.
@@ -1478,6 +1664,10 @@ def trace_parabole_tableaux():
 \smallskip
 
 En \textit{partenariat} avec \ctex{tcolorbox}, on peut avoir une présentation de code Python !
+
+\smallskip
+
+\cmaj{2.0.2} Depuis la version \ctex{0.95} du package \ctex{piton}, \Cle{left-margin=auto} est disponible et activée dans \ctex{ProfLycee}.
 \end{codeinfo}
 
 \begin{codeattention}
@@ -3509,7 +3699,7 @@ L'utilisateur peut donc utiliser \og sa \fg{} méthode pour formater les résult
 
 \begin{codetex}[listing only]
 %avec un formatage manuel
-\num[exponent-mode=scientific]{\BinomP{100}{0.02}{10}}
+\num[exponent-mode=scientific]{\CalcBinomP{100}{0.02}{10}}
 \end{codetex}
 
 \begin{codesortie}
@@ -5237,6 +5427,14 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.0.4|~:~~~~Ajout d'une commande pour une présentation de solution par TVI (page \pageref{solutiontvi})
+
+{\small \bverb|       |~:~~~~Correction d'un bug avec \textsf{Arbre=3x3} (page \pageref{arbresprobas})
+
+{\small \bverb|v 2.0.3|~:~~~~Commandes pour des suites récurrentes \textit{simples} (page \pageref{calcrecurr})
+
+{\small \bverb|v 2.0.2|~:~~~~Option \textsf{left-margin=auto} pour le package \textsf{piton} (page \pageref{pythonpiton})
 
 {\small \bverb|v 2.0.1|~:~~~~Chargement du package \textsf{piton} uniquement si compilation en \LuaLaTeX{} (page \pageref{pythonpiton})
 
