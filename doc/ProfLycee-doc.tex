@@ -62,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{2.0.5}
-\def\PLdate{20 Novembre 2022}
+\def\PLversion{2.0.6}
+\def\PLdate{30 Novembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -2270,6 +2270,58 @@ Le \textsf{cartouche} peut être \og cliquable \fg{} grâce à \ctex{href}.
 \end{codesortie}
 
 \newpage
+
+\section{Présentation de code \LaTeX}\label{prescode}
+
+\subsection{Introduction}
+
+\begin{codeidee}
+\cmaj{2.0.6} L'idée est de proposer un environnement pour présenter du code \LaTeX. Ce n'est pas forcément lié à l'enseignement en Lycée mais pourquoi pas !
+
+\smallskip
+
+Il s'agir d'un environnement créé en \ctex{tcolorbox}, et utilisant la présentation \textit{basique} de code via \ctex{listings}.
+\end{codeidee}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+\begin{PresentationCode}[<Couleur>]{<options tcbox>}
+...
+\end{PresentationCode}
+\end{codetex}
+
+\begin{codecles}
+Peu de personnalisations pour ces commandes :
+
+\begin{itemize}
+	\item le premier argument, optionnel, permet de préciser la \textit{couleur} de la présentation ;\hfill{}défaut \Cle{ForestGreen}
+	\item le second, mandataire, correspond aux éventuelles options liées à la \ctex{tcolorbox}.
+\end{itemize}
+\end{codecles}
+
+\begin{codeinfo}
+Il est à noter que, même dans le cas d'option vide pour la \ctex{tcolorbox}, les \ctex{\{\}} sont nécessaires.
+
+\smallskip
+
+On peut par exemple utiliser l'option \Cle{listing only} pour ne présenter \textit{que} le code source.
+\end{codeinfo}
+
+\begin{codetex}[]
+\begin{PresentationCode}{}
+\xdef\ValAleaA{\fpeval{randint(1,100)}}
+\xdef\ValAleaB{\fpeval{randint(1,100)}}
+
+Avec $A=\ValAleaA$ et $B=\ValAleaB$, on a $A\times B=\inteval{\ValAleaA * \ValAleaB}$
+\end{PresentationCode}
+
+\begin{PresentationCode}[DarkBlue]{}
+On peut faire beaucoup de choses avec \LaTeX{} !
+\end{PresentationCode}
+\end{codetex}
+
+\pagebreak
 
 \part{Outils pour la géométrie}
 
@@ -5416,6 +5468,10 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.0.6|~:~~~~Changement de taille de la police des codes Python (page \pageref{pythonsimple})
+
+{\small \bverb|       |~:~~~~Ajout d'un environnement pour présenter du code \LaTeX{} (page \pageref{prescode})
 
 {\small \bverb|v 2.0.5|~:~~~~Correction d'un bug avec les calculs de suites récurrentes (page \pageref{calcrecurr})
 

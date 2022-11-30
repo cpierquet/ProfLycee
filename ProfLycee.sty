@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/11/20 2.0.5 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/11/30 2.0.6 Aide pour l'utilisation de LaTeX en lycee]
+% 2.0.6	Quelques modifications sur les codes python (taille police et marges)...
 % 2.0.5	Correction d'un bug avec les calculs en valeurx exactes avec les suites récurrentes...
 % 2.0.4	Ajout d'une commande pour présenter un balayage (TVI) + calculs suites récurrentes 
 % 2.0.3Correction d'un bug avec les arbres 3x3
@@ -61,10 +62,11 @@
 \ProcessOptions\relax
 
 %------Packages utiles
+\RequirePackage{mathtools}
+%\RequirePackage{amssymb}
 \RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
 \RequirePackage{tikz}
 \RequirePackage{tkz-tab}
-\RequirePackage{mathtools}
 \RequirePackage{pgf,pgffor}
 \RequirePackage{ifthen}
 \RequirePackage{xparse}
@@ -85,7 +87,7 @@
   reset-text-series = false, reset-text-shape = false,%
   text-family-to-math = true, text-series-to-math = true,%
   output-decimal-marker={,},%
-  group-minimum-digits=4%
+%  group-minimum-digits=4%
 }%
 \RequirePackage{fontawesome5}
 \if@csvii
@@ -138,7 +140,7 @@
 	fonttitle=\color{#1!90!black}\itshape\ttfamily\footnotesize,%
 	listing options={%
 		style=tcblatex,basicstyle=\footnotesize\ttfamily,%
-		keywordstyle=\bfseries\color{Blue},tabsize=4,%
+		keywordstyle=\bfseries\color{Blue},tabsize=2,%
 	},%
 	#2
 }
@@ -472,14 +474,14 @@
 \tcbset{pytmintedno/.style={%
 	listing engine=minted,minted style=colorful,
 	minted language=python,listing only,
-	minted options={tabsize=4,fontsize=\small,autogobble},
+	minted options={tabsize=4,fontsize=\footnotesize,autogobble},
 	}
 }
 
 \tcbset{pytminted/.style={%
 	listing engine=minted,minted style=colorful,
 	minted language=python,listing only,
-	minted options={tabsize=4,fontsize=\small,autogobble,xleftmargin=16pt,linenos,numbersep=10pt},
+	minted options={tabsize=4,fontsize=\footnotesize,autogobble,xleftmargin=16pt,linenos,numbersep=10pt},
 	}
 }
 
@@ -521,8 +523,8 @@
 		commentstyle      = \color{gray}\itshape,
 		stringstyle       = \color{red!75},
 		numberstyle       = \scriptsize\ttfamily\color{Green},
-		aboveskip        =  4pt,
-		belowskip         = 1pt,
+		aboveskip        =  0pt,
+		belowskip         = 0pt,
 		tabsize           = 4,
 		showstringspaces  = false,
 		columns           = fullflexible,
@@ -545,8 +547,8 @@
 		commentstyle      = \color{gray}\itshape,
 		stringstyle       = \color{red!75},
 		numberstyle       = \scriptsize\ttfamily\color{Green},
-		aboveskip        =  4pt,
-		belowskip         = 1pt,
+		aboveskip        =  0pt,
+		belowskip         = 0pt,
 		tabsize           = 4,
 		showstringspaces  = false,
 		columns           = fullflexible,
@@ -621,7 +623,7 @@
 			\ifboolKV[envpiton]{Lignes}%si lignes=true
 				{\PitonOptions{left-margin=auto,line-numbers}}%
 				{\PitonOptions{}}%
-			\begin{tcolorbox}[stylepythontex,leftupper=8pt,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontlower=\small,\CODPITalign]
+			\begin{tcolorbox}[stylepythontex,leftupper=8pt,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\footnotesize,fontlower=\footnotesize,\CODPITalign]
 		}%
 		{%
 			\end{tcolorbox}%
@@ -1178,6 +1180,7 @@
 		\draw ({-0.707*\PLcerclerayon},0) node[above=2pt,PLval] {$-\tfrac{\sqrt{2}}{2}$} ;
 		\draw (0,{0.707*\PLcerclerayon}) node[right=2pt,PLval] {$\tfrac{\sqrt{2}}{2}$} ;
 		\draw (0,{-0.707*\PLcerclerayon}) node[right=2pt,PLval] {$-\tfrac{\sqrt{2}}{2}$} ;
+		%\draw[\PLcerclethick] (0,0) circle[radius=\PLcerclerayon] ; %on retrace par dessus ?
 		}%
 		{}
 	%valeurs remarquables en dernier
