@@ -3,7 +3,9 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/11/30 2.0.6 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/12/15 2.0.9 Aide pour l'utilisation de LaTeX en lycee]
+% 2.0.9	Ajouts de commandes pour générer des nombres et listes aléatoires
+% 2.0.8	Ajout d'options pour stretch et fonte env python(s) (pas tous...)
 % 2.0.6	Quelques modifications sur les codes python (taille police et marges)...
 % 2.0.5	Correction d'un bug avec les calculs en valeurx exactes avec les suites récurrentes...
 % 2.0.4	Ajout d'une commande pour présenter un balayage (TVI) + calculs suites récurrentes 
@@ -75,6 +77,8 @@
 \RequirePackage{xstring}
 \RequirePackage{xintexpr}
 \RequirePackage{xintbinhex}
+\RequirePackage{xinttools}
+\RequirePackage{randomlist}
 \RequirePackage{simplekv}
 \RequirePackage{listofitems}
 \RequirePackage{tabularray}
@@ -308,11 +312,11 @@
 	\xintifboolexpr{\CFL == 1}%si c'est la première ligne
 		{\coordinate (A0\CFL) at (0,0);}
 		{\coordinate (A0\CFL) at ($(A2\CFLA) + (0,{-\CFesplg})$);}
-	\coordinate (A1\CFL) at ($(A0\CFL) +  (0,{-\CFhle})$);
-	\coordinate (A2\CFL) at ($(A1\CFL) +  (0,{-\CFhlr})$);
-	\coordinate (A3\CFL) at ($(A0\CFL) +  ({\CFlarg},0)$);
-	\coordinate (A4\CFL) at ($(A1\CFL) +  ({\CFlarg},0)$);
-	\coordinate (A5\CFL) at ($(A2\CFL) +  ({\CFlarg},0)$);
+	\coordinate (A1\CFL) at ($(A0\CFL) + (0,{-\CFhle})$);
+	\coordinate (A2\CFL) at ($(A1\CFL) + (0,{-\CFhlr})$);
+	\coordinate (A3\CFL) at ($(A0\CFL) + ({\CFlarg},0)$);
+	\coordinate (A4\CFL) at ($(A1\CFL) + ({\CFlarg},0)$);
+	\coordinate (A5\CFL) at ($(A2\CFL) + ({\CFlarg},0)$);
 	%DÉCLARATION DES NŒUDS INTERMÉDIAIRES (pour les commandes et les résultats)
 	\coordinate (C1\CFL) at ($(A0\CFL) + (0,{-0.5*\CFhle})$);
 	\coordinate (C2\CFL) at ($(A0\CFL) + ({0.5*\CFlarg},{-0.5*\CFhle})$);
@@ -366,13 +370,17 @@
 	Largeur=\def\CSPYlargeur{#1},%
 	Centre=\testboolKV{#1}
 		{\def\hookcenterpre{\begin{center}}\def\hookcenterpost{\end{center}}}
-		{\def\hookcenterpre{\begin{flushleft}}\def\hookcenterpost{\end{flushleft}}}
+		{\def\hookcenterpre{\begin{flushleft}}\def\hookcenterpost{\end{flushleft}}},%
+	TaillePolice=\def\CSPYfonte{#1},%
+	EspacementVertical=\def\CSPYstretch{#1}
 }
 
 \setKVdefault[envpythonconsole]{%
 	Largeur=\linewidth,%
 	Centre=true,%
-	Label=true
+	Label=true,%
+	TaillePolice=\footnotesize,%
+	EspacementVertical=1
 }
 
 \newenvironment{ConsolePythontex}[1][]{%
@@ -383,9 +391,9 @@
 	\begin{minipage}{\CSPYlargeur}
 		\ifboolKV[envpythonconsole]{Label}%si label
 		{\begin{pyconsole}[][%
-				framesep=3mm,frame=single,fontsize=\footnotesize,framerule=1pt,rulecolor=\color{ForestGreen},label={[\scriptsize Début de la console python]\scriptsize Fin de la console python}]}%
+				framesep=3mm,frame=single,fontsize=\CSPYfonte,framerule=1pt,rulecolor=\color{ForestGreen},label={[\scriptsize Début de la console python]\scriptsize Fin de la console python},baselinestretch=\CSPYstretch]}%
 		{\begin{pyconsole}[][%
-				framesep=3mm,frame=single,fontsize=\footnotesize,framerule=1pt,rulecolor=\color{ForestGreen}]}
+				framesep=3mm,frame=single,fontsize=\CSPYfonte,framerule=1pt,rulecolor=\color{ForestGreen},baselinestretch=\CSPYstretch]}
 			}
 			{
 		\end{pyconsole}
@@ -396,6 +404,8 @@
 %=========CODEPYTHONTEX=========== OK!!
 \defKV[envpythonverb]{%
 	Largeur=\def\CODPYlargeur{#1},%
+	TaillePolice=\def\CODPYfonte{#1},%
+	EspacementVertical=\def\CODPYstretch{#1},%
 	Centre=\testboolKV{#1}
 		{\def\verbcenterpre{\begin{center}}\def\verbcenterpost{\end{center}}}
 		{\def\verbcenterpre{}\def\verbcenterpost{}}
@@ -404,7 +414,9 @@
 \setKVdefault[envpythonverb]{%
 	Largeur=\linewidth,%
 	Centre=true,%
-	Lignes=true
+	Lignes=true,%
+	TaillePolice=\footnotesize,%
+	EspacementVertical=1
 }
 
 \tcbset{stylepythontex/.style={%
@@ -429,16 +441,16 @@
 \tcbset{stylepythonnolineos/.style={%
 		stylepythontex,leftupper=10pt,
 		colframe=Green,colback=ForestGreen!5,%
-		fontlower=\small,%
-		before upper = \renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Green}\arabic{FancyVerbLine}}
+%		fontlower=\small,%
+		before upper=\renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Gray}\arabic{FancyVerbLine}}
 	}
 }
 
 \tcbset{stylepythonlineos/.style={%
 		stylepythontex,leftupper=25pt,
 		colframe=Green,colback=ForestGreen!5,%
-		fontlower=\small,%
-		before upper = \renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Green}\arabic{FancyVerbLine}}
+%		fontlower=\small,%
+		before upper=\renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Gray}\arabic{FancyVerbLine}}
 	}
 }
 
@@ -459,8 +471,8 @@
 		{\begin{tcpythontexcode}[\CODPYlargeur]}
 		{\begin{tcpythontexcodeno}[\CODPYlargeur]}
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
-		{\begin{pyverbatim}[][fontsize=\footnotesize,numbers=left,numbersep=10pt,commandchars=\\\{\},mathescape]}
-		{\begin{pyverbatim}[][numbers=none,numbersep=0pt,fontsize=\footnotesize,commandchars=\\\{\},mathescape]}
+		{\begin{pyverbatim}[][fontsize=\CODPYfonte,numbers=left,numbersep=10pt,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
+		{\begin{pyverbatim}[][numbers=none,numbersep=0pt,fontsize=\CODPYfonte,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
 		}
 		{
 	\end{pyverbatim}
@@ -472,20 +484,20 @@
 
 %=========PYTHONMINTED========= OK !!
 \tcbset{pytmintedno/.style={%
-	listing engine=minted,minted style=colorful,
-	minted language=python,listing only,
-	minted options={tabsize=4,fontsize=\footnotesize,autogobble},
+		listing engine=minted,minted style=colorful,
+		minted language=python,listing only,
+		minted options={tabsize=4,fontsize=\footnotesize,autogobble},
 	}
 }
 
 \tcbset{pytminted/.style={%
-	listing engine=minted,minted style=colorful,
-	minted language=python,listing only,
-	minted options={tabsize=4,fontsize=\footnotesize,autogobble,xleftmargin=16pt,linenos,numbersep=10pt},
+		listing engine=minted,minted style=colorful,
+		minted language=python,listing only,
+		minted options={tabsize=4,fontsize=\footnotesize,autogobble,xleftmargin=16pt,linenos,numbersep=10pt},
 	}
 }
 
-\DeclareTCBListing{CodePythonMinted}{ s O{12cm} O{} }{% étoilée sans numéro, taille puis option...
+\DeclareTCBListing{CodePythonMinted}{ s D<>{12cm} O{} }{% étoilée sans numéro, taille puis options...
 	\IfBooleanTF{#1}{pytmintedno}{pytminted},
 	enhanced,width=#2,#3,
 	colframe=Green,colback=ForestGreen!5,%
@@ -504,7 +516,7 @@
 	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
 	title={\scriptsize\faPython}\:Code Python\vphantom{y},
 	watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
-	before upper = \renewcommand{\theFancyVerbLine}{\scriptsize\ttfamily\color{Green}\arabic{FancyVerbLine}}
+	before upper=\renewcommand{\theFancyVerbLine}{\scriptsize\ttfamily\color{Green}\arabic{FancyVerbLine}}
 }
 
 %=======STYLE ALGO LST========= OK !
@@ -606,13 +618,15 @@
 %=========PYTHONPITON========== OK !!
 \defKV[envpiton]{%
 	Largeur=\def\CODPITlargeur{#1},%
-	Alignement=\def\CODPITalign{#1}
+	Alignement=\def\CODPITalign{#1},%
+	TaillePolice=\def\CODPITfonte{#1}
 }
 
 \setKVdefault[envpiton]{%
 	Largeur=\linewidth,%
 	Alignement=center,%
-	Lignes=true
+	Lignes=true,%
+	TaillePolice=\footnotesize
 }
 \ifluatex
 	\RequirePackage{piton}
@@ -623,7 +637,7 @@
 			\ifboolKV[envpiton]{Lignes}%si lignes=true
 				{\PitonOptions{left-margin=auto,line-numbers}}%
 				{\PitonOptions{}}%
-			\begin{tcolorbox}[stylepythontex,leftupper=8pt,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\footnotesize,fontlower=\footnotesize,\CODPITalign]
+			\begin{tcolorbox}[stylepythontex,leftupper=8pt,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign]
 		}%
 		{%
 			\end{tcolorbox}%
@@ -688,7 +702,7 @@
 	\newcommand\algomathttPL[1]{\mathtt{#1}}
 \fi
 
-\DeclareTCBListing{PseudoCode}{ s O{12cm} !O{} }{% étoilée sans numéro, taille puis option...
+\DeclareTCBListing{PseudoCode}{ s D<>{12cm} O{} }{% étoilée sans numéro, <taille> puis option...
 	width=#2,#3,
 	stylepseudocodePL,
 	listing only,listing engine=listings,
@@ -749,7 +763,7 @@
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalWin}{ O{\linewidth} m !O{} }{%[taille] puis {Titre=...} puis [option]
+\DeclareTCBListing{TerminalWin}{ D<>{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
 	PLfaketermwin,title={\termwintitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -800,7 +814,7 @@
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalUnix}{ O{\linewidth} m !O{} }{%[taille] puis {Titre=...} puis [option]
+\DeclareTCBListing{TerminalUnix}{ D<>{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
 	PLtermlinux,title={\termnuxtitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -850,7 +864,7 @@
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalOSX}{ O{\linewidth} m !O{} }{%[taille] puis {Titre=...} puis [option]
+\DeclareTCBListing{TerminalOSX}{ D<>{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
 	PLfaketermosx,title={\termosxtitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -1367,9 +1381,9 @@
 	%#4 = décalage
 	%\shorthandoff{:}\shorthandoff{!} %bizzzzzzzzare
 	%\NoAutoSpacing
-	\coordinate (Z) at ($(T2#2)!.5!(T2\the\numexpr#2+1\relax)$) ;
+	\coordinate (ZZZ) at ($(T2#2)!.5!(T2\the\numexpr#2+1\relax)$) ;
 	%\shorthandon{:}\shorthandon{!}
-	\path (Z.east) + (#4,0) pic[right,scale=#3,every node/.style={scale=#3}] {code={\MiniSchemaSignes[#1]}} ;
+	\path (ZZZ.east) + (#4,0) pic[right,scale=#3,every node/.style={scale=#3}] {code={\MiniSchemaSignes[#1]}} ;
 }
 
 %=============RegressionLinéaire======= OK !!
@@ -1538,7 +1552,7 @@
 	\xintBinToHex{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{16}}{}
 }
 
-%bin/hexa/bin->dec avec écriture polynomiale
+%hexa/bin->dec avec écriture polynomiale
 \defKV[CONVTODEC]{%
 	BaseDep=\def\basedepart{#1}
 }
@@ -1615,7 +1629,7 @@
 			{}
 		\num{\xintBinToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
 	}%
-	{}
+	{}%
 }
 
 \newcommand\ConversionBaseDix[3][]{%1=options,%2=nb,%3=basedep ??
@@ -1645,14 +1659,14 @@
 			\advance\cpt by 1
 		\repeat
 		=
-		}
-		{}
-	\num{\convertbasetobasedix{#2}{#3}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
+		}%
+		{}%
+	\num{\convertbasetobasedix{#2}{#3}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}%
 }
 
 %==============MainLevée TikZ========== OK !!
 \tikzset{%
-	mainlevee/.style args={#1et#2}{decorate,decoration={random steps, segment length=#1,amplitude=#2}},
+	mainlevee/.style args={#1et#2}{decorate,decoration={random steps,segment length=#1,amplitude=#2}},
 	mainlevee/.default={5mm et 0.6pt}
 }
 
@@ -1681,7 +1695,7 @@
 				\foreach \l [count=\n] in \csvline {%
 					\StrDel{\l}{ }[\l]
 					\setsepchar{,}
-					\readlist\LCPA\PATcouleurs
+					\readlist*\LCPA\PATcouleurs
 					\StrPosition{\PATlettres}{\l}[\pixcnt]%
 					\xintifboolexpr{\pixcnt>0}%
 					{%
@@ -1703,7 +1717,7 @@
 					\foreach \l [count=\n] in \csvline {%
 						\StrDel{\l}{ }[\l]
 						\setsepchar{,}
-						\readlist\LCNA\PATchiffres
+						\readlist*\LCNA\PATchiffres
 						\StrPosition{\PATlettres}{\l}[\pixpos]%
 						\xintifboolexpr{\pixpos>0}%
 						{%
@@ -1955,14 +1969,14 @@
 		\StrBetween{\point}{(}{,}[\XPT]
 		\StrBetween{\point}{,}{)}[\YPT]
 		\IfStrEq{\ptsstyle}{o}%
-		{\filldraw[\ptscouleur] ({\XPT-\axexOx},{\YPT-\axeyOy}) circle[radius=\ptstaille] ;}
-		{}
+			{\filldraw[\ptscouleur] ({\XPT-\axexOx},{\YPT-\axeyOy}) circle[radius=\ptstaille] ;}
+			{}
 		\IfStrEq{\ptsstyle}{x}%
-		{\draw[\ptscouleur] ({\XPT-\axexOx},{\YPT-\axeyOy}) pic {PLdotcross=\ptstaille/45} ;}
-		{}
+			{\draw[\ptscouleur] ({\XPT-\axexOx},{\YPT-\axeyOy}) pic {PLdotcross=\ptstaille/45} ;}
+			{}
 		\IfStrEq{\ptsstyle}{+}%
-		{\draw[\ptscouleur] ({\XPT-\axexOx},{\YPT-\axeyOy}) pic {PLdotcross=\ptstaille/0} ;}
-		{}
+			{\draw[\ptscouleur] ({\XPT-\axexOx},{\YPT-\axeyOy}) pic {PLdotcross=\ptstaille/0} ;}
+			{}
 	}
 }
 
@@ -1977,18 +1991,18 @@
 	\def\LNB{\inteval{\LXlen}}
 	\foreach \i in {1,2,...,\LNB} {
 		\IfStrEq{\ptsstyle}{o}%
-		{
-			\IfSubStr{\ptscouleur}{/}
-			{\StrCut{\ptscouleur}{/}{\ptscouleurA}{\ptscouleurB}\draw[thick,\ptscouleurA,fill=\ptscouleurB] ({\LX[\i]-\axexOx},{\LY[\i]-\axeyOy}) circle[radius=\ptstaille] ;}
-			{\draw[\ptscouleur,fill=\ptscouleur] ({\LX[\i]-\axexOx},{\LY[\i]-\axeyOy}) circle[radius=\ptstaille] ;}
-		}
-		{}
+			{
+				\IfSubStr{\ptscouleur}{/}
+				{\StrCut{\ptscouleur}{/}{\ptscouleurA}{\ptscouleurB}\draw[thick,\ptscouleurA,fill=\ptscouleurB] ({\LX[\i]-\axexOx},{\LY[\i]-\axeyOy}) circle[radius=\ptstaille] ;}
+				{\draw[\ptscouleur,fill=\ptscouleur] ({\LX[\i]-\axexOx},{\LY[\i]-\axeyOy}) circle[radius=\ptstaille] ;}
+			}
+			{}
 		\IfStrEq{\ptsstyle}{x}%
-		{\draw[\ptscouleur] ({\LX[\i]-\axexOx},{\LY[\i]-\axeyOy}) pic {PLdotcross=\ptstaille/45} ;}
-		{}
+			{\draw[\ptscouleur] ({\LX[\i]-\axexOx},{\LY[\i]-\axeyOy}) pic {PLdotcross=\ptstaille/45} ;}
+			{}
 		\IfStrEq{\ptsstyle}{+}%
-		{\draw[\ptscouleur] ({\LX[\i]-\axexOx},{\LY[\i]-\axeyOy}) pic {PLdotcross=\ptstaille/0} ;}
-		{}
+			{\draw[\ptscouleur] ({\LX[\i]-\axexOx},{\LY[\i]-\axeyOy}) pic {PLdotcross=\ptstaille/0} ;}
+			{}
 	}
 }
 
@@ -2001,7 +2015,7 @@
 	yg=\def\ptmoyy{#1},%
 	Nom=\def\ptmoynom{#1},%
 	Pos=\def\ptmoypos{#1},%
-	Decal=\def\ptmoydecal{#1},%
+	Decal=\def\ptmoydecal{#1}%
 }
 
 \setKVdefault[PLptmoy]{%
@@ -2021,12 +2035,12 @@
 	\useKVdefault[PLptmoy]
 	\setKV[PLptmoy]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\IfStrEq{\ptmoystyle}{o}%
-	{
-		\IfSubStr{\ptmoycouleur}{/}
-		{\StrCut{\ptmoycouleur}{/}{\ptmoycouleurA}{\ptmoycouleurB}\draw[thick,\ptmoycouleurA,fill=\ptmoycouleurB] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) circle[radius=\ptmoytaille] ;}
-		{\draw[\ptmoycouleur,fill=\ptmoycouleur] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) circle[radius=\ptmoytaille] ;}
-	}
-	{}
+		{
+			\IfSubStr{\ptmoycouleur}{/}
+			{\StrCut{\ptmoycouleur}{/}{\ptmoycouleurA}{\ptmoycouleurB}\draw[thick,\ptmoycouleurA,fill=\ptmoycouleurB] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) circle[radius=\ptmoytaille] ;}
+			{\draw[\ptmoycouleur,fill=\ptmoycouleur] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) circle[radius=\ptmoytaille] ;}
+		}
+		{}
 	\IfStrEq{\ptmoystyle}{x}%
 		{\draw[\ptmoycouleur] ({\ptmoyx-\axexOx},{\ptmoyy-\axeyOy}) pic {PLdotcross=\ptmoytaille/45} ;}
 		{}
@@ -2136,26 +2150,26 @@
 	\draw[\BaMEpaisseur,\BaMCouleur] (\BaMmin,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmin,{\BaMElevation+0.5*\BaMHauteur}) (\BaMmax,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmax,{\BaMElevation+0.5*\BaMHauteur}) (\BaMmed,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmed,{\BaMElevation+0.5*\BaMHauteur});
 	\draw[\BaMEpaisseur,\BaMCouleur] ({\BaMmin},{\BaMElevation})--({\BaMqu},{\BaMElevation}) ({\BaMqt},{\BaMElevation})--({\BaMmax},{\BaMElevation}) ;
 	\ifboolKV[boiteamoustaches]{AffMoyenne}
-	{\filldraw[\BaMCouleur] ({\BaMMoyenne},{\BaMElevation}) circle[radius=2.5pt] ;}
-	{}
+		{\filldraw[\BaMCouleur] ({\BaMMoyenne},{\BaMElevation}) circle[radius=2.5pt] ;}
+		{}
 	\ifboolKV[boiteamoustaches]{Pointilles}
-	{
-		\draw[\BaMEpaisseur,densely dashed] (\BaMmin,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmin,0) ;
-		\draw[\BaMEpaisseur,densely dashed] (\BaMqu,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMqu,0) ;
-		\draw[\BaMEpaisseur,densely dashed] (\BaMmed,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmed,0) ;
-		\draw[\BaMEpaisseur,densely dashed] (\BaMqt,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMqt,0) ;
-		\draw[\BaMEpaisseur,densely dashed] (\BaMmax,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmax,0) ;
-	}
-	{}
+		{
+			\draw[\BaMEpaisseur,densely dashed] (\BaMmin,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmin,0) ;
+			\draw[\BaMEpaisseur,densely dashed] (\BaMqu,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMqu,0) ;
+			\draw[\BaMEpaisseur,densely dashed] (\BaMmed,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmed,0) ;
+			\draw[\BaMEpaisseur,densely dashed] (\BaMqt,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMqt,0) ;
+			\draw[\BaMEpaisseur,densely dashed] (\BaMmax,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmax,0) ;
+		}
+		{}
 	\ifboolKV[boiteamoustaches]{Valeurs}
-	{
-		\filldraw (\BaMmin,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmin}} ;
-		\filldraw (\BaMqu,0) circle[radius=2pt] node[below=4pt] {\num{\BaMqu}} ;
-		\filldraw (\BaMmed,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmed}} ;
-		\filldraw (\BaMqt,0) circle[radius=2pt] node[below=4pt] {\num{\BaMqt}} ;
-		\filldraw (\BaMmax,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmax}} ;
-	}
-	{}
+		{
+			\filldraw (\BaMmin,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmin}} ;
+			\filldraw (\BaMqu,0) circle[radius=2pt] node[below=4pt] {\num{\BaMqu}} ;
+			\filldraw (\BaMmed,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmed}} ;
+			\filldraw (\BaMqt,0) circle[radius=2pt] node[below=4pt] {\num{\BaMqt}} ;
+			\filldraw (\BaMmax,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmax}} ;
+		}
+		{}
 }
 
 %================SUDOMATHS============= OK !!
@@ -3272,6 +3286,85 @@
 		\Rightarrow%
 		n \geqslant \SEUILn%
 	}%
+}
+
+%=================ALEATOIRES============= OK!
+\ExplSyntaxOn
+\NewDocumentCommand\TriListeCroiss{m}
+{
+	\clist_sort:Nn #1
+	{
+		\fp_compare:nNnTF {##1} > {##2}
+		{ \sort_return_swapped: }
+		{ \sort_return_same: }
+	}
+}
+\NewDocumentCommand\TriListeDecroiss{m}
+{
+	\clist_sort:Nn #1
+	{
+		\fp_compare:nNnTF {##1} < {##2}
+		{ \sort_return_swapped: }
+		{ \sort_return_same: }
+	}
+}
+\ExplSyntaxOff
+
+\newcommand\NbAlea[4][0]{%entier ou décimal
+	\xintifboolexpr{#1 == 0}%
+		{\xdef#4{\fpeval{randint(#2,#3)}}}%
+		{\xdef#4{\fpeval{round(randint(#2,#3)+rand(),#1)}}}%
+}
+\newcommand\VarNbAlea[2]{%
+	\xdef#1{\fpeval{#2}}%
+}
+
+\defKV[TirageAleatoireEntiersEntre]{%
+	ValMin=\def\TAEEmin{#1},%
+	ValMax=\def\TAEEmax{#1},%
+	NbVal=\def\TAEEnb{#1},%
+	Sep=\def\TAEEsep{#1},%
+	Tri=\def\TAEEtri{#1}
+}
+
+\setKVdefault[TirageAleatoireEntiersEntre]{%
+	ValMin=1,%
+	ValMax=50,%
+	NbVal=6,%
+	Sep={,},%
+	Tri=non,%
+	Repetition=false
+}
+
+\NewList{TirageEntiersAleatoires}
+\NewDocumentCommand\TirageAleatoireEntiers{ O{} m }{%1=options,2=nomliste triée ou non
+	\useKVdefault[TirageAleatoireEntiersEntre]%
+	\setKV[TirageAleatoireEntiersEntre]{#1}%
+	\ifboolKV[TirageAleatoireEntiersEntre]{Repetition}%suivant la possibilité de répéter
+		{%répétitions autorisées
+			%création de la liste (le 1er puis les autres)
+			\xdef#2{\fpeval{randint(\TAEEmin,\TAEEmax)}}%
+			\foreach \i in {2,3,...,\TAEEnb}%
+				{\xdef#2{#2,\fpeval{randint(\TAEEmin,\TAEEmax)}}}%
+		}%
+		{%pas de répétitions
+			%melange des nombres
+			\ClearList{TirageEntiersAleatoires}%on vide la liste aléatoire
+			\xintFor* ##1 in {\xintSeq{\TAEEmin}{\TAEEmax}}%
+				\do{\InsertRandomItem{TirageEntiersAleatoires}{##1}}%
+			%création de la liste (le 1er puis les autres)
+			\xdef#2{\TirageEntiersAleatoires[0]}%
+			\foreach \i in {1,2,...,{\inteval{\TAEEnb-1}}}%
+				{\xdef#2{#2,\TirageEntiersAleatoires[\i]}}%
+		}%
+	%on trie si besoin
+	\IfStrEq{\TAEEtri}{croissant}%si tri croissant
+		{\TriListeCroiss{#2}}%
+		{}%
+	\IfStrEq{\TAEEtri}{decroissant}%si tri décroissant
+		{\TriListeDecroiss{#2}}%
+		{}%
+	\StrSubstitute{#2}{,}{\TAEEsep}[#2]%on change le séparateur si besoin
 }
 
 \endinput

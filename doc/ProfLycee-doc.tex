@@ -62,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{2.0.6}
-\def\PLdate{30 Novembre 2022}
+\def\PLversion{2.0.9}
+\def\PLdate{15 Décembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -262,6 +262,8 @@ Une commande pour, en \TikZ, créer un SudoMaths non forcément $9\times9$.
 Des commandes pour effectuer des calculs de probas (lois binomiale, exponentielle, de Poisson, normale).
 
 Une commande pour, en \TikZ, créer des arbres de probas \og classiques \fg.
+
+Une commande pour générer des listes d'entiers aléatoires (avec ou sans répétitions).
 
 \vspace{1.5cm}
 
@@ -1684,6 +1686,7 @@ Plusieurs \Cle{clés} sont disponibles :
 \begin{itemize}
 	\item la clé booléenne \Cle{Lignes} pour afficher ou non les numéros de lignes ; \hfill{}défaut \Cle{true}
 	\item la clé \Cle{Largeur} qui correspond à la largeur de la \ctex{tcbox} ; \hfill{}défaut \Cle{\textbackslash linewidth}
+	\item la clé \Cle{TaillePolice} pour la taille des caractères ; \hfill{}défaut \Cle{\textbackslash footnotesize}
 	\item la clé \Cle{Alignement} qui paramètre l'alignement de la \ctex{tcbox}. \hfill{}défaut \Cle{center}
 \end{itemize}
 \end{codecles}
@@ -1800,6 +1803,8 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \begin{itemize}
 	\item \Cle{Largeur} : largeur de la \textit{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
 	\item \Cle{Centre} : booléen pour centrer ou non la \textit{tcbox} ;\hfill{}défaut \Cle{true}
+	\item \Cle{TaillePolice} : taille des caractères ;\hfill{}défaut \Cle{\textbackslash footnotesize}
+	\item \Cle{EspacementVertical} : option (\textit{stretch}) pour l'espacement entre les lignes ;\hfill{}défaut \Cle{1}
 	\item \Cle{Lignes} : booléen pour afficher ou non les numéros de ligne.\hfill{}défaut \Cle{true}
 \end{itemize}
 \end{codecles}
@@ -1914,6 +1919,8 @@ Les \Cle{Clés} disponibles sont :
 \begin{itemize}
 	\item \Cle{Largeur} : largeur de la \textit{console} ;\hfill{}défaut \Cle{\textbackslash linewidth}
 	\item \Cle{Centre} : booléen pour centrer ou non la \textit{console} ;\hfill{}défaut \Cle{true}
+	\item \Cle{TaillePolice} : taille des caractères ;\hfill{}défaut \Cle{\textbackslash footnotesize}
+	\item \Cle{EspacementVertical} : option (\textit{stretch}) pour l'espacement entre les lignes ;\hfill{}défaut \Cle{1}
 	\item \Cle{Label} : booléen pour afficher ou non le titre.\hfill{}défaut \Cle{true}
 \end{itemize}
 \end{codecles}
@@ -4099,6 +4106,103 @@ Pour le moment, seules les lois (continues) exponentielles et normales sont disp
 
 \newpage
 
+\section{Nombres aléatoires}\label{entiersaleatoires}
+
+\subsection{Idée}
+
+\begin{codeidee}
+\cmaj{2.0.9} L'idée est de proposer des commandes pour générer des nombres aléatoires, pour exploitation ultérieure :
+
+\begin{itemize}
+	\item un entier ou un nombre décimal ;
+	\item des nombres entiers, avec ou sans répétitions.
+\end{itemize}
+\end{codeidee}
+
+\begin{codeinfo}
+Pour chacune des commandes, le ou les résultats sont stockés dans une \textsf{macro} dont le nom est choisi par l'utilisateur.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%entier aléatoire entre a et b
+\NbAlea{a}{b}{<macro>}
+
+%nombre décimal (n chiffres après la virgule) aléatoire entre a et b+1 (exclus)
+\NbAlea[n]{a}{b}{<macro>}
+
+%création d'un nombre aléatoire sous forme d'une macro
+\VarNbAlea{<macro>}{<calculs>}
+
+%liste d'entiers aléatoires
+\TirageAleatoireEntiers[<options>]{<macro>}
+\end{codetex}
+
+\begin{codetex}[]
+%nombre aléatoire entre 1 et 50, stocké dans \PremierNbAlea
+Entier entre 1 et 50 : \NbAlea{1}{50}{\PremierNbAlea}\PremierNbAlea
+
+%nombre aléatoire créé à partir du 1er, stocké dans \DeuxiemeNbAlea
+Entier à partir du précédent : \VarNbAlea{\DeuxiemeNbAlea}{\PremierNbAlea+randint(0,10)}\DeuxiemeNbAlea
+
+%nombre aléatoire décimal (au millième) entre 0 et 10+1 (exlus), stocké dans \PremierDecAlea
+Décimal entre 0 et $10,999\ldots$ : \NbAlea[3]{0}{10}{\PremierDecAlea}\PremierDecAlea
+
+%liste de 6 nombres, sans répétitions, entre 1 et 50
+Liste par défaut (6 entre 1 et 50) : \TirageAleatoireEntiers{\PremiereListeAlea}\PremiereListeAlea
+\end{codetex}
+
+\begin{codeinfo}
+Les listes créées sont exploitables, \textit{a posteriori}, par le package \ctex{listofitems} par exemple !
+\end{codeinfo}
+
+\begin{codetex}[]
+Liste générée : \TirageAleatoireEntiers{\TestListeA}\TestListeA
+
+Liste traitée : \readlist*\LISTEa{\TestListeA}\showitems{\LISTEa}
+\end{codetex}
+
+\pagebreak
+
+\subsection{Clés et options}
+
+\begin{codecles}
+Quelques clés sont disponibles pour la commande \ctex{TirageAleatoireEntiers} :
+
+\begin{itemize}
+	\item la clé \Cle{ValMin} pour préciser borne inférieure de l'intervalle ;\hfill{}défaut \Cle{1}
+	\item la clé \Cle{ValMax} pour préciser borne supérieure de l'intervalle ;\hfill{}défaut \Cle{50}
+	\item la clé \Cle{NbVal} qui est le nombre d'entiers à générer ;\hfill{}défaut \Cle{6}
+	\item la clé \Cle{Sep} pour spécifier le séparateur d'éléments ;\hfill{}défaut \Cle{,}
+	\item la clé \Cle{Tri} parmi \Cle{non/croissant/decroissant} pour trier les valeurs
+	;\hfill{}défaut \Cle{non}
+	\item le booléen \Cle{Repetition} pour autoriser la répétition d'éléments.\hfill{}défaut \Cle{false}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[]
+Une liste de 15 valeurs (différentes), entre 10 et 100, stockée dans la macro MaListeA : \\
+Liste : \TirageAleatoireEntiers[ValMin=10,ValMax=100,NbVal=15]{\MaListeA}\MaListeA \\
+
+Une liste de 12 valeurs (différentes), entre 1 et 50, ordre croissant : \\
+Liste : \TirageAleatoireEntiers[ValMin=1,ValMax=50,NbVal=12,Tri=croissant]{\MaListeB}\MaListeB \\
+
+Une liste de 12 valeurs (différentes), entre 1 et 50, ordre décroissant : \\
+Liste : \TirageAleatoireEntiers[ValMin=1,ValMax=50,NbVal=12,Tri=decroissant]{\MaListeC}\MaListeC \\
+
+15 tirages de dé à 6 faces : \\ \TirageAleatoireEntiers[ValMin=1,ValMax=6,NbVal=15,Repetition]{\TestDes}\TestDes
+\end{codetex}
+
+\begin{codetex}[]
+Une liste (10) pour le Keno\textcopyright, ordonnée, et séparée par des \texttt{-} :
+
+\TirageAleatoireEntiers[ValMin=1,ValMax=70,NbVal=10,Tri=croissant,Sep={-}]{\ListeKeno}
+$\ListeKeno$
+
+\setsepchar{-}\readlist*\KENO{\ListeKeno}\showitems{\KENO}
+\end{codetex}
+
+\newpage
+
 \part{Outils pour l'arithmétique}
 
 \section{Conversions binaire/hexadécimal/décimal}\label{conversions}
@@ -5469,9 +5573,13 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
-{\small \bverb|v 2.0.6|~:~~~~Changement de taille de la police des codes Python (page \pageref{pythonsimple})
+{\small \bverb|v 2.0.9|~:~~~~Nombres aléatoires, tirages aléatoires d'entiers (page \pageref{entiersaleatoires})
 
-{\small \bverb|       |~:~~~~Ajout d'un environnement pour présenter du code \LaTeX{} (page \pageref{prescode})
+{\small \bverb|v 2.0.8|~:~~~~Ajout d'un environnement pour présenter du code \LaTeX{} (page \pageref{prescode})
+
+{\small \bverb|v 2.0.7|~:~~~~Ajout d'options pour stretch et fonte env python(s) (pas tous...)
+
+{\small \bverb|v 2.0.6|~:~~~~Changement de taille de la police des codes Python (page \pageref{pythonsimple})
 
 {\small \bverb|v 2.0.5|~:~~~~Correction d'un bug avec les calculs de suites récurrentes (page \pageref{calcrecurr})
 
