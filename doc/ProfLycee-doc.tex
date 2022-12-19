@@ -6,7 +6,7 @@
 
 \documentclass{article}
 \usepackage[french]{babel}
-\usepackage{ProfLycee}
+\usepackage[pythontex]{ProfLycee}
 \usepackage{mathtools}
 \usepackage{lualatex-math}
 \usepackage{luatexbase}
@@ -62,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{2.0.9}
-\def\PLdate{15 Décembre 2022}
+\def\PLversion{2.1.0}
+\def\PLdate{18 Décembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -221,7 +221,7 @@
 
 \thispagestyle{empty}
 
-{\Large {\bfseries Résumé} : Quelques commandes pour faciliter l'utilisation de \LaTeX{} pour les enseignants de mathématiques en lycée.}
+{\large {\bfseries Résumé} : Quelques commandes pour faciliter l'utilisation de \LaTeX{} pour les enseignants de mathématiques en lycée.}
 
 \medskip
 
@@ -265,7 +265,9 @@ Une commande pour, en \TikZ, créer des arbres de probas \og classiques \fg.
 
 Une commande pour générer des listes d'entiers aléatoires (avec ou sans répétitions).
 
-\vspace{1.5cm}
+\ldots
+
+~
 
 \hfill{}\textit{Merci à Anne pour ses retours et sa relecture !}
 
@@ -279,13 +281,13 @@ Une commande pour générer des listes d'entiers aléatoires (avec ou sans rép�
 
 \medskip
 
-\begin{tblr}{width=\linewidth,colspec={X[c]X[c]X[c]X[c]X[c]X[c]},cells={font=\sffamily}}
-	{\huge \LaTeX} & & & & &\\
-	& {\huge \pdfLaTeX} & & & & \\
-	& & {\huge \LuaLaTeX} & & & \\
-	& & & {\huge \TikZ} & & \\
-	& & & & {\huge \TeXLive} & \\
-	& & & & & {\huge \MiKTeX} \\
+\begin{tblr}{width=\linewidth,colspec={X[c]X[c]X[c]X[c]X[c]X[c]},cells={font=\sffamily\LARGE}}
+	{\LaTeX} & & & & &\\
+	& {\pdfLaTeX} & & & & \\
+	& & {\LuaLaTeX} & & & \\
+	& & & {\TikZ} & & \\
+	& & & & {\TeXLive} & \\
+	& & & & & {\MiKTeX} \\
 \end{tblr}
 
 \medskip
@@ -345,20 +347,19 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 \begin{codetex}[listing only]
 %exemple de chargement pour une compilation en (pdf)latex
 \documentclass{article}
-\usepackage[french]{babel}
 \usepackage{ProfLycee}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[french]{babel}
 ...
 \end{codetex}
 
 \begin{codetex}[listing only]
 %exemple de chargement pour une compilation en (xe/lua)latex
 \documentclass{article}
-\usepackage[french]{babel}
 \usepackage{ProfLycee}
-\usepackage{mathtools}
 \usepackage{fontspec}
+\usepackage[french]{babel}
 ...
 \end{codetex}
 
@@ -374,6 +375,18 @@ Cependant, si vous ne \underline{souhaitez pas} charger (et utiliser) \ctex{mint
 ...
 \usepackage[nonshellescape]{ProfLycee}
 %package <minted> et librairie <minted> non chargés
+...
+\end{codetex}
+
+\begin{codeattention}
+\cmaj{2.1.0} Le package\ctex{pythontex} nécessitant une chaîne de compilation particulière, j'ai décidé de le mettre en \textit{option}.
+
+Pour utiliser le package \ctex{pythontex} et utiliser les commandes définies à partir de lui, il faut désormais charger \ctex{ProfLycee} avec l'option \Cle{pythontex}.
+\end{codeattention}
+
+\begin{codetex}[listing only]
+...
+\usepackage[pythontex]{ProfLycee}
 ...
 \end{codetex}
 
@@ -401,6 +414,8 @@ Les options précédentes sont cumulables, et, pour info, elles conditionnent le
 	\item \ctex{\textbackslash RequirePackage[outputdir=build]\{minted\}}
 \end{itemize}
 \end{codeinfo}
+
+\pagebreak
 
 \section{Compléments}
 
@@ -483,6 +498,8 @@ Les \textsf{clés} ou \textsf{options} seront présentées dans des \textsf{boî
 À noter que certaines commandes disponibles sont liées à un environnement \ctex{tikzpicture}, elles ne sont pas autonomes mais permettent de conserver -- en parallèle -- toute commande liée à \TikZ{} !
 \end{codeinfo}
 
+\pagebreak
+
 \subsection{Compilateur(s)}
 
 \begin{codeinfo}
@@ -516,11 +533,19 @@ Certains packages ont une fâcheuse tendance à être tatillons sur leurs option
 En dehors de cela, ce sont des tests multiples et variés qui permettront de détecter d'éventuels bugs !
 \end{codeinfo}
 
+\pagebreak
+
+~
+
 \vfill
 
-\hfill{\Huge $\leftrightsquigarrow$ Bonne(s) découverte(s) $\leftrightsquigarrow$}\hfill~
+%\hfill{\Huge $\leftrightsquigarrow$ Bonne(s) découverte(s) $\leftrightsquigarrow$}\hfill~
+
+\hfill\tikz \draw (0,0) node[above right=0pt,inner sep=0pt,outer sep=0pt,rotate=25,scale=4] {$\leftrightsquigarrow$ Bonne(s) découverte(s) $\leftrightsquigarrow$} ;\hfill~
 
 \vfill
+
+~
 
 \newpage
 
@@ -540,6 +565,10 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %Présentation d'une solution par balayage (TVI)
 \SolutionTVI[<options>]{<fonction>}{<valeur>}
 
+%schémas pour le signe affine/trinôme, dans un environnement tikz
+\MiniSchemaSignes[<clés>]
+\MiniSchemaSignesTkzTab[<options>]{<numligne>}[<echelle>][<décalage horizontal>]
+
 %Calculer le terme d'une suite récurrente simple, toile pour une suite récurrente simple
 \CalculTermeRecurrence[<options>]{<fonction associée>}
 \ToileRecurrence[<clés>][<options du tracé>][<option supplémentaire des termes>]
@@ -556,10 +585,10 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %présentation de code Python
 \begin{CodePythonLst}(*)[<largeur>]{<commandes tcbox>}...\end{CodePythonLst}
 \begin{CodePiton}[<options>]...\end{CodePiton}
-\begin{CodePythontex}[<options>]...\end{CodePythontex}
+\begin{CodePythontex}[<options>]...\end{CodePythontex}    %avec l'option [pythontex]
 \begin{CodePythonMinted}(*)[<largeur>][<options>]...\end{CodePythonMinted}
 
-%console Python
+%console Python avec l'option [pythontex]
 \begin{ConsolePythontex}[<options>]...\end{ConsolePythontex}
 
 %présentation de pseudocode
@@ -610,24 +639,26 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \BinomP(*)[prec]{n}{p}{k}
 \BinomC(*)[prec]{n}{p}{a}{b}
 
-%loi de Poisson P (l)
+%loi de Poisson P(l)
 \CalcPoissP{l}{k}
 \CalcPoissC{l}{a}{b}
 \PoissonP(*)[prec]{l}{k}
 \PoissonC(*)[prec]{l}{a}{b}
 
-%loi géométrique G (p)
+%loi géométrique G(p)
 \CalcGeomP{p}{k}
 \CalcGeomC{l}{a}{b}
 \GeomP{p}{k}
 \GeomC{l}{a}{b}
 
-%loi hypergéométrique H (N,n,m)
+%loi hypergéométrique H(N,n,m)
 \CalcHypergeomP{N}{n}{m}{k}
 \CalcHypergeomP{N}{n}{m}{a}{b}
 \HypergeomP{N}{n}{m}{k}
 \HypergeomC{N}{n}{m}{a}{b}
+\end{codetex}
 
+\begin{codetex}[listing only]
 %loi normale N(m,s)
 \CalcNormC{m}{s}{a}{b}
 \NormaleC(*)[prec]{m}{s}{a}{b}
@@ -646,6 +677,17 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \end{codetex}
 
 \begin{codetex}[listing only]
+%entier aléatoire entre a et b
+\NbAlea{a}{b}{<macro>}
+%nombre décimal (n chiffres après la virgule) aléatoire entre a et b+1 (exclus)
+\NbAlea[n]{a}{b}{<macro>}
+%création d'un nombre aléatoire sous forme d'une macro
+\VarNbAlea{<macro>}{<calculs>}
+%liste d'entiers aléatoires
+\TirageAleatoireEntiers[<options>]{<macro>}
+\end{codetex}
+
+\begin{codetex}[listing only]
 %conversions
 \ConversionDecBin(*)[<clés>]{<nombre>}
 \ConversionBinHex[<clés>]{<nombre>}
@@ -658,15 +700,12 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \end{codetex}
 
 \begin{codetex}[listing only]
-%conversion en fraction
+%conversion en fraction, simplification de racine
 \ConversionFraction[<option>]{<argument>}
+\SimplificationRacine{<expression>}
 
 %ensemble d'éléments
 \EcritureEnsemble[<clés>]{<liste>}
-
-%schémas pour le signe affine/trinôme, dans un environnement tikz
-\MiniSchemaSignes[<clés>]
-\MiniSchemaSignesTkzTab[<options>]{<numligne>}[<echelle>][<décalage horizontal>]
 
 %trinôme, trinôme aléatoire
 \EcritureTrinome[<options>]{a}{b}{c}
@@ -1023,7 +1062,7 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande, relative donc à une
 	\item la clé \Cle{Precision} qui est la précision des calculs pour les images ;\hfill{}défaut \Cle{2}
 	\item la clé \Cle{Stretch} qui permet d'espacer les lignes ;\hfill{}défaut \Cle{1.15}
 	\item les booléens \Cle{Balayage} ou \Cle{Calculatrice} pour afficher un texte en amont ;\hfill{}défaut \Cle{false}
-	\item le booléen  qui affiche un texte avant, en spécifiant la calculatrice ;\hfill{}défaut \Cle{false}
+	%\item le booléen \Cle{Simple} pour une présentation plus \textit{neutre} ;\hfill{}défaut \Cle{false}
 	\item le booléen \Cle{Majuscule} qui affiche le texte avant, avec une majuscule au début ;\hfill{}défaut \Cle{true}
 \end{itemize}
 
@@ -1048,6 +1087,210 @@ On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.
 
 \newpage
 
+\section{Petits schémas pour le signe d'une fonction affine ou d'un trinôme}\label{aidesigne}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est d'obtenir une commande pour tracer (en \TikZ) un petit schéma pour \textit{visualiser} le signe d'une fonction affine ou d'un trinôme.
+
+Le code est très largement inspiré de celui du package \ctex{tnsana} même si la philosophie est légèrement différente.
+
+\smallskip
+
+Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{MiniSchemaSignes} pour afficher le schéma.
+\end{codeidee}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\MiniSchemaSignes[<clés>]
+\end{codetex}
+
+\subsection{Commandes}
+
+\begin{codetex}[listing only]
+...
+\begin{tikzpicture}[<options>]
+	...
+	\MiniSchemaSignes[<clés>]
+	...
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codetex}[listing only]
+... {\tikz[<options>] \MiniSchemaSignes[<clés>]}...
+\end{codetex}
+
+\begin{codecles}
+Plusieurs \Cle{Clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item la clé \Cle{Code} qui permet de définir le type d'expression (voir en-dessous) ;\hfill{}défaut \Cle{da+}
+	\item la clé \Cle{Couleur} qui donne la couleur de la représentation ;\hfill{}défaut \Cle{red}
+	\item la clé \Cle{Racines} qui définit la ou les racines ;\hfill{}défaut \Cle{2}
+	\item la clé \Cle{Largeur} qui est la largeur du schéma ;\hfill{}défaut \Cle{2}
+	\item la clé \Cle{Hauteur} qui est la hauteur du schéma ;\hfill{}défaut \Cle{1}
+	\item un booléen \Cle{Cadre} qui affiche un cadre autour du schéma.\hfill{}défaut \Cle{true}
+\end{itemize}
+\end{codecles}
+
+\begin{codecles}
+Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou \textsf{p} comme parabole) puis les éléments caractéristiques (\textsf{a+} pour $a>0$, \textsf{d0} pour $\Delta=0$, etc) :
+
+\begin{itemize}
+	\item \Cle{Code=da+} := une droite croissante ;
+	\item \Cle{Code=da-} := une droite décroissante ;
+	\item \Cle{Code=pa+d+} := une parabole \textit{souriante} avec deux racines ;
+	\item etc
+\end{itemize}
+\end{codecles}
+
+\pagebreak
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=da+,Racines=-4]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=da-,Racines={h},Couleur=blue,Largeur=3,Cadre=false]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa+d+,Racines={1/2},Couleur=orange]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa+d-,Couleur=ForestGreen]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa+d0,Racines={5},Couleur=purple]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa-d+,Racines={-3/0},Couleur=yellow]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa-d-,Couleur=cyan]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa-d0,Racines={-1},Couleur=magenta]
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=da+,Racines=-4]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=da-,Racines={h},Couleur=blue,Largeur=3,Cadre=false]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa+d+,Racines={1/2},Couleur=orange]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa+d-,Couleur=ForestGreen]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa+d0,Racines={5},Couleur=purple]
+	\end{tikzpicture}
+\end{center}
+%
+\begin{center}
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa-d+,Racines={-3/0},Couleur=yellow]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa-d-,Couleur=cyan]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\MiniSchemaSignes[Code=pa-d0,Racines={-1},Couleur=magenta]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\begin{codetex}[tikz lower]
+%code tikz
+\MiniSchemaSignes[Largeur=3.5,Hauteur=1.5,Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]
+\end{codetex}
+
+\subsection{Intégration avec tkz-tab}
+
+\begin{codeidee}
+Ces schémas peuvent être de plus utilisés, via la commande \ctex{MiniSchemaSignesTkzTab} pour illustrer les signes obtenus dans un tableau de signes présentés grâce au package \ctex{tkz-tab}.
+
+Pour des raisons internes, le fonctionnement de la commande \ctex{aidesignetkztabPL} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour que la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}
+	%commandes tkztab
+	\MiniSchemaSignesTkzTab[<options>]{<numligne>}[<echelle>][<décalage horizontal>]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codecles}
+Les \Cle{Clés} pour le premier argument optionnel sont les mêmes que pour la version \textit{initiale} de la commande précédente.
+
+En ce qui concerne les autres arguments :
+
+\begin{itemize}
+	\item le deuxième argument, mandataire, est le numéro de la ligne à côté de laquelle placer le schéma ;
+	\item le troisième argument, optionnel et valant \Cle{0.85} par défaut, est l'échelle à appliquer sur l'ensemble du schéma (à ajuster en fonction de la hauteur de la ligne) ;
+	\item le quatrième argument, optionnel et valant \Cle{1.5} par défait, est lié à l'écart horizontal entre le bord de la ligne du tableau et le schéma.
+\end{itemize}
+
+À noter que si l'un des arguments optionnels (le n°3 et/ou le n°4) sont utilisés, il vaut mieux préciser les 2 !
+\end{codecles}
+
+\begin{codetex}[listing only]
+\begin{center}
+	\begin{tikzpicture}
+		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
+		\tkzTabLine{,+,t,+,z,-,}
+		\tkzTabLine{,-,z,+,t,+,}
+		\tkzTabLine{,-,z,+,z,-,}
+		\MiniSchemaSignesTkzTab[Code=da-,Racines={2,5},Couleur=blue]{1}
+		\MiniSchemaSignesTkzTab[Code=da+,Racines={-2},Couleur=purple]{2}
+		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/2,5},Couleur=orange]{3}[0.85][2]
+	\end{tikzpicture}
+\end{center}
+\end{codetex}
+
+\begin{codesortie}
+\begin{center}
+	\begin{tikzpicture}
+		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
+		\tkzTabLine{,+,t,+,z,-,}
+		\tkzTabLine{,-,z,+,t,+,}
+		\tkzTabLine{,-,z,+,z,-,}
+		\MiniSchemaSignesTkzTab[Code=da-,Racines={2,5},Couleur=blue]{1}
+		\MiniSchemaSignesTkzTab[Code=da+,Racines={-2},Couleur=purple]{2}
+		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/2,5},Couleur=orange]{3}[0.85][2]
+	\end{tikzpicture}
+\end{center}
+\end{codesortie}
+
+\newpage
+
 \section{Suites récurrentes simples}\label{calcrecurr}
 
 \subsection{Idées}
@@ -1062,7 +1305,7 @@ On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.
 \end{codeidee}
 
 \begin{codeattention}
-Le code pour le seuil ne trouve pas la solution (\ldots), il met \textit{juste} en forme et effectue quand même les calculs d'images.
+\cmaj{2.1.0} Le code pour le seuil \textbf{trouve} également le rang cherché, il met en forme et effectue les calculs d'images.
 
 \smallskip
 
@@ -1127,13 +1370,15 @@ Plusieurs \Cle{Clés} sont disponibles pour la commande du seuil :
 	\item la clé \Cle{NomSuite} qui est le nom de la suite ;\hfill~défaut \Cle{u}
 	\item la clé \Cle{No} qui est le rang initial de la suite ;
 	\item la clé \Cle{UNo} qui est le terme initial de la suite ;
-	\item la clé \Cle{SolN} qui est la valeur de l'indice cherché ;
+	%\item la clé \Cle{SolN} qui est la valeur de l'indice cherché ;
 	\item la clé \Cle{Precision} qui précise l'arrondi éventuel ;\hfill{}défaut \Cle{2}
 	\item la clé \Cle{Stretch} qui permet d'espacer les lignes ;\hfill{}défaut \Cle{1.15}
 	\item les booléens \Cle{Balayage} ou \Cle{Calculatrice} pour afficher un texte en amont ;\hfill{}défaut \Cle{false}
-	\item le booléen  qui affiche un texte avant, en spécifiant la calculatrice ;\hfill{}défaut \Cle{false}
+	\item le booléen \Cle{Simple} pour une présentation plus \textit{neutre} ;\hfill{}défaut \Cle{false}
 	\item le booléen \Cle{Majuscule} qui affiche le texte avant, avec une majuscule au début ;\hfill{}défaut \Cle{true}
-	\item la clé \Cle{Sens} (parmi \Cle{<} ou \Cle{>}) pour indiquer le type de seuil.\hfill{}défaut \Cle{>}
+	\item le booléen \Cle{Exact} qui affiche \ctex{=} au lieu de \ctex{\textbackslash approx} ;\hfill{}défaut \Cle{false}
+	\item le booléen \Cle{Conclusion} pour afficher la conclusion ou non ;\hfill{}défaut \Cle{true}
+	\item la clé \Cle{Sens} parmi \Cle{< / > / <= / >=} pour indiquer le type de seuil.\hfill{}défaut \Cle{>}
 \end{itemize}
 
 \smallskip
@@ -1144,8 +1389,8 @@ Le premier argument mandataire est la fonction associée à la suite, en syntaxe
 \begin{codetex}[]
 Avec $\begin{dcases} u_1 = 2 \\ u_{n+1}=1+\dfrac{1+u_n^2}{1+u_n} \end{dcases}$,
 on cherche $n$ tel que $u_n > 5$.\\
-\SolutionSeuil[Balayage,No=1,UNo=2,SolN=8]{1+(1+x**2)/(1+x)}{5}.\\
-\SolutionSeuil[Calculatrice,Precision=3,No=1,UNo=2,SolN=8]{1+(1+x**2)/(1+x)}{5}.\\
+\SolutionSeuil[Balayage,No=1,UNo=2]{1+(1+x**2)/(1+x)}{5}.
+~\SolutionSeuil[Calculatrice,Precision=4,No=1,UNo=2,Conclusion=false]{1+(1+x**2)/(1+x)}{5}.\\
 \end{codetex}
 
 \subsection{Exemple d'utilisation}
@@ -1157,7 +1402,9 @@ on obtient le tableau de valeurs suivant :
 	$n$ & $u_n$ \\ \hline
 	1 & 2 \\
 	\xintFor* #1 in {\xintSeq{2}{8}} \do {#1 & \CalculTermeRecurrence[No=1,UNo=2,N=#1]{1+(1+x**2)/(1+x)} \\}
-\end{tabular}
+\end{tabular}\\
+
+\SolutionSeuil[Precision=4,No=1,UNo=2,Simple]{1+(1+x**2)/(1+x)}{10} (Ainsi $u_n > 10$ à partir de $n=\the\CompteurSeuil$)
 \end{codetex}
 
 \newpage
@@ -1776,6 +2023,8 @@ Le {package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. O
 \begin{codeattention}
 \textbf{Attention : }il faut dans ce cas une compilation en plusieurs étapes, comme par exemple \textsf{pdflatex puis pythontex puis pdflatex} !
 
+\cmaj{2.1.0} Il faut de plus penser à charger le package avec l'option \Cle{pythontex}.
+
 Voir par exemple \url{http://lesmathsduyeti.fr/fr/informatique/latex/pythontex/} !
 \end{codeattention}
 
@@ -1905,6 +2154,8 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \ctex{pythontex} permet également de \textit{simuler} (en exécutant également !) du code python dans une \textit{console}.
 
 C'est l'environnement \ctex{ConsolePythontex} qui permet de le faire.
+
+\cmaj{2.1.0} Il ne faut donc pas oublier de charger le package \ctex{ProfLycee} avec l'option \Cle{pythontex}.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -2679,6 +2930,75 @@ Les \Cle{Clés} pour cette possibilité sont :
 
 \newpage
 
+\section{Style \og main levée \fg{} en \TikZ}\label{mainlevee}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de \textit{proposer} un style \textit{tout prêt} pour simuler un tracé, en \TikZ, à \og main levée \fg.
+
+Il s'agit d'un style \textit{basique} utilisant la librairie \ctex{decorations} avec \textsf{random steps}.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\tikzset{%
+	mainlevee/.style args={#1et#2}{decorate,decoration={random steps, segment length=#1,amplitude=#2}},
+	mainlevee/.default={5mm et 0.6pt}
+}
+\end{codetex}
+
+\subsection{Utilisation basique}
+
+\begin{codeinfo}
+Il s'agit ni plus ni moins d'un style \TikZ{} à intégrer dans les tracés et constructions \TikZ !
+\end{codeinfo}
+
+\begin{codecles}
+Concernant le style en lui-même, deux paramètres peuvent être précisés via \Cle{mainlevee=\#1 et \#2} :
+
+\begin{itemize}
+	\item \Cle{\#1} correspond à l'option \textsf{segment length} (longueur des segments \textit{types}) ;\hfill{}défaut \Cle{5mm}
+	\item \Cle{\#2} correspond à l'option \textsf{amplitude} (amplitude maximale de la \textit{déformation}).\hfill{}défaut \Cle{0.6pt}
+\end{itemize}
+
+Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -- satisfaisants, mais l'utilisateur pourra modifier à loisir ces paramètres !
+\end{codecles}
+
+\begin{codetex}[listing only]
+%la grille a été rajoutée pour la sortie
+\begin{tikzpicture}
+	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+
+\begin{tikzpicture}
+	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+
+\begin{tikzpicture}
+	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\hfill~\begin{tikzpicture}
+	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+\hspace{1.5cm}
+\begin{tikzpicture}
+	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+\hspace{1.5cm}
+\begin{tikzpicture}
+	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+\end{tikzpicture}
+\hfill~
+\end{codesortie}
+
+\newpage
+
 \part{Outils pour les statistiques}
 
 \section{Paramètres d'une régression linéaire par la méthode des moindres carrés}\label{reglin}
@@ -3204,7 +3524,7 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 \begin{codetex}[listing only]
 %...code tikz
 	\AxexTikz[<options>]{valeurs}
-	\AxexTikz[<options>]{valeurs}
+	\AxeyTikz[<options>]{valeurs}
 \end{codetex}
 
 \begin{codecles}
@@ -4144,7 +4464,7 @@ Entier entre 1 et 50 : \NbAlea{1}{50}{\PremierNbAlea}\PremierNbAlea
 %nombre aléatoire créé à partir du 1er, stocké dans \DeuxiemeNbAlea
 Entier à partir du précédent : \VarNbAlea{\DeuxiemeNbAlea}{\PremierNbAlea+randint(0,10)}\DeuxiemeNbAlea
 
-%nombre aléatoire décimal (au millième) entre 0 et 10+1 (exlus), stocké dans \PremierDecAlea
+%nombre aléatoire décimal (au millième) entre 0 et 10+1 (exclus), stocké dans \PremierDecAlea
 Décimal entre 0 et $10,999\ldots$ : \NbAlea[3]{0}{10}{\PremierDecAlea}\PremierDecAlea
 
 %liste de 6 nombres, sans répétitions, entre 1 et 50
@@ -4587,11 +4907,11 @@ $\left[ \PresentationPGCD[AfficheConclusion=false,AfficheDelimiteurs=false]{1234
 
 \newpage
 
-\part{Outils divers et variés}
+\part{Écritures, simplifications}
 
-\section{Fractions, ensembles}
+\section{Simplification sous forme d'une fractions}\label{convfrac}
 
-\subsection{Fractions}\label{convfrac}
+\subsection{Idée}
 
 \begin{codeidee}
 L'idée est d'obtenir une commande pour \textit{simplifier} un calcul sous forme de fraction irréductible.
@@ -4600,6 +4920,8 @@ L'idée est d'obtenir une commande pour \textit{simplifier} un calcul sous forme
 \begin{codetex}[listing only]
 \ConversionFraction[<option>]{<argument>}
 \end{codetex}
+
+\subsection{Commande et options}
 
 \begin{codecles}
 Peu d'options pour ces commandes :
@@ -4680,7 +5002,9 @@ A priori le package \ctex{xint} permet de s'en sortir pour des calculs \og simpl
 
 \pagebreak
 
-\subsection{Ensembles}\label{ensembles}
+\section{Ensembles}\label{ensembles}
+
+\subsection{Idée}
 
 \begin{codeidee}
 L'idée est d'obtenir une commande pour simplifier l'écriture d'un ensemble d'éléments, en laissant gérer les espaces.
@@ -4691,6 +5015,8 @@ Les délimiteurs de l'ensemble créé sont toujours \textsf{\{~~\}}.
 \begin{codetex}[listing only]
 \EcritureEnsemble[<clés>]{<liste>}
 \end{codetex}
+
+\subsection{Commande et options}
 
 \begin{codecles}
 Peu d'options pour ces commandes :
@@ -4740,281 +5066,7 @@ Attention cependant au comportement de la commande avec des éléments en mode \
 
 \newpage
 
-\section{Petits schémas pour le signe d'une fonction affine ou d'un trinôme}\label{aidesigne}
-
-\subsection{Idée}
-
-\begin{codeidee}
-L'idée est d'obtenir une commande pour tracer (en \TikZ) un petit schéma pour \textit{visualiser} le signe d'une fonction affine ou d'un trinôme.
-
-Le code est très largement inspiré de celui du package \ctex{tnsana} même si la philosophie est légèrement différente.
-
-\smallskip
-
-Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{MiniSchemaSignes} pour afficher le schéma.
-\end{codeidee}
-
-\begin{codetex}[tikz lower]
-%code tikz
-\MiniSchemaSignes[<clés>]
-\end{codetex}
-
-\subsection{Commandes}
-
-\begin{codetex}[listing only]
-...
-\begin{tikzpicture}[<options>]
-	...
-	\MiniSchemaSignes[<clés>]
-	...
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codetex}[listing only]
-... {\tikz[<options>] \MiniSchemaSignes[<clés>]}...
-\end{codetex}
-
-\begin{codecles}
-Plusieurs \Cle{Clés} sont disponibles pour cette commande :
-
-\begin{itemize}
-	\item la clé \Cle{Code} qui permet de définir le type d'expression (voir en-dessous) ;\hfill{}défaut \Cle{da+}
-	\item la clé \Cle{Couleur} qui donne la couleur de la représentation ;\hfill{}défaut \Cle{red}
-	\item la clé \Cle{Racines} qui définit la ou les racines ;\hfill{}défaut \Cle{2}
-	\item la clé \Cle{Largeur} qui est la largeur du schéma ;\hfill{}défaut \Cle{2}
-	\item la clé \Cle{Hauteur} qui est la hauteur du schéma ;\hfill{}défaut \Cle{1}
-	\item un booléen \Cle{Cadre} qui affiche un cadre autour du schéma.\hfill{}défaut \Cle{true}
-\end{itemize}
-\end{codecles}
-
-\begin{codecles}
-Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou \textsf{p} comme parabole) puis les éléments caractéristiques (\textsf{a+} pour $a>0$, \textsf{d0} pour $\Delta=0$, etc) :
-
-\begin{itemize}
-	\item \Cle{Code=da+} := une droite croissante ;
-	\item \Cle{Code=da-} := une droite décroissante ;
-	\item \Cle{Code=pa+d+} := une parabole \textit{souriante} avec deux racines ;
-	\item etc
-\end{itemize}
-\end{codecles}
-
-\pagebreak
-
-\begin{codetex}[listing only]
-\begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=da+,Racines=-4]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=da-,Racines={h},Couleur=blue,Largeur=3,Cadre=false]
-	\end{tikzpicture}
-\end{center}
-%
-\begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d+,Racines={1/2},Couleur=orange]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d-,Couleur=ForestGreen]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d0,Racines={5},Couleur=purple]
-	\end{tikzpicture}
-\end{center}
-%
-\begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d+,Racines={-3/0},Couleur=yellow]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d-,Couleur=cyan]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d0,Racines={-1},Couleur=magenta]
-	\end{tikzpicture}
-\end{center}
-\end{codetex}
-
-\begin{codesortie}
-\begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=da+,Racines=-4]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=da-,Racines={h},Couleur=blue,Largeur=3,Cadre=false]
-	\end{tikzpicture}
-\end{center}
-%
-\begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d+,Racines={1/2},Couleur=orange]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d-,Couleur=ForestGreen]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d0,Racines={5},Couleur=purple]
-	\end{tikzpicture}
-\end{center}
-%
-\begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d+,Racines={-3/0},Couleur=yellow]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d-,Couleur=cyan]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d0,Racines={-1},Couleur=magenta]
-	\end{tikzpicture}
-\end{center}
-\end{codesortie}
-
-\begin{codetex}[tikz lower]
-%code tikz
-\MiniSchemaSignes[Largeur=3.5,Hauteur=1.5,Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]
-\end{codetex}
-
-\subsection{Intégration avec tkz-tab}
-
-\begin{codeidee}
-Ces schémas peuvent être de plus utilisés, via la commande \ctex{MiniSchemaSignesTkzTab} pour illustrer les signes obtenus dans un tableau de signes présentés grâce au package \ctex{tkz-tab}.
-
-Pour des raisons internes, le fonctionnement de la commande \ctex{aidesignetkztabPL} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour que la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
-\end{codeidee}
-
-\begin{codetex}[listing only]
-\begin{tikzpicture}
-	%commandes tkztab
-	\MiniSchemaSignesTkzTab[<options>]{<numligne>}[<echelle>][<décalage horizontal>]
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codecles}
-Les \Cle{Clés} pour le premier argument optionnel sont les mêmes que pour la version \textit{initiale} de la commande précédente.
-
-En ce qui concerne les autres arguments :
-
-\begin{itemize}
-	\item le deuxième argument, mandataire, est le numéro de la ligne à côté de laquelle placer le schéma ;
-	\item le troisième argument, optionnel et valant \Cle{0.85} par défaut, est l'échelle à appliquer sur l'ensemble du schéma (à ajuster en fonction de la hauteur de la ligne) ;
-	\item le quatrième argument, optionnel et valant \Cle{1.5} par défait, est lié à l'écart horizontal entre le bord de la ligne du tableau et le schéma.
-\end{itemize}
-
-À noter que si l'un des arguments optionnels (le n°3 et/ou le n°4) sont utilisés, il vaut mieux préciser les 2 !
-\end{codecles}
-
-\begin{codetex}[listing only]
-\begin{center}
-	\begin{tikzpicture}
-		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
-		\tkzTabLine{,+,t,+,z,-,}
-		\tkzTabLine{,-,z,+,t,+,}
-		\tkzTabLine{,-,z,+,z,-,}
-		\MiniSchemaSignesTkzTab[Code=da-,Racines={2,5},Couleur=blue]{1}
-		\MiniSchemaSignesTkzTab[Code=da+,Racines={-2},Couleur=purple]{2}
-		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/2,5},Couleur=orange]{3}[0.85][2]
-	\end{tikzpicture}
-\end{center}
-\end{codetex}
-
-\begin{codesortie}
-\begin{center}
-	\begin{tikzpicture}
-		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
-		\tkzTabLine{,+,t,+,z,-,}
-		\tkzTabLine{,-,z,+,t,+,}
-		\tkzTabLine{,-,z,+,z,-,}
-		\MiniSchemaSignesTkzTab[Code=da-,Racines={2,5},Couleur=blue]{1}
-		\MiniSchemaSignesTkzTab[Code=da+,Racines={-2},Couleur=purple]{2}
-		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/2,5},Couleur=orange]{3}[0.85][2]
-	\end{tikzpicture}
-\end{center}
-\end{codesortie}
-
-\newpage
-
-\section{Style \og main levée \fg{} en \TikZ}\label{mainlevee}
-
-\subsection{Idée}
-
-\begin{codeidee}
-L'idée est de \textit{proposer} un style \textit{tout prêt} pour simuler un tracé, en \TikZ, à \og main levée \fg.
-
-Il s'agit d'un style \textit{basique} utilisant la librairie \ctex{decorations} avec \textsf{random steps}.
-\end{codeidee}
-
-\begin{codetex}[listing only]
-\tikzset{%
-	mainlevee/.style args={#1et#2}{decorate,decoration={random steps, segment length=#1,amplitude=#2}},
-	mainlevee/.default={5mm et 0.6pt}
-}
-\end{codetex}
-
-\subsection{Utilisation basique}
-
-\begin{codeinfo}
-Il s'agit ni plus ni moins d'un style \TikZ{} à intégrer dans les tracés et constructions \TikZ !
-\end{codeinfo}
-
-\begin{codecles}
-Concernant le style en lui-même, deux paramètres peuvent être précisés via \Cle{mainlevee=\#1 et \#2} :
-
-\begin{itemize}
-	\item \Cle{\#1} correspond à l'option \textsf{segment length} (longueur des segments \textit{types}) ;\hfill{}défaut \Cle{5mm}
-	\item \Cle{\#2} correspond à l'option \textsf{amplitude} (amplitude maximale de la \textit{déformation}).\hfill{}défaut \Cle{0.6pt}
-\end{itemize}
-
-Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -- satisfaisants, mais l'utilisateur pourra modifier à loisir ces paramètres !
-\end{codecles}
-
-\begin{codetex}[listing only]
-%la grille a été rajoutée pour la sortie
-\begin{tikzpicture}
-	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-
-\begin{tikzpicture}
-	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-
-\begin{tikzpicture}
-	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codesortie}
-\hfill~\begin{tikzpicture}
-	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
-	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-\hspace{1.5cm}
-\begin{tikzpicture}
-	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
-	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-\hspace{1.5cm}
-\begin{tikzpicture}
-	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
-	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-\hfill~
-\end{codesortie}
-
-\newpage
-
 \section{Écriture d'un trinôme, trinôme aléatoire}\label{trinome}
-
 
 \subsection{Idée}
 
@@ -5068,6 +5120,51 @@ Avec $a$ entre 1 et 10 (forcément positif) puis $b$ entre $-2$ et 2 puis $c$ en
 \EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}\\
 \EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}\\
 \EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}
+\end{codetex}
+
+\newpage
+
+\section{Simplification de racines}\label{simplracine}
+
+\subsection{Idée}
+
+\begin{codeidee}
+\cmaj{2.1.0} L'idée est de proposer une commande pour simplifier \textit{automatiquement} une racine carrée, sous la forme $\frac{a\sqrt{b}}{c}$ avec $\frac{a}{c}$ irréductible et $b$ le \frquote{plus petit possible}.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\SimplificationRacine{<expression ou calcul>}
+\end{codetex}
+
+\begin{codetex}[]
+\SimplificationRacine{48}\\
+\SimplificationRacine{100/34}\\
+\SimplificationRacine{99999}\\
+\SimplificationRacine{1500*0.31*(1-0.31)}\\
+\end{codetex}
+
+\begin{codeinfo}
+C'est -- comme souvent -- le package \ctex{xint} qui s'occupe en interne des calculs, et qui devrait donner des résultats satisfaisant dans la majorité des cas (attention aux \textit{grands nombres}\ldots)
+
+\smallskip
+
+La commande ne fait pas office de \textit{calculatrice}, elle ne permet \textit{que} de simplifier \textit{une} racine carrée (donc transformer si besoin !).
+\end{codeinfo}
+
+\subsection{Exemples}
+
+\begin{codetex}[]
+%Simplification d'un module de complexe
+$\left| 4+6\text{i}\right| = \sqrt{4^2+6^2} = \sqrt{\xinteval{4**2+6**2}}=\SimplificationRacine{4**2+6**2}$
+
+%Simplification n°1
+$\frac{1}{\sqrt{6}}=\left(\sqrt{\frac{1}{6}}\right)=\SimplificationRacine{1/6}$
+
+%Simplification n°2
+$\frac{42}{\sqrt{5}}=\left(\sqrt{\frac{42^2}{5}}\right)=\SimplificationRacine{(42*42)/5}$
+
+%Écart-type d'une loi binomiale
+$\sqrt{\num{150}\times\num{0.35}\times(1-\num{0.35})}=\displaystyle\SimplificationRacine{150*0.35*(1-0.35)}$
 \end{codetex}
 
 \newpage
@@ -5573,6 +5670,12 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
+{\small \bverb|v 2.1.0|~:~~~~Calcul du seuil, en interne désormais (page \pageref{calcrecurr})
+
+{\small \bverb|       |~:~~~~Commande pour simplifier une racine carrée (page \pageref{simplracine})
+
+{\small \bverb|       |~:~~~~Option \textsf{[pythontex]} pour charger le nécessaire pour \textsf{pythontex}
+	
 {\small \bverb|v 2.0.9|~:~~~~Nombres aléatoires, tirages aléatoires d'entiers (page \pageref{entiersaleatoires})
 
 {\small \bverb|v 2.0.8|~:~~~~Ajout d'un environnement pour présenter du code \LaTeX{} (page \pageref{prescode})

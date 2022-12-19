@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/12/15 2.0.9 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/12/18 2.1.0 Aide pour l'utilisation de LaTeX en lycee]
+% 2.1.0	Ajout du calcul du seuil pour les suites récurrentes + racines de nombres décimaux + option pour pythontex
 % 2.0.9	Ajouts de commandes pour générer des nombres et listes aléatoires
 % 2.0.8	Ajout d'options pour stretch et fonte env python(s) (pas tous...)
 % 2.0.6	Quelques modifications sur les codes python (taille police et marges)...
@@ -58,6 +59,8 @@
 \DeclareOption{nonshellescape}{\@nonshellescapetrue}
 \newif\if@build \@buildfalse
 \DeclareOption{build}{\@buildtrue}
+\newif\if@pythontex \@pythontexfalse
+\DeclareOption{pythontex}{\@pythontextrue}
 \newif\if@csvii \@csviifalse
 \DeclareOption{csvii}{\@csviitrue}
 \DeclareOption*{}
@@ -65,7 +68,6 @@
 
 %------Packages utiles
 \RequirePackage{mathtools}
-%\RequirePackage{amssymb}
 \RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
 \RequirePackage{tikz}
 \RequirePackage{tkz-tab}
@@ -73,7 +75,6 @@
 \RequirePackage{ifthen}
 \RequirePackage{xparse}
 \RequirePackage{xkeyval}
-%\RequirePackage{xfp} %plus utile
 \RequirePackage{xstring}
 \RequirePackage{xintexpr}
 \RequirePackage{xintbinhex}
@@ -83,15 +84,14 @@
 \RequirePackage{listofitems}
 \RequirePackage{tabularray}
 \RequirePackage{hvlogos}
+\RequirePackage{fancyvrb}
 \RequirePackage{siunitx} %test avec v3
-\sisetup{%
-  locale=FR,%
-  mode = match, propagate-math-font = true,%
-  reset-math-version = false, reset-text-family = false,%
-  reset-text-series = false, reset-text-shape = false,%
-  text-family-to-math = true, text-series-to-math = true,%
-  output-decimal-marker={,},%
-%  group-minimum-digits=4%
+\sisetup{locale=FR,output-decimal-marker={,},%
+	mode = match, propagate-math-font = true,%
+	reset-math-version = false, reset-text-family = false,%
+	reset-text-series = false, reset-text-shape = false,%
+	text-family-to-math = true, text-series-to-math = true,%
+	group-minimum-digits=4%
 }%
 \RequirePackage{fontawesome5}
 \if@csvii
@@ -113,13 +113,16 @@
 \RequirePackage[most]{tcolorbox}
 %divers
 \RequirePackage{iftex}
+
 %python
-\RequirePackage{fancyvrb}
-\RequirePackage[gobble=auto]{pythontex}
-\setpythontexlistingenv{pythont} %pour ne pas télescoper lstlistings (?)
-\if@build
-	\setpythontexoutputdir{./build/pythontex-files-\jobname} %essai de modif pythontex répertoire build
+\if@pythontex
+	\RequirePackage[gobble=auto]{pythontex}
+	\setpythontexlistingenv{pythont} %pour ne pas télescoper lstlistings (?)
+	\if@build
+		\setpythontexoutputdir{./build/pythontex-files-\jobname} %essai de modif pythontex répertoire build
+	\fi
 \fi
+
 %shellescape
 \if@nonshellescape
 	%on ne charge pas minted et la librairie tcbox
@@ -365,6 +368,7 @@
 		{}
 }
 
+\if@pythontex
 %=========CONSOLEPYTHON=========== OK !!
 \defKV[envpythonconsole]{%
 	Largeur=\def\CSPYlargeur{#1},%
@@ -481,6 +485,7 @@
 		{\end{tcpythontexcodeno}}
 	\verbcenterpost
 }
+\fi
 
 %=========PYTHONMINTED========= OK !!
 \tcbset{pytmintedno/.style={%
@@ -497,7 +502,7 @@
 	}
 }
 
-\DeclareTCBListing{CodePythonMinted}{ s D<>{12cm} O{} }{% étoilée sans numéro, taille puis options...
+\DeclareTCBListing{CodePythonMinted}{ s O{12cm} O{} }{% étoilée sans numéro, taille puis options...
 	\IfBooleanTF{#1}{pytmintedno}{pytminted},
 	enhanced,width=#2,#3,
 	colframe=Green,colback=ForestGreen!5,%
@@ -702,7 +707,7 @@
 	\newcommand\algomathttPL[1]{\mathtt{#1}}
 \fi
 
-\DeclareTCBListing{PseudoCode}{ s D<>{12cm} O{} }{% étoilée sans numéro, <taille> puis option...
+\DeclareTCBListing{PseudoCode}{ s O{12cm} O{} }{% étoilée sans numéro, <taille> puis option...
 	width=#2,#3,
 	stylepseudocodePL,
 	listing only,listing engine=listings,
@@ -763,7 +768,7 @@
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalWin}{ D<>{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
+\DeclareTCBListing{TerminalWin}{ O{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
 	PLfaketermwin,title={\termwintitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -814,7 +819,7 @@
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalUnix}{ D<>{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
+\DeclareTCBListing{TerminalUnix}{ O{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
 	PLtermlinux,title={\termnuxtitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -864,7 +869,7 @@
 	\end{tblr}
 }
 
-\DeclareTCBListing{TerminalOSX}{ D<>{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
+\DeclareTCBListing{TerminalOSX}{ O{\linewidth} m !O{} }{%<taille> puis {Titre=...} puis [option]
 	PLfaketermosx,title={\termosxtitre[#2]},%
 	listing only,listing engine=listings,%
 	listing options={style=tcblatex,language={},basicstyle=\footnotesize\ttfamily},%
@@ -1029,7 +1034,7 @@
 		\IfStrEq{#1}{t}{\ensuremath{\tfrac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'arg opt est t
 	}{%si non := entier
 		\num{\calculargument}%on affiche l'entier, avec le package siunitx
-	}
+	}%
 }
 
 %================CabWeb================ OK !!
@@ -2070,7 +2075,7 @@
 	Grille=true,%
 }
 
-\DeclareDocumentCommand\FenetreSimpleTikz{ O{}  D<>{} m D<>{} m }{%
+\DeclareDocumentCommand\FenetreSimpleTikz{ O{} D<>{} m D<>{} m }{%
 	\useKVdefault[PLsimplewindow]%
 	\setKV[PLsimplewindow]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\ifboolKV[PLsimplewindow]{Grille}%
@@ -3214,6 +3219,46 @@
 	\xintFloatToDecimal{\vartmp}%
 }
 
+\newcount\CompteurSeuil%
+\NewDocumentCommand\CalculSeuil{ m m m m m }{%N0 / UN0 / fct / sgn / seuil := en interne
+	\xintdeffloatfunc varfct(x) := #3 ;%
+	\xdef\vartmp{\fpeval{#2}}%
+	\CompteurSeuil=#1%
+	%symbole de comparaison inversé et boucle
+	\IfEq{#4}{>}%
+		{%
+			\whiledo{\xintLtorEq{\vartmp}{#5} = 1}%
+				{%
+					\xdef\vartmp{\xintfloateval{varfct(\vartmp)}}%
+					\CompteurSeuil=\numexpr\CompteurSeuil+1%
+				}%
+		}{}%
+	\IfEq{#4}{<}%
+		{%
+			\whiledo{\xintGtorEq{\vartmp}{#5} = 1}%
+				{%
+					\xdef\vartmp{\xintfloateval{varfct(\vartmp)}}%
+					\CompteurSeuil=\numexpr\CompteurSeuil+1%
+				}%
+		}{}%
+	\IfEq{#4}{>=}%
+		{%
+			\whiledo{\xintLt{\vartmp}{#5} = 1}%
+				{%
+					\xdef\vartmp{\xintfloateval{varfct(\vartmp)}}%
+					\CompteurSeuil=\numexpr\CompteurSeuil+1%
+				}%
+		}{}%
+	\IfEq{#4}{<=}%
+		{%
+			\whiledo{\xintGt{\vartmp}{#5} = 1}%
+				{%
+					\xdef\vartmp{\xintfloateval{varfct(\vartmp)}}%
+					\CompteurSeuil=\numexpr\CompteurSeuil+1%
+				}%
+		}{}%
+}
+
 \defKV[calculsuiterecur]{%
 	No=\def\SRninit{#1},%
 	UNo=\def\SRuninit{#1},%
@@ -3252,7 +3297,7 @@
 	No=\def\SEUILindiceinit{#1},%
 	UNo=\def\SEUILtermeinit{#1},%
 	NomSuite=\def\SEUILnomsuite{#1},%
-	SolN=\def\SEUILn{#1},%
+	%SolN=\def\SEUILn{#1},%
 	Precision=\def\SEUILprec{#1},%
 	Stretch=\def\SEUILstretch{#1},%
 	Sens=\def\SEUILsens{#1}
@@ -3265,27 +3310,52 @@
 	Balayage=false,%
 	Calculatrice=false,%
 	Majuscule=true,%
-	Sens=>
+	Sens={>},%
+	Exact=false,%
+	Conclusion=true,%
+	Simple=false
 }
 
 \newcommand\SolutionSeuil[3][]{%1=options + %2 = fonction + %3 = seuil
 	\useKVdefault[suiteseuil]%
 	\setKV[suiteseuil]{#1}%
-	\def\SEUILnmu{\inteval{\SEUILn-1}}%
+	%on détermine le seuil, directement et on stocke les bascules !!!
+	\CalculSeuil{\SEUILindiceinit}{\SEUILtermeinit}{#2}{\SEUILsens}{#3}%
+	\def\SEUILn{\inteval{\the\CompteurSeuil}}%
+	\def\SEUILnmu{\inteval{\the\CompteurSeuil-1}}%
+	%formatage de la sortie des signes
 	\IfEq{\SEUILsens}{>}%
 		{\def\SensDeb{\leqslant}\def\SensFin{>}}%
+		{}%
+	\IfEq{\SEUILsens}{<}%
 		{\def\SensDeb{\geqslant}\def\SensFin{<}}%
+		{}%
+	\IfEq{\SEUILsens}{>=}%
+		{\def\SensDeb{<}\def\SensFin{\geqslant}}%
+		{}%
+	\IfEq{\SEUILsens}{<=}%
+		{\def\SensDeb{>}\def\SensFin{\leqslant}}%
+		{}%
+	%formatage
 	\ifboolKV[suiteseuil]{Balayage}{\ifboolKV[suiteseuil]{Majuscule}{P}{p}ar balayage, on obtient }{}%
 	\ifboolKV[suiteseuil]{Calculatrice}{\ifboolKV[suiteseuil]{Majuscule}{P}{p}ar calculatrice, on obtient }{}%
-	\ensuremath{%
-		\left\lbrace \begin{tblr}{stretch=\SEUILstretch,colsep=1pt,rll}%
-			\SEUILnomsuite_{\SEUILnmu} &\approx \CalculTermeRecurrence[Precision=\SEUILprec,No=\SEUILindiceinit,UNo=\SEUILtermeinit,N=\SEUILnmu]{#2} & \SensDeb\num{#3} \: \\ %
-			\SEUILnomsuite_{\SEUILn} &\approx \CalculTermeRecurrence[Precision=\SEUILprec,No=\SEUILindiceinit,UNo=\SEUILtermeinit,N=\SEUILn]{#2} & \SensFin\num{#3} \: %
-		\end{tblr}%
-		\right|%
-		\Rightarrow%
-		n \geqslant \SEUILn%
-	}%
+	\ifboolKV[suiteseuil]{Simple}%
+		{%
+			\ensuremath{\SEUILnomsuite_{\SEUILnmu} \ifboolKV[suiteseuil]{Exact}{=}{\approx} \CalculTermeRecurrence[Precision=\SEUILprec,No=\SEUILindiceinit,UNo=\SEUILtermeinit,N=\SEUILnmu]{#2} \SensDeb\num{#3}}%
+			\text{~et~}%
+			\ensuremath{\SEUILnomsuite_{\SEUILn} \ifboolKV[suiteseuil]{Exact}{=}{\approx} \CalculTermeRecurrence[Precision=\SEUILprec,No=\SEUILindiceinit,UNo=\SEUILtermeinit,N=\SEUILn]{#2} \SensFin\num{#3}}%
+		}%
+		{%
+			\ensuremath{%
+				\left\lbrace \begin{tblr}{stretch=\SEUILstretch,colsep=1pt,rll}%
+					\SEUILnomsuite_{\SEUILnmu} &\ifboolKV[suiteseuil]{Exact}{=}{\approx} \CalculTermeRecurrence[Precision=\SEUILprec,No=\SEUILindiceinit,UNo=\SEUILtermeinit,N=\SEUILnmu]{#2} & \SensDeb\num{#3} \: \\ %
+					\SEUILnomsuite_{\SEUILn} &\ifboolKV[suiteseuil]{Exact}{=}{\approx} \CalculTermeRecurrence[Precision=\SEUILprec,No=\SEUILindiceinit,UNo=\SEUILtermeinit,N=\SEUILn]{#2} & \SensFin\num{#3} \: %
+				\end{tblr}%
+				\ifboolKV[suiteseuil]{Conclusion}%
+					{\right| \Rightarrow n \geqslant \SEUILn}%
+					{\right.}%
+			}%
+		}%
 }
 
 %=================ALEATOIRES============= OK!
@@ -3365,6 +3435,48 @@
 		{\TriListeDecroiss{#2}}%
 		{}%
 	\StrSubstitute{#2}{,}{\TAEEsep}[#2]%on change le séparateur si besoin
+}
+
+%================SIMPLIFRACINES============ OK!
+\DeclareDocumentCommand\SimplificationRacine{ m }{% argument mandataire {calcul ou fraction}
+	\xdef\calculargument{\xintIrr{\xinteval{#1}}}%
+	\IfEndWith{\calculargument}{/1}%
+	{%si c'est un entier !
+		\xdef\calculargument{\xintiieval{#1}}%
+		\xdef\ExtractRacStop{\xintiFloor{\xintfloateval{sqrt(\calculargument)}}}%
+		\xintFor* ##1 in {\xintSeq{1}{\ExtractRacStop}}\do{%
+			\xintifboolexpr{ \xintiiRem{\calculargument}{\xintiieval{##1*##1}} == 0}%si le carré divise
+			{\xdef\ExtractRacID{##1}}%
+			{}%
+			}%
+		\xdef\ExtracReste{\xintiieval{\calculargument/(\ExtractRacID*\ExtractRacID)}}%
+		\ensuremath{\xintifboolexpr{\ExtractRacID == 1 && \ExtracReste == 1}%
+			{1}%
+			{ \xintifboolexpr{\ExtractRacID == 1}{}{\num{\xintiieval{\ExtractRacID}}}%
+			\xintifboolexpr{\ExtracReste == 1}{}{\sqrt{\num{\ExtracReste}}} }}%
+%			}%
+	}%
+	{%on va mettre sous forme a\sqrt(d)/b := buggue avec des millièmes...
+		\StrBefore{\calculargument}{/}[\numerateur]%on extrait le numérateur
+		\StrBehind{\calculargument}{/}[\denominateur]%on extrait le dénominateur
+		\xdef\ExtractRacNNum{\xintiieval{\numerateur*\denominateur}}%
+		\xdef\ExtractRacStop{\xintiFloor{\xintfloateval{sqrt(\ExtractRacNNum)}}}%
+		\xintFor* ##1 in {\xintSeq{1}{\ExtractRacStop}}\do{%
+			\xintifboolexpr{ \xintiiRem{\ExtractRacNNum}{\xintiieval{##1*##1}} == 0}%si le carré divise
+			{\xdef\ExtractRacID{##1}}%
+			{}
+		}%
+		\xdef\ExtractRacGCD{\xintiiGCD{\ExtractRacID}{\denominateur}}%
+		\xdef\RacNumSimpl{\xintiieval{\ExtractRacID/\ExtractRacGCD}}%simpl num
+		\xdef\RacDenomSimpl{\xintiieval{\denominateur/\ExtractRacGCD}}%
+		\xdef\RacRacSimpl{\xintiieval{\ExtractRacNNum/(\ExtractRacID*\ExtractRacID)}}%
+		\ensuremath{\frac{%
+			\xintifboolexpr{\RacNumSimpl == 1 && \RacRacSimpl == 1}%
+			{1}%
+			{ \xintifboolexpr{\RacNumSimpl == 1}{}{\RacNumSimpl} \xintifboolexpr{\RacRacSimpl == 1}{}{\sqrt{\RacRacSimpl}} }%
+			}%
+			{ \RacDenomSimpl }}%
+	}%
 }
 
 \endinput
