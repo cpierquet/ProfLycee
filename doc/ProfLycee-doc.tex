@@ -62,8 +62,8 @@
 \setlength{\parindent}{0pt}
 \definecolor{LightGray}{gray}{0.9}
 
-\def\PLversion{2.1.0}
-\def\PLdate{18 Décembre 2022}
+\def\PLversion{2.1.1}
+\def\PLdate{28 Décembre 2022}
 
 \tcbset{vignettes/.style={%
 		nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
@@ -558,6 +558,13 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \end{codeinfo}
 
 \begin{codetex}[listing only]
+%fenêtre de repérage en tikz et courbe
+\GrilleTikz[<options>][<options grille ppale>][<options grille second.>]
+\AxesTikz[<options>]
+\AxexTikz[<options>]{<valeurs>}
+\AxeyTikz[<options>]{<valeurs>}
+\CourbeTikz[<options>]{<fonction>}{<valxmin:valxmax>}
+
 %courbe d'interpolation, tangente, dans un environnement tikz
 \SplineTikz[<options>]{<liste>}
 \TangenteTikz[<options>]{<liste>}
@@ -723,6 +730,326 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \newpage
 
 \part{Outils pour l'analyse}
+
+\section{Repérage et tracé de courbes, en \TikZ}\label{reperagetikz}
+
+\subsection{Idée}
+
+\begin{codeidee}
+\cmaj{2.1.1} L'idée est de proposer des commandes \textit{simplifiées} pour tracer un repère, en \TikZ, avec :
+
+\begin{itemize}
+	\item axes et graduations, grille ;
+	\item courbe.
+\end{itemize}
+\end{codeidee}
+
+\begin{codeinfo}
+Au niveau du code, il y aura donc plusieurs \textit{aspects} :
+
+\begin{itemize}
+	\item le paramétrage de la fenêtre graphique directement dans la déclaration de l'environnement ;
+	\item les commandes de tracés avec options et clés.
+\end{itemize}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%version basique
+\begin{tikzpicture}[<paramètres>]
+	%grille et axes
+	\GrilleTikz[<options>][<options grille ppale>][<options grille second.>]
+	\AxesTikz[<options>]
+	\AxexTikz[<options>]{<valeurs>}
+	\AxeyTikz[<options>]{<valeurs>}
+	%courbe
+	\CourbeTikz[<options>]{<fonction>}{<valxmin:valxmax>}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%version simplifiée
+\begin{tikzpicture}[<paramètres>]
+	%grille et axes
+	\FenetreSimpleTikz[<options>]<opt axe Ox>{liste abscisses}<opt axe Oy>{liste ordonnées}
+	%courbe
+	\CourbeTikz[<options>]{<fonction>}{<valxmin:valxmax>}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\FenetreSimpleTikz<Police=\small>{0,5,...,55}<Police=\small>{0,30,...,210} %repère
+	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
+	{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
+\end{tikzpicture}
+\end{codesortie}
+
+\pagebreak
+
+\subsection{Commandes, clés et options}
+
+\begin{codeinfo}
+Les \Cle{paramètres} nécessaires à la bonne utilisation des commandes suivantes sont à déclarer directement dans l'environnement \ctex{tikzpicture}, seules les versions \og x \fg{}  sont présentées ici:
+
+\begin{itemize}
+	\item \Cle{xmin}, stockée dans \ctex{\textbackslash{}xmin} ;\hfill{}défaut \Cle{-3}
+	\item \Cle{xmax}, stockée dans \ctex{\textbackslash{}xmax} ;\hfill{}défaut \Cle{3}
+	\item \Cle{Ox}, stockée dans \ctex{\textbackslash{}axexOx}, origine de l'axe $(Ox)$ ;\hfill{}défaut \Cle{0}
+	\item \Cle{xgrille}, stockée dans \ctex{\textbackslash{}xgrille}, graduation principale ;\hfill{}défaut \Cle{1}
+	\item \Cle{xgrilles}, stockée dans \ctex{\textbackslash{}xgrilles}, graduation secondaire.\hfill{}défaut \Cle{0.5}
+\end{itemize}
+
+La fenêtre d'affichage (de sortie) sera donc \textit{portée} par le rectangle de coins $(\text{xmin}\,;\,\text{ymin})$ et $(\text{xmax}\,;\,\text{ymax})$ ; ce qui correspond en fait à la fenêtre \TikZ{} \textit{portée} par le rectangle de coins $(xmin-Ox\,;\,ymin-Oy)$ et $(\text{xmax-Ox}\,;\,\text{ymax-Oy})$.
+
+\smallskip
+
+Les commandes ont -- pour certaines -- pas mal de \Cle{clés} pour des réglages fins, mais dans la majorité des cas elles ne sont pas forcément \textit{utiles}.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%...code tikz
+\GrilleTikz[<options>][<options grille ppale>][<options grille second.>]
+\end{codetex}
+
+\begin{codecles}
+Cette commande permet de tracer une grille principale et/ou une grille secondaire :
+
+\begin{itemize}
+	\item les premières \Cle{clés} sont les booléens \Cle{Affp} et \Cle{Affs} qui affichent ou non les grilles ;\hfill~défaut \Cle{true}
+	\item les options des grilles sont en \TikZ. \hfill~défaut \Cle{thin,lightgray} et \Cle{very thin,lightgray}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\GrilleTikz
+\end{tikzpicture}
+~~
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\GrilleTikz[Affp=false][][orange,densely dotted]
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\hfill~
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\GrilleTikz
+\end{tikzpicture}
+~~
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\GrilleTikz[Affp=false][][orange,densely dotted]
+\end{tikzpicture}
+\hfill~
+\end{codesortie}
+
+\begin{codetex}[listing only]
+%...code tikz
+\AxesTikz[<options>]
+\end{codetex}
+
+\begin{codecles}
+Cette commande permet de tracer les axes, avec des \Cle{clés} :
+
+\begin{itemize}
+	\item \Cle{Epaisseur} qui est l'épaisseur des axes ; \hfill~défaut \Cle{1pt}
+	\item \Cle{Police} qui est le style des labels des axes  ; \hfill~défaut \Cle{\textbackslash{}normalsize\textbackslash{}normalfont}
+	\item \Cle{Labelx} qui est le label de l'axe $(Ox)$ ; \hfill~défaut \Cle{\${}x\$}
+	\item \Cle{Labely} qui est le label de l'axe $(Oy)$ ; \hfill~défaut \Cle{\${}y\$}
+	\item \Cle{AffLabel} qui est le code pour préciser quels labels afficher, entre \Cle{x}, \Cle{y} ou \Cle{xy} ; \hfill~défaut \Cle{vide}
+	\item \Cle{PosLabelx} pour la position du label de $(Ox)$ en bout d'axe ; \hfill~défaut \Cle{right}
+	\item \Cle{PosLabely} pour la position du label de $(Oy)$ en bout d'axe ; \hfill~défaut \Cle{above}
+	\item \Cle{EchelleFleche} qui est l'échelle de la flèche des axes ; \hfill~défaut \Cle{1}
+	\item \Cle{TypeFleche} qui est le type de la flèche des axes.\hfill~défaut \Cle{>}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+%code tikz
+\AxesTikz
+
+%code tikz
+\AxesTikz%
+	[AffLabel=xy,Labelx={Nombre de jours},Labely={Nombre d'individus infectés, en centaines},%
+	PosLabelx={above left},PosLabely={above right},%
+	Police=\small\sffamily]
+\end{codetex}
+
+\begin{codesortie}
+\hfill~
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\AxesTikz
+\end{tikzpicture}
+~~
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\AxesTikz%
+	[AffLabel=xy,Labelx={Nombre de jours},
+	Labely={Nombre d'individus infectés, en centaines},%
+	PosLabelx={above left},PosLabely={above right},%
+	Police=\small\sffamily]
+\end{tikzpicture}
+\hfill~
+\end{codesortie}
+
+%les axes
+
+\begin{codetex}[listing only]
+%...code tikz
+\AxexTikz[<options>]{valeurs}
+\AxeyTikz[<options>]{valeurs}
+\end{codetex}
+
+\begin{codecles}
+Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} identiques pour les deux directions :
+
+\begin{itemize}
+	\item \Cle{Epaisseur} qui est l'épaisseur des graduations ; \hfill~défaut \Cle{1pt}
+	\item \Cle{Police} qui est le style des labels des graduations ; \hfill~défaut \Cle{\textbackslash{}normalsize\textbackslash{}normalfont}
+	\item \Cle{PosGrad} qui est la position des graduations par rapport à l'axe ; \hfill~défaut \Cle{below} et \Cle{left}
+	\item \Cle{HautGrad} qui est la position des graduations (sous la forme \Cle{lgt} ou \Cle{lgta/lgtb}) ; \hfill~défaut \Cle{4pt}
+	\item le booléen \Cle{AffGrad} pour afficher les valeurs (formatés avec \ctex{num} donc dépendant de \ctex{sisetup}) des graduations  ; \hfill~défaut \Cle{true}
+	\item le booléen \Cle{AffOrigine} pour afficher la graduation de l'origine ; \hfill~défaut \Cle{true}
+	\item le booléen \Cle{Annee} qui permet de ne pas formater les valeurs des graduations (type \textsf{année}). \hfill~défaut \Cle{false}
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+%code tikz
+\AxexTikz[Police=\small]{0,5,...,55}
+\AxeyTikz[Police=\small]{0,30,...,210}
+
+%code tikz
+\AxexTikz[Police=\small,HautGrad=0pt/4pt]{0,5,...,55}
+\AxeyTikz[AffGrad=false,HautGrad=6pt]{0,30,...,210}
+
+%des axes fictifs (en gris) sont rajoutés pour la lisibilité du code de sortie
+\end{codetex}
+
+\begin{codesortie}
+\hfill~
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\draw[gray,line width=1.25pt,->] ({\xmin-\axexOx},0) -- ({\xmax-\axexOx},0) ;
+	\draw[gray,line width=1.25pt,->] (0,{\ymin-\axeyOy}) -- (0,{\ymax-\axeyOy}) ;
+	\AxexTikz[Police=\small]{0,5,...,55}
+	\AxeyTikz[Police=\small]{0,30,...,210}
+\end{tikzpicture}
+~~
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\draw[gray,line width=1.25pt,->] ({\xmin-\axexOx},0) -- ({\xmax-\axexOx},0) ;
+	\draw[gray,line width=1.25pt,->] (0,{\ymin-\axeyOy}) -- (0,{\ymax-\axeyOy}) ;
+	\AxexTikz[Police=\small,HautGrad=0pt/4pt]{0,5,...,55}
+	\AxeyTikz[AffGrad=false,HautGrad=6pt]{0,30,...,210}
+\end{tikzpicture}
+\hfill~
+\end{codesortie}
+
+\subsection{Commandes annexes}
+
+\begin{codeinfo}
+Il existe, de manière marginale, quelques commandes complémentaires qui ne seront pas trop détaillées mais qui sont existent :
+
+\begin{itemize}
+	\item \ctex{FenetreTikz} qui restreint les tracés à la fenêtre (utile pour des courbes qui \textit{débordent}) ;
+	\item \ctex{FenetreSimpleTikz} qui permet d'automatiser le tracé des grilles/axes/graduations dans leurs versions par défaut, avec peu de paramétrages ;
+	\item \ctex{OrigineTikz} pour rajouter le libellé de l'origine si non affiché par les axes.
+\end{itemize}
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+%code tikz
+\FenetreTikz                %on restreint les tracés
+\FenetreSimpleTikz%
+	[<options>]<options axe Ox>{liste abscisses}<options axe Oy>{liste ordonnées}
+\end{codetex}
+
+\begin{codeidee}
+L'idée est de proposer, en \textit{complément}, une commande simplifiée pour tracer une courbe en \TikZ.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+%...code tikz
+\CourbeTikz[<options>]{formule}{domaine}
+\end{codetex}
+
+\begin{codecles}
+Cette commande permet de rajouter une courbe sur le graphique (sans se soucier de la transformation de son expression) avec les arguments :
+
+\begin{itemize}
+	\item \Cle{optionnels} qui sont - en \TikZ{} - les paramètres du tracé ;
+	\item le premier mandataire, est - en langage \TikZ{} - l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
+	\item le second mandataire est le domaine du tracé , sous la forme \ctex{valxmin:valxmax}.
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
+	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
+	\FenetreSimpleTikz<Police=\small>{0,5,...,55}<Police=\small>{0,30,...,210} %repère
+	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
+	{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\begin{tikzpicture}%
+	[x=0.1cm,y=0.0167cm, %unités
+	xmin=0,xmax=60,xgrille=5,xgrilles=5,ymin=0,ymax=240,ygrille=30,ygrilles=30]
+	\FenetreSimpleTikz<Police=\small>{0,5,...,55}<Police=\small>{0,30,...,210} %repère
+	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
+		{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
+\end{tikzpicture}
+\end{codesortie}
+
+\subsection{Repère non centré en O}
+
+\begin{codeidee}
+Parfois on est amené à travailler dans des repères qui n'ont pas forcément pour origine $(0\,;\,0)$. De ce fait - pour éviter des erreurs de \ctex{dimension too large} liées à \TikZ{} - il faut \textit{décaler les axes} pour se ramener à une origine en $O$.
+
+\smallskip
+
+L'idée est donc d'utiliser les commandes précédentes, sans se soucier des éventuelles translations à effectuer !
+\end{codeidee}
+
+\begin{codetex}[]
+\begin{tikzpicture}%
+	[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2010,%
+	xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1710,ygrille=10,ygrilles=5]
+	\FenetreSimpleTikz<Annee,Police=\small>{1992,1994,...,2008}{1640,1650,...,1700}
+	\FenetreTikz
+	\CourbeTikz%
+		[line width=1.25pt,orange,samples=500]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
+\end{tikzpicture}
+\end{codetex}
+
+\pagebreak
 
 \section{L'outil \og SplineTikz \fg}
 
@@ -3397,7 +3724,7 @@ Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situatio
 \subsection{Commandes, clés et options}
 
 \begin{codeinfo}
-Les \Cle{paramètres} nécessaires à la bonne utilisation des commandes suivantes sont à déclarer directement dans l'environnement \ctex{tikzpicture}, seules versions \og x \fg{}  sont présentées ici:
+Les \Cle{paramètres} nécessaires à la bonne utilisation des commandes suivantes sont à déclarer directement dans l'environnement \ctex{tikzpicture}, seules les versions \og x \fg{}  sont présentées ici:
 
 \begin{itemize}
 	\item \Cle{xmin}, stockée dans \ctex{\textbackslash{}xmin} ;\hfill{}défaut \Cle{-3}
@@ -3407,7 +3734,7 @@ Les \Cle{paramètres} nécessaires à la bonne utilisation des commandes suivant
 	\item \Cle{xgrilles}, stockée dans \ctex{\textbackslash{}xgrilles}, graduation secondaire.\hfill{}défaut \Cle{0.5}
 \end{itemize}
 
-La fenêtre d'affichage (de sortie) sera donc \textit{portée} par le rectangle de coins $(xmin\,;\,ymin)$ et $(xmax\,;\,ymax)$ ; ce qui correspond en fait à la fenêtre \TikZ{} \textit{portée} par le rectangle de coins $(xmin-Ox\,;\,ymin-Oy)$ et $(xmax-Ox\,;\,ymax-Oy)$.
+La fenêtre d'affichage (de sortie) sera donc \textit{portée} par le rectangle de coins $(\text{xmin}\,;\,\text{ymin})$ et $(\text{xmax}\,;\,\text{ymax})$ ; ce qui correspond en fait à la fenêtre \TikZ{} \textit{portée} par le rectangle de coins $(xmin-Ox\,;\,ymin-Oy)$ et $(\text{xmax-Ox}\,;\,\text{ymax-Oy})$.
 
 \smallskip
 
@@ -3531,7 +3858,7 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} identiques pour les deux directions :
 
 \begin{itemize}
-	\item \Cle{Epaisseur} qui est l'épaisseur des graduations ; \hfill~défaut \Cle{1.25pt}
+	\item \Cle{Epaisseur} qui est l'épaisseur des graduations ; \hfill~défaut \Cle{1pt}
 	\item \Cle{Police} qui est le style des labels des graduations ; \hfill~défaut \Cle{\textbackslash{}normalsize\textbackslash{}normalfont}
 	\item \Cle{PosGrad} qui est la position des graduations par rapport à l'axe ; \hfill~défaut \Cle{below} et \Cle{left}
 	\item \Cle{HautGrad} qui est la position des graduations (sous la forme \Cle{lgt} ou \Cle{lgta/lgtb}) ; \hfill~défaut \Cle{4pt}
@@ -5669,6 +5996,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.1.1|~:~~~~Ajout d'une section pour des repères en \TikZ{} (page \pageref{reperagetikz})
 
 {\small \bverb|v 2.1.0|~:~~~~Calcul du seuil, en interne désormais (page \pageref{calcrecurr})
 

@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/12/18 2.1.0 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2022/12/28 2.1.1 Aide pour l'utilisation de LaTeX en lycee]
+% 2.1.1	Ajout d'une section pour les tracés de repère et courbe, en tikz
 % 2.1.0	Ajout du calcul du seuil pour les suites récurrentes + racines de nombres décimaux + option pour pythontex
 % 2.0.9	Ajouts de commandes pour générer des nombres et listes aléatoires
 % 2.0.8	Ajout d'options pour stretch et fonte env python(s) (pas tous...)
@@ -1785,7 +1786,7 @@
 }
 
 \setKVdefault[PLaxextkz]{%
-	Epaisseur=1.25pt,%
+	Epaisseur=1pt,%
 	Police=\normalsize\normalfont,%
 	PosGrad=below,%
 	HautGrad=4pt,%
@@ -1832,7 +1833,7 @@
 }
 
 \setKVdefault[PLaxeytkz]{%
-	Epaisseur=1.25pt,%
+	Epaisseur=1pt,%
 	Police=\normalsize\normalfont,%
 	PosGrad=left,%
 	HautGrad=4pt,%
@@ -1883,7 +1884,7 @@
 }
 
 \setKVdefault[PLaxestkz]{%
-	Epaisseur=1.25pt,%
+	Epaisseur=1pt,%
 	Police=\normalsize\normalfont,%
 	Labelx=$x$,%
 	Labely=$y$,%
