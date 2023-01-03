@@ -3,7 +3,10 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2022/12/28 2.1.1 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/01/02 2.1.4 Aide pour l'utilisation de LaTeX en lycee]
+% 2.1.4	Ajout d'une commande pour résoudre de manière approchée une équation f(x)=k
+% 2.1.3	Ajout de l'option auto-tabs-gobble sur piton (v1.0) + correction d'un bug sur CodePiton
+% 2.1.2	Ajout d'une commande pour déterminer la mesure principale d'un angle + option <ElargirOx/y> pour les axes
 % 2.1.1	Ajout d'une section pour les tracés de repère et courbe, en tikz
 % 2.1.0	Ajout du calcul du seuil pour les suites récurrentes + racines de nombres décimaux + option pour pythontex
 % 2.0.9	Ajouts de commandes pour générer des nombres et listes aléatoires
@@ -87,7 +90,8 @@
 \RequirePackage{hvlogos}
 \RequirePackage{fancyvrb}
 \RequirePackage{siunitx} %test avec v3
-\sisetup{locale=FR,output-decimal-marker={,},%
+\sisetup{%
+	locale=FR,output-decimal-marker={,},%
 	mode = match, propagate-math-font = true,%
 	reset-math-version = false, reset-text-family = false,%
 	reset-text-series = false, reset-text-shape = false,%
@@ -632,8 +636,29 @@
 	Largeur=\linewidth,%
 	Alignement=center,%
 	Lignes=true,%
+	Gobble=true,%
 	TaillePolice=\footnotesize
 }
+
+\tcbset{stylepiton/.style={%
+		enhanced,boxrule=1.25pt,%
+		sharp corners=downhill,arc=12pt,
+		before skip=12pt,after skip=12pt,%
+		top=10pt,bottom=1mm,rightupper=4pt,%leftupper=25pt,
+		attach boxed title to top right={yshift=-\tcboxedtitleheight},
+		boxed title style={
+			size=small,colback=ForestGreen!25,boxrule=1.25pt,
+			colframe=Green,boxsep=1.25pt,
+			sharp corners=downhill,
+			arc=12pt,
+			top=2pt,bottom=1pt,left=6pt,right=6pt
+		},
+		fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
+		title={\scriptsize\faPython}\:Code Python\vphantom{p},
+		watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
+	}
+}
+
 \ifluatex
 	\RequirePackage{piton}
 	\NewPitonEnvironment{CodePiton}{ O{} }%
@@ -641,13 +666,17 @@
 			\useKVdefault[envpiton]%
 			\setKV[envpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
 			\ifboolKV[envpiton]{Lignes}%si lignes=true
-				{\PitonOptions{left-margin=auto,line-numbers}}%
-				{\PitonOptions{}}%
-			\begin{tcolorbox}[stylepythontex,leftupper=8pt,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign]
+				{\PitonOptions{left-margin=auto,all-line-numbers}}%
+				{}%
+			\ifboolKV[envpiton]{Gobble}%si gobble=true
+				{\PitonOptions{tabs-auto-gobble}}%
+				{}%
+			\PitonOptions{break-lines,indent-broken-lines}%
+			\begin{tcolorbox}[stylepiton,leftupper=8pt,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign]
 		}%
 		{%
 			\end{tcolorbox}%
-		}
+		}%
 \fi
 
 %=========PSEUDOCODE=========== OK !!
@@ -1156,8 +1185,8 @@
 		}%
 		{}
 	%tracés
-	\draw[\PLcerclethick,->] ({-\PLcerclerayon-\PLcerclemarge},0)--({\PLcerclerayon+\PLcerclemarge},0) ;
-	\draw[\PLcerclethick,->] (0,{-\PLcerclerayon-\PLcerclemarge})--(0,{\PLcerclerayon+\PLcerclemarge}) ;
+	\draw[\PLcerclethick,->,>=latex] ({-\PLcerclerayon-\PLcerclemarge},0)--({\PLcerclerayon+\PLcerclemarge},0) ;
+	\draw[\PLcerclethick,->,>=latex] (0,{-\PLcerclerayon-\PLcerclemarge})--(0,{\PLcerclerayon+\PLcerclemarge}) ;
 	\draw[\PLcerclethick] (0,0) circle[radius=\PLcerclerayon] ;
 	\draw (0,0) node[below left=2pt,PLval] {0} ;
 	%equations
@@ -1880,7 +1909,9 @@
 	PosLabely=\def\axesposlabely{#1},%
 	EchelleFleche=\def\axesechellefleche{#1},%
 	TypeFleche=\def\axestypefleche{#1},%
-	AffLabel=\def\axesafflabel{#1}
+	AffLabel=\def\axesafflabel{#1},%
+	ElargirOx=\def\axeselargx{#1},%
+	ElargirOy=\def\axeselargy{#1}
 }
 
 \setKVdefault[PLaxestkz]{%
@@ -1892,15 +1923,28 @@
 	PosLabelx=right,%
 	PosLabely=above,%
 	EchelleFleche=1,%
-	TypeFleche=>
+	TypeFleche=latex,%
+	ElargirOx=0/0.05,%
+	ElargirOy=0/0.05
 }
 
 \DeclareDocumentCommand\AxesTikz{ O{} }{%
 	\useKVdefault[PLaxestkz]
 	\setKV[PLaxestkz]{#1}%
+	%les petits élargissements
+	\IfSubStr{\axeselargx}{/}
+		{\StrCut{\axeselargx}{/}{\axeselargxG}{\axeselargxD}}
+		{\def\axeselargxG{\axeselargx}\def\axeselargxD{\axeselargx}}
+	\def\axesenlargxG{\fpeval{\axeselargxG*(\xmax-\xmin)}}
+	\def\axesenlargxD{\fpeval{\axeselargxD*(\xmax-\xmin)}}
+	\IfSubStr{\axeselargy}{/}
+		{\StrCut{\axeselargy}{/}{\axeselargyG}{\axeselargyD}}
+		{\def\axeselargyG{\axeselargy}\def\axeselargyD{\axeselargy}}
+	\def\axesenlargyG{\fpeval{\axeselargyG*(\ymax-\ymin)}}
+	\def\axesenlargyD{\fpeval{\axeselargyD*(\ymax-\ymin)}}
 	%on affiche les deux axes
-	\draw[line width=\axeswidth,-{\axestypefleche[scale=\axesechellefleche]}] ({\xmin-\axexOx},0) -- ({\xmax-\axexOx},0) ;
-	\draw[line width=\axeswidth,-{\axestypefleche[scale=\axesechellefleche]}] (0,{\ymin-\axeyOy}) -- (0,{\ymax-\axeyOy}) ;
+	\draw[line width=\axeswidth,-{\axestypefleche[scale=\axesechellefleche]}] ({\xmin-\axexOx-\axesenlargxG},0) -- ({\xmax-\axexOx+\axesenlargxD},0) ;
+	\draw[line width=\axeswidth,-{\axestypefleche[scale=\axesechellefleche]}] (0,{\ymin-\axeyOy-\axesenlargyG}) -- (0,{\ymax-\axeyOy++\axesenlargyD}) ;
 	%les labels éventuels
 	\IfSubStr{\axesafflabel}{x}%
 		{\draw ({\xmax-\axexOx},0) node[\axesposlabelx,font=\axesfont] {\axeslabelx} ;}
@@ -2076,14 +2120,16 @@
 	Grille=true,%
 }
 
-\DeclareDocumentCommand\FenetreSimpleTikz{ O{} D<>{} m D<>{} m }{%
+\DeclareDocumentCommand\FenetreSimpleTikz{ O{} D(){} D<>{} m D<>{} m }{%
 	\useKVdefault[PLsimplewindow]%
 	\setKV[PLsimplewindow]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\ifboolKV[PLsimplewindow]{Grille}%
 		{\GrilleTikz}%
 		{}%
 	\ifboolKV[PLsimplewindow]{Axes}%
-		{\AxesTikz\AxexTikz[#2]{#3}\AxeyTikz[#4]{#5}}%
+		{\AxesTikz[#2]%
+		 \AxexTikz[#3]{#4}
+		 \AxeyTikz[#5]{#6}}%
 		{}%
 }
 
@@ -2136,7 +2182,7 @@
 	\def\BaMaxelargeur{\fpeval{\BaMAxeMax-\BaMAxeMin}}
 	\def\BaMaxexmin{\fpeval{\BaMAxeMin-\BaMAxeElarg*\BaMaxelargeur}}
 	\def\BaMaxexmax{\fpeval{\BaMAxeMax+\BaMAxeElarg*\BaMaxelargeur}}
-	\draw[\BaMAxeEpaisseur,->] (\BaMaxexmin,0) -- (\BaMaxexmax,0) ;
+	\draw[\BaMAxeEpaisseur,->,>=latex] (\BaMaxexmin,0) -- (\BaMaxexmax,0) ;
 	\ifboolKV[boiteamoustachesaxe]{AffValeurs}
 		{\foreach \x in \BaMAxeValeurs \draw[\BaMAxeEpaisseur] (\x,3pt)--(\x,-3pt) node[below=3pt] {\num{\x}} ;}
 		{}
@@ -3033,7 +3079,7 @@
 			{}
 		\clip (-4,-0.075) rectangle (4,0.425) ;
 		\draw[black,semithick,fill=\GRPHPROBcoulsurf] ({\BorneInf},0) -- plot [domain={\BorneInf}:{\BorneSup},samples=100] (\x,{\densnorm{\x}}) -- ({\BorneSup},0) -- cycle;
-		\draw[thick,->,>=stealth] (-4,0)--(4,0) ;
+		\draw[thick,->,>=latex] (-4,0)--(4,0) ;
 		\draw[thick,densely dotted] (0,0)--(0,0.39894) ;
 		\draw[thick,domain=-4:4,samples=100,\GRPHPROBcoulcbe] plot (\x,{\densnorm{\x}}) ;
 	\end{tikzpicture}
@@ -3061,8 +3107,8 @@
 			{\draw (1,-0.075) node[font=\tiny,scale={\UNITEX}] {\MOYENNE} ;
 			\draw[thick,densely dotted] (1,0)--(1,{0.7*\densexpo{1}}) ;}
 			{}
-		\draw[thick,->,>=stealth] (-0.2,0)--(3.8,0) ;
-		\draw[thick,->,>=stealth] (0,-0.15)--(0,0.85) ;
+		\draw[thick,->,>=latex] (-0.2,0)--(3.8,0) ;
+		\draw[thick,->,>=latex] (0,-0.15)--(0,0.85) ;
 		\draw[thick,domain=0:3.8,samples=100,\GRPHPROBcoulcbe] plot (\x,{0.7*\densexpo{\x}}) ;
 	\end{tikzpicture}
 }
@@ -3478,6 +3524,98 @@
 			}%
 			{ \RacDenomSimpl }}%
 	}%
+}
+
+%================MESUREPPALE============= OK!
+\setKVdefault[MesurePpale]{%
+	Crochets=false,
+	d=false
+}
+
+\newcommand{\MesurePrincipale}[2][]{%fraction sous la forme a/b ou entier :-)
+	\useKVdefault[MesurePpale]%
+	\setKV[MesurePpale]{#1}%
+	\StrDel{#2}{pi}[\MPargument]%
+	%on conserve les données initiales
+	\IfSubStr{\MPargument}{/}%on coupe numérateur/dénominateur
+		{ \StrCut{\MPargument}{/}\MPnumerateurinit\MPdenominateurinit }%
+		{ \xdef\MPnumerateurinit{\MPargument}\xdef\MPdenominateurinit{1} }%
+	%on affiche le début, avant simplification
+	\ifboolKV[MesurePpale]{d}%
+		{\displaystyle}%
+		{}%
+	\xintifboolexpr{\MPdenominateurinit == 1}%
+		{ \num{\MPnumerateurinit}\pi = }%
+		{ \frac{\num{\MPnumerateurinit}\pi}{\num{\MPdenominateurinit}}= }%
+	%on simplifie puis on réduit
+	\xdef\MPsimpl{\xintPRaw{\xintIrr{\MPargument}}}%
+	%test si l'argument est une fraction ou un entier
+	\IfSubStr{\MPsimpl}{/}%
+		{ \StrCut{\MPsimpl}{/}\MPnumerateur\MPdenominateur }%
+		{ \xdef\MPnumerateur{\MPsimpl}\xdef\MPdenominateur{1} }%
+	%calculs
+	\xdef\MPtour{\inteval{2*\MPdenominateur}}%
+	\xdef\MPreste{\xintiiRem{\MPnumerateur}{\MPtour}}%reste
+	\xintifboolexpr{\MPreste>\MPdenominateur}%
+		{\xdef\MPreste{\inteval{\MPreste-\MPtour}}}{}%
+	\xintifboolexpr{\MPreste<-\MPdenominateur}%
+		{\xdef\MPreste{\inteval{\MPreste+\MPtour}}}{}%
+	%sortie suivant fraction ou non...
+	\xintifboolexpr{\MPdenominateur == 1}%
+	{%entier
+		\xintifboolexpr{\MPreste == 1}{\pi \: \ifboolKV[MesurePpale]{Crochets}{[2\pi]}{(2\pi)} }{}%
+		\xintifboolexpr{\MPreste == 0}{0 \: \ifboolKV[MesurePpale]{Crochets}{[2\pi]}{(2\pi)} }{}%
+		\xintifboolexpr{\MPreste != 0 && \MPreste != 1}{\MPreste\pi \: \ifboolKV[MesurePpale]{Crochets}{[2\pi]}{(2\pi)} }{}%
+	}%
+	{%fraction
+		\frac{%
+			\xintifboolexpr{\xinteval{\MPreste == 1}}{}{}%
+			\xintifboolexpr{\xinteval{\MPreste == -1}}{-}{}%
+			\xintifboolexpr{\xinteval{abs(\MPreste) != 1}}{\num{\MPreste}}{}%
+			\pi}{\num{\MPdenominateur}} \: \ifboolKV[MesurePpale]{Crochets}{[2\pi]}{(2\pi)}%
+	}%
+}
+
+%================DICHOTOMIE============== OK!
+\defKV[SolDichoto]{%
+	Precision=\xdef\DICHOTOstep{#1},%
+	Intervalle=\xdef\DICHOTOinterv{#1},%
+	Variable=\xdef\DICHOTOvar{#1}
+}
+
+\setKVdefault[SolDichoto]{%
+	Precision=2,%
+	Variable=x,%
+	Intervalle={0:10}
+}
+
+\NewDocumentCommand\ResolutionApprochee{ O{} m O{masolution} }{%1=options,2=equation,3=macro
+	\useKVdefault[SolDichoto]%
+	%extraction fonction + valeur
+	\setKV[SolDichoto]{#1}%
+	\IfSubStr{#2}{=}%on coupe mmb gauche / mmb droit
+		{\StrCut{#2}{=}{\SolDiFCT}{\SolDiVal}}%
+		{\xdef\SolDiFCT{#2}\xdef\SolDiVal{0}}%
+	%création des variables temporaires
+	\xintdeffloatfunc dichotovarfct(\DICHOTOvar) := \SolDiFCT ;%
+	\StrCut{\DICHOTOinterv}{:}{\varvala}{\varvalb}%
+	\xdef\varstep{\fpeval{10**(-\DICHOTOstep-1)}}%un chiffre en plus :-)
+	%boucles
+	\whiledo{\xintGt{\xintfloateval{\varvalb-\varvala-\varstep}}{0} = 1}%
+	{%
+		\xdef\varvalm{\xintfloateval{(\varvala+\varvalb)*0.5}}%
+		\xintifboolexpr{\xintGt{\xintfloateval{(dichotovarfct(\varvala)-\SolDiVal)*(dichotovarfct(\varvalm)-\SolDiVal)}}{0}==1}%
+			{\xdef\varvala{\fpeval{\varvalm}}}%
+			{\xdef\varvalb{\fpeval{\varvalm}}}%
+	}%
+	\xdef\varvalm{\xintfloateval{(\varvala+\varvalb)*0.5}}%
+	\xdef\vartmpmd{\fpeval{floor(\varvalm,\DICHOTOstep)}}%
+	\xdef\vartmpme{\fpeval{\vartmpmd+10**(-\DICHOTOstep)}}%
+	%les variables créées
+	\expandafter\def\csname#3d\endcsname{\fpeval{\vartmpmd}}%
+	\expandafter\def\csname#3e\endcsname{\fpeval{\vartmpme}}%
+	%valeur approchée
+	\expandafter\def\csname#3a\endcsname{\fpeval{round(\varvalm,\DICHOTOstep)}}%
 }
 
 \endinput
