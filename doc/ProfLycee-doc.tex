@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass{article}
-\def\PLversion{2.1.4}
-\def\PLdate{02 Janvier 2023}
+\def\PLversion{2.1.5}
+\def\PLdate{09 Janvier 2023}
 \usepackage[pythontex]{ProfLycee}
 \usepackage{mathtools}
 \usepackage{lualatex-math}
@@ -672,6 +672,14 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \VarNbAlea{macro}{calcul}
 %liste d'entiers aléatoires
 \TirageAleatoireEntiers[options]{macro}
+\end{codetex}
+
+\begin{codetex}[listing only]
+%arrangement Anp
+\Arrangement(*)[option]{p}{n}
+
+%arrangement Cnp (p parmi n)
+\Combinaison(*)[option]{p}{n}
 \end{codetex}
 
 \begin{codetex}[listing only]
@@ -4967,6 +4975,50 @@ $\ListeKeno$
 
 \newpage
 
+\section{Combinatoire}\label{combinatoire}
+
+\subsection{Idée}
+
+\begin{codeidee}
+L'idée est de proposer une commande pour calculer un arrangement ou une combinaison, en utilisant les capacités de calcul du package \ctex{xfp}.
+\end{codeidee}
+
+\begin{codetex}[listing only]
+\Arrangement(*)[option]{p}{n}
+\Combinaison(*)[option]{p}{n}
+\end{codetex}
+
+\subsection{Utilisation}
+
+\begin{codecles}
+Peu de paramétrage pour ces commandes qui permettent de calculer $A_n^p$ et $C_n^p$ :
+
+\begin{itemize}
+	\item les versions étoilées ne formatent pas le résultat grâce à \ctex{\textbackslash num} de \ctex{sinuitx} ;
+	\item le booléen \Cle{Formule} permet de présenter la formule avant le résultat ; \hfill~défaut \Cle{false}
+	\item le premier argument, \textit{mandataire}, est la valeur de $p$ ;
+	\item le second argument, \textit{mandataire}, est la valeur de $n$.
+\end{itemize}
+\end{codecles}
+
+\begin{codetex}[]
+On a $A_{20}^3=\Arrangement*{3}{20}$ en non formaté, et $A_{20}^3=\Arrangement{3}{20}$ en formaté.
+\end{codetex}
+
+\begin{codetex}[]
+On a $C_{20}^3=\Combinaison*{3}{20}$ en non formaté, et $C_{20}^3=\Combinaison{3}{20}$ en formaté.
+\end{codetex}
+
+\begin{codetex}[]
+On a $A_{20}^3=\Arrangement[Formule]{3}{20}$.
+\end{codetex}
+
+\begin{codetex}[]
+On a $C_{20}^3=\displaystyle\Combinaison[Formule]{3}{20}$.
+\end{codetex}
+
+\newpage
+
 \part{Outils pour l'arithmétique}
 
 \section{Conversions binaire/hexadécimal/décimal}\label{conversions}
@@ -6189,6 +6241,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.1.5|~:~~~~Combinatoire avec arrangements et combinaisons (page \pageref{combinatoire})
 
 {\small \bverb|v 2.1.4|~:~~~~Résolution approchée d'équations $f(x)=k$ (page \pageref{resolapprox})
 
