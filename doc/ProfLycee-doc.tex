@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass{article}
-\def\PLversion{2.1.5}
-\def\PLdate{09 Janvier 2023}
+\def\PLversion{2.1.6}
+\def\PLdate{17 Janvier 2023}
 \usepackage[pythontex]{ProfLycee}
 \usepackage{mathtools}
 \usepackage{lualatex-math}
@@ -6241,6 +6241,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.1.6|~:~~~~Correction d'un bug lié au chargement de \textsf{hvlogos}, remplacé par \textsf{hologo}
 
 {\small \bverb|v 2.1.5|~:~~~~Combinatoire avec arrangements et combinaisons (page \pageref{combinatoire})
 
