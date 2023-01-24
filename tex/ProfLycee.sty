@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/01/17 2.1.6 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/01/23 2.1.7 Aide pour l'utilisation de LaTeX en lycee]
+% 2.1.7	Option booléenne Math pour les figures pave/tetraèdre
 % 2.1.6	Chargement de hologo à la place de hvlogos (bug potentiel avec \bm)
 % 2.1.5	Ajout de commandes pour calculer arrangements et combinaisons
 % 2.1.4	Ajout d'une commande pour résoudre de manière approchée une équation f(x)=k
@@ -936,7 +937,8 @@
 	Fuite=0.5,%
 	Epaisseur=thick,%
 	Sommets=A§B§C§D§E§F§G§H,%
-	Cube=false
+	Cube=false,%
+	Math=false
 }
 
 \newcommand\PaveTikz[1][]{%
@@ -966,16 +968,16 @@
 	\coordinate (\PaveG) at ($(\PaveC) + (0,{\PFPaveHt})$) ;
 	\coordinate (\PaveH) at ($(\PaveD) + (0,{\PFPaveHt})$) ;
 	\ifboolKV[paramspave]{Aff}
-		{\draw (\PaveA) node[below left] {\PaveA} ;
-			\draw (\PaveB) node[below right] {\PaveB} ;
-			\draw (\PaveC) node[above right] {\PaveC} ;
+		{\draw (\PaveA) node[below left] {\ifboolKV[paramspave]{Math}{$\PaveA$}{\PaveA}} ;
+			\draw (\PaveB) node[below right] {\ifboolKV[paramspave]{Math}{$\PaveB$}{\PaveB}} ;
+			\draw (\PaveC) node[above right] {\ifboolKV[paramspave]{Math}{$\PaveC$}{\PaveC}} ;
 			\ifboolKV[paramspave]{Plein}
 				{}
-				{\draw (\PaveD) node[above left] {\PaveD} ;}
-				\draw (\PaveE) node[below left] {\PaveE} ;
-				\draw (\PaveF) node[below right] {\PaveF} ;
-				\draw (\PaveG) node[above right] {\PaveG} ;
-				\draw (\PaveH) node[above left] {\PaveH} ;}
+				{\draw (\PaveD) node[above left] {\ifboolKV[paramspave]{Math}{$\PaveD$}{\PaveD}} ;}
+				\draw (\PaveE) node[below left] {\ifboolKV[paramspave]{Math}{$\PaveE$}{\PaveE}} ;
+				\draw (\PaveF) node[below right] {\ifboolKV[paramspave]{Math}{$\PaveF$}{\PaveF}} ;
+				\draw (\PaveG) node[above right] {\ifboolKV[paramspave]{Math}{$\PaveG$}{\PaveG}} ;
+				\draw (\PaveH) node[above left] {\ifboolKV[paramspave]{Math}{$\PaveH$}{\PaveH}} ;}
 		{}%on affiche rien
 	\draw[\PFPaveThick] (\PaveA)--(\PaveB)--(\PaveF)--(\PaveE)--cycle
 	                    (\PaveB)--(\PaveC)--(\PaveG)--(\PaveF)--cycle
@@ -1006,6 +1008,7 @@
 	Beta=60,%
 	Epaisseur=thick,%
 	Sommets=A§B§C§D,%
+	Math=false
 }
 
 \newcommand\TetraedreTikz[1][]{%
@@ -1023,10 +1026,10 @@
 	\coordinate (\TetraC) at ({\PFTetraLg},0) ;
 	\coordinate (\TetraD) at ($(\TetraA) + ({\PFTetraBeta}:{\PFTetraHt})$) ;
 	\ifboolKV[paramstetra]{Aff}
-	{\draw (\TetraA) node[left] {\TetraA} ;
-		\draw (\TetraB) node[below] {\TetraB} ;
-		\draw (\TetraC) node[right] {\TetraC} ;
-		\draw (\TetraD) node[above] {\TetraD} ;}
+	{\draw (\TetraA) node[left] {\ifboolKV[paramstetra]{Math}{$\TetraA$}{\TetraA}} ;
+		\draw (\TetraB) node[below] {\ifboolKV[paramstetra]{Math}{$\TetraB$}{\TetraB}} ;
+		\draw (\TetraC) node[right] {\ifboolKV[paramstetra]{Math}{$\TetraC$}{\TetraC}} ;
+		\draw (\TetraD) node[above] {\ifboolKV[paramstetra]{Math}{$\TetraD$}{\TetraD}} ;}
 		{}%on affiche rien
 	\draw[\PFTetraThick] (\TetraA)--(\TetraD)--(\TetraC)--(\TetraB)--cycle
 						(\TetraD)--(\TetraB) ;

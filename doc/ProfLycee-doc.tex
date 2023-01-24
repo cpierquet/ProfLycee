@@ -5,14 +5,14 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass{article}
-\def\PLversion{2.1.6}
-\def\PLdate{17 Janvier 2023}
+\def\PLversion{2.1.7}
+\def\PLdate{23 Janvier 2023}
 \usepackage[pythontex]{ProfLycee}
 \usepackage{mathtools}
 \usepackage{lualatex-math}
 \usepackage{luatexbase}
 \usepackage[math-style=french,bold-style=ISO]{fourier-otf}
-\usepackage{tkz-euclide}
+\usepackage[lua]{tkz-euclide}
 \usepackage{tkz-tab}
 \tikzstyle{every picture}+=[remember picture]
 \usetikzlibrary{hobby}
@@ -423,7 +423,7 @@ L'idée est de conserver -- autant que faire se peut -- l'idée de \Cle{Clés} q
 	\item définies (en majorité) par défaut pour chaque commande.
 \end{itemize}
 
-Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce fait le fonctionnement est plus \textit{basique} avec un système d'\textsf{arguments} optionnels (entre \textsf{[\ldots]}) ou obligatoires (entre \textsf{\{\ldots\}}).
+Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce fait le fonctionnement est plus \textit{basique} avec un système d'\textsf{arguments} \textit{optionnels} (entre \textsf{[\ldots]}) ou \textit{obligatoires} (entre \textsf{\{\ldots\}}).
 
 \smallskip
 
@@ -832,7 +832,7 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande, relative donc à une
 
 \smallskip
 
-Le premier argument obligatoire est la fonction, en syntaxe \ctex{xint} et avec comme variable $x$, et le second la valeur de $k$.
+Le premier argument \textit{obligatoire} est la fonction, en syntaxe \ctex{xint} et avec comme variable $x$, et le second la valeur de $k$.
 \end{codecles}
 
 \begin{codetex}[]
@@ -911,7 +911,7 @@ Plusieurs \Cle{Clés} sont disponibles pour la commande du calcul d'un terme :
 
 \smallskip
 
-L'argument obligatoire est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$.
+L'argument \textit{obligatoire} est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$.
 \end{codecles}
 
 \begin{codetex}[listing only]
@@ -960,7 +960,7 @@ Plusieurs \Cle{Clés} sont disponibles pour la commande du seuil :
 
 \smallskip
 
-Le premier argument obligatoire est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$, et le second est le seuil à dépasser.
+Le premier argument \textit{obligatoire} est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$, et le second est le seuil à dépasser.
 \end{codecles}
 
 \begin{codetex}[]
@@ -1262,8 +1262,8 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 
 \begin{itemize}
 	\item \Cle{optionnels} qui sont - en \TikZ{} - les paramètres du tracé ;
-	\item le premier, obligatoire, est - en langage \TikZ{} - l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
-	\item le second, obligatoire, est le domaine du tracé, sous la forme \ctex{valxmin:valxmax}.
+	\item le premier \textit{obligatoire}, est - en langage \TikZ{} - l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
+	\item le second \textit{obligatoire} est le domaine du tracé , sous la forme \ctex{valxmin:valxmax}.
 \end{itemize}
 \end{codecles}
 
@@ -1787,14 +1787,14 @@ Pour des raisons internes, le fonctionnement de la commande \ctex{aidesignetkzta
 \end{codetex}
 
 \begin{codecles}
-Les \Cle{Clés} pour le premier argument optionnel sont les mêmes que pour la version \textit{initiale} de la commande précédente.
+Les \Cle{Clés} pour le premier argument \textit{optionnel} sont les mêmes que pour la version \textit{initiale} de la commande précédente.
 
 En ce qui concerne les autres arguments :
 
 \begin{itemize}
-	\item le deuxième argument, obligatoire, est le numéro de la ligne à côté de laquelle placer le schéma ;
-	\item le troisième argument, optionnel et valant \Cle{0.85} par défaut, est l'échelle à appliquer sur l'ensemble du schéma (à ajuster en fonction de la hauteur de la ligne) ;
-	\item le quatrième argument, optionnel et valant \Cle{1.5} par défait, est lié à l'écart horizontal entre le bord de la ligne du tableau et le schéma.
+	\item le deuxième argument, \textit{obligatoire}, est le numéro de la ligne à côté de laquelle placer le schéma ;
+	\item le troisième argument, \textit{optionnel} et valant \Cle{0.85} par défaut, est l'échelle à appliquer sur l'ensemble du schéma (à ajuster en fonction de la hauteur de la ligne) ;
+	\item le quatrième argument, \textit{optionnel} et valant \Cle{1.5} par défait, est lié à l'écart horizontal entre le bord de la ligne du tableau et le schéma.
 \end{itemize}
 
 À noter que si l'un des arguments optionnels (le n°3 et/ou le n°4) sont utilisés, il vaut mieux préciser les 2 !
@@ -2167,8 +2167,8 @@ Plusieurs \Cle{arguments} sont disponibles :
 
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
-	\item le premier argument (optionnel), concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
-	\item le second argument (obligatoire), concerne des \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}, comme l'alignement.
+	\item le premier argument (\textit{optionnel}), concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item le second argument (\textit{obligatoire}), concerne des \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}, comme l'alignement.
 \end{itemize}
 \end{codecles}
 
@@ -2837,9 +2837,9 @@ Comme pour le pseudo-code, pas d'\textsf{autogobble}, donc commandes à aligner 
 Peu d'options pour ces commandes :
 
 \begin{itemize}
-	\item le premier, optionnel, est la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
-	\item le deuxième, obligatoire, permet de spécifier le titre par la clé \Cle{titre}.\hfill{}défaut \Cle{Terminal Windows/UNiX/OSX}
-	\item le troisième, optionnel, concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+	\item le premier, \textit{optionnel}, est la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item le deuxième, \textit{obligatoire}, permet de spécifier le titre par la clé \Cle{titre}.\hfill{}défaut \Cle{Terminal Windows/UNiX/OSX}
+	\item le troisième, \textit{optionnel}, concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
 \end{itemize}
 \end{codecles}
 
@@ -2937,8 +2937,8 @@ Peu d'options pour ces commandes :
 
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de  passer de la police \Cle{sffamily} à la police \Cle{ttfamily}, et donc dépendante des fontes du document ;
-	\item le deuxième, optionnel, permet de rajouter des caractères après le code (comme un \textsf{espace}) ;\hfill{}défaut \Cle{vide}
-	\item le troisième, obligatoire, est le \textsf{code capytale} à afficher.
+	\item le deuxième, \textit{optionnel}, permet de rajouter des caractères après le code (comme un \textsf{espace}) ;\hfill{}défaut \Cle{vide}
+	\item le troisième, \textit{obligatoire}, est le \textsf{code capytale} à afficher.
 \end{itemize}
 \end{codecles}
 
@@ -3003,8 +3003,8 @@ Il s'agir d'un environnement créé en \ctex{tcolorbox}, et utilisant la présen
 Peu de personnalisations pour ces commandes :
 
 \begin{itemize}
-	\item le premier argument, optionnel, permet de préciser la \textit{couleur} de la présentation ;\hfill{}défaut \Cle{ForestGreen}
-	\item le second, obligatoire, correspond aux éventuelles options liées à la \ctex{tcolorbox}.
+	\item le premier argument, \textit{optionnel}, permet de préciser la \textit{couleur} de la présentation ;\hfill{}défaut \Cle{ForestGreen}
+	\item le second, \textit{obligatoire}, correspond aux éventuelles options liées à la \ctex{tcolorbox}.
 \end{itemize}
 \end{codecles}
 
@@ -3044,7 +3044,6 @@ L'idée est d'obtenir un pavé droit, dans un environnement \TikZ, avec les nœu
 \subsection{Commandes}
 
 \begin{codetex}[listing only]
-...
 \begin{tikzpicture}[options tikz]
 	\PaveTikz[options]
 	...
@@ -3061,6 +3060,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 	\item \Cle{Angle} : angle de fuite de la perspective ;\hfill{}défaut \Cle{30}
 	\item \Cle{Fuite} : coefficient de fuite de la perspective ;\hfill{}défaut \Cle{0.5}
 	\item \Cle{Sommets} : liste des sommets (avec délimiteur § !) ;\hfill{}défaut \Cle{A§B§C§D§E§F§G§H}
+	\item \Cle{Math} : booléen pour forcer le mode math des sommets ;\hfill{}défaut \Cle{false}
 	\item \Cle{Epaisseur} : épaisseur des arêtes (en \textit{langage simplifié} \TikZ) ;\hfill{}défaut \Cle{thick}
 	\item \Cle{Aff} : booléen pour afficher les noms des sommets ;\hfill{}défaut \Cle{false}
 	\item \Cle{Plein} : booléen pour ne pas afficher les arêtes \textit{invisibles} ;\hfill{}défaut \Cle{false}
@@ -3131,7 +3131,6 @@ L'idée est d'obtenir un tétraèdre, dans un environnement \TikZ, avec les nœu
 \subsection{Commandes}
 
 \begin{codetex}[listing only]
-...
 \begin{tikzpicture}[options tikz]
 	\TetraedreTikz[options]
 	...
@@ -3148,6 +3147,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 	\item \Cle{Alpha} : angle \textit{du sommet de devant} ;\hfill{}défaut \Cle{40}
 	\item \Cle{Beta} : angle \textit{du sommet du haut} ;\hfill{}défaut \Cle{60}
 	\item \Cle{Sommets} : liste des sommets (avec délimiteur § !) ;\hfill{}défaut \Cle{A§B§C§D}
+	\item \Cle{Math} : booléen pour forcer le mode math des sommets ;\hfill{}défaut \Cle{false}
 	\item \Cle{Epaisseur} : épaisseur des arêtes (en \textit{langage simplifié} \TikZ) ;\hfill{}défaut \Cle{thick}
 	\item \Cle{Aff} : booléen pour afficher les noms des sommets ;\hfill{}défaut \Cle{false}
 	\item \Cle{Plein} : booléen pour ne pas afficher l'arête \textit{invisible} .\hfill{}défaut \Cle{false}
@@ -4176,8 +4176,8 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 
 \begin{itemize}
 	\item \Cle{optionnels} qui sont -- en \TikZ{} -- les paramètres du tracé ;
-	\item le premier, obligatoire, est -- en langage \TikZ{} -- l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
-	\item le second, obligatoire, est le domaine du tracé, sous la forme \ctex{valxmin:valxmax}.
+	\item le premier \textit{obligatoire}, est -- en langage \TikZ{} -- l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
+	\item le second \textit{obligatoire} est le domaine du tracé , sous la forme \ctex{valxmin:valxmax}.
 \end{itemize}
 \end{codecles}
 
@@ -5080,7 +5080,7 @@ Concernant la commande en elle même, peu de paramétrage :
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher de zéros avant pour \og compléter \fg{} ;
 	\item le booléen \Cle{AffBase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
-	\item l'argument, obligatoire, est le nombre entier à convertir.
+	\item l'argument, \textit{obligatoire}, est le nombre entier à convertir.
 \end{itemize}
 
 Le formatage est géré par \ctex{sinuitx}, le mieux est donc de positionner la commande dans un environnement mathématique.
@@ -5423,8 +5423,8 @@ L'idée est d'obtenir une commande pour \textit{simplifier} un calcul sous forme
 Peu d'options pour ces commandes :
 
 \begin{itemize}
-\item le premier argument, optionnel, permet de spécifier le mode de sortie de la fraction \textsf{[t]} pour \textsf{tfrac} et \textsf{[d]} pour \textsf{dfrac} ;
-\item le second, obligatoire, est le \textsf{calcul} ou la \textsf{division} à convertir.
+\item le premier argument, \textit{optionnel}, permet de spécifier le mode de sortie de la fraction \textsf{[t]} pour \textsf{tfrac} et \textsf{[d]} pour \textsf{dfrac} ;
+\item le second, \textit{obligatoire}, est le \textsf{calcul} ou la \textsf{division} à convertir.
 \end{itemize}
 
 À noter que la macro est dans un bloc \ctex{ensuremath} donc les \ctex{\$...\$} ne sont pas nécessaires.
@@ -5518,13 +5518,13 @@ Les délimiteurs de l'ensemble créé sont toujours \textsf{\{~~\}}.
 Peu d'options pour ces commandes :
 
 \begin{itemize}
-\item le premier argument, optionnel, permet de spécifier les \Cle{Clés} :
+\item le premier argument, \textit{optionnel}, permet de spécifier les \Cle{Clés} :
 \begin{itemize}
 	\item clé \Cle{Sep} qui correspond au délimiteur des éléments de l'ensemble ; \hfill{}défaut \Cle{;}
 	\item clé \Cle{Option} qui est un code (par exemple \textsf{strut}\dots) inséré avant les éléments ;\hfill{}défaut \Cle{vide}
 	\item un booléen \Cle{Mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct};\hfill{}défaut \Cle{true}
 \end{itemize}
-\item le second, obligatoire, est la \textsf{liste} des éléments, séparés par \textsf{/}.
+\item le second, \textit{obligatoire}, est la \textsf{liste} des éléments, séparés par \textsf{/}.
 \end{itemize}
 \end{codecles}
 
@@ -5691,7 +5691,7 @@ Pour cette commande :
 \begin{itemize}
 	\item le booléen \Cle{d} permet de forcer l'affichage en \ctex{displaystyle} ;\hfill{}défaut \Cle{false}
 	\item le booléen \Cle{Crochets} permet d'afficher le \textit{modulo} entre crochets plutôt qu'entre parenthèses ;\hfill{}défaut \Cle{false}
-	\item l'argument obligatoire est en écriture \textit{en ligne}.
+	\item l'argument \textit{obligatoire} est en écriture \textit{en ligne}.
 \end{itemize}
 \end{codecles}
 
@@ -6241,6 +6241,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.1.7|~:~~~~Ajout d'une clé \textsf{Math} pour les sommets des figures de l'espace (pages \pageref{pave} et \pageref{tetra})
 
 {\small \bverb|v 2.1.6|~:~~~~Correction d'un bug lié au chargement de \textsf{hvlogos}, remplacé par \textsf{hologo}
 
