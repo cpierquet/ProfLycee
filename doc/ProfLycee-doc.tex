@@ -423,7 +423,7 @@ L'idée est de conserver -- autant que faire se peut -- l'idée de \Cle{Clés} q
 	\item définies (en majorité) par défaut pour chaque commande.
 \end{itemize}
 
-Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce fait le fonctionnement est plus \textit{basique} avec un système d'\textsf{arguments} optionnels (entre \textsf{[\ldots]}) ou mandataires (entre \textsf{\{\ldots\}}).
+Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce fait le fonctionnement est plus \textit{basique} avec un système d'\textsf{arguments} optionnels (entre \textsf{[\ldots]}) ou obligatoires (entre \textsf{\{\ldots\}}).
 
 \smallskip
 
@@ -756,7 +756,7 @@ Quelques explications sur les \Cle{clés} et sur les arguments :
 	\item la clé \Cle{Précision} qui permet de spécifier le nombre de chiffres après la virgule de la solution ; \hfill{}défaut \Cle{2}
 	\item la clé (obligatoire !) \Cle{Intervalle} qui permet de préciser l'intervalle initial de recherche ;
 	\item la clé \Cle{Variable} qui permet de spécifier la variable de l'équation ;\hfill{}défaut \Cle{x}
-	\item l'argument \textit{mandataire} est l'équation, sous la forme $f(\ldots)=k$ (ou $f(\ldots)$ pour $f(\ldots)=0$) ;
+	\item l'argument \textit{obligatoire} est l'équation, sous la forme $f(\ldots)=k$ (ou $f(\ldots)$ pour $f(\ldots)=0$) ;
 	\item l'argument \textit{optionnel} est la base de la \textit{<macro>} qui sert à stocker les valeurs :\hfill{}défaut \Cle{masolution}
 	\begin{itemize}
 		\item \ctex{\textbackslash<macro>d} pour la valeur approchée par défaut ;
@@ -832,7 +832,7 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande, relative donc à une
 
 \smallskip
 
-Le premier argument mandataire est la fonction, en syntaxe \ctex{xint} et avec comme variable $x$, et le second la valeur de $k$.
+Le premier argument obligatoire est la fonction, en syntaxe \ctex{xint} et avec comme variable $x$, et le second la valeur de $k$.
 \end{codecles}
 
 \begin{codetex}[]
@@ -911,7 +911,7 @@ Plusieurs \Cle{Clés} sont disponibles pour la commande du calcul d'un terme :
 
 \smallskip
 
-L'argument mandataire est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$.
+L'argument obligatoire est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$.
 \end{codecles}
 
 \begin{codetex}[listing only]
@@ -960,7 +960,7 @@ Plusieurs \Cle{Clés} sont disponibles pour la commande du seuil :
 
 \smallskip
 
-Le premier argument mandataire est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$, et le second est le seuil à dépasser.
+Le premier argument obligatoire est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$, et le second est le seuil à dépasser.
 \end{codecles}
 
 \begin{codetex}[]
@@ -1262,8 +1262,8 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 
 \begin{itemize}
 	\item \Cle{optionnels} qui sont - en \TikZ{} - les paramètres du tracé ;
-	\item le premier mandataire, est - en langage \TikZ{} - l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
-	\item le second mandataire est le domaine du tracé , sous la forme \ctex{valxmin:valxmax}.
+	\item le premier, obligatoire, est - en langage \TikZ{} - l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
+	\item le second, obligatoire, est le domaine du tracé, sous la forme \ctex{valxmin:valxmax}.
 \end{itemize}
 \end{codecles}
 
@@ -1792,7 +1792,7 @@ Les \Cle{Clés} pour le premier argument optionnel sont les mêmes que pour la v
 En ce qui concerne les autres arguments :
 
 \begin{itemize}
-	\item le deuxième argument, mandataire, est le numéro de la ligne à côté de laquelle placer le schéma ;
+	\item le deuxième argument, obligatoire, est le numéro de la ligne à côté de laquelle placer le schéma ;
 	\item le troisième argument, optionnel et valant \Cle{0.85} par défaut, est l'échelle à appliquer sur l'ensemble du schéma (à ajuster en fonction de la hauteur de la ligne) ;
 	\item le quatrième argument, optionnel et valant \Cle{1.5} par défait, est lié à l'écart horizontal entre le bord de la ligne du tableau et le schéma.
 \end{itemize}
@@ -2168,7 +2168,7 @@ Plusieurs \Cle{arguments} sont disponibles :
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
 	\item le premier argument (optionnel), concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
-	\item le second argument (mandataire), concerne des \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}, comme l'alignement.
+	\item le second argument (obligatoire), concerne des \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}, comme l'alignement.
 \end{itemize}
 \end{codecles}
 
@@ -2838,7 +2838,7 @@ Peu d'options pour ces commandes :
 
 \begin{itemize}
 	\item le premier, optionnel, est la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
-	\item le deuxième, mandataire, permet de spécifier le titre par la clé \Cle{titre}.\hfill{}défaut \Cle{Terminal Windows/UNiX/OSX}
+	\item le deuxième, obligatoire, permet de spécifier le titre par la clé \Cle{titre}.\hfill{}défaut \Cle{Terminal Windows/UNiX/OSX}
 	\item le troisième, optionnel, concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
 \end{itemize}
 \end{codecles}
@@ -2938,7 +2938,7 @@ Peu d'options pour ces commandes :
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de  passer de la police \Cle{sffamily} à la police \Cle{ttfamily}, et donc dépendante des fontes du document ;
 	\item le deuxième, optionnel, permet de rajouter des caractères après le code (comme un \textsf{espace}) ;\hfill{}défaut \Cle{vide}
-	\item le troisième, mandataire, est le \textsf{code capytale} à afficher.
+	\item le troisième, obligatoire, est le \textsf{code capytale} à afficher.
 \end{itemize}
 \end{codecles}
 
@@ -3004,7 +3004,7 @@ Peu de personnalisations pour ces commandes :
 
 \begin{itemize}
 	\item le premier argument, optionnel, permet de préciser la \textit{couleur} de la présentation ;\hfill{}défaut \Cle{ForestGreen}
-	\item le second, mandataire, correspond aux éventuelles options liées à la \ctex{tcolorbox}.
+	\item le second, obligatoire, correspond aux éventuelles options liées à la \ctex{tcolorbox}.
 \end{itemize}
 \end{codecles}
 
@@ -4176,8 +4176,8 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 
 \begin{itemize}
 	\item \Cle{optionnels} qui sont -- en \TikZ{} -- les paramètres du tracé ;
-	\item le premier mandataire, est -- en langage \TikZ{} -- l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
-	\item le second mandataire est le domaine du tracé , sous la forme \ctex{valxmin:valxmax}.
+	\item le premier, obligatoire, est -- en langage \TikZ{} -- l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
+	\item le second, obligatoire, est le domaine du tracé, sous la forme \ctex{valxmin:valxmax}.
 \end{itemize}
 \end{codecles}
 
@@ -4996,8 +4996,8 @@ Peu de paramétrage pour ces commandes qui permettent de calculer $A_n^p$ et $C_
 \begin{itemize}
 	\item les versions étoilées ne formatent pas le résultat grâce à \ctex{\textbackslash num} de \ctex{sinuitx} ;
 	\item le booléen \Cle{Formule} permet de présenter la formule avant le résultat ; \hfill~défaut \Cle{false}
-	\item le premier argument, \textit{mandataire}, est la valeur de $p$ ;
-	\item le second argument, \textit{mandataire}, est la valeur de $n$.
+	\item le premier argument, \textit{obligatoire}, est la valeur de $p$ ;
+	\item le second argument, \textit{obligatoire}, est la valeur de $n$.
 \end{itemize}
 \end{codecles}
 
@@ -5080,7 +5080,7 @@ Concernant la commande en elle même, peu de paramétrage :
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher de zéros avant pour \og compléter \fg{} ;
 	\item le booléen \Cle{AffBase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
-	\item l'argument, mandataire, est le nombre entier à convertir.
+	\item l'argument, obligatoire, est le nombre entier à convertir.
 \end{itemize}
 
 Le formatage est géré par \ctex{sinuitx}, le mieux est donc de positionner la commande dans un environnement mathématique.
@@ -5424,7 +5424,7 @@ Peu d'options pour ces commandes :
 
 \begin{itemize}
 \item le premier argument, optionnel, permet de spécifier le mode de sortie de la fraction \textsf{[t]} pour \textsf{tfrac} et \textsf{[d]} pour \textsf{dfrac} ;
-\item le second, mandataire, est le \textsf{calcul} ou la \textsf{division} à convertir.
+\item le second, obligatoire, est le \textsf{calcul} ou la \textsf{division} à convertir.
 \end{itemize}
 
 À noter que la macro est dans un bloc \ctex{ensuremath} donc les \ctex{\$...\$} ne sont pas nécessaires.
@@ -5524,7 +5524,7 @@ Peu d'options pour ces commandes :
 	\item clé \Cle{Option} qui est un code (par exemple \textsf{strut}\dots) inséré avant les éléments ;\hfill{}défaut \Cle{vide}
 	\item un booléen \Cle{Mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct};\hfill{}défaut \Cle{true}
 \end{itemize}
-\item le second, mandataire, est la \textsf{liste} des éléments, séparés par \textsf{/}.
+\item le second, obligatoire, est la \textsf{liste} des éléments, séparés par \textsf{/}.
 \end{itemize}
 \end{codecles}
 
@@ -5691,7 +5691,7 @@ Pour cette commande :
 \begin{itemize}
 	\item le booléen \Cle{d} permet de forcer l'affichage en \ctex{displaystyle} ;\hfill{}défaut \Cle{false}
 	\item le booléen \Cle{Crochets} permet d'afficher le \textit{modulo} entre crochets plutôt qu'entre parenthèses ;\hfill{}défaut \Cle{false}
-	\item l'argument mandataire est en écriture \textit{en ligne}.
+	\item l'argument obligatoire est en écriture \textit{en ligne}.
 \end{itemize}
 \end{codecles}
 
