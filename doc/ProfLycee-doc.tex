@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass{article}
-\def\PLversion{2.1.7}
-\def\PLdate{23 Janvier 2023}
+\def\PLversion{2.1.8}
+\def\PLdate{25 Janvier 2023}
 \usepackage[pythontex]{ProfLycee}
 \usepackage{mathtools}
 \usepackage{lualatex-math}
@@ -225,7 +225,7 @@
 {\deblst} travailler sur les statistiques à deux variables (algébriques et graphiques) \\
 {\deblst} convertir entre bin/dec/hex avec détails \\
 {\deblst} présenter un calcul de PGCD \\
-{\deblst} créer un pixelart avec correction éventuelle \\
+%{\deblst} créer un pixelart avec correction éventuelle \\
 {\deblst} effectuer des calculs de probas (lois binomiale, exponentielle, de Poisson, normale) \\
 {\deblst} créer des arbres de probas \og classiques \fg \\
 {\deblst} générer des listes d'entiers aléatoires (avec ou sans répétitions)\\
@@ -710,9 +710,6 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \end{codetex}
 
 \begin{codetex}[listing only]
-%pixelart, dans un environnement tikz
-\PixelArtTikz[clés]{fichier.csv}
-
 %sudomaths
 \SudoMaths[options]{liste}
 \begin{EnvSudoMaths}[options]{grille}...\end{EnvSudoMaths}
@@ -5742,346 +5739,346 @@ $\MesurePrincipale[Crochets]{14pi/7}$
 
 \part{Jeux et récréations}
 
-\section{PixelART via un fichier csv, en \TikZ}\label{pixelart}
-
-\subsection{Introduction}
-
-\begin{codeidee}
-L'idée est de \textit{proposer}, dans un environnement \TikZ, une commande permettant de générer des grilles PixelART.
-
-Les données sont \textit{lues} à partir d'un fichier \textsf{csv}, externe au fichier \textsf{tex} ou déclaré en interne grâce à l'environnement \ctex{filecontents}.
-\end{codeidee}
-
-\begin{codeinfo}
-Avant toute chose, quelques petites infos sur les données au format \textsf{csv}, surtout dans l'optique de sa lecture et de son traitement par \ctex{ProfLycee} :
-
-\begin{itemize}
-	\item le fichier de données \textsf{csv} doit être formaté avec le séparateur décimal \og , \fg ;
-	\item des cases vides seront codées par \og \texttt{-} \fg.
-\end{itemize}
-
-Le fichier \textsf{csv} peut être déclaré directement dans le fichier \textsf{tex}, grâce à l'environnement \ctex{filecontents} (intégré en natif sur les dernières versions de \LaTeX) :
-
-\begin{Verbatim}[tabsize=2,fontsize=\scriptsize]
-\begin{filecontents*}{<nomfichier>.csv}
-A,B,C,D
-A,B,D,C
-B,A,C,D
-B,A,D,C
-\end{filecontents*}
-\end{Verbatim}
-
-À la compilation, le fichier \textsf{<nomfichier>.csv} sera créé automatiquement, et l'option \Cle{[overwrite]} permet (logiquement) de propager les modifications au fichier \textsf{csv}.
-\end{codeinfo}
-
-\subsection{Package csvsimple et option}
-
-\begin{codeinfo}
-Le package \textit{central} est ici \ctex{csvsimple}, qui permet de lire et traiter le fichier \textsf{csv}.
-
-Il est \og disponible \fg{} en version \LaTeXe{} ou en version \LaTeXIII. Par défaut, \ctex{ProfLycee} le charge en version \LaTeXIII{}, mais une \Cle{option} est disponible pour une \textit{rétro-compatibilité} avec la version \LaTeXe.
-
-\smallskip
-
-L'option \Cle{csvii} permet de passer l'appel au package en version \LaTeXe.
-\end{codeinfo}
-
-\begin{codetex}[listing only]
-\usepackage{ProfLycee}                     %chargement du package version 3
-%qui charge :
-%\RequirePackage{expl3}
-%\RequirePackage[l3]{csvsimple}
-
-\usepackage[csvii]{ProfLycee}              %chargement du package version 2
-%qui charge :
-%\RequirePackage[legacy]{csvsimple}
-\end{codetex}
-
-\subsection{Exemple simple, clés et options}
-
-\begin{codetex}[listing only]
-%déclaration du fichier csv
-\begin{filecontents*}[overwrite]{basique.csv}
-A,B,C,D
-A,B,D,C
-B,A,D,C
-C,A,B,D
-\end{filecontents*}
-
-\begin{tikzpicture}%avec lettres
-	\PixelArtTikz[Codes=ABCD,Style=\large\sffamily]{basique.csv}
-\end{tikzpicture}
-\begin{tikzpicture}%avec chiffres
-	\PixelArtTikz[Codes=ABCD,Symboles={45,22,1,7},Symb,Style=\large\sffamily]{basique.csv}
-\end{tikzpicture}
-\begin{tikzpicture}%avec correction
-	\PixelArtTikz[codes=ABCD,Couleurs={Black,Green,Yellow,Red},Correction]{basique.csv}
-\end{tikzpicture}
-\begin{tikzpicture}%avec correction sans bordure
-	\PixelArtTikz[Codes=ABCD,Couleurs={Black,Green,Yellow,Red},Correction,BordCases=false]{basique.csv}
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codesortie}
-\begin{filecontents*}[overwrite]{basique.csv}
-A,B,C,D
-A,B,D,C
-B,A,D,C
-C,A,B,D
-\end{filecontents*}
-
-\begin{center}
-	\begin{tblr}{colspec={*{4}{Q[1.25cm,c,m]}},hlines,vlines,rows={1.15em}}
-		\SetCell[c=4]{c} Notice & & & \\
-		A & B & C & D \\
-		45 & 22 & 1 & 7 \\
-		Noir & Vert & Jaune & Rouge \\
-	\end{tblr}
-\end{center}
-
-\hfill\begin{tikzpicture}[scale=0.9]
-	%avec lettres
-	\PixelArtTikz[Codes=ABCD,Style=\large\sffamily]{basique.csv}
-\end{tikzpicture}
-\begin{tikzpicture}[scale=0.9]
-	%avec chiffres
-	\PixelArtTikz[Codes=ABCD,Symboles={45,22,1,7},Symb,Style=\large\sffamily]{basique.csv}
-\end{tikzpicture}
-\begin{tikzpicture}[scale=0.9]
-	%avec correction
-	\PixelArtTikz[Codes=ABCD,Couleurs={Black,Green,Yellow,Red},Correction]{basique.csv}
-\end{tikzpicture}
-\begin{tikzpicture}[scale=0.9]
-	%avec correction
-	\PixelArtTikz[Codes=ABCD,Couleurs={Black,Green,Yellow,Red},Correction,BordCases=false]{basique.csv}
-\end{tikzpicture}
-\hfill~
-\end{codesortie}
-
-\begin{codeinfo}
-La commande \ctex{PixelArtTikz} nécessite de connaître :
-
-\begin{itemize}
-	\item le fichier \textsf{csv} à traiter ;
-	\item la liste (en fait sous forme de chaîne) des codes utilisés dans le fichier \textsf{csv} (comme \ctex{234679} ou \ctex{ABCDJK}\ldots);
-	\item la liste des symboles (éventuellement !) à afficher dans les cases s'il y a ambiguïté, comme \ctex{25,44,12} ou \ctex{AA,AB,AC};
-	\item la liste des couleurs (si la correction est demandée), dans le même ordre que la liste des caractères.
-\end{itemize}
-\end{codeinfo}
-
-\begin{codetex}[listing only]
-%environnement tikz
-\PixelArtTikz[clés]{<fichier>.csv}
-\end{codetex}
-
-\begin{codecles}
-Quelques \Cle{Clés} sont nécessaires au bon fonctionnement de la commande :
-
-\begin{itemize}
-	\item la clé \Cle{Codes} contient la \textsf{chaîne} des codes \textit{simples} du  fichier \textsf{csv} ;
-	\item la clé \Cle{Couleurs} qui contient la \textsf{liste} des couleurs associées ;
-	\item la clé \Cle{Symboles} qui contient la \textsf{liste éventuelles} des caractères alternatifs à afficher dans les cases ;
-	\item la clé booléenne \Cle{Correction} qui permet de colorier le PixelART ;\hfill{}défaut \Cle{false}
-	\item la clé booléenne \Cle{Symb} qui permet d'afficher les caractères \textit{alternatifs} ;\hfill{}défaut \Cle{false}
-	\item la clé booléenne \Cle{BordCases} qui permet d'afficher les bords des cases de la correction ;\hfill{}défaut \Cle{true}
-	\item la clé \Cle{Style} qui permet de spécifier le style des caractères. \hfill{}défaut \Cle{scriptsize}
-\end{itemize}
-\end{codecles}
-
-\begin{codetex}[listing only]
-%codes simples et sans ambiguïté
-%une case vide sera codée par -
-
-\begin{filecontents*}[overwrite]{perroquet.csv}
--,-,-,-,-,-,4,4,4,4,-,-,-,-,-,-
--,-,-,-,4,4,1,1,1,1,4,4,-,-,-,-
--,-,-,4,1,1,1,1,1,1,1,1,4,-,-,-
--,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
--,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
--,4,1,9,9,1,1,1,1,1,1,9,9,1,4,-
--,4,9,9,9,9,4,4,4,4,9,9,9,9,4,-
--,4,9,4,9,9,4,4,4,4,9,4,9,9,4,-
--,4,1,9,9,9,4,4,4,4,9,9,9,1,4,-
--,-,4,1,1,9,4,4,4,4,9,1,1,4,-,-
--,-,4,1,1,1,4,4,4,4,1,1,1,4,-,-
--,-,-,4,1,1,1,4,4,1,1,1,4,-,-,-
--,-,4,3,1,1,1,1,1,1,1,1,3,4,-,-
--,4,6,3,1,1,1,1,1,1,1,1,3,6,4,-
--,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
--,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
--,4,6,4,1,1,1,4,4,1,1,1,4,6,4,-
-2,2,4,2,4,4,4,2,2,4,4,4,2,4,2,2
-2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
-2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
--,-,-,-,-,4,1,1,1,1,4,-,-,-,-,-
--,-,-,-,-,-,4,1,1,4,-,-,-,-,-,-
--,-,-,-,-,-,-,4,4,-,-,-,-,-,-,-
-\end{filecontents*}
-
-\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-	\PixelArtTikz[Codes=123469,Style=\ttfamily]{perroquet.csv}
-\end{tikzpicture}
-
-\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-	\PixelArtTikz[Codes=123469,Couleurs={Red,Brown,Yellow,Black,Blue,White},Correction]{perroquet.csv}
-\end{tikzpicture}
-\end{codetex}
-
-\subsection{Exemples complémentaires}
-
-\begin{codeinfo}
-Les symboles affichés dans les cases sont situés aux nœuds de coordonnées $(c\,;\,-l)$ où $l$ et $c$ sont les numéros de ligne et de colonne correspondants à la position de la donnée dans le fichier \textsf{csv}.
-\end{codeinfo}
-
-\begin{codesortie}
-\begin{filecontents*}[overwrite]{perroquet.csv}
--,-,-,-,-,-,4,4,4,4,-,-,-,-,-,-
--,-,-,-,4,4,1,1,1,1,4,4,-,-,-,-
--,-,-,4,1,1,1,1,1,1,1,1,4,-,-,-
--,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
--,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
--,4,1,9,9,1,1,1,1,1,1,9,9,1,4,-
--,4,9,9,9,9,4,4,4,4,9,9,9,9,4,-
--,4,9,4,9,9,4,4,4,4,9,4,9,9,4,-
--,4,1,9,9,9,4,4,4,4,9,9,9,1,4,-
--,-,4,1,1,9,4,4,4,4,9,1,1,4,-,-
--,-,4,1,1,1,4,4,4,4,1,1,1,4,-,-
--,-,-,4,1,1,1,4,4,1,1,1,4,-,-,-
--,-,4,3,1,1,1,1,1,1,1,1,3,4,-,-
--,4,6,3,1,1,1,1,1,1,1,1,3,6,4,-
--,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
--,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
--,4,6,4,1,1,1,4,4,1,1,1,4,6,4,-
-2,2,4,2,4,4,4,2,2,4,4,4,2,4,2,2
-2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
-2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
--,-,-,-,-,4,1,1,1,1,4,-,-,-,-,-
--,-,-,-,-,-,4,1,1,4,-,-,-,-,-,-
--,-,-,-,-,-,-,4,4,-,-,-,-,-,-,-
-\end{filecontents*}
-
-\begin{center}
-	\begin{tblr}{colspec={*{6}{Q[1.25cm,c,m]}},hlines,vlines,rows={1.15em}}
-		\SetCell[c=6]{c} Notice & & & & &  \\
-		1 & 2 & 3 & 5 & 6 & 9 \\
-		Rouge & Marron & Jaune & Noir & Bleu & Blanc \\
-	\end{tblr}
-%	\renewcommand\arraystretch{1.25}
-%	\begin{tabular}{|c|c|c|c|c|c|}
-%		\hline
-%		\multicolumn{6}{|c|}{Notice} \\ \hline
-%		1 & 2 & 3 & 5 & 6 & 9 \\ \hline
-%		Rouge & Marron & Jaune & Noir & Bleu & Blanc \\ \hline
-%	\end{tabular}
-\end{center}
-
-\begin{center}
-	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-		\PixelArtTikz[Codes=123469,Style=\ttfamily]{perroquet.csv}
-	\end{tikzpicture}
-	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-		\PixelArtTikz[Codes=123469,Couleurs={Red,Brown,Yellow,Black,Blue,White},Correction]{perroquet.csv}
-	\end{tikzpicture}
-\end{center}
-
-\begin{center}
-	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-		\draw[very thin,gray,xstep=1,ystep=1] (0,0) grid (17,-24) ;
-		\foreach \x in {0,1,...,17} \draw[very thin,gray] (\x,-3pt)--(\x,3pt) node[above,font=\scriptsize\sffamily] {\x} ;
-		\foreach \y in {0,-1,...,-24} \draw[very thin,gray] (3pt,\y)--(-3pt,\y) node[left,font=\scriptsize\sffamily] {\y} ;
-		\PixelArtTikz[Codes=123469,Couleurs={Red,Brown,Yellow,Black,Blue,White},Correction]{perroquet.csv}
-		\filldraw[Blue] (14,-1) circle[radius=1] ;
-		\filldraw[Yellow] (14,-1) circle[radius=0.8] ;
-		\draw[ForestGreen,very thick,<-,>=latex] (15,-1) to[bend left=30] (18,-2) node[right,font=\scriptsize\sffamily] {rajouté en \TikZ} ;
-	\end{tikzpicture}
-\end{center}
-\end{codesortie}
-
-\begin{codetex}[listing only]
-%code tikz et pixelart
-\filldraw[Blue] (14,-1) circle[radius=1] ;
-\filldraw[Yellow] (14,-1) circle[radius=0.8] ;
-\draw[ForestGreen,very thick,<-,>=latex] (15,-1) to[bend left=30] (18,-2)
-	node[right,font=\scriptsize\sffamily] {rajouté en \TikZ} ;
-\end{codetex}
-
-\pagebreak
-
-\begin{codetex}[listing only]
-%codes avec ambiguïté
-
-\begin{filecontents*}[overwrite]{cap.csv}
--,-,-,-,-,-,-,-,D,-,D,-,D,-,-,-,-,-,-,-,-,-
--,D,D,-,-,-,-,D,D,D,D,D,D,-,-,D,D,D,D,-,-,-
-D,-,-,D,-,D,D,F,F,F,F,F,F,D,D,-,-,-,-,D,-,-
--,D,-,-,D,F,F,F,-,-,F,F,F,F,F,D,-,D,D,-,-,-
--,-,D,D,F,F,F,-,F,F,-,F,F,F,F,F,D,D,-,-,-,-
--,-,-,D,F,F,F,F,F,F,F,F,F,F,F,F,D,-,-,-,-,-
--,-,-,D,F,J,J,J,J,J,J,J,F,F,F,F,D,-,-,-,-,-
--,-,-,D,J,-,-,-,J,-,-,-,J,J,F,F,D,-,-,-,-,-
--,-,-,D,J,-,D,-,J,-,D,-,J,J,B,B,D,-,-,-,-,-
--,-,-,D,J,-,-,-,J,-,-,-,J,J,B,B,D,-,-,-,-,-
--,-,-,D,C,J,J,J,J,J,J,J,J,C,C,C,D,-,-,-,-,-
--,-,-,D,C,C,C,C,C,C,C,C,C,C,C,D,D,D,-,-,-,-
--,-,-,D,C,C,C,D,D,D,D,D,D,C,D,A,A,A,D,-,-,-
--,-,-,D,F,C,C,C,C,C,C,C,C,D,A,-,-,-,A,D,-,-
--,-,-,D,F,C,F,C,C,C,C,F,D,A,-,A,A,A,-,A,D,-
--,-,D,C,F,F,F,F,C,C,F,D,A,-,A,F,F,F,A,-,A,D
--,-,D,C,F,F,F,F,F,F,F,D,A,-,A,F,-,F,A,-,A,D
--,-,D,A,D,-,A,-,A,-,A,D,A,-,A,F,F,F,A,-,A,D
--,-,-,D,D,-,A,-,A,-,A,-,D,A,-,A,A,A,-,A,D,-
--,-,-,-,-,D,D,F,D,D,D,D,F,D,A,-,-,-,A,D,-,-
--,-,-,-,-,-,D,A,D,-,-,D,-,-,D,A,A,A,D,-,-,-
--,-,-,-,-,-,D,D,D,-,-,D,D,D,D,D,D,D,-,-,-,-
-\end{filecontents*}
-
-\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-	\PixelArtTikz[Codes=ABCDFJ,Symboles={1,2,3,4,6,10},Symb,Style=\tiny\sffamily]{cap.csv}
-\end{tikzpicture}
-
-\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-	\PixelArtTikz[Codes=ABCDFJ,Couleurs={Red,Brown,Yellow,Black,Blue,Gray},Correction]{cap.csv}
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codesortie}
-\begin{filecontents*}[overwrite]{cap.csv}
--,-,-,-,-,-,-,-,D,-,D,-,D,-,-,-,-,-,-,-,-,-
--,D,D,-,-,-,-,D,D,D,D,D,D,-,-,D,D,D,D,-,-,-
-D,-,-,D,-,D,D,F,F,F,F,F,F,D,D,-,-,-,-,D,-,-
--,D,-,-,D,F,F,F,-,-,F,F,F,F,F,D,-,D,D,-,-,-
--,-,D,D,F,F,F,-,F,F,-,F,F,F,F,F,D,D,-,-,-,-
--,-,-,D,F,F,F,F,F,F,F,F,F,F,F,F,D,-,-,-,-,-
--,-,-,D,F,J,J,J,J,J,J,J,F,F,F,F,D,-,-,-,-,-
--,-,-,D,J,-,-,-,J,-,-,-,J,J,F,F,D,-,-,-,-,-
--,-,-,D,J,-,D,-,J,-,D,-,J,J,B,B,D,-,-,-,-,-
--,-,-,D,J,-,-,-,J,-,-,-,J,J,B,B,D,-,-,-,-,-
--,-,-,D,C,J,J,J,J,J,J,J,J,C,C,C,D,-,-,-,-,-
--,-,-,D,C,C,C,C,C,C,C,C,C,C,C,D,D,D,-,-,-,-
--,-,-,D,C,C,C,D,D,D,D,D,D,C,D,A,A,A,D,-,-,-
--,-,-,D,F,C,C,C,C,C,C,C,C,D,A,-,-,-,A,D,-,-
--,-,-,D,F,C,F,C,C,C,C,F,D,A,-,A,A,A,-,A,D,-
--,-,D,C,F,F,F,F,C,C,F,D,A,-,A,F,F,F,A,-,A,D
--,-,D,C,F,F,F,F,F,F,F,D,A,-,A,F,-,F,A,-,A,D
--,-,D,A,D,-,A,-,A,-,A,D,A,-,A,F,F,F,A,-,A,D
--,-,-,D,D,-,A,-,A,-,A,-,D,A,-,A,A,A,-,A,D,-
--,-,-,-,-,D,D,F,D,D,D,D,F,D,A,-,-,-,A,D,-,-
--,-,-,-,-,-,D,A,D,-,-,D,-,-,D,A,A,A,D,-,-,-
--,-,-,-,-,-,D,D,D,-,-,D,D,D,D,D,D,D,-,-,-,-
-\end{filecontents*}
-
-\begin{center}
-	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-		\PixelArtTikz[Codes=ABCDFJ,Symboles={1,2,3,4,6,10},Symb,Style=\tiny\sffamily]{cap.csv}
-	\end{tikzpicture}
-	~~
-	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
-		\PixelArtTikz[Codes=ABCDFJ,Couleurs={Red,Brown,Yellow,Black,Blue,Gray},Correction]{cap.csv}
-	\end{tikzpicture}
-\end{center}
-\end{codesortie}
-
-\newpage
+%\section{PixelART via un fichier csv, en \TikZ}\label{pixelart}
+%
+%\subsection{Introduction}
+%
+%\begin{codeidee}
+%L'idée est de \textit{proposer}, dans un environnement \TikZ, une commande permettant de générer des grilles PixelART.
+%
+%Les données sont \textit{lues} à partir d'un fichier \textsf{csv}, externe au fichier \textsf{tex} ou déclaré en interne grâce à l'environnement \ctex{filecontents}.
+%\end{codeidee}
+%
+%\begin{codeinfo}
+%Avant toute chose, quelques petites infos sur les données au format \textsf{csv}, surtout dans l'optique de sa lecture et de son traitement par \ctex{ProfLycee} :
+%
+%\begin{itemize}
+%	\item le fichier de données \textsf{csv} doit être formaté avec le séparateur décimal \og , \fg ;
+%	\item des cases vides seront codées par \og \texttt{-} \fg.
+%\end{itemize}
+%
+%Le fichier \textsf{csv} peut être déclaré directement dans le fichier \textsf{tex}, grâce à l'environnement \ctex{filecontents} (intégré en natif sur les dernières versions de \LaTeX) :
+%
+%\begin{Verbatim}[tabsize=2,fontsize=\scriptsize]
+%\begin{filecontents*}{<nomfichier>.csv}
+%A,B,C,D
+%A,B,D,C
+%B,A,C,D
+%B,A,D,C
+%\end{filecontents*}
+%\end{Verbatim}
+%
+%À la compilation, le fichier \textsf{<nomfichier>.csv} sera créé automatiquement, et l'option \Cle{[overwrite]} permet (logiquement) de propager les modifications au fichier \textsf{csv}.
+%\end{codeinfo}
+%
+%\subsection{Package csvsimple et option}
+%
+%\begin{codeinfo}
+%Le package \textit{central} est ici \ctex{csvsimple}, qui permet de lire et traiter le fichier \textsf{csv}.
+%
+%Il est \og disponible \fg{} en version \LaTeXe{} ou en version \LaTeXIII. Par défaut, \ctex{ProfLycee} le charge en version \LaTeXIII{}, mais une \Cle{option} est disponible pour une \textit{rétro-compatibilité} avec la version \LaTeXe.
+%
+%\smallskip
+%
+%L'option \Cle{csvii} permet de passer l'appel au package en version \LaTeXe.
+%\end{codeinfo}
+%
+%\begin{codetex}[listing only]
+%\usepackage{ProfLycee}                     %chargement du package version 3
+%%qui charge :
+%%\RequirePackage{expl3}
+%%\RequirePackage[l3]{csvsimple}
+%
+%\usepackage[csvii]{ProfLycee}              %chargement du package version 2
+%%qui charge :
+%%\RequirePackage[legacy]{csvsimple}
+%\end{codetex}
+%
+%\subsection{Exemple simple, clés et options}
+%
+%\begin{codetex}[listing only]
+%%déclaration du fichier csv
+%\begin{filecontents*}[overwrite]{basique.csv}
+%A,B,C,D
+%A,B,D,C
+%B,A,D,C
+%C,A,B,D
+%\end{filecontents*}
+%
+%\begin{tikzpicture}%avec lettres
+%	\PixelArtTikz[Codes=ABCD,Style=\large\sffamily]{basique.csv}
+%\end{tikzpicture}
+%\begin{tikzpicture}%avec chiffres
+%	\PixelArtTikz[Codes=ABCD,Symboles={45,22,1,7},Symb,Style=\large\sffamily]{basique.csv}
+%\end{tikzpicture}
+%\begin{tikzpicture}%avec correction
+%	\PixelArtTikz[codes=ABCD,Couleurs={Black,Green,Yellow,Red},Correction]{basique.csv}
+%\end{tikzpicture}
+%\begin{tikzpicture}%avec correction sans bordure
+%	\PixelArtTikz[Codes=ABCD,Couleurs={Black,Green,Yellow,Red},Correction,BordCases=false]{basique.csv}
+%\end{tikzpicture}
+%\end{codetex}
+%
+%\begin{codesortie}
+%\begin{filecontents*}[overwrite]{basique.csv}
+%A,B,C,D
+%A,B,D,C
+%B,A,D,C
+%C,A,B,D
+%\end{filecontents*}
+%
+%\begin{center}
+%	\begin{tblr}{colspec={*{4}{Q[1.25cm,c,m]}},hlines,vlines,rows={1.15em}}
+%		\SetCell[c=4]{c} Notice & & & \\
+%		A & B & C & D \\
+%		45 & 22 & 1 & 7 \\
+%		Noir & Vert & Jaune & Rouge \\
+%	\end{tblr}
+%\end{center}
+%
+%\hfill\begin{tikzpicture}[scale=0.9]
+%	%avec lettres
+%	\PixelArtTikz[Codes=ABCD,Style=\large\sffamily]{basique.csv}
+%\end{tikzpicture}
+%\begin{tikzpicture}[scale=0.9]
+%	%avec chiffres
+%	\PixelArtTikz[Codes=ABCD,Symboles={45,22,1,7},Symb,Style=\large\sffamily]{basique.csv}
+%\end{tikzpicture}
+%\begin{tikzpicture}[scale=0.9]
+%	%avec correction
+%	\PixelArtTikz[Codes=ABCD,Couleurs={Black,Green,Yellow,Red},Correction]{basique.csv}
+%\end{tikzpicture}
+%\begin{tikzpicture}[scale=0.9]
+%	%avec correction
+%	\PixelArtTikz[Codes=ABCD,Couleurs={Black,Green,Yellow,Red},Correction,BordCases=false]{basique.csv}
+%\end{tikzpicture}
+%\hfill~
+%\end{codesortie}
+%
+%\begin{codeinfo}
+%La commande \ctex{PixelArtTikz} nécessite de connaître :
+%
+%\begin{itemize}
+%	\item le fichier \textsf{csv} à traiter ;
+%	\item la liste (en fait sous forme de chaîne) des codes utilisés dans le fichier \textsf{csv} (comme \ctex{234679} ou \ctex{ABCDJK}\ldots);
+%	\item la liste des symboles (éventuellement !) à afficher dans les cases s'il y a ambiguïté, comme \ctex{25,44,12} ou \ctex{AA,AB,AC};
+%	\item la liste des couleurs (si la correction est demandée), dans le même ordre que la liste des caractères.
+%\end{itemize}
+%\end{codeinfo}
+%
+%\begin{codetex}[listing only]
+%%environnement tikz
+%\PixelArtTikz[clés]{<fichier>.csv}
+%\end{codetex}
+%
+%\begin{codecles}
+%Quelques \Cle{Clés} sont nécessaires au bon fonctionnement de la commande :
+%
+%\begin{itemize}
+%	\item la clé \Cle{Codes} contient la \textsf{chaîne} des codes \textit{simples} du  fichier \textsf{csv} ;
+%	\item la clé \Cle{Couleurs} qui contient la \textsf{liste} des couleurs associées ;
+%	\item la clé \Cle{Symboles} qui contient la \textsf{liste éventuelles} des caractères alternatifs à afficher dans les cases ;
+%	\item la clé booléenne \Cle{Correction} qui permet de colorier le PixelART ;\hfill{}défaut \Cle{false}
+%	\item la clé booléenne \Cle{Symb} qui permet d'afficher les caractères \textit{alternatifs} ;\hfill{}défaut \Cle{false}
+%	\item la clé booléenne \Cle{BordCases} qui permet d'afficher les bords des cases de la correction ;\hfill{}défaut \Cle{true}
+%	\item la clé \Cle{Style} qui permet de spécifier le style des caractères. \hfill{}défaut \Cle{scriptsize}
+%\end{itemize}
+%\end{codecles}
+%
+%\begin{codetex}[listing only]
+%%codes simples et sans ambiguïté
+%%une case vide sera codée par -
+%
+%\begin{filecontents*}[overwrite]{perroquet.csv}
+%-,-,-,-,-,-,4,4,4,4,-,-,-,-,-,-
+%-,-,-,-,4,4,1,1,1,1,4,4,-,-,-,-
+%-,-,-,4,1,1,1,1,1,1,1,1,4,-,-,-
+%-,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
+%-,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
+%-,4,1,9,9,1,1,1,1,1,1,9,9,1,4,-
+%-,4,9,9,9,9,4,4,4,4,9,9,9,9,4,-
+%-,4,9,4,9,9,4,4,4,4,9,4,9,9,4,-
+%-,4,1,9,9,9,4,4,4,4,9,9,9,1,4,-
+%-,-,4,1,1,9,4,4,4,4,9,1,1,4,-,-
+%-,-,4,1,1,1,4,4,4,4,1,1,1,4,-,-
+%-,-,-,4,1,1,1,4,4,1,1,1,4,-,-,-
+%-,-,4,3,1,1,1,1,1,1,1,1,3,4,-,-
+%-,4,6,3,1,1,1,1,1,1,1,1,3,6,4,-
+%-,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
+%-,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
+%-,4,6,4,1,1,1,4,4,1,1,1,4,6,4,-
+%2,2,4,2,4,4,4,2,2,4,4,4,2,4,2,2
+%2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+%2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+%-,-,-,-,-,4,1,1,1,1,4,-,-,-,-,-
+%-,-,-,-,-,-,4,1,1,4,-,-,-,-,-,-
+%-,-,-,-,-,-,-,4,4,-,-,-,-,-,-,-
+%\end{filecontents*}
+%
+%\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%	\PixelArtTikz[Codes=123469,Style=\ttfamily]{perroquet.csv}
+%\end{tikzpicture}
+%
+%\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%	\PixelArtTikz[Codes=123469,Couleurs={Red,Brown,Yellow,Black,Blue,White},Correction]{perroquet.csv}
+%\end{tikzpicture}
+%\end{codetex}
+%
+%\subsection{Exemples complémentaires}
+%
+%\begin{codeinfo}
+%Les symboles affichés dans les cases sont situés aux nœuds de coordonnées $(c\,;\,-l)$ où $l$ et $c$ sont les numéros de ligne et de colonne correspondants à la position de la donnée dans le fichier \textsf{csv}.
+%\end{codeinfo}
+%
+%\begin{codesortie}
+%\begin{filecontents*}[overwrite]{perroquet.csv}
+%-,-,-,-,-,-,4,4,4,4,-,-,-,-,-,-
+%-,-,-,-,4,4,1,1,1,1,4,4,-,-,-,-
+%-,-,-,4,1,1,1,1,1,1,1,1,4,-,-,-
+%-,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
+%-,-,4,1,1,1,1,1,1,1,1,1,1,4,-,-
+%-,4,1,9,9,1,1,1,1,1,1,9,9,1,4,-
+%-,4,9,9,9,9,4,4,4,4,9,9,9,9,4,-
+%-,4,9,4,9,9,4,4,4,4,9,4,9,9,4,-
+%-,4,1,9,9,9,4,4,4,4,9,9,9,1,4,-
+%-,-,4,1,1,9,4,4,4,4,9,1,1,4,-,-
+%-,-,4,1,1,1,4,4,4,4,1,1,1,4,-,-
+%-,-,-,4,1,1,1,4,4,1,1,1,4,-,-,-
+%-,-,4,3,1,1,1,1,1,1,1,1,3,4,-,-
+%-,4,6,3,1,1,1,1,1,1,1,1,3,6,4,-
+%-,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
+%-,4,6,6,1,1,1,1,1,1,1,1,6,6,4,-
+%-,4,6,4,1,1,1,4,4,1,1,1,4,6,4,-
+%2,2,4,2,4,4,4,2,2,4,4,4,2,4,2,2
+%2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+%2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+%-,-,-,-,-,4,1,1,1,1,4,-,-,-,-,-
+%-,-,-,-,-,-,4,1,1,4,-,-,-,-,-,-
+%-,-,-,-,-,-,-,4,4,-,-,-,-,-,-,-
+%\end{filecontents*}
+%
+%\begin{center}
+%	\begin{tblr}{colspec={*{6}{Q[1.25cm,c,m]}},hlines,vlines,rows={1.15em}}
+%		\SetCell[c=6]{c} Notice & & & & &  \\
+%		1 & 2 & 3 & 5 & 6 & 9 \\
+%		Rouge & Marron & Jaune & Noir & Bleu & Blanc \\
+%	\end{tblr}
+%%	\renewcommand\arraystretch{1.25}
+%%	\begin{tabular}{|c|c|c|c|c|c|}
+%%		\hline
+%%		\multicolumn{6}{|c|}{Notice} \\ \hline
+%%		1 & 2 & 3 & 5 & 6 & 9 \\ \hline
+%%		Rouge & Marron & Jaune & Noir & Bleu & Blanc \\ \hline
+%%	\end{tabular}
+%\end{center}
+%
+%\begin{center}
+%	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%		\PixelArtTikz[Codes=123469,Style=\ttfamily]{perroquet.csv}
+%	\end{tikzpicture}
+%	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%		\PixelArtTikz[Codes=123469,Couleurs={Red,Brown,Yellow,Black,Blue,White},Correction]{perroquet.csv}
+%	\end{tikzpicture}
+%\end{center}
+%
+%\begin{center}
+%	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%		\draw[very thin,gray,xstep=1,ystep=1] (0,0) grid (17,-24) ;
+%		\foreach \x in {0,1,...,17} \draw[very thin,gray] (\x,-3pt)--(\x,3pt) node[above,font=\scriptsize\sffamily] {\x} ;
+%		\foreach \y in {0,-1,...,-24} \draw[very thin,gray] (3pt,\y)--(-3pt,\y) node[left,font=\scriptsize\sffamily] {\y} ;
+%		\PixelArtTikz[Codes=123469,Couleurs={Red,Brown,Yellow,Black,Blue,White},Correction]{perroquet.csv}
+%		\filldraw[Blue] (14,-1) circle[radius=1] ;
+%		\filldraw[Yellow] (14,-1) circle[radius=0.8] ;
+%		\draw[ForestGreen,very thick,<-,>=latex] (15,-1) to[bend left=30] (18,-2) node[right,font=\scriptsize\sffamily] {rajouté en \TikZ} ;
+%	\end{tikzpicture}
+%\end{center}
+%\end{codesortie}
+%
+%\begin{codetex}[listing only]
+%%code tikz et pixelart
+%\filldraw[Blue] (14,-1) circle[radius=1] ;
+%\filldraw[Yellow] (14,-1) circle[radius=0.8] ;
+%\draw[ForestGreen,very thick,<-,>=latex] (15,-1) to[bend left=30] (18,-2)
+%	node[right,font=\scriptsize\sffamily] {rajouté en \TikZ} ;
+%\end{codetex}
+%
+%\pagebreak
+%
+%\begin{codetex}[listing only]
+%%codes avec ambiguïté
+%
+%\begin{filecontents*}[overwrite]{cap.csv}
+%-,-,-,-,-,-,-,-,D,-,D,-,D,-,-,-,-,-,-,-,-,-
+%-,D,D,-,-,-,-,D,D,D,D,D,D,-,-,D,D,D,D,-,-,-
+%D,-,-,D,-,D,D,F,F,F,F,F,F,D,D,-,-,-,-,D,-,-
+%-,D,-,-,D,F,F,F,-,-,F,F,F,F,F,D,-,D,D,-,-,-
+%-,-,D,D,F,F,F,-,F,F,-,F,F,F,F,F,D,D,-,-,-,-
+%-,-,-,D,F,F,F,F,F,F,F,F,F,F,F,F,D,-,-,-,-,-
+%-,-,-,D,F,J,J,J,J,J,J,J,F,F,F,F,D,-,-,-,-,-
+%-,-,-,D,J,-,-,-,J,-,-,-,J,J,F,F,D,-,-,-,-,-
+%-,-,-,D,J,-,D,-,J,-,D,-,J,J,B,B,D,-,-,-,-,-
+%-,-,-,D,J,-,-,-,J,-,-,-,J,J,B,B,D,-,-,-,-,-
+%-,-,-,D,C,J,J,J,J,J,J,J,J,C,C,C,D,-,-,-,-,-
+%-,-,-,D,C,C,C,C,C,C,C,C,C,C,C,D,D,D,-,-,-,-
+%-,-,-,D,C,C,C,D,D,D,D,D,D,C,D,A,A,A,D,-,-,-
+%-,-,-,D,F,C,C,C,C,C,C,C,C,D,A,-,-,-,A,D,-,-
+%-,-,-,D,F,C,F,C,C,C,C,F,D,A,-,A,A,A,-,A,D,-
+%-,-,D,C,F,F,F,F,C,C,F,D,A,-,A,F,F,F,A,-,A,D
+%-,-,D,C,F,F,F,F,F,F,F,D,A,-,A,F,-,F,A,-,A,D
+%-,-,D,A,D,-,A,-,A,-,A,D,A,-,A,F,F,F,A,-,A,D
+%-,-,-,D,D,-,A,-,A,-,A,-,D,A,-,A,A,A,-,A,D,-
+%-,-,-,-,-,D,D,F,D,D,D,D,F,D,A,-,-,-,A,D,-,-
+%-,-,-,-,-,-,D,A,D,-,-,D,-,-,D,A,A,A,D,-,-,-
+%-,-,-,-,-,-,D,D,D,-,-,D,D,D,D,D,D,D,-,-,-,-
+%\end{filecontents*}
+%
+%\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%	\PixelArtTikz[Codes=ABCDFJ,Symboles={1,2,3,4,6,10},Symb,Style=\tiny\sffamily]{cap.csv}
+%\end{tikzpicture}
+%
+%\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%	\PixelArtTikz[Codes=ABCDFJ,Couleurs={Red,Brown,Yellow,Black,Blue,Gray},Correction]{cap.csv}
+%\end{tikzpicture}
+%\end{codetex}
+%
+%\begin{codesortie}
+%\begin{filecontents*}[overwrite]{cap.csv}
+%-,-,-,-,-,-,-,-,D,-,D,-,D,-,-,-,-,-,-,-,-,-
+%-,D,D,-,-,-,-,D,D,D,D,D,D,-,-,D,D,D,D,-,-,-
+%D,-,-,D,-,D,D,F,F,F,F,F,F,D,D,-,-,-,-,D,-,-
+%-,D,-,-,D,F,F,F,-,-,F,F,F,F,F,D,-,D,D,-,-,-
+%-,-,D,D,F,F,F,-,F,F,-,F,F,F,F,F,D,D,-,-,-,-
+%-,-,-,D,F,F,F,F,F,F,F,F,F,F,F,F,D,-,-,-,-,-
+%-,-,-,D,F,J,J,J,J,J,J,J,F,F,F,F,D,-,-,-,-,-
+%-,-,-,D,J,-,-,-,J,-,-,-,J,J,F,F,D,-,-,-,-,-
+%-,-,-,D,J,-,D,-,J,-,D,-,J,J,B,B,D,-,-,-,-,-
+%-,-,-,D,J,-,-,-,J,-,-,-,J,J,B,B,D,-,-,-,-,-
+%-,-,-,D,C,J,J,J,J,J,J,J,J,C,C,C,D,-,-,-,-,-
+%-,-,-,D,C,C,C,C,C,C,C,C,C,C,C,D,D,D,-,-,-,-
+%-,-,-,D,C,C,C,D,D,D,D,D,D,C,D,A,A,A,D,-,-,-
+%-,-,-,D,F,C,C,C,C,C,C,C,C,D,A,-,-,-,A,D,-,-
+%-,-,-,D,F,C,F,C,C,C,C,F,D,A,-,A,A,A,-,A,D,-
+%-,-,D,C,F,F,F,F,C,C,F,D,A,-,A,F,F,F,A,-,A,D
+%-,-,D,C,F,F,F,F,F,F,F,D,A,-,A,F,-,F,A,-,A,D
+%-,-,D,A,D,-,A,-,A,-,A,D,A,-,A,F,F,F,A,-,A,D
+%-,-,-,D,D,-,A,-,A,-,A,-,D,A,-,A,A,A,-,A,D,-
+%-,-,-,-,-,D,D,F,D,D,D,D,F,D,A,-,-,-,A,D,-,-
+%-,-,-,-,-,-,D,A,D,-,-,D,-,-,D,A,A,A,D,-,-,-
+%-,-,-,-,-,-,D,D,D,-,-,D,D,D,D,D,D,D,-,-,-,-
+%\end{filecontents*}
+%
+%\begin{center}
+%	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%		\PixelArtTikz[Codes=ABCDFJ,Symboles={1,2,3,4,6,10},Symb,Style=\tiny\sffamily]{cap.csv}
+%	\end{tikzpicture}
+%	~~
+%	\begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%		\PixelArtTikz[Codes=ABCDFJ,Couleurs={Red,Brown,Yellow,Black,Blue,Gray},Correction]{cap.csv}
+%	\end{tikzpicture}
+%\end{center}
+%\end{codesortie}
+%
+%\newpage
 
 \section{SudoMaths, en \TikZ}\label{sudomaths}
 
@@ -6094,8 +6091,7 @@ L'environnement créé, lié à \TikZ, trace la grille de SudoMaths (avec les bl
 \end{codeidee}
 
 \begin{codetex}[listing only]
-%grille classique non remplie, avec légendes H et V
-%les {} non nécessaires pour préciser que les cases seront "vides"
+%grille classique non remplie, avec légendes H/V, {} nécessaires pour préciser que les cases seront "vides"
 \SudoMaths{}
 \end{codetex}
 
@@ -6108,16 +6104,16 @@ La commande \ctex{SudoMaths} crée donc la grille (remplie ou non), dans un envi
 
 \smallskip
 
-Si on veut exploiter le tracé de la grille, on peut utiliser l'\textit{environnement} \ctex{EnvSudoMaths} dans lequel on peut rajouter toute commande en \TikZ{} !
+On peut également utiliser l'\textit{environnement} \ctex{EnvSudoMaths} dans lequel on peut rajouter du code \TikZ{} !
 \end{codeinfo}
 
 \begin{codetex}[listing only]
 %grille "toute seule"
-\SudoMaths[options]{liste}
+\SudoMaths[clés]{liste}
 
 %grille avec ajout de code
-\begin{EnvSudoMaths}[options]{grille}
-	commandes tikz
+\begin{EnvSudoMaths}[clés]{grille}
+	%commandes tikz
 \end{EnvSudoMaths}
 \end{codetex}
 
@@ -6170,8 +6166,8 @@ La \Cle{CouleurCase} est gérée -- en interne -- par le caractère \ctex{*} qui
 	     /      /      / (q)* /      /      §%
 }
 
-\PLsudomaths[unite=0.75cm,nbcol=6,nbsubcol=2,nblig=6,nbsublig=3,police=\small\bfseries\ttfamily,%
-	couleurtexte=red,couleurcase=yellow!50,legendes=false]{\grilleSuMa}
+\SudoMaths[Unite=0.75cm,NbCol=6,NbSubCol=2,NbLig=6,NbSubLig=3,%
+	Police=\small\bfseries\ttfamily,CouleurTexte=red,CouleurCase=yellow!50,Legendes=false]{\grilleSuMa}
 \end{codetex}
 
 \begin{codesortie}
@@ -6242,6 +6238,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
+{\small \bverb|v 2.1.8|~:~~~~Suppression des commandes de PixelArt, désormais dans le package \textsf{PixelArtTikz}
+
 {\small \bverb|v 2.1.7|~:~~~~Ajout d'une clé \textsf{Math} pour les sommets des figures de l'espace (pages \pageref{pave} et \pageref{tetra})
 
 {\small \bverb|v 2.1.6|~:~~~~Correction d'un bug lié au chargement de \textsf{hvlogos}, remplacé par \textsf{hologo}
@@ -6302,7 +6300,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 	
 {\small \bverb|v 1.3.2|~:~~~~Correction d'un bug sur les conversions bintohex avec lualatex (page \pageref{conversions})
 
-{\small \bverb|v 1.3.1|~:~~~~Ajout d'une option pour ne pas afficher les bordures des corrections de pixelart (page \pageref{pixelart})
+{\small \bverb|v 1.3.1|~:~~~~Ajout d'une option pour ne pas afficher les bordures des corrections de pixelart
 
 {\small \bverb|v 1.3.0|~:~~~~Commande pour présenter une conversion depuis la base 10 (page \pageref{convrestes})
 
@@ -6322,7 +6320,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v 1.2.1|~:~~~~Amélioration de la gestion du csv pour Pixelart
 
-{\small \bverb|v 1.1.9|~:~~~~Pixelart en \TikZ{} (page \pageref{pixelart})
+{\small \bverb|v 1.1.9|~:~~~~Pixelart en \TikZ{}
 
 {\small \bverb|v 1.1.8|~:~~~~Style "Mainlevée" basique pour \TikZ (page \pageref{mainlevee})
 
