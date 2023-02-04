@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass{article}
-\def\PLversion{2.1.8}
-\def\PLdate{25 Janvier 2023}
+\def\PLversion{2.1.9}
+\def\PLdate{4 Février 2023}
 \usepackage[pythontex]{ProfLycee}
 \usepackage{mathtools}
 \usepackage{lualatex-math}
@@ -556,7 +556,7 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \TangenteTikz[options]{liste}
 
 %schémas pour le signe affine/trinôme, dans un environnement tikz
-\MiniSchemaSignes[clés]
+\MiniSchemaSignes(*)[clés]<options tikzpicture>
 \MiniSchemaSignesTkzTab[options]{numligne}[échelle][décalage horizontal]
 \end{codetex}
 
@@ -1619,10 +1619,6 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 
 \newpage
 
-
-
-\newpage
-
 \section{Petits schémas pour le signe d'une fonction affine ou d'un trinôme}\label{aidesigne}
 
 \subsection{Idée}
@@ -1634,18 +1630,20 @@ Le code est très largement inspiré de celui du package \ctex{tnsana} même si 
 
 \smallskip
 
-Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{MiniSchemaSignes} pour afficher le schéma.
+Comme pour les autres commandes \TikZ, l'idée est de laisser la possibilité à l'utilisateur de définir et créer son environnement \TikZ, et d'insérer la commande \ctex{MiniSchemaSignes} pour afficher le schéma.
+
+\smallskip
+
+\cmaj{2.1.9} Il est à noter que la version \textit{étoilée} rend la commande autonome, sans besoin de créer l'environnement \TikZ.
 \end{codeidee}
 
-\begin{codetex}[tikz lower]
-%code tikz
-\MiniSchemaSignes[clés]
+\begin{codetex}[]
+\MiniSchemaSignes*
 \end{codetex}
 
 \subsection{Commandes}
 
 \begin{codetex}[listing only]
-...
 \begin{tikzpicture}[<options>]
 	...
 	\MiniSchemaSignes[clés]
@@ -1654,11 +1652,17 @@ Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur déf
 \end{codetex}
 
 \begin{codetex}[listing only]
-... {\tikz[options] \MiniSchemaSignes[clés]}...
+{\tikz[options] \MiniSchemaSignes[clés]}
+%ou
+\MiniSchemaSignes*[clés]<options tikzpicture>
 \end{codetex}
 
 \begin{codecles}
-Plusieurs \Cle{Clés} sont disponibles pour cette commande :
+\cmaj{2.1.9} La version \textit{étoilée} de la commande permet de basculer en mode \textit{autonome}, c'est-à-dire sans avoir besoin de créer son environnement \TikZ.
+
+\smallskip
+
+Le premier argument, \textit{optionnel} et entre \ctex{[...]}, contient les \Cle{Clés} sont disponibles pour cette commande :
 
 \begin{itemize}
 	\item la clé \Cle{Code} qui permet de définir le type d'expression (voir en-dessous) ;\hfill{}défaut \Cle{da+}
@@ -1668,6 +1672,8 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande :
 	\item la clé \Cle{Hauteur} qui est la hauteur du schéma ;\hfill{}défaut \Cle{1}
 	\item un booléen \Cle{Cadre} qui affiche un cadre autour du schéma.\hfill{}défaut \Cle{true}
 \end{itemize}
+
+Le second argument, \textit{optionnel} et entre \ctex{<...>}, permet de spécifier (pour la commande \textit{étoilée}), des options à passer à l'environnement \ctex{tikzpicture}.
 \end{codecles}
 
 \begin{codecles}
@@ -1685,95 +1691,68 @@ Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou
 
 \begin{codetex}[listing only]
 \begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=da+,Racines=-4]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=da-,Racines={h},Couleur=blue,Largeur=3,Cadre=false]
-	\end{tikzpicture}
+\MiniSchemaSignes*[Code=da+,Racines=-4]
+~~~~
+\MiniSchemaSignes*[Code=da-,Racines={h},Couleur=blue,Largeur=3,Cadre=false]
 \end{center}
 %
 \begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d+,Racines={1/2},Couleur=orange]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d-,Couleur=ForestGreen]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d0,Racines={5},Couleur=purple]
-	\end{tikzpicture}
+\MiniSchemaSignes*[Code=pa+d+,Racines={1/2},Couleur=orange]
+~~~~
+\MiniSchemaSignes*[Code=pa+d-,Couleur=ForestGreen]
+~~~~
+\MiniSchemaSignes*[Code=pa+d0,Racines={5},Couleur=purple]
 \end{center}
 %
 \begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d+,Racines={-3/0},Couleur=yellow]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d-,Couleur=cyan]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d0,Racines={-1},Couleur=magenta]
-	\end{tikzpicture}
+\MiniSchemaSignes*[Code=pa-d+,Racines={-3/0},Couleur=yellow]
+~~~~
+\MiniSchemaSignes*[Code=pa-d-,Couleur=cyan]
+~~~~
+\MiniSchemaSignes*[Code=pa-d0,Racines={-1},Couleur=magenta]
 \end{center}
 \end{codetex}
 
 \begin{codesortie}
 \begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=da+,Racines=-4]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=da-,Racines={h},Couleur=blue,Largeur=3,Cadre=false]
-	\end{tikzpicture}
+\MiniSchemaSignes*[Code=da+,Racines=-4]
+~~~~
+\MiniSchemaSignes*[Code=da-,Racines={h},Couleur=blue,Largeur=3,Cadre=false]
 \end{center}
 %
 \begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d+,Racines={1/2},Couleur=orange]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d-,Couleur=ForestGreen]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa+d0,Racines={5},Couleur=purple]
-	\end{tikzpicture}
+\MiniSchemaSignes*[Code=pa+d+,Racines={1/2},Couleur=orange]
+~~~~
+\MiniSchemaSignes*[Code=pa+d-,Couleur=ForestGreen]
+~~~~
+\MiniSchemaSignes*[Code=pa+d0,Racines={5},Couleur=purple]
 \end{center}
 %
 \begin{center}
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d+,Racines={-3/0},Couleur=yellow]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d-,Couleur=cyan]
-	\end{tikzpicture}
-	~~~~
-	\begin{tikzpicture}
-		\MiniSchemaSignes[Code=pa-d0,Racines={-1},Couleur=magenta]
-	\end{tikzpicture}
+\MiniSchemaSignes*[Code=pa-d+,Racines={-3/0},Couleur=yellow]
+~~~~
+\MiniSchemaSignes*[Code=pa-d-,Couleur=cyan]
+~~~~
+\MiniSchemaSignes*[Code=pa-d0,Racines={-1},Couleur=magenta]
 \end{center}
 \end{codesortie}
 
-\begin{codetex}[tikz lower]
-%code tikz
-\MiniSchemaSignes[Largeur=3.5,Hauteur=1.5,Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]
+\begin{codetex}[]
+\begin{tikzpicture}
+	\MiniSchemaSignes[Largeur=3.5,Hauteur=1.5,Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]
+\end{tikzpicture}
+
+\MiniSchemaSignes*[Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]<x=1.75cm,y=1.5cm>
 \end{codetex}
+
+\pagebreak
 
 \subsection{Intégration avec tkz-tab}
 
 \begin{codeidee}
 Ces schémas peuvent être de plus utilisés, via la commande \ctex{MiniSchemaSignesTkzTab} pour illustrer les signes obtenus dans un tableau de signes présentés grâce au package \ctex{tkz-tab}.
 
-Pour des raisons internes, le fonctionnement de la commande \ctex{aidesignetkztabPL} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour que la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
+Pour des raisons internes, le fonctionnement de la commande \ctex{MiniSchemaSignesTkzTab} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour que la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -1804,9 +1783,9 @@ En ce qui concerne les autres arguments :
 		\tkzTabLine{,+,t,+,z,-,}
 		\tkzTabLine{,-,z,+,t,+,}
 		\tkzTabLine{,-,z,+,z,-,}
-		\MiniSchemaSignesTkzTab[Code=da-,Racines={2,5},Couleur=blue]{1}
+		\MiniSchemaSignesTkzTab[Code=da-,Racines={\tfrac{5}{2}},Couleur=blue]{1}
 		\MiniSchemaSignesTkzTab[Code=da+,Racines={-2},Couleur=purple]{2}
-		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/2,5},Couleur=orange]{3}[0.85][2]
+		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/{\tfrac{5}{2}}},Couleur=orange]{3}[0.85][2]
 	\end{tikzpicture}
 \end{center}
 \end{codetex}
@@ -1818,9 +1797,9 @@ En ce qui concerne les autres arguments :
 		\tkzTabLine{,+,t,+,z,-,}
 		\tkzTabLine{,-,z,+,t,+,}
 		\tkzTabLine{,-,z,+,z,-,}
-		\MiniSchemaSignesTkzTab[Code=da-,Racines={2,5},Couleur=blue]{1}
+		\MiniSchemaSignesTkzTab[Code=da-,Racines={\tfrac{5}{2}},Couleur=blue]{1}
 		\MiniSchemaSignesTkzTab[Code=da+,Racines={-2},Couleur=purple]{2}
-		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/2,5},Couleur=orange]{3}[0.85][2]
+		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/{\tfrac{5}{2}}},Couleur=orange]{3}[0.85][2]
 	\end{tikzpicture}
 \end{center}
 \end{codesortie}
@@ -6237,6 +6216,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.1.9|~:~~~~Correction d'un bug (et ajout d'une version étoilée) pour les petits schémas \og de signe \fg{} (page \pageref{aidesigne})
 
 {\small \bverb|v 2.1.8|~:~~~~Suppression des commandes de PixelArt, désormais dans le package \textsf{PixelArtTikz}
 

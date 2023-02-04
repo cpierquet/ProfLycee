@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/01/25 2.1.8 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/02/04 2.1.9 Aide pour l'utilisation de LaTeX en lycee]
+% 2.1.9	Correction d'un bug avec les MiniSchémas + version étoilée
 % 2.1.8	Suppression des pixelarts, désormais dans le package "PixelArtTikz" !
 % 2.1.7	Option booléenne Math pour les figures pave/tetraèdre
 % 2.1.6	Chargement de hologo à la place de hvlogos (bug potentiel avec \bm)
@@ -81,7 +82,7 @@
 \RequirePackage{tkz-tab}
 \RequirePackage{pgf,pgffor}
 \RequirePackage{ifthen}
-\RequirePackage{xparse}
+%\RequirePackage{xparse}
 \RequirePackage{xkeyval}
 \RequirePackage{xstring}
 \RequirePackage{xintexpr}
@@ -1303,7 +1304,9 @@
 	% #6 = liste racines (option)
 	\xintifboolexpr{ #1 > 0 'and' #5 == 2 } %a>0 et delta>0
 	{%
+		\saveexpandmode\expandarg
 		\StrCut{#6}{/}{\xun}{\xdeux}
+		\restoreexpandmode
 		\draw[thick,#2] ({-0.375*#3},{0.5*#4}) parabola bend (0,{-0.5*#4}) ({0.375*#3},{0.5*#4}) ;
 		\draw[#2] ({-0.5*#3},0) node[above right=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut+$}};
 		\draw[#2] ({0.5*#3},0) node[above left=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut+$}};
@@ -1314,7 +1317,9 @@
 	{}
 	\xintifboolexpr{ #1 < 0 'and' #5 == 2 } %a<0 et delta>0
 	{%
+		\saveexpandmode\expandarg
 		\StrCut{#6}{/}{\xun}{\xdeux}
+		\restoreexpandmode
 		\draw[thick,#2] ({-0.375*#3},{-0.5*#4}) parabola bend (0,{0.5*#4}) ({0.375*#3},{-0.5*#4}) ;
 		\draw[#2] ({-0.5*#3},0) node[below right=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut-$}};
 		\draw[#2] ({0.5*#3},0) node[below left=1pt,inner sep=0pt,font=\scriptsize] {\textcircled{$\strut-$}};
@@ -1351,9 +1356,10 @@
 	{}
 }
 
-\newcommand\MiniSchemaSignes[1][]{%
+\NewDocumentCommand\MiniSchemaSignes{ s O{} D<>{} }{%
+%\newcommand\MiniSchemaSignes[1][]{%
 	\useKVdefault[aidetds]
-	\setKV[aidetds]{#1}
+	\setKV[aidetds]{#2}
 	%simplification des codes
 	\IfEq{\tdsparam}{da+}{\def\xcode{1}}{}
 	\IfEq{\tdsparam}{da-}{\def\xcode{-1}}{}
@@ -1363,6 +1369,9 @@
 	\IfEq{\tdsparam}{pa-d0}{\def\xcode{-11}}{}
 	\IfEq{\tdsparam}{pa+d-}{\def\xcode{10}}{}
 	\IfEq{\tdsparam}{pa-d-}{\def\xcode{-10}}{}
+	%si commande étoilée := commande autonome
+	\IfBooleanTF{#1}%
+		{\begin{tikzpicture}[#3]}{}%
 	%cadre si booléen true
 	\ifboolKV[aidetds]{Cadre}
 		{\draw[lightgray] ({-0.5*\tdslarg},{-0.5*\tdshaut}) rectangle ({0.55*\tdslarg},{0.5*\tdshaut}) ;}
@@ -1403,6 +1412,8 @@
 	\ifnum\xcode=-10
 		\schematdsparab{-1}{\tdscouleur}{\tdslarg}{\tdshaut}{0}
 	\fi
+	\IfBooleanTF{#1}%
+		{\end{tikzpicture}}{}%
 }
 
 %pour l'interaction avec tkz-tab
@@ -3211,7 +3222,7 @@
 		{}%
 		\ifboolKV[prespgcd]{AfficheConclusion}%
 		{%
-			\Rightarrow \PLpgcd\left(\num{#2}\mathpunct{};\num{#3}\right)=\ifboolKV[prespgcd]{CouleurResultat}{\mathcolor{\PLPGCDCouleur}{\num{\respgcd}}}{\num{\respgcd}}%
+			\Rightarrow \PLpgcd\left(\num{#2};\num{#3}\right)=\ifboolKV[prespgcd]{CouleurResultat}{\mathcolor{\PLPGCDCouleur}{\num{\respgcd}}}{\num{\respgcd}}%
 		}%
 		{}%
 	}%
