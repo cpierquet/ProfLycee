@@ -1,0 +1,129 @@
+% proflycee-tools-pythontex.tex
+% Copyright 2023  Cédric Pierquet
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+
+%%------CONSOLEPYTHON
+\defKV[envpythonconsole]{%
+	Largeur=\def\CSPYlargeur{#1},%
+	Centre=\testboolKV{#1}
+		{\def\hookcenterpre{\begin{center}}\def\hookcenterpost{\end{center}}}
+		{\def\hookcenterpre{\begin{flushleft}}\def\hookcenterpost{\end{flushleft}}},%
+	TaillePolice=\def\CSPYfonte{#1},%
+	EspacementVertical=\def\CSPYstretch{#1}
+}
+
+\setKVdefault[envpythonconsole]{%
+	Largeur=\linewidth,%
+	Centre=true,%
+	Label=true,%
+	TaillePolice=\footnotesize,%
+	EspacementVertical=1
+}
+
+\newenvironment{ConsolePythontex}[1][]
+{%
+	\useKVdefault[envpythonconsole]%
+	\setKV[envpythonconsole]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\VerbatimEnvironment
+	\hookcenterpre
+	\begin{minipage}{\CSPYlargeur}
+		\ifboolKV[envpythonconsole]{Label}%si label
+			{\begin{pyconsole}[][%
+				framesep=3mm,frame=single,fontsize=\CSPYfonte,framerule=1pt,rulecolor=\color{ForestGreen},label={[\scriptsize Début de la console python]\scriptsize Fin de la console python},baselinestretch=\CSPYstretch]}%
+			{\begin{pyconsole}[][%
+				framesep=3mm,frame=single,fontsize=\CSPYfonte,framerule=1pt,rulecolor=\color{ForestGreen},baselinestretch=\CSPYstretch]}
+}%
+{%
+	\end{pyconsole}
+	\end{minipage}
+	\hookcenterpost
+}
+
+%=========CODEPYTHONTEX=========== OK!!
+\defKV[envpythonverb]{%
+	Largeur=\def\CODPYlargeur{#1},%
+	TaillePolice=\def\CODPYfonte{#1},%
+	EspacementVertical=\def\CODPYstretch{#1},%
+	Centre=\testboolKV{#1}
+		{\def\verbcenterpre{\begin{center}}\def\verbcenterpost{\end{center}}}
+		{\def\verbcenterpre{}\def\verbcenterpost{}}
+}
+
+\setKVdefault[envpythonverb]{%
+	Largeur=\linewidth,%
+	Centre=true,%
+	Lignes=true,%
+	TaillePolice=\footnotesize,%
+	EspacementVertical=1
+}
+
+\tcbset{stylepythontex/.style={%
+	enhanced,boxrule=1.25pt,%
+	sharp corners=downhill,arc=12pt,
+	before skip=12pt,after skip=12pt,%
+	top=10pt,bottom=1mm,rightupper=4pt,%leftupper=25pt,
+	attach boxed title to top right={yshift=-\tcboxedtitleheight},
+	boxed title style={
+		size=small,colback=ForestGreen!25,boxrule=1.25pt,
+		colframe=Green,boxsep=1.25pt,
+		sharp corners=downhill,
+		arc=12pt,
+		top=2pt,bottom=1pt,left=6pt,right=6pt
+		},
+	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
+	title={\scriptsize\faPython}\:Code Python\vphantom{p},
+	watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
+	}
+}
+
+\tcbset{stylepythonnolineos/.style={%
+	stylepythontex,leftupper=10pt,
+	colframe=Green,colback=ForestGreen!5,%
+	before upper=\renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Gray}\arabic{FancyVerbLine}}
+	}
+}
+
+\tcbset{stylepythonlineos/.style={%
+	stylepythontex,leftupper=25pt,
+	colframe=Green,colback=ForestGreen!5,%
+	%		fontlower=\small,%
+	before upper=\renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Gray}\arabic{FancyVerbLine}}
+	}
+}
+
+\newtcolorbox{tcpythontexcode}[1][\linewidth]{%
+	width=#1,stylepythonlineos
+}
+
+\newtcolorbox{tcpythontexcodeno}[1][\linewidth]{%
+	width=#1,stylepythonnolineos
+}
+
+\newenvironment{CodePythontex}[1][]
+{%
+	\useKVdefault[envpythonverb]%
+	\setKV[envpythonverb]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\VerbatimEnvironment
+	\verbcenterpre
+	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+		{\begin{tcpythontexcode}[\CODPYlargeur]}
+		{\begin{tcpythontexcodeno}[\CODPYlargeur]}
+	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+		{\begin{pyverbatim}[][fontsize=\CODPYfonte,numbers=left,numbersep=10pt,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
+		{\begin{pyverbatim}[][numbers=none,numbersep=0pt,fontsize=\CODPYfonte,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
+}%
+{%
+	\end{pyverbatim}
+	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+		{\end{tcpythontexcode}}
+		{\end{tcpythontexcodeno}}
+	\verbcenterpost
+}
+
+\endinput

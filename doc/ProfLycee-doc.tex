@@ -4,11 +4,11 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode}
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
-\documentclass{article}
-\def\PLversion{2.1.9}
-\def\PLdate{4 Février 2023}
-\usepackage[pythontex]{ProfLycee}
-\usepackage{mathtools}
+\documentclass[a4paper,french,11pt]{article}
+\def\PLversion{2.5.0}
+\def\PLdate{8 Février 2023}
+\usepackage{ProfLycee}
+\useproflyclib{piton,minted,pythontex}
 \usepackage{lualatex-math}
 \usepackage{luatexbase}
 \usepackage[math-style=french,bold-style=ISO]{fourier-otf}
@@ -20,6 +20,7 @@
 \sisetup{locale=FR}
 \usepackage{fancyvrb}
 \usepackage{fancyhdr}
+\usepackage{tabularray}
 \usepackage{multicol}
 %fancy
 \fancyhf{}
@@ -29,7 +30,22 @@
 \rfoot{\hyperlink{matoc}{\small\faArrowAltCircleUp[regular]}}
 
 \usepackage{graphics}
-\usepackage{hvlogos}
+\usepackage{hologo}
+\providecommand\tikzlogo{Ti\textit{k}Z}
+\providecommand\TeXLive{\TeX{}Live\xspace}
+\providecommand\PSTricks{\textsf{PSTricks}\xspace}
+\let\pstricks\PSTricks
+\let\TikZ\tikzlogo
+\newcommand\TableauDocumentation{%
+	\begin{tblr}{width=\linewidth,colspec={X[c]X[c]X[c]X[c]X[c]X[c]},cells={font=\sffamily}}
+		{\huge \LaTeX} & & & & &\\
+		& {\huge \hologo{pdfLaTeX}} & & & & \\
+		& & {\huge \hologo{LuaLaTeX}} & & & \\
+		& & & {\huge \TikZ} & & \\
+		& & & & {\huge \TeXLive} & \\
+		& & & & & {\huge \hologo{MiKTeX}} \\
+	\end{tblr}
+}
 \usepackage{simplekv}
 \usepackage{menukeys}
 \let\tab\relax
@@ -45,7 +61,7 @@
 \hypersetup{pdfborder=0 0 0}
 \usepackage{geometry}
 \geometry{margin=1.5cm}
-\usepackage[french]{babel}
+\usepackage{babel}
 \usepackage{newverbs}
 \newverbcommand{\pverb}{\color{purple}}{}
 \newverbcommand{\rverb}{\color{red}}{}
@@ -68,6 +84,16 @@
 	overlay={\begin{tcbclipinterior}%
 		\fill[fill=lightgray!50]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{CadetBlue}{\scalebox{0.6}[0.75]{\textbf{\LaTeX}}}}} ($(interior.north west)+(5pt,0pt)$);%
 	\end{tcbclipinterior}}
+	}
+}
+
+\tcbset{vignettelib/.style={%
+		fontupper={\vphantom{pf}\footnotesize\ttfamily},
+		vignettes,%
+		colframe=ForestGreen,coltitle=white,colback=white,%
+		overlay={\begin{tcbclipinterior}%
+				\fill[fill=green!25]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{ForestGreen}{\scalebox{0.85}[0.75]{\textbf{LIB}}}}} ($(interior.north west)+(5pt,0pt)$);%
+		\end{tcbclipinterior}}
 	}
 }
 
@@ -105,6 +131,11 @@
 %petite vignette màj
 \newcommand\cmaj[1]{%
 	{\tcbox[vignetteMaJ]{#1}\xspace}%
+}
+
+%petite vignette màj
+\newcommand\clib[1]{%
+	{\tcbox[vignettelib]{#1}\xspace}%
 }
 
 %gestion de la fenêtre v2 directement dans le tikzpicture
@@ -206,12 +237,12 @@
 
 \thispagestyle{empty}
 
-{\sffamily{\bfseries Résumé} : Quelques commandes pour faciliter l'utilisation de \LaTeX{} pour les enseignants de mathématiques en lycée.}
+{\sffamily{\bfseries Résumé} : Quelques commandes pour faciliter l'utilisation de \LaTeX{} pour les mathématiques, au lycée.}
 
 \medskip
 
 {\small\noindent%
-{\deblst} résoudre, de manière approchée, des équations \\
+{\deblst} résoudre, de manière approchée, des équations\\
 {\deblst} tracer \textit{facilement} des repères/grilles/courbes\\
 {\deblst} tracer  des courbes \textit{lisses} avec gestion des extrema et des dérivées\\
 {\deblst} simuler une fenêtre de logiciel de calcul formel, une console d'exécution \\
@@ -225,7 +256,6 @@
 {\deblst} travailler sur les statistiques à deux variables (algébriques et graphiques) \\
 {\deblst} convertir entre bin/dec/hex avec détails \\
 {\deblst} présenter un calcul de PGCD \\
-%{\deblst} créer un pixelart avec correction éventuelle \\
 {\deblst} effectuer des calculs de probas (lois binomiale, exponentielle, de Poisson, normale) \\
 {\deblst} créer des arbres de probas \og classiques \fg \\
 {\deblst} générer des listes d'entiers aléatoires (avec ou sans répétitions)\\
@@ -236,7 +266,7 @@
 
 \hfill{}\textsl{Merci à Anne pour ses retours et sa relecture !}
 
-\hfill{}\textsl{Merci à Christophe pour ses retours et ses éclairages !}
+\hfill{}\textsl{Merci à Christophe et Denis pour leurs retours et éclairages !}
 
 \hfill{}\textsl{Merci aux membres du groupe \faFacebook{} du \og Coin \LaTeX{} \fg{} pour leur aide et leurs idées !}
 
@@ -246,14 +276,7 @@
 
 \medskip
 
-\begin{tblr}{width=\linewidth,colspec={X[c]X[c]X[c]X[c]X[c]X[c]},cells={font=\sffamily\LARGE}}
-	{\LaTeX} & & & & &\\
-	& {\pdfLaTeX} & & & & \\
-	& & {\LuaLaTeX} & & & \\
-	& & & {\TikZ} & & \\
-	& & & & {\TeXLive} & \\
-	& & & & & {\MiKTeX} \\
-\end{tblr}
+\TableauDocumentation
 
 \medskip
 
@@ -285,7 +308,7 @@ On peut le voir comme un (maigre) complément à \ctex{ProfCollege}, et je préc
 
 \medskip
 
-Il se charge, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee\}}. Il charge quelques {packages} utiles, mais j'ai fait le choix de laisser l'utilisateur gérer ses autres {packages}, comme notamment \ctex{amssymb} qui peut poser souci en fonction de la \textit{position} de son chargement.
+Il se charge, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee\}}. Il charge des {packages} utiles, mais j'ai fait le choix de laisser l'utilisateur gérer ses autres {packages}, comme notamment \ctex{amssymb} qui peut poser souci en fonction de la \textit{position} de son chargement.
 
 L'utilisateur est libre de charger ses autres {packages} utiles et habituels, ainsi que ses \textsf{polices} et \textsf{encodages} habituels !
 \end{codeidee}
@@ -296,10 +319,10 @@ Le {package} \ctex{ProfLycee} charge les {packages} :
 \begin{itemize}
 	\item \ctex{xcolor} avec les options \textsf{[table,svgnames]} ;
 	\item \ctex{tikz}, \ctex{pgf}, \ctex{pgffor} ;
+	\item \ctex{tcolorbox} avec l'option \textsf{[most]} ;
 	\item \ctex{xparse}, \ctex{xstring}, \ctex{simplekv}, \ctex{xinttools} ;
 	\item \ctex{listofitems}, \ctex{xintexpr} , \ctex{xintbinhex}, \ctex{xintgcd} ;
-	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{tcolorbox}, \ctex{randomlist}, \ctex{fancyvrb}, \ctex{csvsimple} ;
-	\item \ctex{piton} (uniquement si compilation en \LuaLaTeX{} !) et \ctex{pythontex}.
+	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{randomlist}, \ctex{fancyvrb}.
 \end{itemize}
 \end{codeinfo}
 
@@ -315,7 +338,6 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 \usepackage{ProfLycee}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[french]{babel}
 ...
 \end{codetex}
 
@@ -324,55 +346,49 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 \documentclass{article}
 \usepackage{ProfLycee}
 \usepackage{fontspec}
-\usepackage[french]{babel}
 ...
 \end{codetex}
 
-\subsection{Options du package}
+\subsection{Librairies, option du package}\label{librairies}
 
 \begin{codeattention}
-\cmaj{2.0.0} Une compilation \textsf{shell-escape} est recommandée pour l'utilisation de \ctex{ProfLycee}, notamment pour le package \ctex{minted} et la coloration syntaxique de code.
-
-Cependant, si vous ne \underline{souhaitez pas} charger (et utiliser) \ctex{minted} vous pouvez charger le package \ctex{ProfLycee} avec l'option \Cle{nonshellescape}.
+\cmaj{2.5.0} Le package fonctionne désormais avec un système de \clib{librairies}, qui utilisent et chargent des packages spécifiques, avec des compilations particulières, donc l'utilisateur utilisera un système de chargement similaire à celui de \textsf{tcolorbox} ou \textsf{tikz}, dans le préambule, et une fois le package appelé.
 \end{codeattention}
 
 \begin{codetex}[listing only]
-...
-\usepackage[nonshellescape]{ProfLycee}
-%package <minted> et librairie <minted> non chargés
-...
-\end{codetex}
-
-\begin{codeattention}
-\cmaj{2.1.0} Le package\ctex{pythontex} nécessitant une chaîne de compilation particulière, j'ai décidé de le mettre en \textit{option}.
-
-Pour utiliser le package \ctex{pythontex} et utiliser les commandes qui lui sont liées, il faut désormais charger \ctex{ProfLycee} avec l'option \Cle{pythontex}.
-\end{codeattention}
-
-\begin{codetex}[listing only]
-...
-\usepackage[pythontex]{ProfLycee}
-...
+\usepackage{ProfLycee}
+\useproflyclib{...,...}
 \end{codetex}
 
 \begin{codeinfo}
-En compilant (notamment avec les packages \ctex{minted} et \ctex{pythontex}) on peut spécifier des répertoires particuliers pour les (ou des) fichiers auxiliaires.
+Les librairies disponibles seront indiquées dans les sections spécifiques. Pour le moment, il existe :
 
-Avec l'option \Cle{build}, l'utilisateur a la possibilité de placer les fichiers temporaires de \ctex{minted} et \ctex{pythontex} dans un répertoire \menu{build} du répertoire courant.
+\begin{itemize}
+	\item \clib{piton} (page \pageref{pythonpiton}) ;
+	\item \clib{minted} (page \pageref{pytminted}) ;
+	\item \clib{pythontex} (page \pageref{pythontex}).
+\end{itemize}
+\end{codeinfo}
+
+\begin{codeinfo}
+En compilant (notamment avec les librairies \clib{minted} et \clib{pythontex}) on peut spécifier des répertoires particuliers pour les (ou des) fichiers auxiliaires.
+
+Avec l'option \Cle{build}, l'utilisateur a la possibilité de placer les fichiers temporaires de \clib{minted} et \clib{pythontex} dans un répertoire \menu{build} du répertoire courant.
 
 \smallskip
 
-Dans ce cas il vaut mieux créer au préalable le répertoire \menu{build} avant de compiler un fichier !
+Dans ce cas il faut créer au préalable le répertoire \menu{build} avant de compiler un fichier, pour éviter toute erreur !
 \end{codeinfo}
 
 \begin{codetex}[listing only]
 ...
 \usepackage[build]{ProfLycee}
+\useproflyclib{...}
 ...
 \end{codetex}
 
 \begin{codeinfo}
-Les options précédentes sont cumulables, et, pour info, elles conditionnent le chargement des {packages} avec les options :
+L'option \Cle{build} charge certains packages (librairies \clib{minted} et \clib{pythontex}) avec les options :
 
 \begin{itemize}
 	\item \ctex{\textbackslash setpythontexoutputdir\{./build/pythontex-files-\textbackslash jobname\}}
@@ -380,38 +396,31 @@ Les options précédentes sont cumulables, et, pour info, elles conditionnent le
 \end{itemize}
 \end{codeinfo}
 
-\begin{codetex}[listing only]
-...
-%chargement de ProfLycee sans minted, et avec pythontex
-\usepackage[pythontex,nonshellescape]{ProfLycee}
-...
-\end{codetex}
-
 \pagebreak
 
 \section{Compléments}
 
-\subsection{Changements à partir de la version 2 !!}
-
-\begin{codeattention}
-\cmaj{2.0.0} Pour des raisons pratiques, les commandes et environnements disponibles dans \ctex{ProfLycee} ont été renommés, pour utiliser des noms plus génériques et explicites.
-
-La nomenclature des \Cle{clés} a été également revue, avec -- dans la grande majorité des cas -- une majuscule en début.
-
-\smallskip
-
-Je préfère faire ces ajustements tant que le package est assez \textit{jeune} !
-\end{codeattention}
-
-\begin{codeattention}
-\cmaj{2.0.0} L'ancienne version (qui ne sera mise à jour !!) du package \ctex{ProfLycee} est toutefois encore disponible, pour une migration en douceur, elle est désormais accessible sous le nom \ctex{ProfLycee-old}, et la documentation est également encore disponible.
-\end{codeattention}
-
-\begin{codetex}[listing only]
-...
-\usepackage[options]{ProfLycee-old} %nouveautés non disponibles par contre...
-...
-\end{codetex}
+%\subsection{Changements à partir de la version 2 !!}
+%
+%\begin{codeattention}
+%\cmaj{2.0.0} Pour des raisons pratiques, les commandes et environnements disponibles dans \ctex{ProfLycee} ont été renommés, pour utiliser des noms plus génériques et explicites.
+%
+%La nomenclature des \Cle{clés} a été également revue, avec -- dans la grande majorité des cas -- une majuscule en début.
+%
+%\smallskip
+%
+%Je préfère faire ces ajustements tant que le package est assez \textit{jeune} !
+%\end{codeattention}
+%
+%\begin{codeattention}
+%\cmaj{2.0.0} L'ancienne version (qui ne sera mise à jour !!) du package \ctex{ProfLycee} est toutefois encore disponible, pour une migration en douceur, elle est désormais accessible sous le nom \ctex{ProfLycee-old}, et la documentation est également encore disponible.
+%\end{codeattention}
+%
+%\begin{codetex}[listing only]
+%...
+%\usepackage[options]{ProfLycee-old} %nouveautés non disponibles par contre...
+%...
+%\end{codetex}
 
 \subsection{Le système de \og clés/options \fg}
 
@@ -423,7 +432,7 @@ L'idée est de conserver -- autant que faire se peut -- l'idée de \Cle{Clés} q
 	\item définies (en majorité) par défaut pour chaque commande.
 \end{itemize}
 
-Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce fait le fonctionnement est plus \textit{basique} avec un système d'\textsf{arguments} \textit{optionnels} (entre \textsf{[\ldots]}) ou \textit{obligatoires} (entre \textsf{\{\ldots\}}).
+Pour certaines commandes, le système de \Cle{Clés} pose quelques soucis, de ce fait le fonctionnement est plus \textit{basique} avec un système d'\textsf{arguments} \textit{optionnels} (souvent entre \textsf{[\ldots]}) ou \textit{obligatoires} (souvent entre \textsf{\{\ldots\}}).
 
 \smallskip
 
@@ -470,8 +479,6 @@ Les \textsf{clés} ou \textsf{options} seront présentées dans des \textsf{boî
 À noter que certaines commandes disponibles sont liées à un environnement \ctex{tikzpicture}, elles ne sont pas autonomes mais permettent de conserver -- en parallèle -- toute commande liée à \TikZ{} !
 \end{codeinfo}
 
-\pagebreak
-
 \subsection{Compilateur(s)}
 
 \begin{codeinfo}
@@ -479,17 +486,14 @@ Le package \ctex{ProfLycee} est compatible avec les compilateurs classiques : \t
 
 \smallskip
 
-En ce qui concerne les codes \textsf{python}, il faudra :
+En ce qui concerne les codes \textsf{librairies}, il faudra :
 
 \begin{itemize}
-	\item compiler en chaîne \textsf{(xxx)latex + pythontex + (xxx)latex} pour les environnements avec \ctex{pythontex} ;
-	\item compiler avec  \textsf{shell-escape} (ou \textsf{write18}) pour les environnements avec \ctex{minted}.
+	\item \clib{pythontex} : compiler en chaîne \textsf{(xxx)latex + pythontex + (xxx)latex} ;
+	\item \clib{minted} : compiler avec \textsf{shell-escape} (ou \textsf{write18}) ;
+	\item \clib{piton} : compiler en \hologo{LuaLaTeX} et \textsf{shell-escape} (ou \textsf{write18}).
 \end{itemize}
 \end{codeinfo}
-
-\begin{codeattention}
-Certains commandes ou environnements nécessitent une compilation spécifique, qui sera indiquée clairement dans la documentation !
-\end{codeattention}
 
 \subsection{Problèmes éventuels\ldots}
 
@@ -510,8 +514,6 @@ En dehors de cela, ce sont des tests multiples et variés qui permettront de dé
 ~
 
 \vfill
-
-%\hfill{\Huge $\leftrightsquigarrow$ Bonne(s) découverte(s) $\leftrightsquigarrow$}\hfill~
 
 \hfill\tikz \draw (0,0) node[above right=0pt,inner sep=0pt,outer sep=0pt,rotate=25,scale=4] {$\leftrightsquigarrow$ Bonne(s) découverte(s) $\leftrightsquigarrow$} ;\hfill~
 
@@ -556,7 +558,7 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \TangenteTikz[options]{liste}
 
 %schémas pour le signe affine/trinôme, dans un environnement tikz
-\MiniSchemaSignes(*)[clés]<options tikzpicture>
+\MiniSchemaSignes(*)[clés]<options tikz>
 \MiniSchemaSignesTkzTab[options]{numligne}[échelle][décalage horizontal]
 \end{codetex}
 
@@ -567,12 +569,13 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 
 %présentation de code Python
 \begin{CodePythonLst}(*)[largeur]{commandes tcbox}...\end{CodePythonLst}
+%:=librairie piton
 \begin{CodePiton}[options]...\end{CodePiton}
-\begin{CodePythontex}[options]...\end{CodePythontex}    %avec l'option [pythontex]
-\begin{CodePythonMinted}(*)[largeur][options]...\end{CodePythonMinted}
-
-%console Python avec l'option [pythontex]
+%:=librairie pythontex
+\begin{CodePythontex}[options]...\end{CodePythontex}
 \begin{ConsolePythontex}[options]...\end{ConsolePythontex}
+%:=librairie minted
+\begin{CodePythonMinted}(*)[largeur][options]...\end{CodePythonMinted}
 
 %présentation de pseudocode
 \begin{PseudoCode}(*)[largeur][options]...\end{PseudoCode}
@@ -856,7 +859,9 @@ On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.
 On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$ sur l'intervalle $\left[3;5\right]$.
 
 \ResolutionApprochee[Intervalle=3:5]{log(x)=1.5}[SolLn]
-\SolutionTVI[Balayage,Stretch=1.5,va={\SolLnd},vb={\SolLne},NomFct=g,Precision=4,NomSol={x_0}]{log(x)}{1.5}.
+\SolutionTVI%
+	[Balayage,Stretch=1.5,va={\SolLnd},vb={\SolLne},
+	NomFct=g,Precision=4,NomSol={x_0}]{log(x)}{1.5}.
 \end{codetex}
 
 \begin{codeinfo}
@@ -975,7 +980,7 @@ on obtient le tableau de valeurs suivant :
 \begin{tabular}{c|c}
 	$n$ & $u_n$ \\ \hline
 	1 & 2 \\
-	\xintFor* #1 in {\xintSeq{2}{8}} \do {#1 & \CalculTermeRecurrence[No=1,UNo=2,N=#1]{1+(1+x**2)/(1+x)} \\}
+	\xintFor* #1 in {\xintSeq{2}{7}} \do {#1 & \CalculTermeRecurrence[No=1,UNo=2,N=#1]{1+(1+x**2)/(1+x)} \\}
 \end{tabular}\\
 
 \SolutionSeuil[Precision=4,No=1,UNo=2,Simple]{1+(1+x**2)/(1+x)}{10} (Ainsi $u_n > 10$ à partir de $n=\the\CompteurSeuil$)
@@ -1626,7 +1631,7 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 \begin{codeidee}
 L'idée est d'obtenir une commande pour tracer (en \TikZ) un petit schéma pour \textit{visualiser} le signe d'une fonction affine ou d'un trinôme.
 
-Le code est très largement inspiré de celui du package \ctex{tnsana} même si la philosophie est légèrement différente.
+Le code est largement inspiré de celui du package \ctex{tnsana} même si la philosophie est un peu différente.
 
 \smallskip
 
@@ -1645,9 +1650,7 @@ Comme pour les autres commandes \TikZ, l'idée est de laisser la possibilité à
 
 \begin{codetex}[listing only]
 \begin{tikzpicture}[<options>]
-	...
 	\MiniSchemaSignes[clés]
-	...
 \end{tikzpicture}
 \end{codetex}
 
@@ -1662,7 +1665,7 @@ Comme pour les autres commandes \TikZ, l'idée est de laisser la possibilité à
 
 \smallskip
 
-Le premier argument, \textit{optionnel} et entre \ctex{[...]}, contient les \Cle{Clés} sont disponibles pour cette commande :
+Le premier argument, \textit{optionnel} et entre \textsf{[...]}, contient les \Cle{Clés} sont disponibles pour cette commande :
 
 \begin{itemize}
 	\item la clé \Cle{Code} qui permet de définir le type d'expression (voir en-dessous) ;\hfill{}défaut \Cle{da+}
@@ -1673,7 +1676,7 @@ Le premier argument, \textit{optionnel} et entre \ctex{[...]}, contient les \Cle
 	\item un booléen \Cle{Cadre} qui affiche un cadre autour du schéma.\hfill{}défaut \Cle{true}
 \end{itemize}
 
-Le second argument, \textit{optionnel} et entre \ctex{<...>}, permet de spécifier (pour la commande \textit{étoilée}), des options à passer à l'environnement \ctex{tikzpicture}.
+Le second argument, \textit{optionnel} et entre \textsf{<...>}, permet de spécifier (pour la commande \textit{étoilée}), des options à passer à l'environnement \ctex{tikzpicture}.
 \end{codecles}
 
 \begin{codecles}
@@ -1840,7 +1843,7 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 		\item la clé \Cle{No} qui est l'indice initial ;\hfill{}défaut \Cle{0}
 		\item la clé \Cle{Uno} qui est la valeur du terme initial ;\hfill{}défaut \Cle{vide}
 		\item la clé \Cle{Nb} qui est le nombre de termes à construire ;\hfill{}défaut \Cle{5}
-		\item la clé \Cle{PosLabel} qui correspond au placement des labels par rapport à l'axe des abscisses ;\hfill{}défaut \Cle{below}
+		\item la clé \Cle{PosLabel} qui est le placement des labels par rapport à l'axe $(Ox)$ ;\hfill{}défaut \Cle{below}
 		\item la clé \Cle{DecalLabel} qui correspond au décalage des labels par rapport aux abscisses ;\hfill{}défaut \Cle{6pt}
 		\item la clé \Cle{TailleLabel} qui correspond à la taille des labels ;\hfill{}défaut \Cle{small}
 		\item un booléen \Cle{AffTermes} qui permet d'afficher les termes de la suite sur l'axe $(Ox)$.\hfill{}défaut \Cle{true}
@@ -2294,7 +2297,15 @@ def trace_parabole_tableaux():
 \subsection{Introduction}
 
 \begin{codeinfo}
-\cmaj{2.0.0} Le package \ctex{piton} (compatible uniquement avec une compilation en \LuaLaTeX{} !) permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
+\cmaj{2.5.0} Cette section nécessite de charger la \textsf{librairie} \clib{piton} dans le préambule.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\useproflyclib{piton}
+\end{codetex}
+
+\begin{codeinfo}
+\cmaj{2.0.0} La \textsf{librairie} \clib{piton} (qui charge \ctex{piton}, est compatible uniquement avec \hologo{LuaLaTeX} !) permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
 
 \smallskip
 
@@ -2302,24 +2313,23 @@ En \textit{partenariat} avec \ctex{tcolorbox}, on peut avoir une présentation d
 
 \smallskip
 
-\cmaj{2.0.2} Depuis la version \ctex{0.95} du package \ctex{piton}, \Cle{left-margin=auto} est disponible et activée dans \ctex{ProfLycee}.
+\cmaj{2.0.2} Depuis la version \ctex{0.95} de \ctex{piton}, \Cle{left-margin=auto} est disponible et activée dans \ctex{ProfLycee}.
 
-\cmaj{2.1.2} Depuis la version \ctex{0.99} du package \ctex{piton}, \Cle{break-lines} est disponible et activée dans \ctex{ProfLycee}.
+\cmaj{2.1.2} Depuis la version \ctex{0.99} de \ctex{piton}, \Cle{break-lines} est disponible et activée dans \ctex{ProfLycee}.
 
-\cmaj{2.1.3} Depuis la version \ctex{1.0} du package \ctex{piton}, \Cle{tabs-auto-gobble} est disponible et activée dans \ctex{ProfLycee}.
+\cmaj{2.1.3} Depuis la version \ctex{1.0} de \ctex{piton}, \Cle{tabs-auto-gobble} est disponible et activée dans \ctex{ProfLycee}.
 \end{codeinfo}
 
 \begin{codeattention}
-Le package \ctex{piton} nécessite donc obligatoirement l’emploi de \LuaLaTeX{} !
+Le package \ctex{piton} nécessite donc obligatoirement l’emploi de \hologo{LuaLaTeX} !
 
-\cmaj{2.0.1} Ce package n'est chargé que si la compilation détectée est en \LuaLaTeX{} !
+\cmaj{2.0.1} Ce package n'est chargé que si la compilation détectée est en \hologo{LuaLaTeX} !
 \end{codeattention}
 
 \subsection{Présentation de code Python}
 
 \begin{codetex}[listing only]
 \begin{CodePiton}[options]
-...
 ...
 \end{CodePiton}
 \end{codetex}
@@ -2333,7 +2343,7 @@ Plusieurs \Cle{clés} sont disponibles :
 
 \begin{itemize}
 	\item la clé booléenne \Cle{Lignes} pour afficher ou non les numéros de lignes ; \hfill{}défaut \Cle{true}
-	\item \cmaj{2.1.3} la clé booléenne \Cle{Gobble} pour activer les options liées au \textsf{gobble} (v1.0 du package !) ; \hfill{}défaut \Cle{true}
+	\item \cmaj{2.1.3} la clé booléenne \Cle{Gobble} pour activer les options liées au \textsf{gobble} ; \hfill{}défaut \Cle{true}
 	\item la clé \Cle{Largeur} qui correspond à la largeur de la \ctex{tcbox} ; \hfill{}défaut \Cle{\textbackslash linewidth}
 	\item la clé \Cle{TaillePolice} pour la taille des caractères ; \hfill{}défaut \Cle{\textbackslash footnotesize}
 	\item la clé \Cle{Alignement} qui paramètre l'alignement de la \ctex{tcbox}. \hfill{}défaut \Cle{center}
@@ -2366,34 +2376,21 @@ def arctan(x,n=10):
 \end{CodePiton}
 \end{codesortie}
 
-\pagebreak
-
 \begin{codetex}[listing only]
-\begin{CodePiton}[Lignes=false,Largeur=15cm]
-#sans numéro, de largeur 15cm
-def f(x) :
-	return x**2
-\end{CodePiton}
-
 \begin{CodePiton}[Alignement=flush right,Largeur=13cm]
-#avec numéros, de largeur 13cm, aligné à droite
 def f(x) :
 	return x**2
 \end{CodePiton}
 
 \begin{CodePiton}[Alignement=flush left,Largeur=11cm]
-#avec numéros, de largeur 11cm, aligné à gauche
 def f(x) :
 	return x**2
 \end{CodePiton}
 
-Avec des indentations d'environnement :
-
-\begin{itemize}
+\begin{itemize} %Avec des indentations d'environnement :
 	\item On essaye avec un \texttt{itemize} :
 	
-	\begin{CodePiton}[Largeur=7cm]
-		#avec numéros, de largeur 7cm, centré
+	\begin{CodePiton}[Largeur=9cm]
 		def f(x) :
 			return x**2
 	\end{CodePiton}
@@ -2401,12 +2398,6 @@ Avec des indentations d'environnement :
 \end{codetex}
 
 \begin{codesortie}
-\begin{CodePiton}[Lignes=false,Largeur=15cm]
-#sans numéro, de largeur 15cm
-def f(x) :
-	return x**2
-\end{CodePiton}
-
 \begin{CodePiton}[Alignement=flush right,Largeur=13cm]
 #avec numéros, de largeur 13cm, aligné à droite
 def f(x) :
@@ -2422,8 +2413,8 @@ def f(x) :
 \begin{itemize}
 	\item On essaye avec un \texttt{itemize} :
 	
-	\begin{CodePiton}[Largeur=7cm]
-		#avec numéros, de largeur 7cm, centré
+	\begin{CodePiton}[Largeur=9cm]
+		#avec numéros, de largeur 9cm, centré
 		def f(x) :
 			return x**2
 	\end{CodePiton}
@@ -2434,10 +2425,23 @@ def f(x) :
 
 \section{Code \& Console Python, via les packages Pythontex ou Minted}
 
+\subsection{Librairies}
+
+\begin{codeinfo}
+\cmaj{2.5.0} Cette section nécessite de charger les librairies \clib{minted} et/ou \clib{pythontex} dans le préambule.
+\end{codeinfo}
+
+\begin{codetex}[listing only]
+\useproflyclib{minted}
+\useproflyclib{pythontex}
+%ou
+\useproflyclib{minted,pythontex}
+\end{codetex}
+
 \subsection{Introduction}
 
 \begin{codeidee}
-Le {package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
+\cmaj{2.5.0} La \textsf{librairie} \clib{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
 
 \begin{itemize}
 	\item présenter du code Python ;
@@ -2448,8 +2452,6 @@ Le {package} \ctex{pythontex} permet d'insérer et d'exécuter du code Python. O
 
 \begin{codeattention}
 \textbf{Attention : }il faut dans ce cas une compilation en plusieurs étapes, comme par exemple \textsf{pdflatex puis pythontex puis pdflatex} !
-
-\cmaj{2.1.0} Il faut de plus penser à charger le package avec l'option \Cle{pythontex}.
 
 Voir par exemple \url{http://lesmathsduyeti.fr/fr/informatique/latex/pythontex/} !
 \end{codeattention}
@@ -2520,6 +2522,8 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 
 \begin{codeinfo}
 Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment Python.
+
+\cmaj{2.5.0} C'est donc la \textsf{librairie} \clib{minted} qu'il faudra charger.
 \end{codeinfo}
 
 \begin{codeattention}
@@ -2537,8 +2541,8 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
-	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
-	\item le second argument optionnel concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+	\item le 1\up{er} argument \textit{optionnel} concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
+	\item le 2\up{nd} argument \textit{optionnel} concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcbox}.\hfill{}défaut \Cle{vide}
 \end{itemize}
 \end{codecles}
 
@@ -2577,11 +2581,9 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \subsection{Console d'exécution Python}
 
 \begin{codeidee}
-\ctex{pythontex} permet également de \textit{simuler} (en exécutant également !) du code python dans une \textit{console}.
+\ctex{pythontex} permet également de \textit{simuler} (en exécutant également !) du code python dans une \textit{console}, avec la \textsf{librairie} \clib{pythontex} du coup !
 
 C'est l'environnement \ctex{ConsolePythontex} qui permet de le faire.
-
-\cmaj{2.1.0} Il ne faut donc pas oublier de charger le package \ctex{ProfLycee} avec l'option \Cle{pythontex}.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -3444,7 +3446,7 @@ L'idée est que cette macro calcule et stocke les paramètres dans des variables
 	\item en calculs \textit{purs} ;
 	\item dans un environnement \TikZ{} via \textsf{pgfplots} ou bien en \textit{natif} ;
 	\item dans un environnement \PSTricks{} ;
-	\item dans un environnement \METAPOST{} (à vérifier quand même) ;
+	\item dans un environnement \hologo{METAPOST} (à vérifier quand même) ;
 	\item \ldots
 \end{itemize}
 \end{codeidee}
@@ -3860,14 +3862,14 @@ Cette commande permet de tracer une grille principale et/ou une grille secondair
 
 \begin{codetex}[listing only]
 \begin{tikzpicture}%
-	[x=0.35cm,y=0.07cm,%
+	[x=0.3cm,y=0.06cm,%
 	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
 	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\GrilleTikz
 \end{tikzpicture}
 ~~
 \begin{tikzpicture}%
-	[x=0.35cm,y=0.07cm,%
+	[x=0.3cm,y=0.06cm,%
 	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
 	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\GrilleTikz[Affp=false][][orange,densely dotted]
@@ -3877,14 +3879,14 @@ Cette commande permet de tracer une grille principale et/ou une grille secondair
 \begin{codesortie}
 \hfill~
 \begin{tikzpicture}%
-	[x=0.35cm,y=0.07cm,%
+	[x=0.3cm,y=0.06cm,%
 	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
 	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\GrilleTikz
 \end{tikzpicture}
 ~~
 \begin{tikzpicture}%
-	[x=0.35cm,y=0.07cm,%
+	[x=0.3cm,y=0.06cm,%
 	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
 	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\GrilleTikz[Affp=false][][orange,densely dotted]
@@ -3929,14 +3931,14 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 \begin{codesortie}
 \hfill~
 \begin{tikzpicture}%
-	[x=0.35cm,y=0.07cm,%
+	[x=0.3cm,y=0.06cm,%
 	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
 	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\AxesTikz
 \end{tikzpicture}
 ~~
 \begin{tikzpicture}%
-	[x=0.35cm,y=0.07cm,%
+	[x=0.3cm,y=0.06cm,%
 	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
 	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\AxesTikz%
@@ -4030,7 +4032,7 @@ Il existe, de manière marginale, quelques commandes complémentaires qui ne ser
 %	\PLorigine[<options>]
 %\end{codetex}
 
-\subsection{Interactions avec PLreglin}
+\subsection{Interactions avec CalculsRegLin}
 
 \begin{codetex}[listing only]
 %...code tikz
@@ -4094,8 +4096,8 @@ Cette commande permet de rajouter le point moyen du nuage, calculé par la comma
 	\item \Cle{Taille}, taille du point moyen ; \hfill~défaut \Cle{4pt}
 	\item \Cle{Couleur}, couleur du point moyen ; \hfill~défaut \Cle{red}
 	\item \Cle{Style} parmi \Cle{o} (rond) ou \Cle{x} (croix) ou \Cle{+} (plus) ; \hfill~défaut \Cle{o}
-	\item \Cle{xg}, abscisse du point moyen, récupérable via \ctex{PLRegLin} ; \hfill~défaut \Cle{\textbackslash{}LXmoy}
-	\item \Cle{yg}, ordonnée du point moyen, récupérable via \ctex{PLRegLin} ; \hfill~défaut \Cle{\textbackslash{}LYmoy}
+	\item \Cle{xg}, abscisse du point moyen, récupérable via \ctex{CalculsRegLin} ; \hfill~défaut \Cle{\textbackslash{}LXmoy}
+	\item \Cle{yg}, ordonnée du point moyen, récupérable via \ctex{CalculsRegLin} ; \hfill~défaut \Cle{\textbackslash{}LYmoy}
 	\item \Cle{Nom}, label du point moyen ; \hfill~défaut \Cle{G}
 	\item \Cle{Pos} qui est la position du label par rapport au point ; \hfill~défaut \Cle{above}
 	\item \Cle{Decal} qui est l'éloignement de la position du label par rapport au point ; \hfill~défaut \Cle{0pt}
@@ -4971,6 +4973,7 @@ Peu de paramétrage pour ces commandes qui permettent de calculer $A_n^p$ et $C_
 
 \begin{itemize}
 	\item les versions étoilées ne formatent pas le résultat grâce à \ctex{\textbackslash num} de \ctex{sinuitx} ;
+	\item le booléen \Cle{Notation} pour avoir la notation au début ; \hfill~défaut \Cle{false}
 	\item le booléen \Cle{Formule} permet de présenter la formule avant le résultat ; \hfill~défaut \Cle{false}
 	\item le premier argument, \textit{obligatoire}, est la valeur de $p$ ;
 	\item le second argument, \textit{obligatoire}, est la valeur de $n$.
@@ -4978,19 +4981,21 @@ Peu de paramétrage pour ces commandes qui permettent de calculer $A_n^p$ et $C_
 \end{codecles}
 
 \begin{codetex}[]
-On a $A_{20}^3=\Arrangement*{3}{20}$ en non formaté, et $A_{20}^3=\Arrangement{3}{20}$ en formaté.
+On a $A_{20}^3=\Arrangement*{3}{20}$ en non formaté,
+et $\Arrangement[Notation]{3}{20}$ en formaté avec la notation au début.
 \end{codetex}
 
 \begin{codetex}[]
-On a $C_{20}^3=\Combinaison*{3}{20}$ en non formaté, et $C_{20}^3=\Combinaison{3}{20}$ en formaté.
+On a $\displaystyle\binom{20}{3}=\Combinaison*{3}{20}$ en non formaté,~
+et $\displaystyle\Combinaison[Notation]{3}{20}$ en formaté avec la notation au début.
 \end{codetex}
 
 \begin{codetex}[]
-On a $A_{20}^3=\Arrangement[Formule]{3}{20}$.
+On a $\displaystyle\Arrangement[Notation,Formule]{3}{20}$.
 \end{codetex}
 
 \begin{codetex}[]
-On a $C_{20}^3=\displaystyle\Combinaison[Formule]{3}{20}$.
+On a $\displaystyle\Combinaison[NotationAncien,Formule]{3}{20}$. %ancienne notation FR
 \end{codetex}
 
 \newpage
@@ -6217,6 +6222,10 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
+{\small \bverb|v 2.5.0|~:~~~~Système de \textsf{librairies} pour certains packages/commandes (page \pageref{librairies})
+
+{\small \bverb|v 2.2.0|~:~~~~Ajout d'une clé \Cle{Notation} pour les arrangements et combinaisons (page \pageref{combinatoire})
+
 {\small \bverb|v 2.1.9|~:~~~~Correction d'un bug (et ajout d'une version étoilée) pour les petits schémas \og de signe \fg{} (page \pageref{aidesigne})
 
 {\small \bverb|v 2.1.8|~:~~~~Suppression des commandes de PixelArt, désormais dans le package \textsf{PixelArtTikz}
@@ -6257,13 +6266,13 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v 2.0.2|~:~~~~Option \textsf{left-margin=auto} pour le package \textsf{piton} (page \pageref{pythonpiton})
 
-{\small \bverb|v 2.0.1|~:~~~~Chargement du package \textsf{piton} uniquement si compilation en \LuaLaTeX{} (page \pageref{pythonpiton})
+{\small \bverb|v 2.0.1|~:~~~~Chargement du package \textsf{piton} uniquement si compilation en \hologo{LuaLaTeX} (page \pageref{pythonpiton})
 
 {\small \bverb|v 2.0.0|~:~~~~Refonte du code source avec modification des commandes, et de la documentation}
 
 \hrulefill
 
-{\small \bverb|v 1.3.7|~:~~~~Commandes pour du code python via piton, en compilation \LuaLaTeX{} (page \pageref{pythonpiton})
+{\small \bverb|v 1.3.7|~:~~~~Commandes pour du code python via piton, en compilation \hologo{LuaLaTeX} (page \pageref{pythonpiton})
 
 {\small \bverb|       |~:~~~~Corrections et modifications mineures de la documentation
 
