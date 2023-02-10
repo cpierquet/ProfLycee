@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/02/08 2.5.0 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/02/08 2.5.1 Aide pour l'utilisation de LaTeX en lycee]
+% 2.5.1	Modification de la commande de conversion en fraction
 % 2.5.0	Passage à des libraires via \useproflyclib
 % 2.2.0	Ajout de clés [Notation] pour les arrangements et combinaisons
 % 2.1.9	Correction d'un bug avec les MiniSchémas + version étoilée
@@ -50,6 +51,7 @@
 \RequirePackage{tabularray}
 \RequirePackage{hologo}
 \RequirePackage{fancyvrb}
+\RequirePackage{nicefrac}
 \RequirePackage{siunitx} %test avec v3
 \sisetup{%
 	locale=FR,output-decimal-marker={,},%
@@ -807,16 +809,87 @@
 		{\left\lbrace \PLensopt{} \StrSubstitute{#2}{/}{{\PLenssep}} \right\rbrace}
 }
 
-%%------SimplFrac
-\DeclareDocumentCommand\ConversionFraction{ O{} m }{% argument optionnel [d ou t] puis argument mandataire {calcul ou fraction}
-	\def\calculargument{\xintPRaw{\xintIrr{\xinteval{#2}}}}%on calcule et on transforme en A/B
+%%------SimplFrac ancienne version
+%\DeclareDocumentCommand\ConversionFraction{ O{} m }{% argument optionnel [d ou t] puis argument mandataire {calcul ou fraction}
+%	\def\calculargument{\xintPRaw{\xintIrr{\xinteval{#2}}}}%on calcule et on transforme en A/B
+%	\IfSubStr{\calculargument}{/}%on teste si le symbole / apparaît
+%	{%si oui := fraction
+%		\StrBefore{\calculargument}{/}[\numerateur]%on extrait le numérateur
+%		\StrBehind{\calculargument}{/}[\denominateur]%on extrait le dénominateur
+%		\ifblank{#1}{\ensuremath{\frac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'argument optionnel est vide
+%		\IfStrEq{#1}{d}{\ensuremath{\dfrac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'arg opt est d
+%		\IfStrEq{#1}{t}{\ensuremath{\tfrac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'arg opt est t
+%	}{%si non := entier
+%		\num{\calculargument}%on affiche l'entier, avec le package siunitx
+%	}%
+%}
+
+%%------SimplFrac nouvelle version
+\NewDocumentCommand\ConversionFraction{ s O{} m }{%
+	%*=moins sur le numérateur
+	%2=argument.optionnel[d/t/dec=...]
+	%3=argument mandataire {calcul ou fraction}
+	\def\calculargument{\xintPRaw{\xintIrr{\xinteval{#3}}}}%on calcule et on transforme en A/B
 	\IfSubStr{\calculargument}{/}%on teste si le symbole / apparaît
 	{%si oui := fraction
 		\StrBefore{\calculargument}{/}[\numerateur]%on extrait le numérateur
 		\StrBehind{\calculargument}{/}[\denominateur]%on extrait le dénominateur
-		\ifblank{#1}{\ensuremath{\frac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'argument optionnel est vide
-		\IfStrEq{#1}{d}{\ensuremath{\dfrac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'arg opt est d
-		\IfStrEq{#1}{t}{\ensuremath{\tfrac{\num{\numerateur}}{\num{\denominateur}}}}{}%si l'arg opt est t
+		\ifblank{#2}%
+		{%
+			\IfBooleanTF{#1}%
+			{\ensuremath{\frac{\num{\numerateur}}{\num{\denominateur}}}}%
+			{%
+				\ifthenelse{\numerateur < 0}%
+					{\ensuremath{-\frac{\num{\fpeval{abs(\numerateur)}}}{\num{\denominateur}}}}%
+					{\ensuremath{\frac{\num{\numerateur}}{\num{\denominateur}}}}%
+			}%
+		}%
+		{}%si l'argument optionnel est vide
+		\IfStrEq{#2}{d}%
+		{%
+			\IfBooleanTF{#1}%
+			{\ensuremath{\dfrac{\num{\numerateur}}{\num{\denominateur}}}}%
+			{%
+				\ifthenelse{\numerateur < 0}%
+					{\ensuremath{-\dfrac{\num{\fpeval{abs(\numerateur)}}}{\num{\denominateur}}}}%
+					{\ensuremath{\dfrac{\num{\numerateur}}{\num{\denominateur}}}}%
+			}%
+		}%
+		{}%si l'argument optionnel est vide
+		\IfStrEq{#2}{t}%
+		{%
+			\IfBooleanTF{#1}%
+			{\ensuremath{\tfrac{\num{\numerateur}}{\num{\denominateur}}}}%
+			{%
+				\ifthenelse{\numerateur < 0}%
+					{\ensuremath{-\tfrac{\num{\fpeval{abs(\numerateur)}}}{\num{\denominateur}}}}%
+					{\ensuremath{\tfrac{\num{\numerateur}}{\num{\denominateur}}}}%
+			}%
+		}%
+		{}%si l'argument optionnel est vide
+		\IfStrEq{#2}{n}%
+		{%
+			%\IfBooleanTF{#1}%
+			{\ensuremath{\nicefrac{\num{\numerateur}}{\num{\denominateur}}}}%
+			%{%
+			%	\ifthenelse{\numerateur < 0}%
+			%		{\ensuremath{-\nicefrac{\num{\fpeval{abs(\numerateur)}}}{\num{\denominateur}}}}%
+			%		{\ensuremath{\nicefrac{\num{\numerateur}}{\num{\denominateur}}}}%
+			%}%
+		}%
+		{}%si l'argument optionnel est vide
+		\IfSubStr{#2}{dec}%on veut la forme décimale
+		{%
+			\IfSubStr{#2}{=}%si on rajoute une précision
+				{%
+					\StrBehind{#2}{=}[\precdecimal]%
+					\ensuremath{\num{\xintfloateval{round(#3,\precdecimal)}}}%
+				}%
+				{%
+					\ensuremath{\num{\xintfloateval{#3}}}%
+				}%
+		}%
+		{}%si l'argument optionnel est vide
 	}{%si non := entier
 		\num{\calculargument}%on affiche l'entier, avec le package siunitx
 	}%
