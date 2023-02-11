@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/02/08 2.5.1 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/02/11 2.5.2 Aide pour l'utilisation de LaTeX en lycee]
+% 2.5.2	Correction d'un dysfonctionnement avec tcolorbox 6.0 :-(
 % 2.5.1	Modification de la commande de conversion en fraction
 % 2.5.0	Passage à des libraires via \useproflyclib
 % 2.2.0	Ajout de clés [Notation] pour les arrangements et combinaisons
@@ -59,7 +60,7 @@
 	reset-math-version=false,reset-text-family=false,%
 	reset-text-series=false,reset-text-shape=false,%
 	text-family-to-math=true,text-series-to-math=true,%
-	group-minimum-digits=4
+	group-minimum-digits=4%
 }%
 \RequirePackage{fontawesome5}
 %librairies tikz
@@ -423,12 +424,12 @@
 	}
 }
 
-\DeclareTCBListing{CodePythonLst}{ s O{\linewidth} m }{% * off pour numéros de lignes + {largeur} + <options tcbox>
+\NewTCBListing{CodePythonLst}{ s O{\linewidth} m }{% * off pour numéros de lignes + {largeur} + <options tcbox>
 	\IfBooleanTF{#1}{stylepythonlstnolineos}{stylepythonlstlineos},
 	width=#2,#3
 }
 
-\NewTCBInputListing{\CodePythonLstFichier}{ s O{\linewidth} m m }{
+\NewTCBInputListing[]{\CodePythonLstFichier}{ s O{\linewidth} m m }{
 	\IfBooleanTF{#1}{stylepythonlstnolineos}{stylepythonlstlineos},
 	width=#2,#3,
 	listing file={#4}

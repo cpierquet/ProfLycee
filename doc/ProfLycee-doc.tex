@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.5.1}
-\def\PLdate{10 Février 2023}
+\def\PLversion{2.5.2}
+\def\PLdate{11 Février 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 \usepackage{lualatex-math}
@@ -6246,6 +6246,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.5.2|~:~~~~Correction d'un dysfonctionnement avec \textsf{tcolorbox 6.0}
 
 {\small \bverb|v 2.5.1|~:~~~~Ajout d'une version étoilée pour la conversion en fraction (page \pageref{convfrac})
 
