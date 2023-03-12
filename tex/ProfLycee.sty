@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/02/19 2.5.3 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/03/11 2.5.4 Aide pour l'utilisation de LaTeX en lycee]
+% 2.5.4	Amélioration des commandes de combinatoire avec calculs via xint (plus précis !)
 % 2.5.3	Modification des tests d'arguments dans les probas (macros autorisées)
 % 2.5.2	Correction d'un dysfonctionnement avec tcolorbox 6.0 :-(
 % 2.5.1	Modification de la commande de conversion en fraction
@@ -3380,29 +3381,37 @@
 }
 
 %%------aNp/Cnp
+\NewDocumentCommand\CalculAnp{ m m }{%avec et pour xint, p/n
+	pfactorial(#2-#1,#2)
+}
+
+\NewDocumentCommand\CalculCnp{ m m }{%avec et pour xint, p/n
+	binomial(#2,#1)
+}
+
 \setKVdefault[anpCnp]{%
 	Formule=false,%
 	Notation=false,%
 	NotationAncien=false
 }
-\NewDocumentCommand\Arrangement{ s O{} m m }{%
+\NewDocumentCommand\Arrangement{ s O{} m m }{%p/n
 	\useKVdefault[anpCnp]%
 	\setKV[anpCnp]{#2}%
 	\ifboolKV[anpCnp]{Notation}{A_{#4}^{#3}=}{}%
 	\ifboolKV[anpCnp]{Formule}{\frac{#4!}{\inteval{#4-#3}!}=}{}%
 	\IfBooleanTF{#1}%
-		{\fpeval{fact(#4)/fact(#4-#3)}}%non formaté
-		{\num{\fpeval{fact(#4)/fact(#4-#3)}}}%formaté
+		{\xinteval{\CalculAnp{#3}{#4}}}%non formaté
+		{\num{\xinteval{\CalculAnp{#3}{#4}}}}%formaté
 }
-\NewDocumentCommand\Combinaison{ s O{} m m }{%
+\NewDocumentCommand\Combinaison{ s O{} m m }{%p/n
 	\useKVdefault[anpCnp]%
 	\setKV[anpCnp]{#2}%
 	\ifboolKV[anpCnp]{Notation}{\binom{#4}{#3} =}{}%
 	\ifboolKV[anpCnp]{NotationAncien}{C_{#4}^{#3}=}{}%
 	\ifboolKV[anpCnp]{Formule}{\frac{#4!}{#3! \times \inteval{#4-#3}!}=}{}%
 	\IfBooleanTF{#1}%
-		{\fpeval{fact(#4)/(fact(#3)*fact(#4-#3))}}%non formaté
-		{\num{\fpeval{fact(#4)/(fact(#3)*fact(#4-#3))}}}%formaté
+		{\xinteval{\CalculCnp{#3}{#4}}}%non formaté
+		{\num{\xinteval{\CalculCnp{#3}{#4}}}}%formaté
 }
 
 \endinput

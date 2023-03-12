@@ -5,13 +5,14 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.5.3}
-\def\PLdate{19 Février 2023}
+\def\PLversion{2.5.4}
+\def\PLdate{11 Mars 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
-\usepackage{lualatex-math}
-\usepackage{luatexbase}
-\usepackage[math-style=french,bold-style=ISO]{fourier-otf}
+%\usepackage{lualatex-math}
+%\usepackage{luatexbase}
+\usepackage[math-style=french]{fourier-otf}
+%\setsansfont{Fira Sans}[Scale=MatchLowercase]
 \usepackage[lua]{tkz-euclide}
 \usepackage{tkz-tab}
 \tikzstyle{every picture}+=[remember picture]
@@ -753,7 +754,7 @@ $x_0 \approx \num[minimum-decimal-digits=2]{\masolutiona}$ arrondi à $10^{-2}$.
 Quelques explications sur les \Cle{clés} et sur les arguments :
 
 \begin{itemize}
-	\item la clé \Cle{Précision} qui permet de spécifier le nombre de chiffres après la virgule de la solution ; \hfill{}défaut \Cle{2}
+	\item la clé \Cle{Précision} pour le nombre de chiffres après la virgule de la solution ; \hfill{}défaut \Cle{2}
 	\item la clé (obligatoire !) \Cle{Intervalle} qui permet de préciser l'intervalle initial de recherche ;
 	\item la clé \Cle{Variable} qui permet de spécifier la variable de l'équation ;\hfill{}défaut \Cle{x}
 	\item l'argument \textit{obligatoire} est l'équation, sous la forme $f(\ldots)=k$ (ou $f(\ldots)$ pour $f(\ldots)=0$) ;
@@ -845,8 +846,9 @@ Avec $\varphi(t)=3t\,\rm{e}^{-0,5t+1}=5$,
 \end{codetex}
 
 \begin{codetex}[]
-On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.
-\SolutionTVI[Balayage,Stretch=1.5,va=4.48,vb=4.49,NomFct=g,Precision=4,NomSol={x_0}]{log(x)}{1.5}.
+On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.\\
+\SolutionTVI%
+	[Balayage,Stretch=1.5,va=4.48,vb=4.49,NomFct=g,Precision=4,NomSol={x_0}]{log(x)}{1.5}.
 \end{codetex}
 
 \subsection{Interaction avec la commande de résolution approchée}
@@ -2547,15 +2549,15 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \end{codecles}
 
 \begin{codetex}[listing only]
-\begin{CodePythonMinted}[12cm][center]
-	#environnement Python(minted) centré avec numéros, de largeur 12cm
+\begin{CodePythonMinted}[13cm][center]
+	#environnement Python(minted) centré avec numéros, de largeur 13cm
 	def f(x) :
 		return x**2
 \end{CodePythonMinted}
 \end{codetex}
 
 \begin{codesortie}
-\begin{CodePythonMinted}[12cm][center]
+\begin{CodePythonMinted}[13cm][center]
 	#environnement Python(minted) centré avec numéros
 	def f(x) :
 		return x**2
@@ -3323,14 +3325,14 @@ Les \Cle{Clés} pour cette possibilité sont :
 	~~~~
 	\begin{tikzpicture}
 		\CercleTrigo[%
-		AffAngles=false,AffValeurs=false,AffTraits=false,Rayon=2,Equationcos,cos=135,CouleurSol=orange]
+		AffAngles=false,AffValeurs=false,AffTraits=false,Rayon=2,Equationcos,cos=135, CouleurSol=orange]
 	\end{tikzpicture}
 	
 	\medskip
 	
 	\begin{tikzpicture}
 		\CercleTrigo[%
-		AffTraits=false,AffAngles=false,Rayon=2.75,Equationcos,cos=60,CouleurSol=purple,TailleVvaleurs=\tiny]
+		AffTraits=false,AffAngles=false,Rayon=2.5,Equationcos,cos=60,CouleurSol=purple, TailleValeurs=\tiny]
 	\end{tikzpicture}
 \end{center}
 \end{codetex}
@@ -3351,7 +3353,7 @@ Les \Cle{Clés} pour cette possibilité sont :
 	
 	\begin{tikzpicture}
 		\CercleTrigo[%
-		AffTraits=false,AffAngles=false,Rayon=2.75,Equationcos,cos=60,CouleurSol=purple,TailleVvaleurs=\tiny]
+		AffTraits=false,AffAngles=false,Rayon=2.5,Equationcos,cos=60,CouleurSol=purple,TailleValeurs=\tiny]
 	\end{tikzpicture}
 \end{center}
 \end{codesortie}
@@ -4251,16 +4253,20 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 	\item la clé \Cle{Moyenne} qui est la moyenne (optionnelle) de la série ;
 	\item la clé \Cle{Epaisseur} qui est l'épaisseur des traits de la boîte ; \hfill~défaut \Cle{thick}
 	\item la clé \Cle{Remplir} qui est la couleur de remplissage de la boîte ; \hfill~défaut \Cle{white}
-	\item le booléen \Cle{AffMoyenne} qui permet d'afficher ou non la moyenne (sous forme d'un point) ; \hfill~défaut \Cle{false}
+	\item le booléen \Cle{AffMoyenne} qui permet d'afficher ou non la moyenne (sous forme d'un point) ;
+	
+	\hfill~défaut \Cle{false}
 	\item le booléen \Cle{Pointilles} qui permet d'afficher des pointillés au niveau des paramètres ; \hfill~défaut \Cle{false}
-	\item le booléen \Cle{Valeurs} qui permet d'afficher les valeurs des paramètres au niveau des abscisses.\hfill~défaut \Cle{false}
+	\item le booléen \Cle{Valeurs} qui permet d'afficher les valeurs des paramètres au niveau des abscisses.
+	
+	\hfill~défaut \Cle{false}
 \end{itemize}
 \end{codecles}
 
 \begin{codetex}[]
 \begin{tikzpicture}
 	\BoiteMoustaches[Epaisseur=very thick,Moyenne=18.5,Couleur=blue,AffMoyenne,%
-	Pointilles,Valeurs,Hauteur=2.25,Elevation=2.75]{10/15/17/19/20}
+	Pointilles,Valeurs,Hauteur=2.25,Elevation=2]{10/15/17/19/20}
 \end{tikzpicture}
 \end{codetex}
 
@@ -4270,7 +4276,8 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 	\begin{tikzpicture}[x=0.1cm]
 		\BoiteMoustaches[Epaisseur=ultra thick,Couleur=blue]{100/150/170/190/200}
 		\BoiteMoustaches[Epaisseur=thin,Elevation=2.5,Couleur=red]{80/100/110/120/150}
-		\BoiteMoustaches[Elevation=4,Couleur=ForestGreen,Remplir=ForestGreen!25]{100/140/145/160/210}
+		\BoiteMoustaches%
+			[Elevation=4,Couleur=ForestGreen,Remplir=ForestGreen!25]{100/140/145/160/210}
 \end{tikzpicture}
 \end{center}
 \end{codetex}
@@ -4523,8 +4530,8 @@ Les commandes ne sont donc, dans ce cas, pas préfixées par \ctex{calc} :
 \BinomC(*)[prec]{n}{p}{a}{b}      %P(a<=X<=b)
 
 %loi de Poisson P (l)
-\PoissonP(*)[prec]{l}{k}            %P(X=k)
-\PoissonC(*)[prec]{l}{a}{b}         %P(a<=X<=b)
+\PoissonP(*)[prec]{l}{k}          %P(X=k)
+\PoissonC(*)[prec]{l}{a}{b}       %P(a<=X<=b)
 
 %loi géométrique G (p)
 \GeomP{p}{k}                      %P(X=k)
@@ -4535,7 +4542,7 @@ Les commandes ne sont donc, dans ce cas, pas préfixées par \ctex{calc} :
 \HypergeomC{N}{n}{m}{a}{b}        %P(a<=X<=b)
 
 %loi normale N(m,s)
-\NormaleC(*)[prec]{m}{s}{a}{b}       %P(a<=X<=b)
+\NormaleC(*)[prec]{m}{s}{a}{b}    %P(a<=X<=b)
 
 %loi exponentielle E(l)
 \ExpoC(*)[prec]{l}{a}{b}          %P(a<=X<=b)
@@ -4816,7 +4823,8 @@ Les commandes sont donc des environnements \TikZ, sans possibilité de \og rajou
 
 \begin{codetex}
 Avec centrage vertical sur l'axe des abscisses :
-\LoiNormaleGraphe[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>{1000}{100}{950}{*}
+\LoiNormaleGraphe
+	[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>{1000}{100}{950}{*}
 \end{codetex}
 
 \begin{codetex}
@@ -4832,7 +4840,8 @@ Avec centrage vertical :
 \medskip
 
 Avec centrage vertical sur l'axe des abscisses :
-\LoiExpoGraphe[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>{0.05}{*}{32}
+\LoiExpoGraphe
+	[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>{0.05}{*}{32}
 
 \medskip
 
@@ -4881,13 +4890,10 @@ Pour chacune des commandes, le ou les résultats sont stockés dans une \textsf{
 \begin{codetex}[]
 %nombre aléatoire entre 1 et 50, stocké dans \PremierNbAlea
 Entier entre 1 et 50 : \NbAlea{1}{50}{\PremierNbAlea}\PremierNbAlea
-
 %nombre aléatoire créé à partir du 1er, stocké dans \DeuxiemeNbAlea
 Entier à partir du précédent : \VarNbAlea{\DeuxiemeNbAlea}{\PremierNbAlea+randint(0,10)}\DeuxiemeNbAlea
-
 %nombre aléatoire décimal (au millième) entre 0 et 10+1 (exclus), stocké dans \PremierDecAlea
 Décimal entre 0 et $10,999\ldots$ : \NbAlea[3]{0}{10}{\PremierDecAlea}\PremierDecAlea
-
 %liste de 6 nombres, sans répétitions, entre 1 et 50
 Liste par défaut (6 entre 1 et 50) : \TirageAleatoireEntiers{\PremiereListeAlea}\PremiereListeAlea
 \end{codetex}
@@ -4949,12 +4955,13 @@ $\ListeKeno$
 \subsection{Idée}
 
 \begin{codeidee}
-L'idée est de proposer une commande pour calculer un arrangement ou une combinaison, en utilisant les capacités de calcul du package \ctex{xfp}.
+L'idée est de proposer une commande pour calculer un arrangement ou une combinaison, en utilisant les capacités de calcul du package \ctex{xint} (\cmaj{2.5.4}).
 \end{codeidee}
 
 \begin{codetex}[listing only]
 \Arrangement(*)[option]{p}{n}
 \Combinaison(*)[option]{p}{n}
+\CalculAnp{p}{n} ou \CalculCnp{p}{n} dans un calcul via \xinteval{...}
 \end{codetex}
 
 \subsection{Utilisation}
@@ -4978,7 +4985,8 @@ et $\Arrangement[Notation]{3}{20}$ en formaté avec la notation au début.
 
 \begin{codetex}[]
 On a $\displaystyle\binom{20}{3}=\Combinaison*{3}{20}$ en non formaté,~
-et $\displaystyle\Combinaison[Notation]{3}{20}$ en formaté avec la notation au début.
+et $\displaystyle\Combinaison[Notation]{3}{20}$ en formaté avec la notation au début.\\
+Et $\dbinom{20}{3}+\dbinom{20}{4} = \num{\xinteval{\CalculCnp{3}{20}+\CalculCnp{4}{20}}}$.
 \end{codetex}
 
 \begin{codetex}[]
@@ -5237,7 +5245,9 @@ Quelques options pour cette commande :
 	\item la clé \Cle{Couleur} pour la couleur du \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{red}
 	\item la clé \Cle{DecalH} pour gérer le décalage H du \og rectangle \fg{}, qui peut être donné soit sous la forme \Cle{Esp} ou soit sous la forme \Cle{espgauche/espdroite}; \hfill{}défaut \Cle{2pt}
 	\item la clé \Cle{DecalV} pour le décalage vertical du \og rectangle \fg{} ; \hfill{}défaut \Cle{3pt}
-	\item la clé \Cle{Noeud} pour le préfixe du nœud du premier et du dernier reste (pour utilisation en \TikZ) ; \hfill{}défaut \Cle{EEE}
+	\item la clé \Cle{Noeud} pour le préfixe du nœud du premier et du dernier reste (pour utilisation en \TikZ) ;
+	
+	\hfill{}défaut \Cle{EEE}
 	\item le booléen \Cle{Rect} pour afficher ou non le \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{true}
 	\item le booléen \Cle{CouleurRes} pour afficher ou non la conversion en couleur (identique au rectangle). \hfill{}défaut \Cle{false}
 \end{itemize}
@@ -5292,7 +5302,7 @@ On obtient donc \ConversionDepuisBaseDix[Couleur=ForestGreen,CouleurRes,Noeud=TE
 \begin{codeidee}
 L'idée est de proposer une \og présentation \fg{} de l'algorithme d'Euclide pour le calcul du PGCD de deux entiers.
 
-Le package \ctex{xintgcd} permet déjà de le faire, il s'agit ici de travailler sur la \textit{mise en forme} avec alignement des restes.
+Le package \ctex{xintgcd} permet déjà de le faire, il s'agit ici de travailler sur la \textit{mise en forme}.
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -5300,7 +5310,6 @@ Le package \ctex{xintgcd} permet déjà de le faire, il s'agit ici de travailler
 \end{codetex}
 
 \begin{codetex}[listing only]
-...
 \tikzstyle{every picture}+=[remember picture]
 ...
 \PresentationPGCD{150}{27}
@@ -5311,9 +5320,7 @@ Le package \ctex{xintgcd} permet déjà de le faire, il s'agit ici de travailler
 \end{codesortie}
 
 \begin{codeattention}
-La mise en valeur du dernier reste non nul est géré par du code \TikZ, en mode \ctex{overlay}, donc il faut bien penser à déclarer dans le préambule :
-
-\hspace{5mm}\ctex{\textbackslash{}tikzstyle\{every picture\}+=[remember picture]}
+La mise en valeur du dernier reste non nul est géré par du code \TikZ, en mode \ctex{overlay}, donc il faut bien penser à déclarer dans le préambule : \ctex{\textbackslash{}tikzstyle\{every picture\}+=[remember picture]}
 \end{codeattention}
 
 \subsection{Options et clés}
@@ -5325,10 +5332,14 @@ Quelques options disponibles pour cette commande :
 	\item la clé \Cle{Couleur} qui correspond à la couleur pour la mise en valeur ; \hfill{}défaut \Cle{red}
 	\item la clé \Cle{DecalRect} qui correspond à l'écartement du rectangle de mise en valeur ; \hfill{}défaut \Cle{2pt}
 	\item le booléen \Cle{Rectangle} qui gère l'affichage ou non du rectangle de mise ne valeur ; \hfill{}défaut \Cle{true}
-	\item la clé \Cle{Noeud} qui gère le préfixe du nom du nœud \TikZ{} du rectangle (pour exploitation ultérieure) ; \hfill{}défaut \Cle{FFF}
+	\item la clé \Cle{Noeud} qui gère le préfixe du nom du nœud \TikZ{} du rectangle (pour exploitation ultérieure) ;
+	
+	\hfill{}défaut \Cle{FFF}
 	\item le booléen \Cle{CouleurResultat} pour mettre ou non en couleur de PGCD ; \hfill{}défaut \Cle{false}
 	\item le booléen \Cle{AfficheConclusion} pour afficher ou non la conclusion ; \hfill{}défaut \Cle{true}
-	\item le booléen \Cle{AfficheDelimiteurs} pour afficher ou non les délimiteurs (accolade gauche et trait droit). \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{AfficheDelimiteurs} pour afficher ou non les délimiteurs (accolade gauche et trait droit).
+	
+	\hfill{}défaut \Cle{true}
 \end{itemize}
 
 \medskip
@@ -5592,7 +5603,7 @@ L'affichage des monômes est géré par le package \ctex{siunitx} et le tout est
 Quelques clés et options sont disponibles :
 
 \begin{itemize}
-	\item la clé booléenne \Cle{Alea} pour autoriser les coefficients aléatoires (voir plus bas pour la syntaxe) ;\hfill{}défaut \Cle{false}
+	\item la clé booléenne \Cle{Alea} pour autoriser les coefficients aléatoires ;\hfill{}défaut \Cle{false}
 	\item la clé booléenne \Cle{Anegatif} pour autoriser $a$ à être négatif.\hfill{}défaut \Cle{true}
 \end{itemize}
 \end{codecles}
@@ -5601,7 +5612,7 @@ Quelques clés et options sont disponibles :
 La clé \Cle{Alea} va modifier la manière de saisir les coefficients, il suffira dans ce cas de  préciser les bornes, sous la forme \ctex{valmin,valmax}, de chacun des coefficients. C'est ensuite le package \ctex{xfp} qui va se charger de générer les coefficients.
 \end{codeinfo}
 
-\begin{codetex}[sidebyside]
+\begin{codetex}[]
 Avec $a$ entre 1 et 5 (et signe aléatoire) puis $b$ entre $-2$ et 7 puis $c$ entre $-10$ et 20 :
 
 $f(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$\\
@@ -6237,6 +6248,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.5.4|~:~~~~Modification des calculs (via \textsf{xint}) en combinatoire (page \pageref{combinatoire})
 
 {\small \bverb|v 2.5.3|~:~~~~Modification du traitement des tests dans les arbres de probas (page \pageref{arbresprobas})
 
