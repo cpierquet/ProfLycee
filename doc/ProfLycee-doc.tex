@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.5.4}
-\def\PLdate{11 Mars 2023}
+\def\PLversion{2.5.6}
+\def\PLdate{31 Mars 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 %\usepackage{lualatex-math}
@@ -564,10 +564,6 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \end{codetex}
 
 \begin{codetex}[listing only]
-%présentation type calcul formel, dans un environnement tikz
-\CalculFormelParametres[options]
-\CalculFormelLigne[options]{commande}{résultat}
-
 %présentation de code Python
 \begin{CodePythonLst}(*)[largeur]{commandes tcbox}...\end{CodePythonLst}
 %:=librairie piton
@@ -581,6 +577,8 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %présentation de pseudocode
 \begin{PseudoCode}(*)[largeur][options]...\end{PseudoCode}
 \end{codetex}
+
+\pagebreak
 
 \begin{codetex}[listing only]
 %terminal OS
@@ -1193,7 +1191,15 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 	\item \Cle{HautGrad} qui est la position des graduations (sous la forme \Cle{lgt} ou \Cle{lgta/lgtb}) ; \hfill~défaut \Cle{4pt}
 	\item le booléen \Cle{AffGrad} pour afficher les valeurs (formatés avec \ctex{num} donc dépendant de \ctex{sisetup}) des graduations  ; \hfill~défaut \Cle{true}
 	\item le booléen \Cle{AffOrigine} pour afficher la graduation de l'origine ; \hfill~défaut \Cle{true}
-	\item le booléen \Cle{Annee} qui permet de ne pas formater les valeurs des graduations (type \textsf{année}). \hfill~défaut \Cle{false}
+	\item le booléen \Cle{Annee} qui permet de ne pas formater les valeurs des graduations (type \textsf{année}) ;
+	
+	\hfill~défaut \Cle{false}
+	\item \cmaj{2.5.6} le booléen \Cle{Trigo} (uniquement pour l'axe $(Ox)$) pour des graduations libres en radians ;
+	
+	\hfill~défaut \Cle{false}
+	\item \cmaj{2.5.6} le booléen \Cle{Dfrac} (uniquement pour l'axe $(Ox)$ en \Cle{Trigo}) pour forcer les fractions en \textit{grand}.
+	
+	\hfill~défaut \Cle{false}
 \end{itemize}
 \end{codecles}
 
@@ -1201,11 +1207,9 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 %code tikz
 \AxexTikz[Police=\small]{0,5,...,55}
 \AxeyTikz[Police=\small]{0,30,...,210}
-
 %code tikz
 \AxexTikz[Police=\small,HautGrad=0pt/4pt]{0,5,...,55}
 \AxeyTikz[AffGrad=false,HautGrad=6pt]{0,30,...,210}
-
 %des axes fictifs (en gris) sont rajoutés pour la lisibilité du code de sortie
 \end{codetex}
 
@@ -1232,6 +1236,34 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 \end{tikzpicture}
 \hfill~
 \end{codesortie}
+
+\begin{codetex}[listing only]
+\begin{tikzpicture}[x=2cm,y=1cm,xmin=0,xmax={2*pi},xgrille=0.5,xgrilles=0.25,
+		ymin=-1.15,ymax=1.15,ygrille=0.5,ygrilles=0.25]
+	\GrilleTikz \AxesTikz
+	\AxexTikz[Trigo]{{pi/6},{pi/4},{pi/3},{pi/2},{2*pi/3},{3*pi/4},{5*pi/6},pi,{7*pi/6},{5*pi/4}}
+	\CourbeTikz[thick,blue,samples=250]{cos(deg(\x))}{0:2*pi}
+\end{tikzpicture}
+\end{codetex}
+
+\begin{codesortie}
+\begin{tikzpicture}
+	[x=2cm,y=1cm,xmin=0,xmax={2*pi},xgrille=0.5,xgrilles=0.25,
+	ymin=-1.15,ymax=1.15,ygrille=0.5,ygrilles=0.25]
+	\GrilleTikz \AxesTikz
+	\AxexTikz[Trigo]{{pi/6},{pi/4},{pi/3},{pi/2},{2*pi/3},{3*pi/4},{5*pi/6},pi,{7*pi/6},{5*pi/4}}
+	\CourbeTikz[thick,blue,samples=250]{cos(deg(\x))}{0:2*pi}
+\end{tikzpicture}
+\end{codesortie}
+
+\begin{codeinfo}
+La clé \Cle{Trigo} utilise, en interne, une commande qui permet de \textit{transformer} les abscisses, données en langage \TikZ, en fraction en \LaTeX.
+\end{codeinfo}
+
+\begin{codetex}
+$\AffAngleRadian{0}$ \quad $\AffAngleRadian{pi}$ \quad $\AffAngleRadian{pi/4}$ \quad 
+$\AffAngleRadian{2*pi/3}$ \quad $\AffAngleRadian{-2*pi/3}$ \quad $\AffAngleRadian*{-2*pi/3}$
+\end{codetex}
 
 \subsection{Commandes annexes}
 
@@ -1267,7 +1299,7 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 \begin{itemize}
 	\item \Cle{optionnels} qui sont - en \TikZ{} - les paramètres du tracé ;
 	\item le premier \textit{obligatoire}, est - en langage \TikZ{} - l'expression de la fonction à tracer, donc avec \ctex{\textbackslash{}x} comme variable ;
-	\item le second \textit{obligatoire} est le domaine du tracé , sous la forme \ctex{valxmin:valxmax}.
+	\item le second \textit{obligatoire} est le domaine du tracé, sous la forme \ctex{valxmin:valxmax}.
 \end{itemize}
 \end{codecles}
 
@@ -1297,20 +1329,15 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 \subsection{Repère non centré en O}
 
 \begin{codeidee}
-Parfois on est amené à travailler dans des repères qui n'ont pas forcément pour origine $(0\,;\,0)$. De ce fait - pour éviter des erreurs de \ctex{dimension too large} liées à \TikZ{} - il faut \textit{décaler les axes} pour se ramener à une origine en $O$.
-
-\smallskip
-
-L'idée est donc d'utiliser les commandes précédentes, sans se soucier des éventuelles translations à effectuer !
+Parfois on est amené à travailler dans des repères qui n'ont pas forcément pour origine $(0\,;\,0)$. De ce fait - pour éviter des erreurs de \ctex{dimension too large} liées à \TikZ{} - il faut \textit{décaler les axes} pour se ramener à une origine en $O$. L'idée est donc d'utiliser les commandes précédentes, sans se soucier des éventuelles transformations !
 \end{codeidee}
 
 \begin{codetex}[]
 \begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2010,%
 	xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1710,ygrille=10,ygrilles=5]
-	\FenetreSimpleTikz<Annee,Police=\small>{1992,1994,...,2008}{1640,1650,...,1700}
+	\FenetreSimpleTikz<Annee,Police=\scriptsize>{1992,1994,...,2008}{1640,1650,...,1700}
 	\FenetreTikz
-	\CourbeTikz%
-		[line width=1.25pt,orange,samples=500]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
+	\CourbeTikz[line width=1.25pt,orange,samples=500]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
 \end{tikzpicture}
 \end{codetex}
 
@@ -1986,128 +2013,128 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 
 \part{Présentation de codes}
 
-\section{L'outil \og Calcul Formel \fg}
-
-\subsection{Introduction}
-
-\begin{codeidee}
-L'idée des commandes suivantes est de définir, dans un environnement \TikZ, une présentation proche de celle d'un logiciel de calcul formel comme \textsf{XCas} ou \textsf{Geogebra}.
-
-\smallskip
-
-Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{captures d'écran} de logiciel de calcul formel, l'idée est ici de reproduire, de manière autonome, une telle présentation.
-
-\smallskip
-
-À la manière du {package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes sont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
-\end{codeidee}
-
-\subsection{La commande \og CalculFormelParametres \fg}
-
-\begin{codeinfo}
-La première chose à définir est l'ensemble des paramètres \textit{globaux} de la fenêtre de calcul formel, à l'aide de \Cle{Clés}.
-\end{codeinfo}
-
-\begin{codetex}[listing only]
-...
-\begin{tikzpicture}[...]
-	\CalculFormelParametres[options]
-	...
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codecles}
-Les \Cle{Clés} disponibles sont :
-\begin{itemize}
-	\item \Cle{Largeur} : largeur de l'environnement ; \hfill{}défaut \Cle{16}
-	\item \Cle{EspaceLg} : espacement vertical entre les lignes ;\hfill{}défaut \Cle{2pt}
-	\item \Cle{PremCol} \& \Cle{HautPremCol} : largeur et hauteur de la case du \textit{petit numéro} ;\hfill{}défaut \Cle{0.3} \&  \Cle{0.4}
-	\item \Cle{Taille} : taille du texte ;\hfill{}défaut \Cle{\textbackslash normalsize}
-	\item \Cle{Couleur} : couleur des traits de l'environnement ;\hfill{}défaut \Cle{darkgray}
-	\item \Cle{Titre} : booléen pour l'affichage d'un bandeau de titre ;\hfill{}défaut \Cle{false}
-	\item \Cle{TailleTitre} : taille du titre ;\hfill{}défaut \Cle{\textbackslash normalsize}
-	\item \Cle{PosCmd} : position horizontale de la commande d'entrée ;\hfill{}défaut \Cle{gauche}
-	\item \Cle{PosRes} : position horizontale de la commande de sortie ;\hfill{}défaut \Cle{centre}
-	\item \Cle{CouleurCmd} : couleur de la commande d'entrée ;\hfill{}défaut \Cle{red}
-	\item \Cle{CouleurRes} : couleur de la commande de sortie ;\hfill{}défaut \Cle{blue}
-	\item \Cle{Sep} : booléen pour l'affichage du trait de séparation E/S ;\hfill{}défaut \Cle{true}
-	\item \Cle{Menu} : booléen pour l'affichage du \textit{bouton} MENU ;\hfill{}défaut \Cle{true}
-	\item \Cle{LabelTitre} : libellé du titre.\hfill{}défaut \Cle{Résultats obtenus avec un logiciel de Calcul Formel}
-\end{itemize}
-\end{codecles}
-
-\subsection{La commande \og CalculFormelLigne \fg}
-
-\begin{codeinfo}
-Une fois les paramètres déclarés, il faut créer les différentes lignes, grâce à la \ctex{CalculFormelLigne}.
-\end{codeinfo}
-
-\begin{codetex}[listing only]
-\begin{tikzpicture}[...]
-	\CalculFormelParametres[options]
-	\CalculFormelLigne[options]{commande}{résultat}
-	...
-\end{tikzpicture}
-\end{codetex}
-
-\begin{codecles}
-Les (quelques) \Cle{Clés} disponibles sont :
-
-\begin{itemize}
-	\item \Cle{HautCmd} et \Cle{HautRes}: hauteur de la ligne de commande d'entrée et de sortie ;\hfill{}défaut \Cle{0.75}
-	\item deux \textsf{arguments}, celui de la commande d'entrée et celui de la commande de sortie.
-\end{itemize}
+%\section{L'outil \og Calcul Formel \fg}
 %
-Chaque argument \textsf{COMMANDE} \& \textsf{RÉSULTAT} peut être formaté (niveau police) de manière indépendante.
-\end{codecles}
-
-\begin{codetex}[tikz lower]
-%code tikz
-\CalculFormelParametres[Titre=true,CouleurCmd=olive,CouleurRes=orange]
-\CalculFormelLigne{COMMANDE 1}{RÉSULTAT 1}
-\CalculFormelLigne[HautCmd=0.75,HautRes=1]{\texttt{(x+1)\CFchap2}}{$\mathtt{x^2+2x+1}$}
-%\CFchap := ^ en mathtt
-\end{codetex}
-
-\subsection{Visualisation des paramètres}
-
-\begin{codeinfo}
-Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
-
-\begin{center}
-	\begin{tikzpicture}[x=0.7cm,y=0.5cm,line width=1pt]
-	\CalculFormelParametres[Largeur=12cm,Couleur=lightgray,EspaceLg=12pt,Menu=false]
-	\CalculFormelLigne{}{}
-	\CalculFormelLigne[HautCmd=1,HautRes=1.25]{}{}
-	%explications
-	\foreach \noeud in {01,11,21,31,41,51,02,12,22,32,42,52}
-		\draw[blue] (A\noeud) node[font=\footnotesize\ttfamily] {A\noeud} ;
-\end{tikzpicture}
-\end{center}
-
-\begin{center}
-	\begin{tikzpicture}[x=0.7cm,y=0.7cm,line width=1pt]
-	\CalculFormelParametres[Titre,Largeur=12cm,EspaceLg=10pt,PremCol=0.5,HautPremCol=0.7,Couleur=lightgray]
-	\CalculFormelLigne{COMMANDE 1}{RÉSULTAT 1}
-	\CalculFormelLigne[HautCmd=0.85,HautRes=1.05]{COMMANDE 2}{RÉSULTAT 2}
-	%explications
-	\draw[CadetBlue,<->,>=latex] ($(A22) + (0,-12pt)$) -- ($(A52) + (0,-12pt)$) node[midway,below,font=\footnotesize\sffamily] {\Cle{Largeur}} ;
-	\draw[CadetBlue,<->,>=latex] ($(A51) + (12pt,0)$) -- ($(A32) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{EsapceLg}} ;
-	\draw[CadetBlue,<->,>=latex] ($(A02) + (0,2pt)$) -- ($(A02) + (0,2pt) + ({-\CFpremcol},0) $) node[midway,above,font=\footnotesize\sffamily] {\Cle{PremCol}} ;
-	\draw[CadetBlue,<->,>=latex] ($(A02) + ({-\CFpremcol},0) + (-2pt,0)$) -- ($(A02) + ({-\CFpremcol},{-\CFhpremcol}) +(-2pt,0)$) node[midway,left,font=\footnotesize\sffamily] {\Cle{HautPremCol}} ;
-	\draw[CadetBlue,<->,>=latex] ($(A31) + (12pt,0)$) -- ($(A41) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautCom}} ;
-	\draw[CadetBlue,<->,>=latex] ($(A41) + (12pt,0)$) -- ($(A51) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautRes}} ;
-	\draw[CadetBlue,<->,>=latex] ($(A32) + (12pt,0)$) -- ($(A42) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautCom}} ;
-	\draw[CadetBlue,<->,>=latex] ($(A42) + (12pt,0)$) -- ($(A52) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautRes}} ;
-	\draw[CadetBlue,->,>=latex] ($(A12) + (0,-12pt)$) to[bend left=10] ($(A12) + (0,-12pt) + (-18pt,-12pt)$) node[below left,font=\footnotesize\sffamily] {\Cle{Couleur}} ;
-	\draw[CadetBlue,->,>=latex] ($(A52) + (-0.65,0.25)$) to[bend left=10] ($(A52) + (-0.65,0.25) + (-18pt,12pt)$) node[inner sep=0pt,above left=1pt,font=\footnotesize\sffamily] {\Cle{Menu}} ;
-	\draw[CadetBlue,->,>=latex] ($(A12) + (16pt,0)$) to[bend left=10] ($(A12) + (16pt,0) + (18pt,-12pt)$) node[inner sep=0pt,below right=1pt,font=\footnotesize\sffamily] {\Cle{Sep}} ;
-	\draw[CadetBlue,->,>=latex] ($(A01) + (8pt,2pt) + (0,1em)$) to[bend left=10] ($(A01) + (8pt,2pt) + (0,1em) + (-18pt,12pt)$) node[inner sep=0pt,above=1pt,font=\footnotesize\sffamily] {\Cle{Titre} \& \Cle{TailleTitre} \& \Cle{LabelTitre}} ;
-\end{tikzpicture}
-\end{center}
-\end{codeinfo}
-
-\newpage
+%\subsection{Introduction}
+%
+%\begin{codeidee}
+%L'idée des commandes suivantes est de définir, dans un environnement \TikZ, une présentation proche de celle d'un logiciel de calcul formel comme \textsf{XCas} ou \textsf{Geogebra}.
+%
+%\smallskip
+%
+%Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{captures d'écran} de logiciel de calcul formel, l'idée est ici de reproduire, de manière autonome, une telle présentation.
+%
+%\smallskip
+%
+%À la manière du {package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes sont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
+%\end{codeidee}
+%
+%\subsection{La commande \og CalculFormelParametres \fg}
+%
+%\begin{codeinfo}
+%La première chose à définir est l'ensemble des paramètres \textit{globaux} de la fenêtre de calcul formel, à l'aide de \Cle{Clés}.
+%\end{codeinfo}
+%
+%\begin{codetex}[listing only]
+%...
+%\begin{tikzpicture}[...]
+%	\CalculFormelParametres[options]
+%	...
+%\end{tikzpicture}
+%\end{codetex}
+%
+%\begin{codecles}
+%Les \Cle{Clés} disponibles sont :
+%\begin{itemize}
+%	\item \Cle{Largeur} : largeur de l'environnement ; \hfill{}défaut \Cle{16}
+%	\item \Cle{EspaceLg} : espacement vertical entre les lignes ;\hfill{}défaut \Cle{2pt}
+%	\item \Cle{PremCol} \& \Cle{HautPremCol} : largeur et hauteur de la case du \textit{petit numéro} ;\hfill{}défaut \Cle{0.3} \&  \Cle{0.4}
+%	\item \Cle{Taille} : taille du texte ;\hfill{}défaut \Cle{\textbackslash normalsize}
+%	\item \Cle{Couleur} : couleur des traits de l'environnement ;\hfill{}défaut \Cle{darkgray}
+%	\item \Cle{Titre} : booléen pour l'affichage d'un bandeau de titre ;\hfill{}défaut \Cle{false}
+%	\item \Cle{TailleTitre} : taille du titre ;\hfill{}défaut \Cle{\textbackslash normalsize}
+%	\item \Cle{PosCmd} : position horizontale de la commande d'entrée ;\hfill{}défaut \Cle{gauche}
+%	\item \Cle{PosRes} : position horizontale de la commande de sortie ;\hfill{}défaut \Cle{centre}
+%	\item \Cle{CouleurCmd} : couleur de la commande d'entrée ;\hfill{}défaut \Cle{red}
+%	\item \Cle{CouleurRes} : couleur de la commande de sortie ;\hfill{}défaut \Cle{blue}
+%	\item \Cle{Sep} : booléen pour l'affichage du trait de séparation E/S ;\hfill{}défaut \Cle{true}
+%	\item \Cle{Menu} : booléen pour l'affichage du \textit{bouton} MENU ;\hfill{}défaut \Cle{true}
+%	\item \Cle{LabelTitre} : libellé du titre.\hfill{}défaut \Cle{Résultats obtenus avec un logiciel de Calcul Formel}
+%\end{itemize}
+%\end{codecles}
+%
+%\subsection{La commande \og CalculFormelLigne \fg}
+%
+%\begin{codeinfo}
+%Une fois les paramètres déclarés, il faut créer les différentes lignes, grâce à la \ctex{CalculFormelLigne}.
+%\end{codeinfo}
+%
+%\begin{codetex}[listing only]
+%\begin{tikzpicture}[...]
+%	\CalculFormelParametres[options]
+%	\CalculFormelLigne[options]{commande}{résultat}
+%	...
+%\end{tikzpicture}
+%\end{codetex}
+%
+%\begin{codecles}
+%Les (quelques) \Cle{Clés} disponibles sont :
+%
+%\begin{itemize}
+%	\item \Cle{HautCmd} et \Cle{HautRes}: hauteur de la ligne de commande d'entrée et de sortie ;\hfill{}défaut \Cle{0.75}
+%	\item deux \textsf{arguments}, celui de la commande d'entrée et celui de la commande de sortie.
+%\end{itemize}
+%%
+%Chaque argument \textsf{COMMANDE} \& \textsf{RÉSULTAT} peut être formaté (niveau police) de manière indépendante.
+%\end{codecles}
+%
+%\begin{codetex}[tikz lower]
+%%code tikz
+%\CalculFormelParametres[Titre=true,CouleurCmd=olive,CouleurRes=orange]
+%\CalculFormelLigne{COMMANDE 1}{RÉSULTAT 1}
+%\CalculFormelLigne[HautCmd=0.75,HautRes=1]{\texttt{(x+1)\CFchap2}}{$\mathtt{x^2+2x+1}$}
+%%\CFchap := ^ en mathtt
+%\end{codetex}
+%
+%\subsection{Visualisation des paramètres}
+%
+%\begin{codeinfo}
+%Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
+%
+%\begin{center}
+%	\begin{tikzpicture}[x=0.7cm,y=0.5cm,line width=1pt]
+%	\CalculFormelParametres[Largeur=12cm,Couleur=lightgray,EspaceLg=12pt,Menu=false]
+%	\CalculFormelLigne{}{}
+%	\CalculFormelLigne[HautCmd=1,HautRes=1.25]{}{}
+%	%explications
+%	\foreach \noeud in {01,11,21,31,41,51,02,12,22,32,42,52}
+%		\draw[blue] (A\noeud) node[font=\footnotesize\ttfamily] {A\noeud} ;
+%\end{tikzpicture}
+%\end{center}
+%
+%\begin{center}
+%	\begin{tikzpicture}[x=0.7cm,y=0.7cm,line width=1pt]
+%	\CalculFormelParametres[Titre,Largeur=12cm,EspaceLg=10pt,PremCol=0.5,HautPremCol=0.7,Couleur=lightgray]
+%	\CalculFormelLigne{COMMANDE 1}{RÉSULTAT 1}
+%	\CalculFormelLigne[HautCmd=0.85,HautRes=1.05]{COMMANDE 2}{RÉSULTAT 2}
+%	%explications
+%	\draw[CadetBlue,<->,>=latex] ($(A22) + (0,-12pt)$) -- ($(A52) + (0,-12pt)$) node[midway,below,font=\footnotesize\sffamily] {\Cle{Largeur}} ;
+%	\draw[CadetBlue,<->,>=latex] ($(A51) + (12pt,0)$) -- ($(A32) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{EsapceLg}} ;
+%	\draw[CadetBlue,<->,>=latex] ($(A02) + (0,2pt)$) -- ($(A02) + (0,2pt) + ({-\CFpremcol},0) $) node[midway,above,font=\footnotesize\sffamily] {\Cle{PremCol}} ;
+%	\draw[CadetBlue,<->,>=latex] ($(A02) + ({-\CFpremcol},0) + (-2pt,0)$) -- ($(A02) + ({-\CFpremcol},{-\CFhpremcol}) +(-2pt,0)$) node[midway,left,font=\footnotesize\sffamily] {\Cle{HautPremCol}} ;
+%	\draw[CadetBlue,<->,>=latex] ($(A31) + (12pt,0)$) -- ($(A41) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautCom}} ;
+%	\draw[CadetBlue,<->,>=latex] ($(A41) + (12pt,0)$) -- ($(A51) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautRes}} ;
+%	\draw[CadetBlue,<->,>=latex] ($(A32) + (12pt,0)$) -- ($(A42) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautCom}} ;
+%	\draw[CadetBlue,<->,>=latex] ($(A42) + (12pt,0)$) -- ($(A52) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautRes}} ;
+%	\draw[CadetBlue,->,>=latex] ($(A12) + (0,-12pt)$) to[bend left=10] ($(A12) + (0,-12pt) + (-18pt,-12pt)$) node[below left,font=\footnotesize\sffamily] {\Cle{Couleur}} ;
+%	\draw[CadetBlue,->,>=latex] ($(A52) + (-0.65,0.25)$) to[bend left=10] ($(A52) + (-0.65,0.25) + (-18pt,12pt)$) node[inner sep=0pt,above left=1pt,font=\footnotesize\sffamily] {\Cle{Menu}} ;
+%	\draw[CadetBlue,->,>=latex] ($(A12) + (16pt,0)$) to[bend left=10] ($(A12) + (16pt,0) + (18pt,-12pt)$) node[inner sep=0pt,below right=1pt,font=\footnotesize\sffamily] {\Cle{Sep}} ;
+%	\draw[CadetBlue,->,>=latex] ($(A01) + (8pt,2pt) + (0,1em)$) to[bend left=10] ($(A01) + (8pt,2pt) + (0,1em) + (-18pt,12pt)$) node[inner sep=0pt,above=1pt,font=\footnotesize\sffamily] {\Cle{Titre} \& \Cle{TailleTitre} \& \Cle{LabelTitre}} ;
+%\end{tikzpicture}
+%\end{center}
+%\end{codeinfo}
+%
+%\newpage
 
 \section{Code Python \og simple \fg{} via le package listings}\label{pythonsimple}
 
@@ -6248,6 +6275,10 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.5.6|~:~~~~Ajout d'une clé \Cle{Trigo} pour l'axe $(Ox)$ (page \pageref{reperagetikz})
+
+{\small \bverb|v 2.5.5|~:~~~~Externalisation de la fenêtre XCas (dans la package \textsf{FentreCas})
 
 {\small \bverb|v 2.5.4|~:~~~~Modification des calculs (via \textsf{xint}) en combinatoire (page \pageref{combinatoire})
 

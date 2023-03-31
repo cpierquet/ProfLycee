@@ -3,7 +3,10 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/03/11 2.5.4 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/03/31 2.5.6 Aide pour l'utilisation de LaTeX en lycee]
+% 2.5.6	Ajout d'une clé [Trigo] pour \AxexTikz (avec graduations libres)
+%		"Suppression" de la fenêtre XCas de la documentation
+% 2.5.5	Correction d'un bug avec la fenetre XCas
 % 2.5.4	Amélioration des commandes de combinatoire avec calculs via xint (plus précis !)
 % 2.5.3	Modification des tests d'arguments dans les probas (macros autorisées)
 % 2.5.2	Correction d'un dysfonctionnement avec tcolorbox 6.0 :-(
@@ -53,6 +56,7 @@
 \RequirePackage{simplekv}
 \RequirePackage{listofitems}
 \RequirePackage{tabularray}
+\RequirePackage{settobox}
 \RequirePackage{hologo}
 \RequirePackage{fancyvrb}
 \RequirePackage{nicefrac}
@@ -279,7 +283,7 @@
 
 \newcommand\CalculFormelLigne[3][]{%
 	\addtocounter{CFnum}{1}
-	\def\CFL{\theCFnum}
+	\def\CFL{\theCFnum}%
 	\def\CFLA{\inteval{\CFL-1}}%
 	\useKVdefault[paramlgxcas]%
 	\setKV[paramlgxcas]{#1}% on paramètres les nouvelles clés et on les simplifie
@@ -313,9 +317,9 @@
 		{\draw (C3\CFL) node[left,\CFcoulcmd,font=\CFtaille] {#2} ;}
 		{}
 	%LA LIGNE DE SÉPARATION
-	\ifboolKV[paramfenxcas]{Sep}%si sep=true
-		{\draw[\CFcouleur] (A1\CFL) -- (A4\CFL);}
-		{}
+	%\ifboolKV[paramfenxcas]{Sep}%si sep=true
+	%	{\draw[\CFcouleur] (A1\CFL) -- (A4\CFL);}
+	%	{}
 	%LE RÉSULTAT
 	\IfStrEq{\CFposres}{centre}%si posrep=center
 		{\draw (R2\CFL) node[\CFcoulres,font=\CFtaille] {#3} ;}
@@ -1568,6 +1572,36 @@
 	pics/PLdotcross/.default={4pt/0}
 }
 
+%affichage d'un label en radians
+\NewDocumentCommand\AffAngleRadian{ s m }{%étoilée en dfrac
+	\IfStrEq{#2}{0}%cas où l'argument vaut 0
+		{\def\restmp{0}}%
+		{%
+			\StrDel{#2}{*}[\restmpsansmoins]%
+			\StrSubstitute{\restmpsansmoins}{pi}{\pi}[\restmppi]%
+			\IfSubStr{#2}{/}%
+			{%
+				\StrCut{\restmppi}{/}\tmpnum\tmpdenom%
+				\IfSubStr{\tmpnum}{-}
+				{%
+					\StrDel{\tmpnum}{-}[\restmppinum]%
+					\IfBooleanTF{#1}
+						{\def\restmp{-\dfrac{\restmppinum}{\tmpdenom}}}
+						{\def\restmp{-\frac{\restmppinum}{\tmpdenom}}}
+				}%
+				{%
+					\IfBooleanTF{#1}
+						{\def\restmp{\dfrac{\tmpnum}{\tmpdenom}}}
+						{\def\restmp{\frac{\tmpnum}{\tmpdenom}}}
+				}%
+			}%
+			{%
+				\def\restmp{\restmppi}%
+			}%
+		}%
+	\restmp%
+}
+
 %axeOx
 \defKV[PLaxextkz]{%
 	Epaisseur=\def\axexwidth{#1},%
@@ -1583,36 +1617,53 @@
 	HautGrad=4pt,%
 	AffGrad=true,%
 	AffOrigine=true,%
-	Annee=false
+	Annee=false,%
+	Dfrac=false,%
+	Trigo=false
 }
 
 \DeclareDocumentCommand\AxexTikz{ O{} m }{%
 	\useKVdefault[PLaxextkz]
 	\setKV[PLaxextkz]{#1}% on paramètres les nouvelles clés et on les simplifie
-	%formatage des années
+	%récupération des tickwidth H/B
 	\IfSubStr{\axextickwidth}{/}
-	{\StrCut{\axextickwidth}{/}{\axextickwidthA}{\axextickwidthB}}
-	{\def\axextickwidthA{\axextickwidth}\def\axextickwidthB{\axextickwidth}}
-	\foreach \x in {#2}{%
-		\draw[line width=\axexwidth] ({\x-\axexOx},{\axextickwidthA}) -- ({\x-\axexOx},{-\axextickwidthB})%
-		\ifboolKV[PLaxextkz]{AffGrad}%on affiche les graduations
-		{%
-			\ifboolKV[PLaxextkz]{AffOrigine}%si on demande d'afficher l'origine
-			{node[\axexposlabel,font=\axexfont] 
-				{\ifboolKV[PLaxextkz]{Annee}%
-					{\num[group-digits=none]{\x}}%
-					{\num[text-family-to-math=true,text-series-to-math=true]{\x}}%
-				}
-			}
-			{\xintifboolexpr{\x==\axexOx}{}{node[\axexposlabel,font=\axexfont] {\ifboolKV[PLaxextkz]{Annee}%
-						{\num[group-digits=none]{\x}}%
-						{\num[text-family-to-math=true,text-series-to-math=true]{\x}}%
+		{\StrCut{\axextickwidth}{/}{\axextickwidthA}{\axextickwidthB}}
+		{\def\axextickwidthA{\axextickwidth}\def\axextickwidthB{\axextickwidth}}
+	%en fonction de Trigo ou non
+	\ifboolKV[PLaxextkz]{Trigo}
+		{
+			\foreach \x in {#2}{%
+				\draw[line width=\axexwidth] ({\x-\axexOx},{\axextickwidthA}) -- ({\x-\axexOx},{-\axextickwidthB})%
+				\ifboolKV[PLaxextkz]{AffGrad}%on affiche les graduations
+				{%
+					node[\axexposlabel,font=\axexfont] {\ifboolKV[PLaxextkz]{Dfrac}{$\AffAngleRadian*{\x}$}{$\AffAngleRadian{\x}$}}
+				}%
+				{}%
+				;}
+		}
+		{
+			\foreach \x in {#2}{%
+				\draw[line width=\axexwidth] ({\x-\axexOx},{\axextickwidthA}) -- ({\x-\axexOx},{-\axextickwidthB})%
+				\ifboolKV[PLaxextkz]{AffGrad}%on affiche les graduations
+				{%
+					\ifboolKV[PLaxextkz]{AffOrigine}%si on demande d'afficher l'origine
+					{node[\axexposlabel,font=\axexfont] 
+						{\ifboolKV[PLaxextkz]{Annee}%
+							{\num[group-digits=none]{\x}}%
+							{\num[text-family-to-math=true,text-series-to-math=true]{\x}}%
+						}
+					}
+					{\xintifboolexpr{\x==\axexOx}{}{node[\axexposlabel,font=\axexfont] {\ifboolKV[PLaxextkz]{Annee}%
+								{\num[group-digits=none]{\x}}%
+								{\num[text-family-to-math=true,text-series-to-math=true]{\x}}%
+							}
+						}
 					}
 				}
-			}
+				{}
+				;}
 		}
-		{}
-		;}
+	
 }
 
 %axeOy
