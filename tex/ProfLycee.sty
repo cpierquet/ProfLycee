@@ -3,7 +3,9 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/03/31 2.5.6 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/04/04 2.5.7 Aide pour l'utilisation de LaTeX en lycee]
+% 2.5.7	Ajout d'un style classique pour le code python (Piton + ...) + console piton/pyluatex
+%		Refonte des commandes tcbset pour les codes
 % 2.5.6	Ajout d'une clé [Trigo] pour \AxexTikz (avec graduations libres)
 %		"Suppression" de la fenêtre XCas de la documentation
 % 2.5.5	Correction d'un bug avec la fenetre XCas
@@ -398,24 +400,24 @@
 
 %%------PYTHONLISTINGS
 \tcbset{stylepythonlst/.style={%
-		enhanced,boxrule=1.25pt,%
-		leftupper=10pt,
-		sharp corners=downhill,arc=12pt,
-		before skip=12pt,after skip=12pt,%
-		top=10pt,bottom=1mm,rightupper=4pt,%leftupper=25pt,
-		attach boxed title to top right={yshift=-\tcboxedtitleheight},
-		boxed title style={
-			size=small,colback=ForestGreen!25,boxrule=1.25pt,
-			colframe=Green,boxsep=1.25pt,
-			sharp corners=downhill,
-			arc=12pt,
-			top=2pt,bottom=1pt,left=6pt,right=6pt
+	enhanced,boxrule=1.25pt,%
+	leftupper=10pt,
+	sharp corners=downhill,arc=12pt,
+	before skip=12pt,after skip=12pt,%
+	top=10pt,bottom=1mm,rightupper=4pt,%leftupper=25pt,
+	attach boxed title to top right={yshift=-\tcboxedtitleheight},
+	boxed title style={
+		size=small,colback=ForestGreen!25,boxrule=1.25pt,
+		colframe=Green,boxsep=1.25pt,
+		sharp corners=downhill,
+		arc=12pt,
+		top=2pt,bottom=1pt,left=6pt,right=6pt
 		},
-		colframe=Green,colback=ForestGreen!5,%
-		fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
-		title={\scriptsize\faPython}\:Code Python\vphantom{p},
-		watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
-		listing only,listing engine=listings,%
+	colframe=Green,colback=ForestGreen!5,%
+	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
+	title={\scriptsize\faPython}\:Code Python\vphantom{p},
+	watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
+	listing only,listing engine=listings,%
 	}
 }
 

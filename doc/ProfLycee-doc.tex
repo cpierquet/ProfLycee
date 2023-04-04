@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.5.6}
-\def\PLdate{31 Mars 2023}
+\def\PLversion{2.5.7}
+\def\PLdate{4 Avril 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 %\usepackage{lualatex-math}
@@ -568,6 +568,7 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \begin{CodePythonLst}(*)[largeur]{commandes tcbox}...\end{CodePythonLst}
 %:=librairie piton
 \begin{CodePiton}[options]...\end{CodePiton}
+\begin{PitonConsole}[options Piton]<Clés>{paramètres tcbox}...\end{PitonConsole}
 %:=librairie pythontex
 \begin{CodePythontex}[options]...\end{CodePythontex}
 \begin{ConsolePythontex}[options]...\end{ConsolePythontex}
@@ -2327,14 +2328,17 @@ def trace_parabole_tableaux():
 
 \begin{codeinfo}
 \cmaj{2.5.0} Cette section nécessite de charger la \textsf{librairie} \clib{piton} dans le préambule.
+
+\cmaj{2.5.7} Une console Python est disponible, elle nécessite le package \ctex{pyluatex}, qui n'est pas chargé par \ctex{ProfLycee}, du fait de l'obligation de spécifier le \textit{chemin} pour l'exécutable Python !
 \end{codeinfo}
 
 \begin{codetex}[listing only]
+\usepackage[executable=...]{pyluatex} %si utilisation de la console REPL
 \useproflyclib{piton}
 \end{codetex}
 
 \begin{codeinfo}
-\cmaj{2.0.0} La \textsf{librairie} \clib{piton} (qui charge \ctex{piton}, est compatible uniquement avec \hologo{LuaLaTeX} !) permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
+La \textsf{librairie} \clib{piton} (qui charge \ctex{piton}, est compatible uniquement avec \hologo{LuaLaTeX} !) permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
 
 \smallskip
 
@@ -2342,17 +2346,23 @@ En \textit{partenariat} avec \ctex{tcolorbox}, on peut avoir une présentation d
 
 \smallskip
 
-\cmaj{2.0.2} Depuis la version \ctex{0.95} de \ctex{piton}, \Cle{left-margin=auto} est disponible et activée dans \ctex{ProfLycee}.
+Depuis la version \ctex{0.95} de \ctex{piton}, \Cle{left-margin=auto} est disponible et activée dans \ctex{ProfLycee}.
 
-\cmaj{2.1.2} Depuis la version \ctex{0.99} de \ctex{piton}, \Cle{break-lines} est disponible et activée dans \ctex{ProfLycee}.
+Depuis la version \ctex{0.99} de \ctex{piton}, \Cle{break-lines} est disponible et activée dans \ctex{ProfLycee}.
 
-\cmaj{2.1.3} Depuis la version \ctex{1.0} de \ctex{piton}, \Cle{tabs-auto-gobble} est disponible et activée dans \ctex{ProfLycee}.
+Depuis la version \ctex{1.0} de \ctex{piton}, \Cle{tabs-auto-gobble} est disponible et activée dans \ctex{ProfLycee}.
 \end{codeinfo}
 
 \begin{codeattention}
 Le package \ctex{piton} nécessite donc obligatoirement l’emploi de \hologo{LuaLaTeX} !
 
-\cmaj{2.0.1} Ce package n'est chargé que si la compilation détectée est en \hologo{LuaLaTeX} !
+Ce package n'est chargé que si la compilation détectée est en \hologo{LuaLaTeX} !
+
+\smallskip
+
+\cmaj{2.5.7} L'utilisation de la console \textbf{REPL} nécessite une compilation en \ctex{--shell-escape} ou \ctex{-write18} !
+
+\cmaj{2.5.7} Les packages \ctex{pyluatex} et \ctex{pythontex} utilisent des commandes de même nom, donc la présente documentation n'utilisera pas le package \ctex{pyluatex}. Une documentation annexe spécifique est disponible.
 \end{codeattention}
 
 \subsection{Présentation de code Python}
@@ -2363,25 +2373,29 @@ Le package \ctex{piton} nécessite donc obligatoirement l’emploi de \hologo{Lu
 \end{CodePiton}
 \end{codetex}
 
-%\begin{codeattention}
-%Les environnements créés par \ctex{piton} et \ctex{tcolorbox} ne sont -- a priori -- pas compatibles avec les options de type \Cle{gobble} (pour supprimer les tabulations d'environnement), donc il faut bien penser à \og aligner \fg{} le code à gauche, pour éviter des tabulations non esthétiques !
-%\end{codeattention}
-
 \begin{codecles}
 Plusieurs \Cle{clés} sont disponibles :
 
 \begin{itemize}
 	\item la clé booléenne \Cle{Lignes} pour afficher ou non les numéros de lignes ; \hfill{}défaut \Cle{true}
-	\item \cmaj{2.1.3} la clé booléenne \Cle{Gobble} pour activer les options liées au \textsf{gobble} ; \hfill{}défaut \Cle{true}
+	\item la clé booléenne \Cle{Gobble} pour activer les options liées au \textsf{gobble} ; \hfill{}défaut \Cle{true}
 	\item la clé \Cle{Largeur} qui correspond à la largeur de la \ctex{tcbox} ; \hfill{}défaut \Cle{\textbackslash linewidth}
 	\item la clé \Cle{TaillePolice} pour la taille des caractères ; \hfill{}défaut \Cle{\textbackslash footnotesize}
-	\item la clé \Cle{Alignement} qui paramètre l'alignement de la \ctex{tcbox}. \hfill{}défaut \Cle{center}
+	\item la clé \Cle{Alignement} qui paramètre l'alignement de la \ctex{tcbox} ;  \hfill{}défaut \Cle{center}
+	\item \cmaj{2.5.7} la clé \Cle{Style} (parmi \Cle{Moderne / Classique}) pour changer le style ; \hfill{}défaut \Cle{Moderne}
+	\item \cmaj{2.5.7} le boolén \Cle{Filigrane} pour afficher, le logo {\small \faPython} en filigrane ; \hfill{}défaut \Cle{false}
+	\item \cmaj{2.5.7} le boolén \Cle{BarreTitre} (si \Cle{Style=Moderne}) pour afficher le titre ; \hfill{}défaut \Cle{true}
+	\item \cmaj{2.5.7} le boolén \Cle{Cadre} (si \Cle{Style=Moderne}) pour afficher le cadre. \hfill{}défaut \Cle{true}
 \end{itemize}
 \end{codecles}
 
+\begin{codeinfo}
+Du fait du paramétrage des boîtes \ctex{tcolorbox}, il se peut que le rendu soit non conforme si elle doit être insérée dans une autre \ctex{tcolorbox}\ldots{} !
+\end{codeinfo}
+
 \begin{codetex}[listing only]
 \begin{CodePiton}
-#environnement piton avec numéros de ligne, pleine largeur
+#environnement piton avec numéros de ligne, pleine largeur, style moderne
 def arctan(x,n=10):
 	if x < 0:
 		return -arctan(-x) #> (appel récursif)
@@ -2392,9 +2406,8 @@ def arctan(x,n=10):
 \end{CodePiton}
 \end{codetex}
 
-\begin{codesortie}
 \begin{CodePiton}
-#environnement piton avec numéros de ligne, pleine largeur
+#environnement piton avec numéros de ligne, pleine largeur, style moderne
 def arctan(x,n=10):
 	if x < 0:
 		return -arctan(-x) #> (appel récursif)
@@ -2403,7 +2416,30 @@ def arctan(x,n=10):
 	else:
 		return sum( (-1)**k/(2*k+1)*x**(2*k+1) for k in range(n) )
 \end{CodePiton}
-\end{codesortie}
+
+\begin{codetex}[listing only]
+\begin{CodePiton}[Style=Classique]
+#environnement piton avec numéros de ligne, pleine largeur, style classique
+def arctan(x,n=10):
+	if x < 0:
+		return -arctan(-x) #> (appel récursif)
+	elif x > 1:
+		return pi/2 - arctan(1/x) #> (autre appel récursif)
+	else:
+		return sum( (-1)**k/(2*k+1)*x**(2*k+1) for k in range(n) )
+\end{CodePiton}
+\end{codetex}
+
+\begin{CodePiton}[Style=Classique]
+#environnement piton avec numéros de ligne, pleine largeur, style classique
+def arctan(x,n=10):
+	if x < 0:
+		return -arctan(-x) #> (appel récursif)
+	elif x > 1:
+		return pi/2 - arctan(1/x) #> (autre appel récursif)
+	else:
+		return sum( (-1)**k/(2*k+1)*x**(2*k+1) for k in range(n) )
+\end{CodePiton}
 
 \begin{codetex}[listing only]
 \begin{CodePiton}[Alignement=flush right,Largeur=13cm]
@@ -2418,15 +2454,21 @@ def f(x) :
 
 \begin{itemize} %Avec des indentations d'environnement :
 	\item On essaye avec un \texttt{itemize} :
-	
-	\begin{CodePiton}[Largeur=9cm]
+	%
+	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false]
+		def f(x) :
+			return x**2
+	\end{CodePiton}
+	\item Et avec un autre \texttt{itemize} :
+	%
+	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false,BarreTitre=false]
+		#avec numéros, de largeur 12cm, centré, classique, sans cadre/titre
 		def f(x) :
 			return x**2
 	\end{CodePiton}
 \end{itemize}
 \end{codetex}
 
-\begin{codesortie}
 \begin{CodePiton}[Alignement=flush right,Largeur=13cm]
 #avec numéros, de largeur 13cm, aligné à droite
 def f(x) :
@@ -2441,14 +2483,26 @@ def f(x) :
 
 \begin{itemize}
 	\item On essaye avec un \texttt{itemize} :
-	
-	\begin{CodePiton}[Largeur=9cm]
-		#avec numéros, de largeur 9cm, centré
+	%
+	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false]
+		#avec numéros, de largeur 12cm, centré, classique, sans cadre
+		def f(x) :
+			return x**2
+	\end{CodePiton}
+	\item Et avec un autre \texttt{itemize} :
+	%
+	\begin{CodePiton}[Largeur=12cm,Style=Classique,BarreTitre=false,Cadre=false]
+		#avec numéros, de largeur 12cm, centré, classique, sans cadre/titre
 		def f(x) :
 			return x**2
 	\end{CodePiton}
 \end{itemize}
-\end{codesortie}
+
+\subsection{Console en partenariat avec Pyluatex}
+
+\begin{codeinfo}
+\cmaj{2.5.7} Une console d'exécution (type REPL) est disponible, et la documentation associée est en marge de la présente documentation.
+\end{codeinfo}
 
 \pagebreak
 
@@ -6275,6 +6329,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.5.7|~:~~~~Ajout de clés pour les codes \textsf{Piton} + Console via \textsf{Pyluatex} (page \pageref{pythonpiton})
 
 {\small \bverb|v 2.5.6|~:~~~~Ajout d'une clé \Cle{Trigo} pour l'axe $(Ox)$ (page \pageref{reperagetikz})
 
