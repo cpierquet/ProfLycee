@@ -1,37 +1,37 @@
-% !TeX document-id = {fc3853a9-0c9c-4d02-b763-6dc6c85d34db}
-% !TeX TXS-program:compile = txs:///lualatex/[--shell-escape]
+% !TeX TXS-program:compile = txs:///arara
+% arara: lualatex: {shell: no, synctex: yes, interaction: batchmode}
+% arara: pythontex: {rerun: always} if found('pytxcode', 'PYTHONTEX#py')
+% arara: lualatex: {shell: no, synctex: yes, interaction: batchmode} if found('pytxcode', 'PYTHONTEX#py')
+% arara: lualatex: {shell: no, synctex: yes, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[french,a4paper,10pt]{article}
 \def\PLver{2.5.8}
 \usepackage[margin=1.5cm]{geometry}
 \usepackage{ProfLycee}
-\useproflyclib{piton}
-\usepackage[executable=python.exe]{pyluatex}
+\useproflyclib{pythontex}
 \usepackage{babel}
 \sisetup{locale=FR,output-decimal-marker={,},group-minimum-digits=4}
 \usepackage{codehigh}
-%\usepackage[most]{tcolorbox}
-%\newtcblisting{ShowCodeTeX}[1][]{colback=white,colframe=red!75!black,listing options={style=tcblatex},#1}
 
 \begin{document}
 
-\part*{ProfLycee (\PLver), Piton et Pyluatex}
+\part*{ProfLycee (\PLver), Pythontex}
 
-\section{Code \og Piton \fg{}, indépendant de Pyluatex}
+\section{Code \og Pythontex \fg{}}
 
 \subsection{Préambule basique}
 
 {\small \begin{codehigh}
 \documentclass[french,a4paper,10pt]{article}
 \usepackage{ProfLycee}
-\useproflyclib{piton}                           % lua
+\useproflyclib{pythontex}                     % compilation spécifique
 \end{codehigh}}
 
 \subsection{Exemples}
 
 {\small \begin{codehigh}
 %Sortie par défaut
-\begin{CodePiton}
+\begin{CodePythontex}{}
 def valeur_absolue(x):
     "Renvoie la valeur absolue de x"
     #le petit test qui va bien
@@ -39,10 +39,10 @@ def valeur_absolue(x):
         return x
     else:
     return -x
-\end{CodePiton}
+\end{CodePythontex}
 \end{codehigh}}
 
-\begin{CodePiton}
+\begin{CodePythontex}{}
 def valeur_absolue(x):
 	"Renvoie la valeur absolue de x"
 	#le petit test qui va bien
@@ -50,11 +50,44 @@ def valeur_absolue(x):
 		return x
 	else:
 		return -x
-\end{CodePiton}
+
+#bla
+#bla
+#bla
+\end{CodePythontex}
+
+{\small \begin{codehigh}
+%Sortie avec Style=Classique, Largeur=10cm, centré
+\begin{CodePythontexAlt}[Largeur=10cm,Centre]{}
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+    return -x
+\end{CodePythontexAlt}
+\end{codehigh}}
+
+\begin{CodePythontexAlt}[Largeur=10cm,Centre]{}
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+
+#bla
+#bla
+#bla
+\end{CodePythontexAlt}
+
+\pagebreak
 
 {\small \begin{codehigh}
 %Sortie avec Style=Classique, Largeur=10cm
-\begin{CodePiton}[Style=Classique,Largeur=10cm]
+\begin{CodePythontexAlt}[Largeur=10cm]{}
 def valeur_absolue(x):
     "Renvoie la valeur absolue de x"
     #le petit test qui va bien
@@ -62,10 +95,10 @@ def valeur_absolue(x):
         return x
     else:
     return -x
-\end{CodePiton}
+\end{CodePythontexAlt}
 \end{codehigh}}
 
-\begin{CodePiton}[Style=Classique,Largeur=10cm]
+\begin{CodePythontexAlt}[Largeur=10cm]{}
 def valeur_absolue(x):
 	"Renvoie la valeur absolue de x"
 	#le petit test qui va bien
@@ -73,117 +106,61 @@ def valeur_absolue(x):
 		return x
 	else:
 		return -x
-\end{CodePiton}
+\end{CodePythontexAlt}
+
+{\small \begin{codehigh}
+%Sortie avec Style=Classique, Largeur=0.5\linewidth, centré, sans numéro
+\begin{CodePythontexAlt}[Largeur=0.5\linewidth,Centre,Lignes=false]{}
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+    return -x
+\end{CodePythontexAlt}
+\end{codehigh}}
+
+\begin{CodePythontexAlt}[Largeur=0.5\linewidth,Centre,Lignes=false]{}
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+\end{CodePythontexAlt}
+
+{\small \begin{codehigh}
+%Sortie Moderne, Largeur=11cm, sans ligne
+\begin{CodePythontex}[Largeur=11cm,Lignes=false]{}
+def valeur_absolue(x):
+    "Renvoie la valeur absolue de x"
+    #le petit test qui va bien
+    if x > 0:
+        return x
+    else:
+    return -x
+\end{CodePythontex}
+\end{codehigh}}
+
+\begin{CodePythontex}[Largeur=11cm,Lignes=false]{}
+def valeur_absolue(x):
+	"Renvoie la valeur absolue de x"
+	#le petit test qui va bien
+	if x > 0:
+		return x
+	else:
+		return -x
+\end{CodePythontex}
 
 \pagebreak
 
-{\small \begin{codehigh}
-%Sortie avec Style=Classique, Sans Titre, Largeur=10cm, centré
-\begin{CodePiton}[Style=Classique,Largeur=10cm,BarreTitre=false,Alignement=center]
-def valeur_absolue(x):
-    "Renvoie la valeur absolue de x"
-    #le petit test qui va bien
-    if x > 0:
-        return x
-    else:
-    return -x
-\end{CodePiton}
-\end{codehigh}}
-
-\begin{CodePiton}[Style=Classique,Largeur=10cm,BarreTitre=false,Alignement=center]
-def valeur_absolue(x):
-	"Renvoie la valeur absolue de x"
-	#le petit test qui va bien
-	if x > 0:
-		return x
-	else:
-		return -x
-\end{CodePiton}
-
-{\small \begin{codehigh}
-%Sortie avec Style=Classique, Largeur=0.5\linewidth, aligné à droite, sans Cadre, avec Filigrane
-\begin{CodePiton}%
-    [Style=Classique,Largeur=0.5\linewidth,Cadre=false,Alignement=flush right,Filigrane,Titre={Script}]
-def valeur_absolue(x):
-    "Renvoie la valeur absolue de x"
-    #le petit test qui va bien
-    if x > 0:
-        return x
-    else:
-    return -x
-\end{CodePiton}
-\end{codehigh}}
-
-\begin{CodePiton}[Style=Classique,Largeur=0.5\linewidth,Cadre=false,Alignement=flush right,Filigrane,Titre={Script}]
-def valeur_absolue(x):
-	"Renvoie la valeur absolue de x"
-	#le petit test qui va bien
-	if x > 0:
-		return x
-	else:
-		return -x
-\end{CodePiton}
-
-{\small \begin{codehigh}
-%Sortie Moderne, Largeur=11cm, avec Filigrane, aligné à gauche, sans ligne
-\begin{CodePiton}[Largeur=11cm,Filigrane,Alignement=flush left,Lignes=false]
-def valeur_absolue(x):
-    "Renvoie la valeur absolue de x"
-    #le petit test qui va bien
-    if x > 0:
-        return x
-    else:
-    return -x
-\end{CodePiton}
-\end{codehigh}}
-
-\begin{CodePiton}[Largeur=11cm,Filigrane,Alignement=flush left,Lignes=false]
-def valeur_absolue(x):
-	"Renvoie la valeur absolue de x"
-	#le petit test qui va bien
-	if x > 0:
-		return x
-	else:
-		return -x
-\end{CodePiton}
-
-\pagebreak
-
-\section{Console \og Piton \fg{}, dépendant de Pyluatex}
-
-\subsection{Préambule, avec le package pyluatex}
-
-{\small \begin{codehigh}
-\documentclass[french,a4paper,10pt]{article}
-\usepackage{ProfLycee}
-\useproflyclib{piton}
-\usepackage[executable=python.exe]{pyluatex}    % lua + shell-escape
-\end{codehigh}}
-
-\subsection{Commande}
-
-{\small \begin{codehigh}
-\begin{ConsolePiton}[Options piton]<Clés>{Options tcbox}
-...
-...
-\end{ConsolePiton}
-\end{codehigh}}
-
-\medskip
-
-Les clés, à placer entre \texttt{<...>}, sont :
-
-\begin{itemize}
-	\item \textbf{\textsf{$\langle$Logo$\rangle$}} pour afficher un petit logo dans les \textit{titres} de la console REPL ; \hfill{}défaut : \textbf{\textsf{$\langle$true$\rangle$}}
-	\item \textbf{\textsf{$\langle$Largeur$\rangle$}} pour spécifier la largeur de la console REPL ; \hfill{}défaut : \textbf{\textsf{$\langle$\textbackslash{}linewidth$\rangle$}}
-	\item \textbf{\textsf{$\langle$Alignement$\rangle$}} pour spécifier l'alignement de la console REPL.\hfill{}défaut : \textbf{\textsf{$\langle$flush left$\rangle$}}
-\end{itemize}
-
-\subsection{Exemples}
+\section{Console \og Pythontex \fg{}}
 
 {\small \begin{codehigh}
 %Déclaration d'une fonction python + librairie random pour utilisation ultérieure
-\begin{python}
+\begin{pyconcode}
 from random import randint
 
 def valeur_absolue(x):
@@ -193,10 +170,11 @@ def valeur_absolue(x):
         return x
     else:
         return -x
-\end{python}
+
+\end{pyconcode}
 \end{codehigh}}
 
-\begin{python}
+\begin{pyconcode}
 from random import randint
 
 def valeur_absolue(x):
@@ -206,10 +184,11 @@ def valeur_absolue(x):
 		return x
 	else:
 		return -x
-\end{python}
+
+\end{pyconcode}
 
 {\small \begin{codehigh}
-\begin{ConsolePiton}{}
+\begin{ConsolePythontex}{}
 1+1
 2**10
 valeur_absolue(-3)
@@ -217,10 +196,10 @@ valeur_absolue(0)
 valeur_absolue(5)
 print(f"La valeur absolue de 5 est {valeur_absolue(5)}")
 print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
-\end{ConsolePiton}
+\end{ConsolePythontex}
 \end{codehigh}}
 
-\begin{ConsolePiton}{}
+\begin{ConsolePythontex}{}
 1+1
 2**10
 valeur_absolue(-3)
@@ -228,12 +207,12 @@ valeur_absolue(0)
 valeur_absolue(5)
 print(f"La valeur absolue de 5 est {valeur_absolue(5)}")
 print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
-\end{ConsolePiton}
+\end{ConsolePythontex}
 
 \pagebreak
 
 {\small \begin{codehigh}
-\begin{ConsolePiton}<Largeur=11cm,Alignement=center,Logo=false>{}
+\begin{ConsolePythontex}[Largeur=12cm,Centre]{}
 1+1
 2**10
 valeur_absolue(-3)
@@ -244,10 +223,10 @@ print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
 liste = [randint(1,20) for i in range(10)]
 print(liste)
 print(max(liste), min(liste), sum(liste))
-\end{ConsolePiton}
+\end{ConsolePythontex}
 \end{codehigh}}
 
-\begin{ConsolePiton}<Largeur=11cm,Alignement=center,Logo=false>{}
+\begin{ConsolePythontex}[Largeur=12cm,Centre]{}
 1+1
 2**10
 valeur_absolue(-3)
@@ -258,6 +237,6 @@ print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
 liste = [randint(1,20) for i in range(10)]
 print(liste)
 print(max(liste), min(liste), sum(liste))
-\end{ConsolePiton}
+\end{ConsolePythontex}
 
 \end{document}

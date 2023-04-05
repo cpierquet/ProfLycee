@@ -8,6 +8,9 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.5.8	Modification des marges
+%2.5.7	Style alternatif
+
 \RequirePackage{iftex}
 
 %%=============PYTHONPITON
@@ -55,7 +58,7 @@
 
 %==Style Classique
 \tcbset{thonnystyle/.style={%
-	enhanced,boxrule=0.75pt,colframe=DarkGray!25!Black,%
+	enhanced,boxrule=0.75pt,colframe=DarkGray!50!Black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
 	before skip=\baselineskip,after skip=\baselineskip,%
 	colback=white
@@ -66,7 +69,7 @@
 	thonnystyle,%
 	underlay={%
 		\begin{tcbclipinterior}
-			\filldraw[lightgray!15] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
+			\filldraw[lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
 		\end{tcbclipinterior}%
 		}
 	}
@@ -91,7 +94,7 @@
 	%------les styles tcbox
 	\IfEq{\CODPITstyle}{Moderne}%style Moderne (défaut)
 		{%
-			\tcbset{stylepiton,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}
+			\tcbset{stylepiton,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign,leftupper=0.75em}
 			\ifboolKV[envpiton]{Filigrane}%si filigrane
 				{\tcbset{watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50}}%
 				{}%
@@ -100,18 +103,18 @@
 	\IfEq{\CODPITstyle}{Classique}%style Classique
 		{%
 			\ifboolKV[envpiton]{Lignes}%si lignes=true
-				{\tcbset{thonnystylelineos,leftupper=0.4em}}%
+				{\tcbset{thonnystylelineos,leftupper=0.75em}}%
 				{\tcbset{thonnystyle,leftupper=0.4em}}%
-			\tcbset{width=\CODPITlargeur,colframe=darkgray,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}
+			\tcbset{width=\CODPITlargeur,colframe=DarkGray!50!Black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}
 			\ifboolKV[envpiton]{Filigrane}%si filigrane
-				{\tcbset{watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50}}%
+				{\tcbset{watermark text={\faPython},watermark opacity=0.25,watermark zoom=0.50}}%
 				{}%
 			\ifboolKV[envpiton]{BarreTitre}%
 				{%
 					\ifboolKV[envpiton]{Cadre}
 						{}
 						{\tcbset{boxrule=0pt,frame hidden}}
-					\tcbset{lefttitle=0.4em,title={\CODPITtitre},fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!25!Black}
+					\tcbset{lefttitle=0.4em,title={\CODPITtitre},fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!50!Black}
 				}%
 				{%
 					\tcbset{notitle}

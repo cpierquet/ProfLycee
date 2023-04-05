@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.5.7}
-\def\PLdate{4 Avril 2023}
+\def\PLversion{2.5.8}
+\def\PLdate{5 Avril 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 %\usepackage{lualatex-math}
@@ -315,7 +315,7 @@ L'utilisateur est libre de charger ses autres {packages} utiles et habituels, ai
 \end{codeidee}
 
 \begin{codeinfo}
-Le {package} \ctex{ProfLycee} charge les {packages} :
+Le {package} \ctex{ProfLycee} charge et utilise les {packages} :
 
 \begin{itemize}
 	\item \ctex{xcolor} avec l' option \textsf{[table,svgnames]} ;
@@ -370,6 +370,10 @@ Les librairies disponibles seront indiquées dans les sections spécifiques. Pou
 	\item \clib{pythontex} (page \pageref{pythontex}).
 \end{itemize}
 \end{codeinfo}
+
+\begin{codeattention}
+\cmaj{2.5.8} Pour le package \ctex{piton}, la version minimale requise est la \ctex{1.5} pour bénéficier d'un rendu optimal (marges) de la présentation du code \textsf{Python}.
+\end{codeattention}
 
 \begin{codeinfo}
 En compilant (notamment avec les librairies \clib{minted} et \clib{pythontex}) on peut spécifier des répertoires particuliers pour les (ou des) fichiers auxiliaires.
@@ -566,14 +570,17 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \begin{codetex}[listing only]
 %présentation de code Python
 \begin{CodePythonLst}(*)[largeur]{commandes tcbox}...\end{CodePythonLst}
+\begin{CodePythonLstAlt}(*)[largeur]{commandes tcbox}...\end{CodePythonLstAlt}
 %:=librairie piton
 \begin{CodePiton}[options]...\end{CodePiton}
 \begin{PitonConsole}[options Piton]<Clés>{paramètres tcbox}...\end{PitonConsole}
 %:=librairie pythontex
-\begin{CodePythontex}[options]...\end{CodePythontex}
-\begin{ConsolePythontex}[options]...\end{ConsolePythontex}
+\begin{CodePythontex}[options]{}...\end{CodePythontex}
+\begin{CodePythontexAlt}[options]{}...\end{CodePythontexAlt}
+\begin{ConsolePythontex}[options]{}...\end{ConsolePythontex}
 %:=librairie minted
-\begin{CodePythonMinted}(*)[largeur][options]...\end{CodePythonMinted}
+\begin{CodePythonMinted}(*)[largeur]{commandes tcbox}...\end{CodePythonMinted}
+\begin{CodePythonMintedAlt}(*)[largeur]{commandes tcbox}...\end{CodePythonMintedAlt}
 
 %présentation de pseudocode
 \begin{PseudoCode}(*)[largeur][options]...\end{PseudoCode}
@@ -2152,23 +2159,29 @@ Le package \ctex{listings} ne nécessite pas de compilation particulière, au co
 \end{codeinfo}
 
 \begin{codeinfo}
-Le style utilisé pour formater le code Python n'est pas modifiable. Il donne un rendu proche de celui des packages comme \ctex{pythontex} ou \ctex{minted} ou \ctex{piton}.
+Les styles utilisés pour formater le code Python ne sont pas modifiables. Ils donnent un rendu proche de celui des packages comme \ctex{pythontex} ou \ctex{minted} ou \ctex{piton}.
 
 \smallskip
 
-Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code Python (via les \textit{méthodes} suivantes), le rendu pourra être légèrement différent.
+Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code \textsf{Python} (via les \textit{méthodes} suivantes), le rendu pourra être légèrement différent.
 \end{codeinfo}
 
 \subsection{Commande et options}
 
 \begin{codeidee}
-L'environnement \ctex{CodePythonLst} permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
+L'environnement \ctex{CodePythonLst} permet de présenter du code python, dans une \ctex{tcolorbox} avec deux styles particuliers (\cmaj{2.5.8}).
 \end{codeidee}
 
 \begin{codetex}[listing only]
 \begin{CodePythonLst}(*)[largeur]{commandes tcbox}
 ...
 \end{CodePythonLst}
+\end{codetex}
+
+\begin{codetex}[listing only]
+\begin{CodePythonLstAlt}(*)[largeur]{commandes tcbox}
+...
+\end{CodePythonLstAlt}
 \end{codetex}
 
 \begin{codecles}
@@ -2232,7 +2245,7 @@ def f(x) :
 \end{codesortie}
 
 \begin{codetex}[listing only]
-\begin{CodePythonLst}*[0.5\linewidth]{flush right}
+\begin{CodePythonLstAlt}*[0.75\linewidth]{flush right}
 #largeur de 50%, sans numéro, et aligné à droite
 nb = int(input("Saisir un entier Python positif"))
 if (nb %7 == 0) :
@@ -2241,11 +2254,11 @@ if (nb %7 == 0) :
 
 def f(x) :
 	return x**2
-\end{CodePythonLst}
+\end{CodePythonLstAlt}
 \end{codetex}
 
 \begin{codesortie}
-\begin{CodePythonLst}*[0.5\linewidth]{flush right}
+\begin{CodePythonLstAlt}*[0.75\linewidth]{flush right}
 #largeur de 50%, sans numéro, et aligné à droite
 nb = int(input("Saisir un entier Python positif"))
 if (nb %7 == 0) :
@@ -2254,7 +2267,7 @@ if (nb %7 == 0) :
 
 def f(x) :
 	return x**2
-\end{CodePythonLst}
+\end{CodePythonLstAlt}
 \end{codesortie}
 
 \begin{codetex}[listing only]
@@ -2329,7 +2342,7 @@ def trace_parabole_tableaux():
 \begin{codeinfo}
 \cmaj{2.5.0} Cette section nécessite de charger la \textsf{librairie} \clib{piton} dans le préambule.
 
-\cmaj{2.5.7} Une console Python est disponible, elle nécessite le package \ctex{pyluatex}, qui n'est pas chargé par \ctex{ProfLycee}, du fait de l'obligation de spécifier le \textit{chemin} pour l'exécutable Python !
+\cmaj{2.5.7} Une console Python est disponible, elle nécessite le package \ctex{pyluatex}, qui n'est pas chargé par \ctex{ProfLycee}, du fait de l'obligation de spécifier le \textit{chemin} pour l'exécutable \textsf{Python} !
 \end{codeinfo}
 
 \begin{codetex}[listing only]
@@ -2338,11 +2351,11 @@ def trace_parabole_tableaux():
 \end{codetex}
 
 \begin{codeinfo}
-La \textsf{librairie} \clib{piton} (qui charge \ctex{piton}, est compatible uniquement avec \hologo{LuaLaTeX} !) permet d'insérer du code Python avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
+La \textsf{librairie} \clib{piton} (qui charge \ctex{piton}, est compatible uniquement avec \hologo{LuaLaTeX} !) permet d'insérer du code \textsf{Python} avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
 
 \smallskip
 
-En \textit{partenariat} avec \ctex{tcolorbox}, on peut avoir une présentation de code Python !
+En \textit{partenariat} avec \ctex{tcolorbox}, on peut avoir une présentation de code \textsf{Python} !
 
 \smallskip
 
@@ -2418,8 +2431,8 @@ def arctan(x,n=10):
 \end{CodePiton}
 
 \begin{codetex}[listing only]
-\begin{CodePiton}[Style=Classique]
-#environnement piton avec numéros de ligne, pleine largeur, style classique
+\begin{CodePiton}[Style=Classique,Filigrane]
+#environnement piton avec numéros, style classique, filigrane
 def arctan(x,n=10):
 	if x < 0:
 		return -arctan(-x) #> (appel récursif)
@@ -2430,8 +2443,8 @@ def arctan(x,n=10):
 \end{CodePiton}
 \end{codetex}
 
-\begin{CodePiton}[Style=Classique]
-#environnement piton avec numéros de ligne, pleine largeur, style classique
+\begin{CodePiton}[Style=Classique,Filigrane]
+	#environnement piton avec numéros, style classique, filigrane
 def arctan(x,n=10):
 	if x < 0:
 		return -arctan(-x) #> (appel récursif)
@@ -2527,7 +2540,7 @@ def f(x) :
 \cmaj{2.5.0} La \textsf{librairie} \clib{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
 
 \begin{itemize}
-	\item présenter du code Python ;
+	\item \cmaj{2.5.8} présenter du code Python (deux styles disponibles) ;
 	\item exécuter du code Python dans un environnement type \og console \fg{} ;
 	\item charger du code Python, et éventuellement l'utiliser dans la console.
 \end{itemize}
@@ -2552,9 +2565,15 @@ L'environnement \ctex{CodePythontex} est donc lié à \ctex{pythontex} (chargé 
 \end{codeidee}
 
 \begin{codetex}[listing only]
-\begin{CodePythontex}[options]
+\begin{CodePythontex}[options]{} %les {} vides sont nécessaires
 ...
 \end{CodePythontex}
+\end{codetex}
+
+\begin{codetex}[listing only]
+\begin{CodePythontexAlt}[options]{} %les {} vides sont nécessaires
+	...
+\end{CodePythontexAlt}
 \end{codetex}
 
 \begin{codecles}
@@ -2562,7 +2581,7 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 
 \begin{itemize}
 	\item \Cle{Largeur} : largeur de la \textit{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
-	\item \Cle{Centre} : booléen pour centrer ou non la \textit{tcbox} ;\hfill{}défaut \Cle{true}
+	\item \Cle{Centre} : booléen pour centrer ou non la \textit{tcbox} ;\hfill{}défaut \Cle{false}
 	\item \Cle{TaillePolice} : taille des caractères ;\hfill{}défaut \Cle{\textbackslash footnotesize}
 	\item \Cle{EspacementVertical} : option (\textit{stretch}) pour l'espacement entre les lignes ;\hfill{}défaut \Cle{1}
 	\item \Cle{Lignes} : booléen pour afficher ou non les numéros de ligne.\hfill{}défaut \Cle{true}
@@ -2570,41 +2589,43 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \end{codecles}
 
 \begin{codetex}[listing only]
-\begin{CodePythontex}[Largeur=12cm]
-	#environnement Python(tex) centré avec numéros de ligne
+\begin{CodePythontex}{} %bien mettre les {} !!
+	#environnement Python(tex) par défaut
 	def f(x) :
 		return x**2
 \end{CodePythontex}
 \end{codetex}
 
 \begin{codesortie}
-\begin{CodePythontex}[Largeur=12cm]
-	#environnement Python(tex) centré avec numéros de ligne
+\begin{CodePythontex}{}
+	#environnement Python(tex) par défaut
 	def f(x) :
 		return x**2
 \end{CodePythontex}
 \end{codesortie}
 
 \begin{codetex}[listing only]
-\begin{CodePythontex}[Largeur=12cm,Lignes=false,Centre=false]
-	#environnement Python(tex) non centré sans numéro de ligne
+\begin{CodePythontexAlt}[Largeur=12cm,Centre,Lignes=false]{}
+	#environnement Python(tex) classique, centré, sans lignes
 	def f(x) :
 		return x**2
-\end{CodePythontex}
+\end{CodePythontexAlt}
 \end{codetex}
 
 \begin{codesortie}
-\begin{CodePythontex}[Largeur=12cm,Lignes=false,Centre=false]
-	#environnement Python(tex) non centré sans numéro de ligne
+\begin{CodePythontexAlt}[Largeur=12cm,Centre,Lignes=false]{}
+	#environnement Python(tex) classique, centré, sans lignes
 	def f(x) :
 		return x**2
-\end{CodePythontex}
+\end{CodePythontexAlt}
 \end{codesortie}
 
 \subsection{Présentation de code Python via le package minted}\label{pytminted}
 
 \begin{codeinfo}
 Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment Python.
+
+\cmaj{2.5.8} Deux styles sont désormais disponibles.
 
 \cmaj{2.5.0} C'est donc la \textsf{librairie} \clib{minted} qu'il faudra charger.
 \end{codeinfo}
@@ -2614,23 +2635,29 @@ Le package \ctex{minted} nécessite quand même une compilation avec l'option \c
 \end{codeattention}
 
 \begin{codetex}[listing only]
-\begin{CodePythonMinted}(*)[largeur][options]
+\begin{CodePythonMinted}(*)[largeur]{options}
 ...
 \end{CodePythonMinted}
 \end{codetex}
 
+\begin{codetex}[listing only]
+\begin{CodePythonMintedAlt}(*)[largeur]{options}
+...
+\end{CodePythonMintedAlt}
+\end{codetex}
+
 \begin{codecles}
-Plusieurs \Cle{arguments} (optionnels) sont disponibles :
+Plusieurs \Cle{arguments} sont disponibles :
 
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
 	\item le 1\up{er} argument \textit{optionnel} concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
-	\item le 2\up{nd} argument \textit{optionnel} concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcbox}.\hfill{}défaut \Cle{vide}
+	\item le 2\up{nd} argument \textit{obligatoire} concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcbox}.\hfill{}défaut \Cle{vide}
 \end{itemize}
 \end{codecles}
 
 \begin{codetex}[listing only]
-\begin{CodePythonMinted}[13cm][center]
+\begin{CodePythonMinted}[13cm]{center}
 	#environnement Python(minted) centré avec numéros, de largeur 13cm
 	def f(x) :
 		return x**2
@@ -2638,7 +2665,7 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \end{codetex}
 
 \begin{codesortie}
-\begin{CodePythonMinted}[13cm][center]
+\begin{CodePythonMinted}[13cm]{center}
 	#environnement Python(minted) centré avec numéros
 	def f(x) :
 		return x**2
@@ -2646,19 +2673,19 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \end{codesortie}
 
 \begin{codetex}[listing only]
-\begin{CodePythonMinted}*[0.8\linewidth][]
-	#environnement Python(minted) sans numéro, de largeur 0.8\linewidth
+\begin{CodePythonMintedAlt}*[0.8\linewidth]{}
+	#environnement Python(minted), style alt, sans numéro, de largeur 0.8\linewidth
 	def f(x) :
 		return x**2
-\end{CodePythonMinted}
+\end{CodePythonMintedAlt}
 \end{codetex}
 
 \begin{codesortie}
-\begin{CodePythonMinted}*[0.8\linewidth][]
-	#environnement Python(minted) sans numéro, de largeur 0.8\linewidth
+\begin{CodePythonMintedAlt}*[0.8\linewidth]{}
+	#environnement Python(minted), style alt, sans numéro, de largeur 0.8\linewidth
 	def f(x) :
 		return x**2
-\end{CodePythonMinted}
+\end{CodePythonMintedAlt}
 \end{codesortie}
 
 \subsection{Console d'exécution Python}
@@ -2670,7 +2697,7 @@ C'est l'environnement \ctex{ConsolePythontex} qui permet de le faire.
 \end{codeidee}
 
 \begin{codetex}[listing only]
-\begin{ConsolePythontex}[options]
+\begin{ConsolePythontex}[options]{} %les {} vides sont nécessaires
 ...
 \end{ConsolePythontex}
 \end{codetex}
@@ -2680,7 +2707,7 @@ Les \Cle{Clés} disponibles sont :
 
 \begin{itemize}
 	\item \Cle{Largeur} : largeur de la \textit{console} ;\hfill{}défaut \Cle{\textbackslash linewidth}
-	\item \Cle{Centre} : booléen pour centrer ou non la \textit{console} ;\hfill{}défaut \Cle{true}
+	\item \Cle{Centre} : booléen pour centrer ou non la \textit{console} ;\hfill{}défaut \Cle{false}
 	\item \Cle{TaillePolice} : taille des caractères ;\hfill{}défaut \Cle{\textbackslash footnotesize}
 	\item \Cle{EspacementVertical} : option (\textit{stretch}) pour l'espacement entre les lignes ;\hfill{}défaut \Cle{1}
 	\item \Cle{Label} : booléen pour afficher ou non le titre.\hfill{}défaut \Cle{true}
@@ -2688,8 +2715,8 @@ Les \Cle{Clés} disponibles sont :
 \end{codecles}
 
 \begin{codetex}[listing only]
-\begin{ConsolePythontex}[Largeur=14cm,Centre=false]
-	#console Python(tex) non centrée avec label
+\begin{ConsolePythontex}{}
+	#console Python(tex) par défaut
 	from math import sqrt
 	1+1
 	sqrt(12)
@@ -2698,8 +2725,8 @@ Les \Cle{Clés} disponibles sont :
 
 \begin{codesortie}
 \smallskip
-\begin{ConsolePythontex}[Largeur=14cm,Centre=false]
-	#console Python(tex) non centrée avec label
+\begin{ConsolePythontex}{}
+	#console Python(tex) par défaut
 	from math import sqrt
 	1+1
 	sqrt(12)
@@ -2707,31 +2734,29 @@ Les \Cle{Clés} disponibles sont :
 \end{codesortie}
 
 \begin{codetex}[listing only]
-\begin{ConsolePythontex}[Largeur=14cm,Label=false]
-	#console Python(tex) centrée sans label
+\begin{ConsolePythontex}[Largeur=14cm,Label=false,Centre]{}
+	#console Python(tex) centrée sans label, 14cm
 	table = [[1,2],[3,4]]
 	table[0][0]
 	
 	from random import randint
 	tableau = [[randint(1,20) for j in range(0,6)] for i in range(0,3)]
 	tableau
-	len(tableau), len(tableau[0])
-	tableau[1][4]
+	len(tableau), len(tableau[0]), tableau[1][4]
 \end{ConsolePythontex}
 \end{codetex}
 
 \begin{codesortie}
 \smallskip
-\begin{ConsolePythontex}[Largeur=14cm,Label=false]
-	#console Python(tex) centrée sans label
+\begin{ConsolePythontex}[Largeur=14cm,Label=false,Centre]{}
+	#console Python(tex) centrée sans label, 14cm
 	table = [[1,2],[3,4]]
 	table[0][0]
 	
 	from random import randint
 	tableau = [[randint(1,20) for j in range(0,6)] for i in range(0,3)]
 	tableau
-	len(tableau), len(tableau[0])
-	tableau[1][4]
+	len(tableau), len(tableau[0]), tableau[1][4]
 \end{ConsolePythontex}
 \end{codesortie}
 
@@ -6329,6 +6354,10 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.5.8|~:~~~~Ajout d'un style \textsf{Alt} pour les codes  (pages \pageref{pythonsimple} et \pageref{pytminted})
+
+{\small \bverb|       |~:~~~~Modification de la syntaxe des commandes avec \textsf{Pythontex} (page \pageref{pythontex})
 
 {\small \bverb|v 2.5.7|~:~~~~Ajout de clés pour les codes \textsf{Piton} + Console via \textsf{Pyluatex} (page \pageref{pythonpiton})
 

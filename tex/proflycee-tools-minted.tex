@@ -8,7 +8,11 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.5.8	Style alternatif + Modification marges
+
 %%------PYTHONMINTED
+
+%v1
 \tcbset{pytmintedno/.style={%
 	listing engine=minted,minted style=colorful,
 	minted language=python,listing only,
@@ -23,14 +27,14 @@
 	}
 }
 
-\DeclareTCBListing{CodePythonMinted}{ s O{12cm} O{} }{% étoilée sans numéro, taille puis options...
+\DeclareTCBListing{CodePythonMinted}{ s O{12cm} m }{% étoilée sans numéro, taille puis options...
 	\IfBooleanTF{#1}{pytmintedno}{pytminted},
 	enhanced,width=#2,#3,
 	colframe=Green,colback=ForestGreen!5,%
 	boxrule=1.25pt,
 	sharp corners=downhill,arc=12pt,
-	before skip=12pt,after skip=12pt,%
-	leftupper=8pt,top=10pt,bottom=4pt,rightupper=4pt,%
+	before skip=\baselineskip,after skip=\baselineskip,%
+	left=0.6em,top=\baselineskip,bottom=2mm,right=5mm,%
 	attach boxed title to top right={yshift=-\tcboxedtitleheight},
 	boxed title style={
 		size=small,colback=ForestGreen!25,boxrule=1.25pt,
@@ -42,7 +46,42 @@
 	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
 	title={\scriptsize\faPython}\:Code Python\vphantom{y},
 	watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
-	before upper=\renewcommand{\theFancyVerbLine}{\scriptsize\ttfamily\color{Green}\arabic{FancyVerbLine}}
+	before upper=\renewcommand{\theFancyVerbLine}{\scriptsize\ttfamily\color{DarkGray}\arabic{FancyVerbLine}}
+}
+
+%v2
+\tcbset{pytmintedaltno/.style={%
+	listing engine=minted,minted style=colorful,
+	minted language=python,listing only,
+	minted options={tabsize=4,fontsize=\footnotesize,autogobble},
+	}
+}
+
+\tcbset{pytmintedalt/.style={%
+	listing engine=minted,minted style=colorful,
+	minted language=python,listing only,
+	minted options={tabsize=4,fontsize=\footnotesize,autogobble,xleftmargin=16pt,linenos,numbersep=10pt},
+	underlay={%
+			\begin{tcbclipinterior}
+				\filldraw[lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
+			\end{tcbclipinterior}%
+		}
+	}
+}
+
+\DeclareTCBListing{CodePythonMintedAlt}{ s O{12cm} m }{% étoilée sans numéro, taille puis options...
+	\IfBooleanTF{#1}{pytmintedaltno}{pytmintedalt},
+	width=#2,#3,
+	enhanced,boxrule=0.75pt,colframe=DarkGray!50!Black,%
+	sharp corners,top=0mm,bottom=0mm,left=0.2em,right=5mm,%
+	before skip=\baselineskip,after skip=\baselineskip,%
+	colback=white,
+	fontupper=\footnotesize,fontlower=\footnotesize,%
+	watermark text={\faPython},watermark opacity=0.25,watermark zoom=0.50,%
+	title={{\scriptsize\faCode} Code Python},
+	lefttitle=0.4em,
+	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!50!Black,%
+	before upper=\renewcommand{\theFancyVerbLine}{\scriptsize\ttfamily\color{DarkGray}\arabic{FancyVerbLine}}
 }
 
 \endinput

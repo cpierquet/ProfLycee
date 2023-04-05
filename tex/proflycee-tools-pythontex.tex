@@ -8,6 +8,8 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.5.8	Style alternatif + Modification marges + Modification arguments
+
 %%------CONSOLEPYTHON
 \defKV[envpythonconsole]{%
 	Largeur=\def\CSPYlargeur{#1},%
@@ -20,13 +22,13 @@
 
 \setKVdefault[envpythonconsole]{%
 	Largeur=\linewidth,%
-	Centre=true,%
+	Centre=false,%
 	Label=true,%
 	TaillePolice=\footnotesize,%
 	EspacementVertical=1
 }
 
-\newenvironment{ConsolePythontex}[1][]
+\newenvironment{ConsolePythontex}[2][]
 {%
 	\useKVdefault[envpythonconsole]%
 	\setKV[envpythonconsole]{#1}% on paramètres les nouvelles clés et on les simplifie
@@ -57,17 +59,19 @@
 
 \setKVdefault[envpythonverb]{%
 	Largeur=\linewidth,%
-	Centre=true,%
+	Centre=false,%
 	Lignes=true,%
 	TaillePolice=\footnotesize,%
 	EspacementVertical=1
 }
 
+%v1
+
 \tcbset{stylepythontex/.style={%
 	enhanced,boxrule=1.25pt,%
 	sharp corners=downhill,arc=12pt,
-	before skip=12pt,after skip=12pt,%
-	top=10pt,bottom=1mm,rightupper=4pt,%leftupper=25pt,
+	before skip=\baselineskip,after skip=\baselineskip,%
+	top=\baselineskip,bottom=1mm,right=5mm,left=0.6em,
 	attach boxed title to top right={yshift=-\tcboxedtitleheight},
 	boxed title style={
 		size=small,colback=ForestGreen!25,boxrule=1.25pt,
@@ -79,21 +83,18 @@
 	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
 	title={\scriptsize\faPython}\:Code Python\vphantom{p},
 	watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
+	colframe=Green,colback=ForestGreen!5,%
+	before upper=\renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{darkgray}\arabic{FancyVerbLine}}
 	}
 }
 
 \tcbset{stylepythonnolineos/.style={%
-	stylepythontex,leftupper=10pt,
-	colframe=Green,colback=ForestGreen!5,%
-	before upper=\renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Gray}\arabic{FancyVerbLine}}
+	stylepythontex,leftupper=1em
 	}
 }
 
 \tcbset{stylepythonlineos/.style={%
-	stylepythontex,leftupper=25pt,
-	colframe=Green,colback=ForestGreen!5,%
-	%		fontlower=\small,%
-	before upper=\renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{Gray}\arabic{FancyVerbLine}}
+	stylepythontex,leftupper=2em
 	}
 }
 
@@ -105,7 +106,7 @@
 	width=#1,stylepythonnolineos
 }
 
-\newenvironment{CodePythontex}[1][]
+\NewDocumentEnvironment{CodePythontex}{ O{} m }
 {%
 	\useKVdefault[envpythonverb]%
 	\setKV[envpythonverb]{#1}% on paramètres les nouvelles clés et on les simplifie
@@ -115,7 +116,7 @@
 		{\begin{tcpythontexcode}[\CODPYlargeur]}
 		{\begin{tcpythontexcodeno}[\CODPYlargeur]}
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
-		{\begin{pyverbatim}[][fontsize=\CODPYfonte,numbers=left,numbersep=10pt,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
+		{\begin{pyverbatim}[][fontsize=\CODPYfonte,numbers=left,numbersep=0.75em,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
 		{\begin{pyverbatim}[][numbers=none,numbersep=0pt,fontsize=\CODPYfonte,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
 }%
 {%
@@ -123,6 +124,64 @@
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
 		{\end{tcpythontexcode}}
 		{\end{tcpythontexcodeno}}
+	\verbcenterpost
+}
+
+%v2
+\tcbset{stylepythontexalt/.style={%
+	enhanced,boxrule=0.75pt,colframe=DarkGray!50!Black,%
+	sharp corners,top=0mm,bottom=0mm,left=0.2em,right=5mm,%
+	before skip=\baselineskip,after skip=\baselineskip,%
+	colback=white,
+	fontupper=\footnotesize,fontlower=\footnotesize,%
+	title={{\scriptsize\faCode} Code Python},
+	lefttitle=0.4em,
+	watermark text={\faPython},watermark opacity=0.25,watermark zoom=0.50,
+	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!50!Black,
+	before upper=\renewcommand\theFancyVerbLine{\scriptsize\ttfamily\color{darkgray}\arabic{FancyVerbLine}}
+	}
+}
+
+\tcbset{stylepythonnolineosalt/.style={%
+		stylepythontexalt,leftupper=0.2em,
+	}
+}
+
+\tcbset{stylepythonlineosalt/.style={%
+		stylepythontexalt,leftupper=1.35em,
+		underlay={%
+			\begin{tcbclipinterior}
+				\filldraw[lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
+			\end{tcbclipinterior}%
+		}
+	}
+}
+
+\newtcolorbox{tcpythontexcodealt}[1][\linewidth]{%
+	width=#1,stylepythonlineosalt
+}
+
+\newtcolorbox{tcpythontexcodenoalt}[1][\linewidth]{%
+	width=#1,stylepythonnolineosalt
+}
+\NewDocumentEnvironment{CodePythontexAlt}{ O{} m }
+{%
+	\useKVdefault[envpythonverb]%
+	\setKV[envpythonverb]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\VerbatimEnvironment
+	\verbcenterpre
+	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+		{\begin{tcpythontexcodealt}[\CODPYlargeur]}
+		{\begin{tcpythontexcodenoalt}[\CODPYlargeur]}
+	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+		{\begin{pyverbatim}[][fontsize=\CODPYfonte,numbers=left,numbersep=0.75em,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
+		{\begin{pyverbatim}[][numbers=none,numbersep=0pt,fontsize=\CODPYfonte,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
+}%
+{%
+	\end{pyverbatim}
+	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
+		{\end{tcpythontexcodealt}}
+		{\end{tcpythontexcodenoalt}}
 	\verbcenterpost
 }
 
