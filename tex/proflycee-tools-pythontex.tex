@@ -42,7 +42,7 @@
 				framesep=3mm,frame=single,fontsize=\CSPYfonte,framerule=1pt,rulecolor=\color{ForestGreen},baselinestretch=\CSPYstretch]}
 }%
 {%
-	\end{pyconsole}
+		\end{pyconsole}
 	\end{minipage}
 	\hookcenterpost
 }
@@ -143,16 +143,16 @@
 }
 
 \tcbset{stylepythonnolineosalt/.style={%
-		stylepythontexalt,leftupper=0.2em,
+	stylepythontexalt,leftupper=0.2em,
 	}
 }
 
 \tcbset{stylepythonlineosalt/.style={%
-		stylepythontexalt,leftupper=1.35em,
-		underlay={%
-			\begin{tcbclipinterior}
-				\filldraw[lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
-			\end{tcbclipinterior}%
+	stylepythontexalt,leftupper=1.35em,
+	underlay={%
+		\begin{tcbclipinterior}
+			\filldraw[lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
+		\end{tcbclipinterior}%
 		}
 	}
 }

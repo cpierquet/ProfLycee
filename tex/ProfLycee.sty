@@ -3,8 +3,9 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/04/05 2.5.8 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/04/06 2.5.8 Aide pour l'utilisation de LaTeX en lycee]
 % 2.5.8	Ajout du style Classique pour PythonLst (externalisation listings) + Modification marges CodePiton (1.5)
+%		Refonte des commandes pour les codes pour éviter des soucis avec les étoilées
 % 2.5.7	Ajout d'un style classique pour le code python (Piton) + console piton/pyluatex
 %		Refonte des commandes tcbset pour les codes
 % 2.5.6	Ajout d'une clé [Trigo] pour \AxexTikz (avec graduations libres)
@@ -115,22 +116,8 @@
 		{}%
 }
 
-%%------PRESENTATIONDECODES
-\NewTCBListing{PresentationCode}{ O{ForestGreen} m }{%
-	sharp corners=downhill,enhanced,arc=12pt,skin=bicolor,%
-	colback=#1!5!white,colframe=#1!75!black,colbacklower=White,%
-	attach boxed title to top right={yshift=-\tcboxedtitleheight},title=Code \LaTeX,%
-	boxed title style={%
-		colframe=#1!75!black,colback=#1!15!white,%
-		,sharp corners=downhill,arc=12pt,%
-	},%
-	fonttitle=\color{#1!90!black}\itshape\ttfamily\footnotesize,%
-	listing options={%
-		style=tcblatex,basicstyle=\footnotesize\ttfamily,%
-		keywordstyle=\bfseries\color{Blue},tabsize=2,%
-	},%
-	#2
-}
+%%------Codes listings
+\input{proflycee-tools-listings.tex}
 
 %%------SPLINES
 %commande utile pour extraire des infos d'une liste
@@ -319,10 +306,6 @@
 	\IfStrEq{\CFposcmd}{right}%si poscmd=right
 		{\draw (C3\CFL) node[left,\CFcoulcmd,font=\CFtaille] {#2} ;}
 		{}
-	%LA LIGNE DE SÉPARATION
-	%\ifboolKV[paramfenxcas]{Sep}%si sep=true
-	%	{\draw[\CFcouleur] (A1\CFL) -- (A4\CFL);}
-	%	{}
 	%LE RÉSULTAT
 	\IfStrEq{\CFposres}{centre}%si posrep=center
 		{\draw (R2\CFL) node[\CFcoulres,font=\CFtaille] {#3} ;}
@@ -347,9 +330,6 @@
 		{\draw[\CFcouleur,fill=lightgray!25,rounded corners] ($(A01) + (0,2pt)$) rectangle ++ ($({\CFlarg},2em)$) node[ForestGreen!50!\CFcouleur,midway,font=\CFtailletitre\ttfamily\bfseries] {\CFlabeltitre};}
 		{}
 }
-
-%%------Codes listings
-\input{proflycee-tools-listings.tex}
 
 %%------FakeTerm
 %couleurs (inspirées par termsim !)

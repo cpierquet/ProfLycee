@@ -6,7 +6,7 @@
 
 \documentclass[a4paper,french,11pt]{article}
 \def\PLversion{2.5.8}
-\def\PLdate{5 Avril 2023}
+\def\PLdate{6 Avril 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 %\usepackage{lualatex-math}
@@ -89,12 +89,12 @@
 }
 
 \tcbset{vignettelib/.style={%
-		fontupper={\vphantom{pf}\footnotesize\ttfamily},
-		vignettes,%
-		colframe=ForestGreen,coltitle=white,colback=white,%
-		overlay={\begin{tcbclipinterior}%
-				\fill[fill=green!25]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{ForestGreen}{\scalebox{0.85}[0.75]{\textbf{LIB}}}}} ($(interior.north west)+(5pt,0pt)$);%
-		\end{tcbclipinterior}}
+	fontupper={\vphantom{pf}\footnotesize\ttfamily},
+	vignettes,%
+	colframe=ForestGreen,coltitle=white,colback=white,%
+	overlay={\begin{tcbclipinterior}%
+			\fill[fill=green!25]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{ForestGreen}{\scalebox{0.85}[0.75]{\textbf{LIB}}}}} ($(interior.north west)+(5pt,0pt)$);%
+	\end{tcbclipinterior}}
 	}
 }
 
@@ -246,8 +246,7 @@
 {\deblst} résoudre, de manière approchée, des équations\\
 {\deblst} tracer \textit{facilement} des repères/grilles/courbes\\
 {\deblst} tracer  des courbes \textit{lisses} avec gestion des extrema et des dérivées\\
-{\deblst} simuler une fenêtre de logiciel de calcul formel, une console d'exécution \\
-{\deblst} présenter du code \textsf{python} ou \textsf{pseudocode} \\
+{\deblst} présenter du code \textsf{python} ou \textsf{pseudocode}, une console d'exécution \textsf{Python} \\
 {\deblst} tracer rapidement un pavé, un tétraèdre \\
 {\deblst} simplifier des calculs sous forme fractionnaire, simplifier des racines \\
 {\deblst} effectuer des calculs avec des suites récurrentes \\
@@ -303,13 +302,13 @@
 \subsection{\og Philosophie \fg{} du package}
 
 \begin{codeidee}
-Ce \ctex{package}, très largement inspiré (et beaucoup moins abouti !) de l'excellent \ctex{ProfCollege} de C. Poulain et des excellents \ctex{tkz-*} d'A. Matthes, va définir quelques outils pour des situations particulières qui ne sont pas encore dans \ctex{ProfCollege}.
+Ce \ctex{package}, très largement inspiré (et beaucoup moins abouti) de l'excellent \ctex{ProfCollege} de C. Poulain et des excellents \ctex{tkz-*} d'A. Matthes, va définir quelques outils pour des situations particulières qui ne sont pas encore dans \ctex{ProfCollege}.
 
-On peut le voir comme un (maigre) complément à \ctex{ProfCollege}, et je précise que la syntaxe est très proche (car pertinente de base) et donc pas de raison de changer une équipe qui gagne !
+On peut le voir comme un (maigre) complément à \ctex{ProfCollege}, et je précise que la syntaxe est très proche (car pertinente de base) et donc pas de raison de changer une \textit{équipe qui gagne} !
 
 \medskip
 
-Il se charge, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee\}}. Il charge des {packages} utiles, mais j'ai fait le choix de laisser l'utilisateur gérer ses autres {packages}, comme notamment \ctex{amssymb} qui peut poser souci en fonction de la \textit{position} de son chargement.
+Il se charge de manière classique, dans le préambule, par \ctex{\textbackslash usepackage\{ProfLycee\}}. Il charge des {packages} utiles, mais j'ai fait le choix de laisser l'utilisateur gérer ses autres {packages}, comme notamment \ctex{amssymb} qui peut poser souci en fonction de la \textit{position} de son chargement.
 
 L'utilisateur est libre de charger ses autres {packages} utiles et habituels, ainsi que ses \textsf{polices} et \textsf{encodages} habituels !
 \end{codeidee}
@@ -372,7 +371,7 @@ Les librairies disponibles seront indiquées dans les sections spécifiques. Pou
 \end{codeinfo}
 
 \begin{codeattention}
-\cmaj{2.5.8} Pour le package \ctex{piton}, la version minimale requise est la \ctex{1.5} pour bénéficier d'un rendu optimal (marges) de la présentation du code \textsf{Python}.
+\cmaj{2.5.8} Pour le package \ctex{piton}, la version minimale requise est la \ctex{1.5} pour bénéficier d'un rendu optimal (au niveau des marges) de la présentation du code \textsf{Python}.
 \end{codeattention}
 
 \begin{codeinfo}
@@ -404,28 +403,6 @@ L'option \Cle{build} charge certains packages (librairies \clib{minted} et \clib
 \pagebreak
 
 \section{Compléments}
-
-%\subsection{Changements à partir de la version 2 !!}
-%
-%\begin{codeattention}
-%\cmaj{2.0.0} Pour des raisons pratiques, les commandes et environnements disponibles dans \ctex{ProfLycee} ont été renommés, pour utiliser des noms plus génériques et explicites.
-%
-%La nomenclature des \Cle{clés} a été également revue, avec -- dans la grande majorité des cas -- une majuscule en début.
-%
-%\smallskip
-%
-%Je préfère faire ces ajustements tant que le package est assez \textit{jeune} !
-%\end{codeattention}
-%
-%\begin{codeattention}
-%\cmaj{2.0.0} L'ancienne version (qui ne sera mise à jour !!) du package \ctex{ProfLycee} est toutefois encore disponible, pour une migration en douceur, elle est désormais accessible sous le nom \ctex{ProfLycee-old}, et la documentation est également encore disponible.
-%\end{codeattention}
-%
-%\begin{codetex}[listing only]
-%...
-%\usepackage[options]{ProfLycee-old} %nouveautés non disponibles par contre...
-%...
-%\end{codetex}
 
 \subsection{Le système de \og clés/options \fg}
 
@@ -461,27 +438,8 @@ Les \textsf{codes} seront présentés dans des \textsf{boîtes} \textcolor{red!7
 Les \textsf{clés} ou \textsf{options} seront présentées dans des \textsf{boîtes} \textcolor{ForestGreen}{{\small \faPaperclip} Clés}.
 \end{codeinfo}
 
-%\subsection{Outils disponibles}
-%
-%\begin{codeidee}
-%Le {package}, qui s'enrichira peut-être au fil du temps permet -- pour le moment -- de :
-%
-%\begin{itemize}
-%	\item tracer des splines cubiques avec gestion \textit{assez fine} des tangentes ;
-%	\item tracer des tangentes (ou portions) de tangentes sur la même base que pour les splines ;
-%	\item simuler une fenêtre de logiciel formel (\textit{à la manière de} \textsf{XCas}) ;
-%	\item mettre en forme du code \textsf{python} ou \textsf{pseudocode} ;
-%	\item simuler une fenêtre de terminal (win/unix/osx) ;
-%	\item créer un cartouche \textit{à la manière de} Capytale ;
-%	\item créer rapidement un pavé droit ou un tétraèdre en \TikZ, avec gestion des nœuds ;
-%	\item créer rapidement un ensemble d'éléments, avec gestion des espaces ;
-%	\item créer, dans un environnement \TikZ, la \og toile \fg{} pour une suite récurrente :
-%	\item etc
-%\end{itemize}
-%\end{codeidee}
-
 \begin{codeinfo}
-À noter que certaines commandes disponibles sont liées à un environnement \ctex{tikzpicture}, elles ne sont pas autonomes mais permettent de conserver -- en parallèle -- toute commande liée à \TikZ{} !
+À noter que certaines commandes disponibles sont liées à un environnement \ctex{tikzpicture}, elles peuvent ne pas être autonomes mais permettent de conserver -- en parallèle -- toute commande liée à \TikZ{} !
 \end{codeinfo}
 
 \subsection{Compilateur(s)}
@@ -572,8 +530,8 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \begin{CodePythonLst}(*)[largeur]{commandes tcbox}...\end{CodePythonLst}
 \begin{CodePythonLstAlt}(*)[largeur]{commandes tcbox}...\end{CodePythonLstAlt}
 %:=librairie piton
-\begin{CodePiton}[options]...\end{CodePiton}
-\begin{PitonConsole}[options Piton]<Clés>{paramètres tcbox}...\end{PitonConsole}
+\begin{CodePiton}[options piton]{commandes tcbox}...\end{CodePiton}
+\begin{PitonConsole}<Clés>{commandes tcbox}...\end{PitonConsole}
 %:=librairie pythontex
 \begin{CodePythontex}[options]{}...\end{CodePythontex}
 \begin{CodePythontexAlt}[options]{}...\end{CodePythontexAlt}
@@ -583,7 +541,8 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \begin{CodePythonMintedAlt}(*)[largeur]{commandes tcbox}...\end{CodePythonMintedAlt}
 
 %présentation de pseudocode
-\begin{PseudoCode}(*)[largeur][options]...\end{PseudoCode}
+\begin{PseudoCode}(*)[largeur]{commandes tcbox}...\end{PseudoCode}
+\begin{PseudoCodeAlt}(*)[largeur]{commandes tcbox}...\end{PseudoCodeAlt}
 \end{codetex}
 
 \pagebreak
@@ -1451,7 +1410,7 @@ Avec des explications utiles à la compréhension :
 \begin{center}
 	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=7,ygrille=1,ygrilles=0.5]
 		\genfenetre
-		\SplineTikz[affpoints=true]{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
+		\SplineTikz[AffPoints]{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
 		\gennotice
 		\gentangentes
 		\listecoeffs{3}{3}{3}{3}
@@ -1467,12 +1426,6 @@ Dans la majorité des cas, le \textit{coefficient} \textcircled{3} permet d'obte
 Dans certains cas, il se peut que la portion paraisse un peu trop \og abrupte \fg{}.
 
 On peut dans ce cas \textit{jouer} sur les coefficients de cette portion pour \textit{arrondir} un peu tout cela (\textit{ie} diminuer le \textsf{coeff}\ldots)!
-
-%\begin{itemize}
-%	\item être donnés (pour utiliser le même partout) sous la forme \Cle{coeffs=C} ;
-%	\item être donnés portion par portion, sous la forme \Cle{coeffs=C1§C2§...} ;
-%	\item être donné de manière très fine, portion par portion et côté par côté, sous la forme \Cle{coeffs=C1G/C1D§C2G/C2D§...}.
-%\end{itemize}
 
 \begin{center}
 	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=7,ygrille=1,ygrilles=0.5]
@@ -1507,8 +1460,6 @@ On peut dans ce cas \textit{jouer} sur les coefficients de cette portion pour \t
 		\foreach \y in {0,1,...,4} {\draw[gray,line width=1.5pt] (4pt,\y) -- (-4pt,\y) ;}
 		\draw[darkgray] (1,-4pt) node[below,font=\sffamily] {1} ;
 		\draw[darkgray] (-4pt,1) node[left,font=\sffamily] {1} ;
-%		\draw (1,-4pt) node[below,font=\sffamily] {1} ;
-%		\draw (-4pt,1) node[left,font=\sffamily] {1} ;
 		\def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
 		\SplineTikz[AffPoints,Coeffs=3§3§3§2/1]{\LISTE}
 	\end{tikzpicture}
@@ -2021,137 +1972,14 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 
 \part{Présentation de codes}
 
-%\section{L'outil \og Calcul Formel \fg}
-%
-%\subsection{Introduction}
-%
-%\begin{codeidee}
-%L'idée des commandes suivantes est de définir, dans un environnement \TikZ, une présentation proche de celle d'un logiciel de calcul formel comme \textsf{XCas} ou \textsf{Geogebra}.
-%
-%\smallskip
-%
-%Les sujets d'examens, depuis quelques années, peuvent comporter des \textit{captures d'écran} de logiciel de calcul formel, l'idée est ici de reproduire, de manière autonome, une telle présentation.
-%
-%\smallskip
-%
-%À la manière du {package} \ctex{tkz-tab}, l'environnement de référence est un environnement \TikZ, dans lequel les lignes sont créées petit à petit, à l'aide de nœuds qui peuvent être réutilisés à loisir ultérieurement.
-%\end{codeidee}
-%
-%\subsection{La commande \og CalculFormelParametres \fg}
-%
-%\begin{codeinfo}
-%La première chose à définir est l'ensemble des paramètres \textit{globaux} de la fenêtre de calcul formel, à l'aide de \Cle{Clés}.
-%\end{codeinfo}
-%
-%\begin{codetex}[listing only]
-%...
-%\begin{tikzpicture}[...]
-%	\CalculFormelParametres[options]
-%	...
-%\end{tikzpicture}
-%\end{codetex}
-%
-%\begin{codecles}
-%Les \Cle{Clés} disponibles sont :
-%\begin{itemize}
-%	\item \Cle{Largeur} : largeur de l'environnement ; \hfill{}défaut \Cle{16}
-%	\item \Cle{EspaceLg} : espacement vertical entre les lignes ;\hfill{}défaut \Cle{2pt}
-%	\item \Cle{PremCol} \& \Cle{HautPremCol} : largeur et hauteur de la case du \textit{petit numéro} ;\hfill{}défaut \Cle{0.3} \&  \Cle{0.4}
-%	\item \Cle{Taille} : taille du texte ;\hfill{}défaut \Cle{\textbackslash normalsize}
-%	\item \Cle{Couleur} : couleur des traits de l'environnement ;\hfill{}défaut \Cle{darkgray}
-%	\item \Cle{Titre} : booléen pour l'affichage d'un bandeau de titre ;\hfill{}défaut \Cle{false}
-%	\item \Cle{TailleTitre} : taille du titre ;\hfill{}défaut \Cle{\textbackslash normalsize}
-%	\item \Cle{PosCmd} : position horizontale de la commande d'entrée ;\hfill{}défaut \Cle{gauche}
-%	\item \Cle{PosRes} : position horizontale de la commande de sortie ;\hfill{}défaut \Cle{centre}
-%	\item \Cle{CouleurCmd} : couleur de la commande d'entrée ;\hfill{}défaut \Cle{red}
-%	\item \Cle{CouleurRes} : couleur de la commande de sortie ;\hfill{}défaut \Cle{blue}
-%	\item \Cle{Sep} : booléen pour l'affichage du trait de séparation E/S ;\hfill{}défaut \Cle{true}
-%	\item \Cle{Menu} : booléen pour l'affichage du \textit{bouton} MENU ;\hfill{}défaut \Cle{true}
-%	\item \Cle{LabelTitre} : libellé du titre.\hfill{}défaut \Cle{Résultats obtenus avec un logiciel de Calcul Formel}
-%\end{itemize}
-%\end{codecles}
-%
-%\subsection{La commande \og CalculFormelLigne \fg}
-%
-%\begin{codeinfo}
-%Une fois les paramètres déclarés, il faut créer les différentes lignes, grâce à la \ctex{CalculFormelLigne}.
-%\end{codeinfo}
-%
-%\begin{codetex}[listing only]
-%\begin{tikzpicture}[...]
-%	\CalculFormelParametres[options]
-%	\CalculFormelLigne[options]{commande}{résultat}
-%	...
-%\end{tikzpicture}
-%\end{codetex}
-%
-%\begin{codecles}
-%Les (quelques) \Cle{Clés} disponibles sont :
-%
-%\begin{itemize}
-%	\item \Cle{HautCmd} et \Cle{HautRes}: hauteur de la ligne de commande d'entrée et de sortie ;\hfill{}défaut \Cle{0.75}
-%	\item deux \textsf{arguments}, celui de la commande d'entrée et celui de la commande de sortie.
-%\end{itemize}
-%%
-%Chaque argument \textsf{COMMANDE} \& \textsf{RÉSULTAT} peut être formaté (niveau police) de manière indépendante.
-%\end{codecles}
-%
-%\begin{codetex}[tikz lower]
-%%code tikz
-%\CalculFormelParametres[Titre=true,CouleurCmd=olive,CouleurRes=orange]
-%\CalculFormelLigne{COMMANDE 1}{RÉSULTAT 1}
-%\CalculFormelLigne[HautCmd=0.75,HautRes=1]{\texttt{(x+1)\CFchap2}}{$\mathtt{x^2+2x+1}$}
-%%\CFchap := ^ en mathtt
-%\end{codetex}
-%
-%\subsection{Visualisation des paramètres}
-%
-%\begin{codeinfo}
-%Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les différents nœuds crées par les \textsf{macros}.
-%
-%\begin{center}
-%	\begin{tikzpicture}[x=0.7cm,y=0.5cm,line width=1pt]
-%	\CalculFormelParametres[Largeur=12cm,Couleur=lightgray,EspaceLg=12pt,Menu=false]
-%	\CalculFormelLigne{}{}
-%	\CalculFormelLigne[HautCmd=1,HautRes=1.25]{}{}
-%	%explications
-%	\foreach \noeud in {01,11,21,31,41,51,02,12,22,32,42,52}
-%		\draw[blue] (A\noeud) node[font=\footnotesize\ttfamily] {A\noeud} ;
-%\end{tikzpicture}
-%\end{center}
-%
-%\begin{center}
-%	\begin{tikzpicture}[x=0.7cm,y=0.7cm,line width=1pt]
-%	\CalculFormelParametres[Titre,Largeur=12cm,EspaceLg=10pt,PremCol=0.5,HautPremCol=0.7,Couleur=lightgray]
-%	\CalculFormelLigne{COMMANDE 1}{RÉSULTAT 1}
-%	\CalculFormelLigne[HautCmd=0.85,HautRes=1.05]{COMMANDE 2}{RÉSULTAT 2}
-%	%explications
-%	\draw[CadetBlue,<->,>=latex] ($(A22) + (0,-12pt)$) -- ($(A52) + (0,-12pt)$) node[midway,below,font=\footnotesize\sffamily] {\Cle{Largeur}} ;
-%	\draw[CadetBlue,<->,>=latex] ($(A51) + (12pt,0)$) -- ($(A32) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{EsapceLg}} ;
-%	\draw[CadetBlue,<->,>=latex] ($(A02) + (0,2pt)$) -- ($(A02) + (0,2pt) + ({-\CFpremcol},0) $) node[midway,above,font=\footnotesize\sffamily] {\Cle{PremCol}} ;
-%	\draw[CadetBlue,<->,>=latex] ($(A02) + ({-\CFpremcol},0) + (-2pt,0)$) -- ($(A02) + ({-\CFpremcol},{-\CFhpremcol}) +(-2pt,0)$) node[midway,left,font=\footnotesize\sffamily] {\Cle{HautPremCol}} ;
-%	\draw[CadetBlue,<->,>=latex] ($(A31) + (12pt,0)$) -- ($(A41) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautCom}} ;
-%	\draw[CadetBlue,<->,>=latex] ($(A41) + (12pt,0)$) -- ($(A51) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautRes}} ;
-%	\draw[CadetBlue,<->,>=latex] ($(A32) + (12pt,0)$) -- ($(A42) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautCom}} ;
-%	\draw[CadetBlue,<->,>=latex] ($(A42) + (12pt,0)$) -- ($(A52) + (12pt,0)$) node[midway,right,font=\footnotesize\sffamily] {\Cle{HautRes}} ;
-%	\draw[CadetBlue,->,>=latex] ($(A12) + (0,-12pt)$) to[bend left=10] ($(A12) + (0,-12pt) + (-18pt,-12pt)$) node[below left,font=\footnotesize\sffamily] {\Cle{Couleur}} ;
-%	\draw[CadetBlue,->,>=latex] ($(A52) + (-0.65,0.25)$) to[bend left=10] ($(A52) + (-0.65,0.25) + (-18pt,12pt)$) node[inner sep=0pt,above left=1pt,font=\footnotesize\sffamily] {\Cle{Menu}} ;
-%	\draw[CadetBlue,->,>=latex] ($(A12) + (16pt,0)$) to[bend left=10] ($(A12) + (16pt,0) + (18pt,-12pt)$) node[inner sep=0pt,below right=1pt,font=\footnotesize\sffamily] {\Cle{Sep}} ;
-%	\draw[CadetBlue,->,>=latex] ($(A01) + (8pt,2pt) + (0,1em)$) to[bend left=10] ($(A01) + (8pt,2pt) + (0,1em) + (-18pt,12pt)$) node[inner sep=0pt,above=1pt,font=\footnotesize\sffamily] {\Cle{Titre} \& \Cle{TailleTitre} \& \Cle{LabelTitre}} ;
-%\end{tikzpicture}
-%\end{center}
-%\end{codeinfo}
-%
-%\newpage
-
 \section{Code Python \og simple \fg{} via le package listings}\label{pythonsimple}
 
 \subsection{Introduction}
 
 \begin{codeidee}
-Le {package} \ctex{listings} permet d'insérer et de formater du code, notamment du code Python.
+Le {package} \ctex{listings} permet d'insérer et de formater du code, notamment du code \textsf{Python}.
 
-En \textit{partenariat} avec \ctex{tcolorbox}, on peut donc présenter \textit{joliment} du code python !
+En \textit{partenariat} avec \ctex{tcolorbox}, on peut donc présenter \textit{joliment} du code \textsf{Python} !
 \end{codeidee}
 
 \begin{codeinfo}
@@ -2159,7 +1987,7 @@ Le package \ctex{listings} ne nécessite pas de compilation particulière, au co
 \end{codeinfo}
 
 \begin{codeinfo}
-Les styles utilisés pour formater le code Python ne sont pas modifiables. Ils donnent un rendu proche de celui des packages comme \ctex{pythontex} ou \ctex{minted} ou \ctex{piton}.
+Les styles utilisés pour formater le code \textsf{Python} ne sont pas modifiables. Ils donnent un rendu proche de celui des packages comme \ctex{pythontex} ou \ctex{minted} ou \ctex{piton}.
 
 \smallskip
 
@@ -2169,7 +1997,7 @@ Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code \tex
 \subsection{Commande et options}
 
 \begin{codeidee}
-L'environnement \ctex{CodePythonLst} permet de présenter du code python, dans une \ctex{tcolorbox} avec deux styles particuliers (\cmaj{2.5.8}).
+L'environnement \ctex{CodePythonLst} permet de présenter du code \textsf{Python}, dans une \ctex{tcolorbox} avec deux styles particuliers (\cmaj{2.5.8}).
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -2201,7 +2029,7 @@ Les environnements \ctex{DeclareTCBListing} créés par \ctex{tcolorbox} et \cte
 \subsection{Insertion via un fichier \og externe \fg}
 
 \begin{codeidee}
-Pour des raison pratiques, il est parfois intéressant d'avoir le code Python dans un fichier externe au ficher \ctex{tex}, ou bien créé directement par le fichier \ctex{tex} (via \ctex{scontents}, notamment, mais non chargé par \ctex{ProfLycee}).
+Pour des raison pratiques, il est parfois intéressant d'avoir le code \textsf{Python} dans un fichier externe au ficher \ctex{tex}, ou bien créé directement par le fichier \ctex{tex} (via \ctex{scontents}, notamment, mais non chargé par \ctex{ProfLycee}).
 
 Dans ce cas, il n'est pas nécessaire d'aligner le code \og à gauche \fg, en utilisant une commande alternative.
 
@@ -2342,7 +2170,7 @@ def trace_parabole_tableaux():
 \begin{codeinfo}
 \cmaj{2.5.0} Cette section nécessite de charger la \textsf{librairie} \clib{piton} dans le préambule.
 
-\cmaj{2.5.7} Une console Python est disponible, elle nécessite le package \ctex{pyluatex}, qui n'est pas chargé par \ctex{ProfLycee}, du fait de l'obligation de spécifier le \textit{chemin} pour l'exécutable \textsf{Python} !
+\cmaj{2.5.7} Une console \textsf{Python} est disponible, elle nécessite le package \ctex{pyluatex}, qui n'est pas chargé par \ctex{ProfLycee}, du fait de l'obligation de spécifier le \textit{chemin} pour l'exécutable \textsf{Python} !
 \end{codeinfo}
 
 \begin{codetex}[listing only]
@@ -2381,7 +2209,7 @@ Ce package n'est chargé que si la compilation détectée est en \hologo{LuaLaTe
 \subsection{Présentation de code Python}
 
 \begin{codetex}[listing only]
-\begin{CodePiton}[options]
+\begin{CodePiton}[options]{options tcbox}
 ...
 \end{CodePiton}
 \end{codetex}
@@ -2406,8 +2234,12 @@ Plusieurs \Cle{clés} sont disponibles :
 Du fait du paramétrage des boîtes \ctex{tcolorbox}, il se peut que le rendu soit non conforme si elle doit être insérée dans une autre \ctex{tcolorbox}\ldots{} !
 \end{codeinfo}
 
+\begin{codeinfo}
+Pour éviter des problèmes avec le code interprété par \textsf{piton}, les \ctex{\{\}} de l'argument obligatoire sont nécessaires au bon fonctionnement du code.
+\end{codeinfo}
+
 \begin{codetex}[listing only]
-\begin{CodePiton}
+\begin{CodePiton}{}
 #environnement piton avec numéros de ligne, pleine largeur, style moderne
 def arctan(x,n=10):
 	if x < 0:
@@ -2419,7 +2251,7 @@ def arctan(x,n=10):
 \end{CodePiton}
 \end{codetex}
 
-\begin{CodePiton}
+\begin{CodePiton}{}
 #environnement piton avec numéros de ligne, pleine largeur, style moderne
 def arctan(x,n=10):
 	if x < 0:
@@ -2431,7 +2263,7 @@ def arctan(x,n=10):
 \end{CodePiton}
 
 \begin{codetex}[listing only]
-\begin{CodePiton}[Style=Classique,Filigrane]
+\begin{CodePiton}[Style=Classique,Filigrane]{}
 #environnement piton avec numéros, style classique, filigrane
 def arctan(x,n=10):
 	if x < 0:
@@ -2443,8 +2275,8 @@ def arctan(x,n=10):
 \end{CodePiton}
 \end{codetex}
 
-\begin{CodePiton}[Style=Classique,Filigrane]
-	#environnement piton avec numéros, style classique, filigrane
+\begin{CodePiton}[Style=Classique,Filigrane]{}
+#environnement piton avec numéros, style classique, filigrane
 def arctan(x,n=10):
 	if x < 0:
 		return -arctan(-x) #> (appel récursif)
@@ -2455,12 +2287,12 @@ def arctan(x,n=10):
 \end{CodePiton}
 
 \begin{codetex}[listing only]
-\begin{CodePiton}[Alignement=flush right,Largeur=13cm]
+\begin{CodePiton}[Alignement=flush right,Largeur=13cm]{}
 def f(x) :
 	return x**2
 \end{CodePiton}
 
-\begin{CodePiton}[Alignement=flush left,Largeur=11cm]
+\begin{CodePiton}[Alignement=flush left,Largeur=11cm]{}
 def f(x) :
 	return x**2
 \end{CodePiton}
@@ -2468,13 +2300,13 @@ def f(x) :
 \begin{itemize} %Avec des indentations d'environnement :
 	\item On essaye avec un \texttt{itemize} :
 	%
-	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false]
+	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false]{}
 		def f(x) :
 			return x**2
 	\end{CodePiton}
 	\item Et avec un autre \texttt{itemize} :
 	%
-	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false,BarreTitre=false]
+	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false,BarreTitre=false]{}
 		#avec numéros, de largeur 12cm, centré, classique, sans cadre/titre
 		def f(x) :
 			return x**2
@@ -2482,13 +2314,13 @@ def f(x) :
 \end{itemize}
 \end{codetex}
 
-\begin{CodePiton}[Alignement=flush right,Largeur=13cm]
+\begin{CodePiton}[Alignement=flush right,Largeur=13cm]{}
 #avec numéros, de largeur 13cm, aligné à droite
 def f(x) :
 	return x**2
 \end{CodePiton}
 
-\begin{CodePiton}[Alignement=flush left,Largeur=11cm]
+\begin{CodePiton}[Alignement=flush left,Largeur=11cm]{}
 #avec numéros, de largeur 11cm, aligné à gauche
 def f(x) :
 	return x**2
@@ -2497,14 +2329,14 @@ def f(x) :
 \begin{itemize}
 	\item On essaye avec un \texttt{itemize} :
 	%
-	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false]
+	\begin{CodePiton}[Largeur=12cm,Style=Classique,Cadre=false]{}
 		#avec numéros, de largeur 12cm, centré, classique, sans cadre
 		def f(x) :
 			return x**2
 	\end{CodePiton}
 	\item Et avec un autre \texttt{itemize} :
 	%
-	\begin{CodePiton}[Largeur=12cm,Style=Classique,BarreTitre=false,Cadre=false]
+	\begin{CodePiton}[Largeur=12cm,Style=Classique,BarreTitre=false,Cadre=false]{}
 		#avec numéros, de largeur 12cm, centré, classique, sans cadre/titre
 		def f(x) :
 			return x**2
@@ -2537,12 +2369,12 @@ def f(x) :
 \subsection{Introduction}
 
 \begin{codeidee}
-\cmaj{2.5.0} La \textsf{librairie} \clib{pythontex} permet d'insérer et d'exécuter du code Python. On peut :
+\cmaj{2.5.0} La \textsf{librairie} \clib{pythontex} permet d'insérer et d'exécuter du code \textsf{Python}. On peut :
 
 \begin{itemize}
-	\item \cmaj{2.5.8} présenter du code Python (deux styles disponibles) ;
-	\item exécuter du code Python dans un environnement type \og console \fg{} ;
-	\item charger du code Python, et éventuellement l'utiliser dans la console.
+	\item \cmaj{2.5.8} présenter du code \textsf{Python} (deux styles disponibles) ;
+	\item exécuter du code \textsf{Python} dans un environnement type \og console \fg{} ;
+	\item charger du code \textsf{Python}, et éventuellement l'utiliser dans la console.
 \end{itemize}
 \end{codeidee}
 
@@ -2553,7 +2385,7 @@ Voir par exemple \url{http://lesmathsduyeti.fr/fr/informatique/latex/pythontex/}
 \end{codeattention}
 
 \begin{codeinfo}
-Compte tenu de la \textit{relative complexité} pour gérer les options (par paramètres/clés\ldots) des \textit{tcbox} et des \textit{fancyvrb}, le style est \og fixé \fg{} tel quel, et seules la taille et la position de la \textit{tcbox} sont modifiables. Si toutefois vous souhaitez personnaliser davantage, il faudra prendre le code correspondant et appliquer vos modifications !
+Compte tenu de la \textit{relative complexité} pour gérer les options (par paramètres/clés\ldots) des \textit{tcbox} et des \textit{fancyvrb}, les style sont \og fixés \fg{} tels quels, et seules la taille et la position de la \textit{tcbox} sont modifiables. Si toutefois vous souhaitez personnaliser davantage, il faudra prendre le code correspondant et appliquer vos modifications !
 
 Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une base \textit{pré}existante !
 \end{codeinfo}
@@ -2561,7 +2393,7 @@ Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une b
 \subsection{Présentation de code Python grâce au package pythontex}\label{pythontex}
 
 \begin{codeidee}
-L'environnement \ctex{CodePythontex} est donc lié à \ctex{pythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code python, dans une \ctex{tcolorbox} avec un style particulier.
+L'environnement \ctex{CodePythontex} est donc lié à \ctex{pythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code \textsf{Python}, dans une \ctex{tcolorbox} avec deux styles particuliers (\cmaj{2.5.8}).
 \end{codeidee}
 
 \begin{codetex}[listing only]
@@ -2623,7 +2455,7 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \subsection{Présentation de code Python via le package minted}\label{pytminted}
 
 \begin{codeinfo}
-Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment Python.
+Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex} et notamment sa spécificité pour compiler, il existe le {package} \ctex{minted} qui permet de présenter du code, et notamment \textsf{Python}.
 
 \cmaj{2.5.8} Deux styles sont désormais disponibles.
 
@@ -2691,7 +2523,7 @@ Plusieurs \Cle{arguments} sont disponibles :
 \subsection{Console d'exécution Python}
 
 \begin{codeidee}
-\ctex{pythontex} permet également de \textit{simuler} (en exécutant également !) du code python dans une \textit{console}, avec la \textsf{librairie} \clib{pythontex} du coup !
+\ctex{pythontex} permet également de \textit{simuler} (en exécutant également !) du code \textsf{Python} dans une \textit{console}, avec la \textsf{librairie} \clib{pythontex} du coup !
 
 C'est l'environnement \ctex{ConsolePythontex} qui permet de le faire.
 \end{codeidee}
@@ -2761,7 +2593,7 @@ Les \Cle{Clés} disponibles sont :
 \end{codesortie}
 
 \begin{codeinfo}
-Le package \ctex{pythontex} peut donc servir à présenter du code Python, comme \ctex{minted} ou \ctex{piton}, sa particularité est toutefois de pouvoir \textit{exécuter} du code Python pour une présentation de type \textit{console}.
+Le package \ctex{pythontex} peut donc servir à présenter du code Python, comme \ctex{minted} ou \ctex{piton}, sa particularité est toutefois de pouvoir \textit{exécuter} du code \textsf{Python} pour une présentation de type \textit{console}.
 \end{codeinfo}
 
 \newpage
@@ -2771,13 +2603,13 @@ Le package \ctex{pythontex} peut donc servir à présenter du code Python, comme
 \subsection{Introduction}
 
 \begin{codeinfo}
-Le {package} \ctex{listings} permet d'insérer et de présenter du code, et avec \ctex{tcolorbox} on peut obtenir une présentation similaire à celle du code Python. Pour le moment la \textit{philosophie} de la commande est un peu différente de celle du code python, avec son système de \Cle{Clés}, car l'environnement \ctex{tcblisting} est un peu différent\ldots
+Le {package} \ctex{listings} permet d'insérer et de présenter du code, et avec \ctex{tcolorbox} on peut obtenir une présentation similaire à celle du code \textsf{Python}. Pour le moment la \textit{philosophie} de la commande est un peu différente de celle du code \textsf{Python}, avec son système de \Cle{Clés}.
 \end{codeinfo}
 
 \subsection{Présentation de Pseudo-Code}
 
 \begin{codeidee}
-L'environnement \ctex{PseudoCode} permet de présenter du (pseudo-code) dans une \ctex{tcolorbox}.
+Les environnements \ctex{PseudoCode} ou \ctex{PseudoCodeAlt} permet de présenter du (pseudo-code) dans une \ctex{tcolorbox}, avec deux styles à disposition (\cmaj{2.5.8}).
 \end{codeidee}
 
 \begin{codeattention}
@@ -2785,10 +2617,17 @@ De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gére
 \end{codeattention}
 
 \begin{codetex}[listing only]
-\begin{PseudoCode}(*)[largeur][options]
+\begin{PseudoCode}(*)[largeur]{options tcbox}
 %attention à l'indentation, gobble ne fonctionne pas...
 ...
 \end{PseudoCode}
+\end{codetex}
+
+\begin{codetex}[listing only]
+\begin{PseudoCodeAlt}(*)[largeur]{options tcbox}
+%attention à l'indentation, gobble ne fonctionne pas...
+...
+\end{PseudoCodeAlt}
 \end{codetex}
 
 \begin{codecles}
@@ -2797,12 +2636,13 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
 	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
-	\item le second argument optionnel concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
+	\item \cmaj{2.5.8} l'argument obligatoire entre \ctex{\{...\}} concerne les \Cle{options} de la \ctex{tcbox}.
 \end{itemize}
 \end{codecles}
 
 \begin{codetex}[listing only]
-\begin{PseudoCode} %non centré, de largeur par défaut (12cm) avec lignes
+%en pas oublier les {}, même vides !
+\begin{PseudoCode}{} %non centré, de largeur par défaut (12cm) avec lignes
 List = [...]          # à déclarer au préalable
 n = longueur(List)
 Pour i allant de 0 à n-1 Faire
@@ -2812,7 +2652,7 @@ FinPour
 \end{codetex}
 
 \begin{codesortie}
-\begin{PseudoCode}
+\begin{PseudoCode}{}
 List = [...]          # à déclarer au préalable
 n = longueur(List)
 Pour i allant de 0 à n-1 Faire
@@ -2822,51 +2662,41 @@ FinPour
 \end{codesortie}
 
 \begin{codetex}[listing only]
-\begin{PseudoCode}*[15cm][center] %centré, de largeur 15cm sans ligne
+\begin{PseudoCodeAlt}[15cm]{center} %centré, de largeur 15cm
 List = [...]          # à déclarer au préalable
 n = longueur(List)
 Pour i allant de 0 à n-1 Faire
 	Afficher(List[i])
 FinPour
-\end{PseudoCode}
+\end{PseudoCodeAlt}
 \end{codetex}
 
 \begin{codesortie}
-\begin{PseudoCode}*[15cm][center]
+\begin{PseudoCodeAlt}[15cm]{center}
 List = [...]          # à déclarer au préalable
 n = longueur(List)
 Pour i allant de 0 à n-1 Faire
 	Afficher(List[i])
 FinPour
-\end{PseudoCode}
+\end{PseudoCodeAlt}
 \end{codesortie}
 
 \subsection{Compléments}
 
-\begin{codeinfo}
+\begin{codeattention}
 À l'instar de packages existants, la \textit{philosophie} ici est de laisser l'utilisateur gérer \textit{son} langage pseudo-code.
 
-J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique ou de mise en évidence de mots clés, uniquement un formatage basique de pseudo-code.
-\end{codeinfo}
-
-\begin{codeidee}
-Évidemment, le code source est récupérable et adaptable à volonté, en utilisant les possibilités du package \ctex{listings}.
-
-\smallskip
-
-Celles et ceux qui sont déjà à l'aise avec les packages \ctex{listings} ou \ctex{minted} doivent déjà avoir leur environnement personnel prêt ! 
-
-Il s'agit ici de présenter une version \og clé en main \fg{}.
-\end{codeidee}
+J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique ou de mise en évidence de mots clés, uniquement un formatage basique !
+\end{codeattention}
 
 \begin{codeinfo}
 Le style \ctex{listings} utilisé par la commande a l'option \Cle{mathescape} activée, et accessible grâce aux délimiteurs \Cle{(*...*)}.
 
-Cela permet d'insérer du code \LaTeX{} dans l'environnement \ctex{PseudoCode} (attention au fontes de rendu par contre !).
+Cela permet d'insérer du code \LaTeX{} dans l'environnement \ctex{PseudoCode} (attention au fontes par contre !).
 \end{codeinfo}
 
 \begin{codetex}[listing only]
-\begin{PseudoCode}[12cm][]
+\begin{PseudoCode}*[12cm]{}
 #Utilisation du mode mathescape
 Afficher (*\og*) .........(*\fg*)
 m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
@@ -2874,7 +2704,7 @@ m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
 \end{codetex}
 
 \begin{codesortie}
-\begin{PseudoCode}[12cm][]
+\begin{PseudoCode}*[12cm]{}
 #Utilisation du mode mathescape
 Afficher (*\og*) .........(*\fg*)
 m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
@@ -2906,15 +2736,15 @@ Comme pour le pseudo-code, pas d'\textsf{autogobble}, donc commandes à aligner 
 \subsection{Commandes}
 
 \begin{codetex}[listing only]
-\begin{TerminalWin}[largeur]{titre=...}[options]
+\begin{TerminalWin}[largeur]{titre=...}[options tcbox]
 ...
 \end{TerminalWin}
 
-\begin{TerminalUnix}[largeur]{titre=...}[options]
+\begin{TerminalUnix}[largeur]{titre=...}[options tcbox]
 ...
 \end{TerminalUnix}
 
-\begin{TerminalOSX}[largeur]{titre=...}[options]
+\begin{TerminalOSX}[largeur]{titre=...}[options tcbox]
 ...
 \end{TerminalOSX}
 \end{codetex}
@@ -2955,7 +2785,7 @@ Microsoft Windows [version 10.0.22000.493]
 (c) Microsoft Corporation. Tous droits réservés.
 C:\Users\test>ping ctan.org
 
-Envoi d’une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+Envoi d'une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
 Réponse de 5.35.249.60 : octets=32 temps=35 ms TTL=51
 Réponse de 5.35.249.60 : octets=32 temps=37 ms TTL=51
 Réponse de 5.35.249.60 : octets=32 temps=35 ms TTL=51
@@ -2979,7 +2809,7 @@ Microsoft Windows [version 10.0.22000.493]
 (c) Microsoft Corporation. Tous droits réservés.
 C:\Users\test>ping ctan.org
 
-Envoi d’une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
+Envoi d'une requête 'ping' sur ctan.org [5.35.249.60] avec 32 octets de données :
 Réponse de 5.35.249.60 : octets=32 temps=35 ms TTL=51
 Réponse de 5.35.249.60 : octets=32 temps=37 ms TTL=51
 Réponse de 5.35.249.60 : octets=32 temps=35 ms TTL=51
@@ -3009,7 +2839,7 @@ PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \subsection{Introduction}
 
 \begin{codeidee}
-L'idée est d'obtenir des \textsf{cartouches} tels que \textsf{Capytale} les présente, pour partager un code afin d'accéder à une activité \textsf{python}.
+L'idée est d'obtenir des \textsf{cartouches} tels que \textsf{Capytale} les présente, pour partager un code afin d'accéder à une activité \textsf{Python}.
 \end{codeidee}
 
 \subsection{Commandes}
@@ -3023,7 +2853,9 @@ Peu d'options pour ces commandes :
 
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de  passer de la police \Cle{sffamily} à la police \Cle{ttfamily}, et donc dépendante des fontes du document ;
-	\item le deuxième, \textit{optionnel}, permet de rajouter des caractères après le code (comme un \textsf{espace}) ;\hfill{}défaut \Cle{vide}
+	\item le deuxième, \textit{optionnel}, permet de rajouter des caractères après le code (comme un \textsf{espace}) ;
+	
+	\hfill{}défaut \Cle{vide}
 	\item le troisième, \textit{obligatoire}, est le \textsf{code capytale} à afficher.
 \end{itemize}
 \end{codecles}
@@ -3107,7 +2939,7 @@ On peut par exemple utiliser l'option \Cle{listing only} pour ne présenter \tex
 \xdef\ValAleaA{\fpeval{randint(1,100)}}
 \xdef\ValAleaB{\fpeval{randint(1,100)}}
 
-Avec $A=\ValAleaA$ et $B=\ValAleaB$, on a $A\times B=\inteval{\ValAleaA * \ValAleaB}$
+Avec $A=\ValAleaA$ et $B=\ValAleaB$, on a $A\times B=\inteval{\ValAleaA * \ValAleaB}$.
 \end{PresentationCode}
 
 \begin{PresentationCode}[DarkBlue]{}
@@ -3255,12 +3087,6 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 \TetraedreTikz[Plein,Aff,Largeur=5,Beta=60]
 \end{codetex}
 
-%\begin{codeinfo}
-%La ligne est de ce fait à insérer dans un environnement \TikZ, avec les options au choix pour cet environnement.
-%
-%Le code créé les nœuds relatifs aux sommets, et les nomme comme les sommets, ce qui permet de les réutiliser pour éventuellement compléter la figure !
-%\end{codeinfo}
-
 \subsection{Influence des paramètres}
 
 \begin{codeinfo}
@@ -3297,33 +3123,9 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 	\end{tikzpicture}
 \end{center}
 \end{codesortie}
-%
-%\begin{codetex}[listing only]
-%	\begin{center}
-%		\begin{tikzpicture}[line join=bevel]
-%			\pavePL[plein,aff,largeur=7,profondeur=3.5,hauteur=4,sommets=Q§S§D§F§G§H§J§K]
-%			\draw[thick,red,densely dotted] (G)--(J) ;
-%			\draw[thick,blue,densely dotted] (K)--(H) ;
-%		\end{tikzpicture}
-%	\end{center}
-%\end{codetex}
-%
-%\medskip
-%
-%\begin{codesortie}
-%	\begin{center}
-%		\begin{tikzpicture}[line join=bevel]
-%			\pavePL[plein,aff,largeur=7,profondeur=3.5,hauteur=4,sommets=Q§S§D§F§G§H§J§K]
-%			\draw[thick,red,densely dotted] (G)--(J) ;
-%			\draw[thick,blue,densely dotted] (K)--(H) ;
-%		\end{tikzpicture}
-%	\end{center}
-%\end{codesortie}
 
 \newpage
 
-%\newpage
-%
 \section{Cercle trigo}\label{cercletrigo}
 
 \subsection{Idée}
@@ -3669,10 +3471,10 @@ Les \textsf{macros} qui contiennent les paramètres de la régression sont donc 
 \def\LstY{-35,-37.4,-37.7,-39.9,-39,-39.6}
 %on lance les calculs et on change le nom des "macros-résultats"
 \CalculsRegLin[NomCoeffa=TESTa,NomCoeffb=TESTb,NomCoeffr=TESTr,NomCoeffrd=TESTrd,%
-          NomXmin=TESTmin,NomXmax=TESTmax]{\LstX}{\LstY}
+               NomXmin=TESTmin,NomXmax=TESTmax]{\LstX}{\LstY}
 %commandes complémentaires
-\DeclareDocumentCommand\arrond{ s O{3} m }{% * pour afficher signe / opt = précision / argument = nb
-	\IfBooleanTF{#1}{\num[print-implicit-plus]{\fpeval{round(#3,#2)}}}{\num{\fpeval{round(#3,#2)}}}
+\DeclareDocumentCommand\arrond{ s O{3} m }{% * signe / précision / nb
+	\IfBooleanTF{#1}{\num[print-implicit-plus]{\fpeval{round(#3,#2)}}} {\num{\fpeval{round(#3,#2)}}}
 }
 %paramètres
 Les valeurs extr. de X sont \TESTmin{} et \TESTmax. Une éq. est $y=\arrond[3]{\TESTa}x \arrond*[3]{\TESTb}$.
@@ -3687,7 +3489,9 @@ Le coeff. de corrélation est $r=\arrond[4]{\TESTr}$, et son carré est $r^2=\ar
 		{\num{\fpeval{round(#3,#2)}}}
 }
 
-Les valeurs extrêmes de X sont \TESTmin{} et \TESTmax. Une équation de la droite de régression de $y$ en $x$ est $y=\arrond[3]{\TESTa}x \arrond*[3]{\TESTb}$.
+Les valeurs extrêmes de $x$ sont \TESTmin{} et \TESTmax. Une équation de la droite de régression de $y$ en $x$ est 
+
+\hfill$y=\arrond[3]{\TESTa}x \arrond*[3]{\TESTb}$.\hfill~
 
 \smallskip
 
@@ -3812,8 +3616,8 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 	\PointsRegLin[Ox=1992,Oy=1640,Couleur=blue,Taille=3pt]{\LLX}{\LLY}
 	\draw[orange,very thick,samples=2,domain=\LXmin:\LXmax] plot ({\x-\Ox},{\COEFFa*(\x)+\COEFFb-\Oy}) ;
 	\matrix [draw,fill=white,below left] at (current bounding box.north east) {
-		\node {$y = \fpeval{round(\COEFFa,3)}\,x + \fpeval{round(\COEFFb,3)}$} ; \\
-		\node {$R^2=\fpeval{round(\COEFFrd,5)}$} ; \\
+		\node {$y=\num{\fpeval{round(\COEFFa,3)}}\,x+\num{\fpeval{round(\COEFFb,3)}}$} ; \\
+		\node {$R^2=\num{\fpeval{round(\COEFFrd,5)}}$} ; \\
 	};
 \end{tikzpicture}
 \end{codetex}
@@ -3833,8 +3637,8 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 \PointsRegLin[Ox=1992,Oy=1640,Couleur=blue,Taille=3pt]{\LLX}{\LLY}
 	\draw[orange,very thick,samples=2,domain=\LXmin:\LXmax] plot ({\x-\Ox},{\COEFFa*(\x)+\COEFFb-\Oy}) ;
 	\matrix [draw,fill=white,below left] at (current bounding box.north east) {
-		\node {$y = \fpeval{round(\COEFFa,3)}\,x + \fpeval{round(\COEFFb,3)}$} ; \\
-		\node {$R^2=\fpeval{round(\COEFFrd,5)}$} ; \\
+		\node {$y=\num{\fpeval{round(\COEFFa,3)}}\,x + \num{\fpeval{round(\COEFFb,3)}}$} ; \\
+		\node {$R^2=\num{\fpeval{round(\COEFFrd,5)}}$} ; \\
 	};
 \end{tikzpicture}
 \end{codesortie}
@@ -3850,7 +3654,7 @@ L'idée est de \textit{prolonger} le paragraphe précédent pour proposer un env
 
 \smallskip
 
-Un des soucis pour ces situations est le fait que le repère dans lequel on travaille n'a pas forcément pour origine $(0\,;\,0)$.
+Un des soucis pour ces situations est le fait que le repère dans lequel on travaille n'a pas forcément pour origine $(0;0)$.
 
 De ce fait -- pour éviter des erreurs de \ctex{dimension too large} liées à \TikZ{} -- il faut \textit{décaler les axes} pour se ramener à une origine en $O$.
 
@@ -4293,20 +4097,25 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 
 \begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\GrilleTikz \AxesTikz[ElargirOx=0,ElargirOy=0]
-	\AxexTikz[Annee,Police=\small]{1992,1994,...,2010}
+	\AxexTikz[Annee,Police=\footnotesize]{1992,1994,...,2010}
 	\AxeyTikz{1640,1650,...,1720}
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \PointMoyenTikz
 	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
 \end{tikzpicture}
 \end{codesortie}
 
+\subsection{Exemple complémentaire, pour illustration}
+
 \begin{codetex}[listing only]
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 
+%la courbe n'a pas de lien avec le nuage
+%elle illustre l'interaction des commandes "nuage" avec les autres commandes
+
 \begin{tikzpicture}[...]
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \FenetreTikz %on fixe la fenêtre
-	\CourbeTikz[line width=1.25pt,orange,samples=500]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
+	\CourbeTikz[line width=1.25pt,orange,samples=250]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
 \end{tikzpicture}
 \end{codetex}
 
@@ -4314,12 +4123,12 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 
-\begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
+\begin{tikzpicture}[x=0.7cm,y=0.14cm,Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\GrilleTikz \AxesTikz[ElargirOx=0,ElargirOy=0]
 	\AxexTikz[Annee,Police=\small]{1992,1994,...,2010}
 	\AxeyTikz{1640,1650,...,1720}
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \FenetreTikz
-	\CourbeTikz[line width=1.25pt,orange,samples=500]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
+	\CourbeTikz[line width=1.25pt,orange,samples=250]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
 \end{tikzpicture}
 \end{codesortie}
 
@@ -4487,15 +4296,15 @@ De ce fait, les options de \ctex{siunitx} de l'utilisateur affecterons les forma
 \CalcBinomP{n}{p}{k}             %P(X=k)
 \CalcBinomC{n}{p}{a}{b}          %P(a<=X<=b)
 
-%loi de Poisson P (l)
+%loi de Poisson P(l)
 \CalcPoissP{l}{k}                %P(X=k)
 \CalcPoissC{l}{a}{b}             %P(a<=X<=b)
 
-%loi géométrique G (p)
+%loi géométrique G(p)
 \CalcGeomP{p}{k}                 %P(X=k)
 \CalcGeomC{l}{a}{b}              %P(a<=X<=b)
 
-%loi hypergéométrique H (N,n,m)
+%loi hypergéométrique H(N,n,m)
 \CalcHypergeomP{N}{n}{m}{k}      %P(X=k)
 \CalcHypergeomP{N}{n}{m}{a}{b}   %P(a<=X<=b)
 
@@ -5073,7 +4882,7 @@ L'idée est de proposer une commande pour calculer un arrangement ou une combina
 \subsection{Utilisation}
 
 \begin{codecles}
-Peu de paramétrage pour ces commandes qui permettent de calculer $A_n^p$ et $C_n^p$ :
+Peu de paramétrage pour ces commandes qui permettent de calculer $A_n^p$ et $\binom{n}{p}$ :
 
 \begin{itemize}
 	\item les versions étoilées ne formatent pas le résultat grâce à \ctex{\textbackslash num} de \ctex{sinuitx} ;
@@ -5355,7 +5164,9 @@ Quelques options pour cette commande :
 	
 	\hfill{}défaut \Cle{EEE}
 	\item le booléen \Cle{Rect} pour afficher ou non le \og rectangle \fg{} des restes ; \hfill{}défaut \Cle{true}
-	\item le booléen \Cle{CouleurRes} pour afficher ou non la conversion en couleur (identique au rectangle). \hfill{}défaut \Cle{false}
+	\item le booléen \Cle{CouleurRes} pour afficher ou non la conversion en couleur (identique au rectangle).
+	
+	\hfill{}défaut \Cle{false}
 \end{itemize}
 \end{codecles}
 
@@ -5468,11 +5279,10 @@ La présentation est dans un environnement \ctex{ensuremath} donc les \ctex{\$..
 
 \PresentationPGCD[CouleurResultat,Couleur=DarkBlue]{13500}{2500}.
 
-\PresentationPGCD[Rectangle=false]{420}{540}.
+\PresentationPGCD[Rectangle=false]{420}{540}. \\
 
-\medskip
-
-D'après l'algorithme d'Euclide, on a $\left| \PresentationPGCD[Couleur=LightSkyBlue,AfficheConclusion=false,AfficheDelimiteurs=false]{123456789}{9876} \right.$
+D'après l'algorithme d'Euclide, on a $\left| \PresentationPGCD[Couleur=LightSkyBlue,AfficheConclusion=false,AfficheDelimiteurs=false]%
+	{123456789}{9876} \right.$
 \begin{tikzpicture}
 	\draw[overlay,LightSkyBlue,thick,<-] (FFF1.east) to[bend right] ++ (2cm,0.75cm) node[right] {dernier reste non nul} ;
 \end{tikzpicture}
@@ -5636,7 +5446,9 @@ Peu d'options pour ces commandes :
 \begin{itemize}
 	\item clé \Cle{Sep} qui correspond au délimiteur des éléments de l'ensemble ; \hfill{}défaut \Cle{;}
 	\item clé \Cle{Option} qui est un code (par exemple \textsf{strut}\dots) inséré avant les éléments ;\hfill{}défaut \Cle{vide}
-	\item un booléen \Cle{Mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct};\hfill{}défaut \Cle{true}
+	\item un booléen \Cle{Mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct}.
+	
+	\hfill{}défaut \Cle{true}
 \end{itemize}
 \item le second, \textit{obligatoire}, est la \textsf{liste} des éléments, séparés par \textsf{/}.
 \end{itemize}
@@ -5747,10 +5559,8 @@ Avec $a$ entre 1 et 10 (forcément positif) puis $b$ entre $-2$ et 2 puis $c$ en
 \end{codetex}
 
 \begin{codetex}[]
-\SimplificationRacine{48}\\
-\SimplificationRacine{100/34}\\
-\SimplificationRacine{99999}\\
-\SimplificationRacine{1500*0.31*(1-0.31)}\\
+\SimplificationRacine{48} \\ \SimplificationRacine{100/34}\\
+\SimplificationRacine{99999} \\ \SimplificationRacine{1500*0.31*(1-0.31)}\\
 \end{codetex}
 
 \begin{codeinfo}
@@ -5774,7 +5584,7 @@ $\frac{1}{\sqrt{6}}=\left(\sqrt{\frac{1}{6}}\right)=\SimplificationRacine{1/6}$
 $\frac{42}{\sqrt{5}}=\left(\sqrt{\frac{42^2}{5}}\right)=\SimplificationRacine{(42*42)/5}$
 
 %Écart-type d'une loi binomiale
-$\sqrt{\num{150}\times\num{0.35}\times(1-\num{0.35})}=\displaystyle\SimplificationRacine{150*0.35*(1-0.35)}$
+$\sqrt{\num{150}\times\num{0.35}\times(1-\num{0.35})} = \displaystyle\SimplificationRacine{150*0.35*(1-0.35)}$
 \end{codetex}
 
 \newpage
@@ -5804,7 +5614,9 @@ Pour cette commande :
 
 \begin{itemize}
 	\item le booléen \Cle{d} permet de forcer l'affichage en \ctex{displaystyle} ;\hfill{}défaut \Cle{false}
-	\item le booléen \Cle{Crochets} permet d'afficher le \textit{modulo} entre crochets plutôt qu'entre parenthèses ;\hfill{}défaut \Cle{false}
+	\item le booléen \Cle{Crochets} permet d'afficher le \textit{modulo} entre crochets plutôt qu'entre parenthèses ;
+	
+	\hfill{}défaut \Cle{false}
 	\item l'argument \textit{obligatoire} est en écriture \textit{en ligne}.
 \end{itemize}
 \end{codecles}
@@ -6357,7 +6169,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v 2.5.8|~:~~~~Ajout d'un style \textsf{Alt} pour les codes  (pages \pageref{pythonsimple} et \pageref{pytminted})
 
-{\small \bverb|       |~:~~~~Modification de la syntaxe des commandes avec \textsf{Pythontex} (page \pageref{pythontex})
+{\small \bverb|       |~:~~~~Modification de la syntaxe des commandes avec \textsf{Pythontex} et \textsf{PseudoCode} (pages \pageref{pythontex} et \pageref{pseudocode})
 
 {\small \bverb|v 2.5.7|~:~~~~Ajout de clés pour les codes \textsf{Piton} + Console via \textsf{Pyluatex} (page \pageref{pythonpiton})
 

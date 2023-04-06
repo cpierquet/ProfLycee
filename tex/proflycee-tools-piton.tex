@@ -78,7 +78,7 @@
 %==Création de la boîte
 \ifluatex
 \RequirePackage{piton}
-\NewPitonEnvironment{CodePiton}{ O{} }%
+\NewPitonEnvironment{CodePiton}{ O{} m }%
 {%
 	\tcbset{reset}
 	\useKVdefault[envpiton]%
@@ -125,7 +125,7 @@
 		}
 		{}%
 	%on crée la boîte
-	\begin{tcolorbox}
+	\begin{tcolorbox}[#2]
 }%
 {%
 	\end{tcolorbox}%
@@ -135,9 +135,9 @@
 
 %======CONSOLE PYLUATEX (package à charger manuellement !!)
 \tcbset{consolepylua/.style={%base de la boîte
-		enhanced,colback=white,colframe=ForestGreen,sharp corners,boxrule=1pt,%
-		top=1.5mm,bottom=1.5mm,left=2mm,right=2mm,fontupper=\small,%
-		before skip=\baselineskip,after skip=\baselineskip,%
+	enhanced,colback=white,colframe=ForestGreen,sharp corners,boxrule=1pt,%
+	top=1.5mm,bottom=1.5mm,left=2mm,right=2mm,fontupper=\small,%
+	before skip=\baselineskip,after skip=\baselineskip,%
 	}
 }
 
@@ -179,8 +179,8 @@
 	\PitonOptions{#1}
 	\PyLTVerbatimEnv
 	\ifboolKV[consolepyluatex]{Logo}
-	{\tcbset{consolepyluatexlogo,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
-	{\tcbset{consolepyluatex,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
+		{\tcbset{consolepyluatexlogo,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
+		{\tcbset{consolepyluatex,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
 	\begin{tcolorbox}
 		\begin{pythonrepl}
 }
@@ -191,8 +191,8 @@
 	tex.print("\\end{Piton}")
 	tex.print("")
 }
-	\end{pythonrepl}
-\end{tcolorbox}
+		\end{pythonrepl}
+	\end{tcolorbox}
 }
 
 \endinput
