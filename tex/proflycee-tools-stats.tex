@@ -1,0 +1,198 @@
+% proflycee-tools-stats.tex
+% Copyright 2023  Cédric Pierquet
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+
+%%------RegressionLinéaire
+%calcul des paramètres
+\defKV[coeffreglin]{%
+	NomCoeffa=\def\RegLinCoeffa{#1},%
+	NomCoeffb=\def\RegLinCoeffb{#1},%
+	NomCoeffr=\def\RegLinCoeffr{#1},%
+	NomCoeffrd=\def\RegLinCoeffrd{#1},%
+	NomXmin=\def\RegLinCoeffXmin{#1},%
+	NomXmax=\def\RegLinCoeffXmax{#1}
+}
+
+\setKVdefault[coeffreglin]{%
+	NomCoeffa=COEFFa,%
+	NomCoeffb=COEFFb,%
+	NomCoeffr=COEFFr,%
+	NomCoeffrd=COEFFrd,%
+	NomXmin=LXmin,%
+	NomXmax=LXmax
+}
+
+\newcommand\CalculsRegLin[3][]{%
+	\useKVdefault[coeffreglin]%
+	\setKV[coeffreglin]{#1}% on paramètres les nouvelles clés et on les simplifie
+	%xmin et xmax
+	\expandafter\def\csname\RegLinCoeffXmin\endcsname{\fpeval{min(#2)}}
+	\expandafter\def\csname\RegLinCoeffXmax\endcsname{\fpeval{max(#2)}}
+	%listes des données
+	\def\xliste{#2}
+	\def\yliste{#3}
+	\readlist*\LX{\xliste}
+	\readlist*\LY{\yliste}
+	%taille des listes
+	\def\LNB{\inteval{\LXlen}}
+	%somme des LX et des LY OK
+	\xdef\LXSomme{0}
+	\xdef\LYSomme{0}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LXSomme{\fpeval{\LXSomme+\LX[\i]}}
+	}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LYSomme{\fpeval{\LYSomme+\LY[\i]}}
+	}
+	%moyenne des LX et des LY OK
+	\xdef\LXmoy{\fpeval{\LXSomme/\LNB}}
+	\xdef\LYmoy{\fpeval{\LYSomme/\LNB}}
+	%variance des LX et des LY OK
+	\xdef\LXvar{0}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LXvar{\fpeval{\LXvar+(\LX[\i]-\LXmoy)*(\LX[\i]-\LXmoy)}}
+	}
+	\xdef\LXvar{\fpeval{\LXvar/\LNB}}
+	\xdef\LYvar{0}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LYvar{\fpeval{\LYvar+(\LY[\i]-\LYmoy)*(\LY[\i]-\LYmoy)}}
+	}
+	\xdef\LYvar{\fpeval{\LYvar/\LNB}}
+	%covariance des XY OK
+	\xdef\LXYvar{0}
+	\foreach \i in {1,2,...,\LNB}{
+		\xdef\LXYvar{\fpeval{\LXYvar+(\LX[\i]-\LXmoy)*(\LY[\i]-\LYmoy)}}
+	}
+	\xdef\LXYvar{\fpeval{\LXYvar/\LNB}}
+	%COEFFS OK
+	\expandafter\def\csname\RegLinCoeffa\endcsname{\fpeval{\LXYvar/\LXvar}}
+	\expandafter\def\csname\RegLinCoeffb\endcsname{\fpeval{\LYmoy-\csname\RegLinCoeffa\endcsname*\LXmoy}}
+	\expandafter\def\csname\RegLinCoeffr\endcsname{\fpeval{\LXYvar/sqrt(\LXvar*\LYvar)}}
+	\expandafter\def\csname\RegLinCoeffrd\endcsname{\fpeval{\csname\RegLinCoeffr\endcsname*\csname\RegLinCoeffr\endcsname}}
+}
+
+%pour un nuage en TiKz
+\defKV[nuagereglin]{%
+	Couleur=\def\RegLinNuageCouleur{#1},%
+	Taille=\def\RegLinNuageTaille{#1},
+	Ox=\def\RegLinNuageOx{#1},%
+	Oy=\def\RegLinNuageOy{#1},%
+}
+
+\setKVdefault[nuagereglin]{%
+	Couleur=teal,%
+	Taille=2pt,%
+	Ox=0,%
+	Oy=0
+}
+
+\newcommand\PointsRegLin[3][]{%
+	\useKVdefault[nuagereglin]
+	\setKV[nuagereglin]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\def\xliste{#2}
+	\def\yliste{#3}
+	\readlist*\LX{\xliste}
+	\readlist*\LY{\yliste}
+	%taille des listes
+	\def\LNB{\inteval{\LXlen}}
+	\foreach \i in {1,2,...,\LNB} {\filldraw[\RegLinNuageCouleur] ({\LX[\i]-\RegLinNuageOx},{\LY[\i]-\RegLinNuageOy}) circle[radius=\RegLinNuageTaille] ;}
+}
+
+\NewDocumentEnvironment{StatsTikz}{ O{} }
+{%
+	\begin{tikzpicture}[#1]
+	}%
+	{%
+	\end{tikzpicture}%
+}
+
+%%------BOITES MOUSTACHES
+\defKV[boiteamoustaches]{%
+	Couleur=\def\BaMCouleur{#1},%
+	Elevation=\def\BaMElevation{#1},%
+	Hauteur=\def\BaMHauteur{#1},%
+	Moyenne=\def\BaMMoyenne{#1},%
+	Epaisseur=\def\BaMEpaisseur{#1},%
+	Remplir=\def\BaMRemplissage{#1}
+}
+
+\setKVdefault[boiteamoustaches]{%
+	Couleur=black,%
+	Elevation=1,%
+	Hauteur=1,%
+	AffMoyenne=false,%
+	Epaisseur=thick,%
+	Pointilles=false,%
+	Valeurs=false,%
+	Remplir=white
+}
+
+\defKV[boiteamoustachesaxe]{%
+	Min=\def\BaMAxeMin{#1},%
+	Max=\def\BaMAxeMax{#1},%
+	Elargir=\def\BaMAxeElarg{#1},%
+	Epaisseur=\def\BaMAxeEpaisseur{#1},%
+	Valeurs=\def\BaMAxeValeurs{#1}
+}
+
+\setKVdefault[boiteamoustachesaxe]{%
+	Elargir=0.05,%
+	Epaisseur=thick,%
+	AffValeurs=false
+}
+
+\newcommand\BoiteMoustachesAxe[1][]{
+	\useKVdefault[boiteamoustachesaxe]
+	\setKV[boiteamoustachesaxe]{#1}
+	\def\BaMaxelargeur{\fpeval{\BaMAxeMax-\BaMAxeMin}}
+	\def\BaMaxexmin{\fpeval{\BaMAxeMin-\BaMAxeElarg*\BaMaxelargeur}}
+	\def\BaMaxexmax{\fpeval{\BaMAxeMax+\BaMAxeElarg*\BaMaxelargeur}}
+	\draw[\BaMAxeEpaisseur,->,>=latex] (\BaMaxexmin,0) -- (\BaMaxexmax,0) ;
+	\ifboolKV[boiteamoustachesaxe]{AffValeurs}
+		{\foreach \x in \BaMAxeValeurs \draw[\BaMAxeEpaisseur] (\x,3pt)--(\x,-3pt) node[below=3pt] {\num{\x}} ;}
+		{}
+}
+
+\newcommand\BoiteMoustaches[2][]{
+	\useKVdefault[boiteamoustaches]
+	\setKV[boiteamoustaches]{#1}
+	\setsepchar[.]{/}%
+	\readlist*\BaMListeparams{#2}%
+	\itemtomacro\BaMListeparams[1]\BaMmin%
+	\itemtomacro\BaMListeparams[2]\BaMqu%
+	\itemtomacro\BaMListeparams[3]\BaMmed%
+	\itemtomacro\BaMListeparams[4]\BaMqt%
+	\itemtomacro\BaMListeparams[5]\BaMmax%
+	\draw[draw,\BaMEpaisseur,\BaMCouleur,fill=\BaMRemplissage] ({\BaMqu},{\BaMElevation-0.5*\BaMHauteur}) rectangle ({\BaMqt},{\BaMElevation+0.5*\BaMHauteur}) ;
+	\draw[\BaMEpaisseur,\BaMCouleur] (\BaMmin,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmin,{\BaMElevation+0.5*\BaMHauteur}) (\BaMmax,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmax,{\BaMElevation+0.5*\BaMHauteur}) (\BaMmed,{\BaMElevation-0.5*\BaMHauteur})--(\BaMmed,{\BaMElevation+0.5*\BaMHauteur});
+	\draw[\BaMEpaisseur,\BaMCouleur] ({\BaMmin},{\BaMElevation})--({\BaMqu},{\BaMElevation}) ({\BaMqt},{\BaMElevation})--({\BaMmax},{\BaMElevation}) ;
+	\ifboolKV[boiteamoustaches]{AffMoyenne}
+		{\filldraw[\BaMCouleur] ({\BaMMoyenne},{\BaMElevation}) circle[radius=2.5pt] ;}
+		{}
+	\ifboolKV[boiteamoustaches]{Pointilles}
+		{
+			\draw[\BaMEpaisseur,densely dashed] (\BaMmin,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmin,0) ;
+			\draw[\BaMEpaisseur,densely dashed] (\BaMqu,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMqu,0) ;
+			\draw[\BaMEpaisseur,densely dashed] (\BaMmed,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmed,0) ;
+			\draw[\BaMEpaisseur,densely dashed] (\BaMqt,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMqt,0) ;
+			\draw[\BaMEpaisseur,densely dashed] (\BaMmax,{\BaMElevation-0.5*\BaMHauteur}) -- (\BaMmax,0) ;
+		}
+		{}
+	\ifboolKV[boiteamoustaches]{Valeurs}
+		{
+			\filldraw (\BaMmin,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmin}} ;
+			\filldraw (\BaMqu,0) circle[radius=2pt] node[below=4pt] {\num{\BaMqu}} ;
+			\filldraw (\BaMmed,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmed}} ;
+			\filldraw (\BaMqt,0) circle[radius=2pt] node[below=4pt] {\num{\BaMqt}} ;
+			\filldraw (\BaMmax,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmax}} ;
+		}
+		{}
+}
+
+\endinput

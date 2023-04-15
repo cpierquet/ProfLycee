@@ -1,0 +1,311 @@
+% proflycee-tools-arithm.tex
+% Copyright 2023  Cédric Pierquet
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+
+%%------ConversionsBases
+%dec->bin avec blocs de 4 chiffres
+\setKVdefault[CONVDECBIN]{%
+	AffBase=true
+}
+\NewDocumentCommand\ConversionDecBin{ s O{} m }{%
+	\useKVdefault[CONVDECBIN]
+	\setKV[CONVDECBIN]{#2}% on paramètres les nouvelles clés et on les simplifie
+	\def\resbrut{\xintDecToBin{#3}}
+	\StrLen{\resbrut}[\nbchiffres]
+	\def\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}}
+	\IfBooleanTF{#1}
+		{\num{#3}\ifboolKV[CONVDECBIN]{AffBase}{_{10}}{}=\num[digit-group-size=4]{\resbrut}\ifboolKV[CONVDECBIN]{AffBase}{_{2}}{}}
+		{\num{#3}\ifboolKV[CONVDECBIN]{AffBase}{_{10}}{}=\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resbrut}\ifboolKV[CONVDECBIN]{AffBase}{_{2}}{}}
+}
+
+\setKVdefault[CONVBINHEX]{%
+	%trait=0.5pt,%
+	AffBase=true,%
+	Details=true
+}
+%bourrage de 0 avant
+\ExplSyntaxOn
+\NewExpandableDocumentCommand{\PLstrzeros}{m}
+{
+	\int_compare:nT { #1 > 0 }
+	{
+		0 \prg_replicate:nn { #1 - 1 } { 0 }
+	}
+}
+\ExplSyntaxOff
+
+
+%la conversion complète
+\newcommand\ConversionBinHex[2][]{%
+	\useKVdefault[CONVBINHEX]
+	\setKV[CONVBINHEX]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\def\chbrut{#2}
+	\StrLen{\chbrut}[\nbchiffres] %nb de chiffres du binaire
+	\xdef\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}} %nb de chiffres avec blocs de 4
+	\xdef\nbblocs{\fpeval{\nbgrp/4}} %nb de blocs
+	%on rajoute des zeros si besoin := OK
+	\xdef\resinter{\chbrut}
+	\num[digit-group-size=4]{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{2}}{}=
+	\ifboolKV[CONVBINHEX]{Details}{%
+	\ifnum\nbchiffres<\nbgrp
+		\xdef\nbz{\inteval{\nbgrp-\nbchiffres}}
+		\xdef\resinter{\PLstrzeros{\nbz}\chbrut}
+		\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resinter}=
+	\fi
+	%découpage par blocs et conversion en hexa := OK
+	\newcount\cpt
+	\cpt0
+	\loop\ifnum \cpt<\nbblocs
+		\def\iinit{\fpeval{4*\cpt+1}}%
+		\def\ifinal{\fpeval{4*(\cpt+1)}}%
+		\StrMid{\resinter}{\iinit}{\ifinal}[\blocinter]%
+		{\underbracket{\blocinter}_{\xintBinToHex{\blocinter}}\,}
+		\advance\cpt by 1
+	\repeat
+	\!=
+	}%
+	{}
+	\xintBinToHex{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{16}}{}
+}
+
+%hexa/bin->dec avec écriture polynomiale
+\defKV[CONVTODEC]{%
+	BaseDep=\def\basedepart{#1}
+}
+\setKVdefault[CONVTODEC]{%
+	BaseDep=2,%
+	AffBase=true,%
+	Details=true,%
+	Zeros=true
+}
+
+\ExplSyntaxOn
+\newcommand\convertbasetobasedix[2]{%
+	\int_from_base:nn {#1}{#2}
+}
+\ExplSyntaxOff
+
+\newcommand\ConversionVersDec[2][]{%
+	\useKVdefault[CONVTODEC]
+	\setKV[CONVTODEC]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\def\nbdepart{#2}
+	\StrLen{\nbdepart}[\nbchiffres]
+	\StrChar{\nbdepart}{1}[\chiffre]
+	%si on est en base 16
+	\xintifboolexpr{\basedepart == 16}%
+	{%
+		\nbdepart\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
+		\ifboolKV[CONVTODEC]{Details}{%
+			\xintHexToDec{\chiffre}\times\basedepart^{\inteval{\nbchiffres-1}}%
+			\newcount\cpt
+			\cpt2
+			\loop\ifnum \cpt<\inteval{\nbchiffres+1}
+				\def\puiss{\inteval{\nbchiffres-\cpt}}
+				\StrChar{\nbdepart}{\cpt}[\chiffre]
+				\ifboolKV[CONVTODEC]{Zeros}%
+					{%
+						+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
+					}
+					{
+						\ifnum\xintHexToDec{\chiffre} > 0
+							+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
+						\fi
+					}
+				\advance\cpt by 1
+			\repeat
+			=
+			}
+			{}
+		\num{\xintHexToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
+	}%
+	{}
+	\xintifboolexpr{\basedepart == 2}%
+	{%
+		\num[digit-group-size=4]{\nbdepart}\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
+		\ifboolKV[CONVTODEC]{Details}{%
+			\chiffre\times\basedepart^{\inteval{\nbchiffres-1}}%
+			\newcount\cpt
+			\cpt2
+			\loop\ifnum \cpt<\inteval{\nbchiffres+1}
+				\def\puiss{\inteval{\nbchiffres-\cpt}}
+				\StrChar{\nbdepart}{\cpt}[\chiffre]
+				\ifboolKV[CONVTODEC]{Zeros}%
+				{%
+					+\chiffre\times\basedepart^{\puiss}%
+				}
+				{
+					\ifnum\chiffre > 0
+						+\chiffre\times\basedepart^{\puiss}%
+					\fi
+				}
+			\advance\cpt by 1
+			\repeat
+			=
+			}
+			{}
+		\num{\xintBinToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
+	}%
+	{}%
+}
+
+\newcommand\ConversionBaseDix[3][]{%1=options,%2=nb,%3=basedep ??
+	\useKVdefault[CONVTODEC]
+	\setKV[CONVTODEC]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\def\NBdepart{#2}
+	\def\basedepart{#3}
+	\StrLen{\NBdepart}[\nbchiffres]
+	\StrChar{\NBdepart}{1}[\chiffre]
+	\NBdepart\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
+	\ifboolKV[CONVTODEC]{Details}{%
+		\xintHexToDec{\chiffre}\times\basedepart^{\inteval{\nbchiffres-1}}%
+		\newcount\cpt
+		\cpt2
+		\loop\ifnum \cpt<\inteval{\nbchiffres+1}
+			\def\puiss{\inteval{\nbchiffres-\cpt}}
+			\StrChar{\NBdepart}{\cpt}[\chiffre]
+			\ifboolKV[CONVTODEC]{Zeros}%
+				{%
+					+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
+				}
+				{
+					\ifnum\xintHexToDec{\chiffre} > 0
+						+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
+					\fi
+				}
+			\advance\cpt by 1
+		\repeat
+		=
+		}%
+		{}%
+	\num{\convertbasetobasedix{#2}{#3}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}%
+}
+
+%%------CONVFROMDEC
+\newcommand\PLnoeud[2]{\tikz[remember picture,baseline=(#1.base)]\node[shape=rectangle,inner sep=0pt](#1){#2};}
+\ExplSyntaxOn
+\newcommand\convertbasedixtobase[2]{%
+	\int_to_Base:nn {#1}{#2}
+}
+\ExplSyntaxOff
+
+\defKV[convfromten]{%
+	Couleur=\def\PLConvCouleur{#1},%
+	DecalH=\def\PLConvDecalH{#1},%
+	DecalV=\def\PLConvDecalV{#1},%
+	Noeud=\def\PLConvNoeud{#1}
+}
+
+\setKVdefault[convfromten]{%
+	Couleur=red,%
+	DecalH=2pt,%
+	DecalV=3pt,%
+	Rect=true,%
+	Noeud=EEE,%
+	CouleurRes=false
+}
+
+\newcommand\ConversionDepuisBaseDix[3][]{%
+	\useKVdefault[convfromten]%
+	\setKV[convfromten]{#1}%
+	\xdef\ValRes{\xintDecToHex{#2}}%
+	\xdef\ValA{#2}\xdef\ValB{#3}%
+	\xdef\ValTMP{#2}%
+	\xdef\ValMU{\inteval{#3-1}}%
+	\ensuremath{%
+		\left\lbrace\begin{array}{@{\,}r@{\;=\;}l@{\;+\;}r}
+			%1ere division
+			\xdef\ValQ{\fpeval{trunc(\ValTMP/#3,0)}}\xdef\ValR{\fpeval{\ValTMP-#3*\ValQ}}
+			\num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\PLnoeud{\PLConvNoeud1}{\num{\ValR}}%
+			\xdef\ValTMP{\ValQ}%
+			\whiledo {\ValTMP > \ValMU}%
+			{%
+				\xdef\ValQ{\fpeval{trunc(\ValTMP/#3,0)}}\xdef\ValR{\fpeval{\ValTMP-#3*\ValQ}}%
+				\\ \num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\num{\ValR}
+				\xdef\ValTMP{\ValQ}%
+			}
+			%dernière
+			\xdef\ValQ{\fpeval{trunc(\ValTMP/#3,0)}}\xdef\ValR{\fpeval{\ValTMP-#3*\ValQ}}%
+			\\ \num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\PLnoeud{\PLConvNoeud2}{\num{\ValR}}
+		\end{array} \right| \Rightarrow \num{#2}_{10}=\ifboolKV[convfromten]{CouleurRes}{\mathcolor{\PLConvCouleur}{\convertbasedixtobase{#2}{#3}_{#3}}}{\convertbasedixtobase{#2}{#3}_{#3}}}%
+	\ifboolKV[convfromten]{Rect}%
+	{%
+		\IfSubStr{\PLConvDecalH}{/}%
+			{\StrCut{\PLConvDecalH}{/}{\PLConvDecalHg}{\PLConvDecalHd}}%
+			{\def\PLConvDecalHg{\PLConvDecalH}\def\PLConvDecalHd{\PLConvDecalH}}%
+		\begin{tikzpicture}
+			\draw[overlay,rounded corners=4pt,\PLConvCouleur,thick] ($(\PLConvNoeud1.north west)+(-\PLConvDecalHg,\PLConvDecalV)$) rectangle ($(\PLConvNoeud2.south east)+(\PLConvDecalHd,-\PLConvDecalV)$) ;
+			\draw[overlay,rounded corners=4pt,\PLConvCouleur,thick,->,>=latex] ($(\PLConvNoeud2.east)+(\PLConvDecalHd,0)$)--++(0,{0.75\baselineskip}) ;
+		\end{tikzpicture}%
+	}{}%
+}
+
+%%------PRESPGCD
+\DeclareMathOperator{\PLpgcd}{PGCD}
+\defKV[prespgcd]{%
+	Couleur=\def\PLPGCDCouleur{#1},%
+	DecalRect=\def\PLPGCDDecal{#1},%
+	Noeud=\def\PLPGCDNoeud{#1}
+}
+
+\setKVdefault[prespgcd]{%
+	Couleur=red,%
+	DecalRect=2pt,%
+	Rectangle=true,%
+	Noeud=FFF,%
+	CouleurResultat=false,%
+	AfficheConclusion=true,%
+	AfficheDelimiteurs=true
+}
+
+\newcommand\PresentationPGCD[3][]{%
+	\useKVdefault[prespgcd]%
+	\setKV[prespgcd]{#1}%
+	\xdef\respgcd{\xinteval{gcd(#2,#3)}}
+	\xdef\ValA{#2}\xdef\ValB{#3}%on stocke les valeurs du départ
+	\ensuremath{%
+		\ifboolKV[prespgcd]{AfficheDelimiteurs}%
+		{\left\lbrace}%
+		{}%
+		\begin{array}{@{\,}r@{\;=\;}l@{\;+\;}r}
+			%1ère division
+			\xdef\ValQ{\fpeval{trunc(\ValA/\ValB,0)}}\xdef\ValR{\fpeval{\ValA-\ValB*\ValQ}}
+			\num{\ValA}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}%
+			\xintifboolexpr{\ValR == \respgcd}%
+			{\PLnoeud{\PLPGCDNoeud1}{\num{\ValR}}}%noeud si c'est le pgcd
+			{\num{\ValR}}%
+			\xdef\ValA{\ValB}\xdef\ValB{\ValR}%nouvelles valeurs
+			\whiledo {\ValR > 0}%
+			{%
+				\xdef\ValQ{\fpeval{trunc(\ValA/\ValB,0)}}\xdef\ValR{\fpeval{\ValA-\ValB*\ValQ}}%
+				\\%
+				\num{\ValA}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}%
+				\xintifboolexpr{\ValR == \respgcd}%
+				{\PLnoeud{\PLPGCDNoeud1}{\num{\ValR}}}%noeud si c'est le pgcd
+				{\num{\ValR}}%
+				\xdef\ValA{\ValB}\xdef\ValB{\ValR}%nouvelles valeurs
+			}%
+		\end{array}%
+		\ifboolKV[prespgcd]{AfficheDelimiteurs}%
+		{\right|}%
+		{}%
+		\ifboolKV[prespgcd]{AfficheConclusion}%
+		{%
+			\Rightarrow \PLpgcd\left(\num{#2};\num{#3}\right)=\ifboolKV[prespgcd]{CouleurResultat}{\mathcolor{\PLPGCDCouleur}{\num{\respgcd}}}{\num{\respgcd}}%
+		}%
+		{}%
+	}%
+	\ifboolKV[prespgcd]{Rectangle}%
+	{%
+		\begin{tikzpicture}
+			\draw[overlay,rounded corners=4pt,\PLPGCDCouleur,thick] ($(\PLPGCDNoeud1.north west)+(-\PLPGCDDecal,\PLPGCDDecal)$) rectangle ($(\PLPGCDNoeud1.south east)+(\PLPGCDDecal,-\PLPGCDDecal)$) ;
+		\end{tikzpicture}%
+	}{}%
+}
+
+\endinput

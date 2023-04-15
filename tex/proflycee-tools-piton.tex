@@ -8,6 +8,7 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.5.9	Ajout d'une clé pour la couleur des nombres
 %2.5.8	Modification des marges
 %2.5.7	Style alternatif
 
@@ -21,7 +22,9 @@
 	Alignement=\def\CODPITalign{#1},%
 	TaillePolice=\def\CODPITfonte{#1},%
 	Style=\def\CODPITstyle{#1},%
-	Titre=\def\CODPITtitre{#1}
+	Titre=\def\CODPITtitre{#1},%
+	EspacementV=\def\CODPITespV{#1},%
+	CouleurNombres=\def\CODPITcolnb{#1}
 }
 
 \setKVdefault[envpiton]{%
@@ -34,14 +37,16 @@
 	Style=Moderne,%
 	Cadre=true,%
 	BarreTitre=true,%
-	Titre={{\scriptsize\faCode} Code Python}
+	Titre={{\scriptsize\faCode} Code Python},%
+	EspacementV=\baselineskip,%
+	CouleurNombres=orange
 }
 
 %==Style Moderne
 \tcbset{stylepiton/.style={%
 	enhanced,boxrule=1.25pt,%
 	sharp corners=downhill,arc=12pt,
-	before skip=\baselineskip,after skip=\baselineskip,%
+	before skip=\CODPITespV,after skip=\CODPITespV,%
 	top=\baselineskip,bottom=0mm,left=0.6em,right=5mm,%
 	attach boxed title to top right={yshift=-\tcboxedtitleheight},
 	boxed title style={
@@ -60,7 +65,7 @@
 \tcbset{thonnystyle/.style={%
 	enhanced,boxrule=0.75pt,colframe=DarkGray!50!Black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
-	before skip=\baselineskip,after skip=\baselineskip,%
+	before skip=\CODPITespV,after skip=\CODPITespV,%
 	colback=white
 	}
 }
@@ -84,6 +89,7 @@
 	\useKVdefault[envpiton]%
 	\setKV[envpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%------les styles piton
+	\SetPitonStyle{ Number = \color{\CODPITcolnb} }%
 	\ifboolKV[envpiton]{Lignes}%si lignes=true
 		{\PitonOptions{left-margin=0.75em,all-line-numbers}}%left-margin=auto,
 		{}%
@@ -136,7 +142,7 @@
 %======CONSOLE PYLUATEX (package à charger manuellement !!)
 \tcbset{consolepylua/.style={%base de la boîte
 	enhanced,colback=white,colframe=ForestGreen,sharp corners,boxrule=1pt,%
-	top=1.5mm,bottom=1.5mm,left=2mm,right=2mm,fontupper=\small,%
+	top=1.5mm,bottom=1.5mm,left=2mm,right=2mm,fontupper=\footnotesize,%
 	before skip=\baselineskip,after skip=\baselineskip,%
 	}
 }

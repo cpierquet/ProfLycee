@@ -1,0 +1,246 @@
+% proflycee-tools-recreat.tex
+% Copyright 2023  Cédric Pierquet
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+
+%%------FENÊTRE CALCUL FORMEL
+\newcommand\CFchap{\textasciicircum}
+\newcounter{CFnum}
+%def des clés
+\defKV[paramfenxcas]{%
+	Largeur=\def\CFlarg{#1},%
+	EspaceLg=\def\CFesplg{#1},%
+	PremCol=\def\CFpremcol{#1},%
+	HautPremCol=\def\CFhpremcol{#1},%
+	Taille=\def\CFtaille{#1},%
+	Couleur=\def\CFcouleur{#1},%
+	TailleTitre=\def\CFtailletitre{#1},%
+	CouleurCmd=\def\CFcoulcmd{#1},%
+	CouleurRes=\def\CFcoulres{#1},%
+	PosCmd=\def\CFposcmd{#1},%
+	PosRes=\def\CFposres{#1},%
+	LabelTitre=\def\CFlabeltitre{#1}%
+}
+\setKVdefault[paramfenxcas]{%
+	Largeur=16,EspaceLg=2pt,PremCol=0.3,HautPremCol=0.4,%
+	Couleur=darkgray,Menu=true,Titre=false,TailleTitre=\normalsize,Taille=\normalsize,%
+	Sep=true,PosRes=centre,PosCmd=gauche,%
+	CouleurCmd=red,CouleurRes=blue,%
+	LabelTitre={Résultats obtenus avec un logiciel de Calcul Formel}%
+}
+
+\newcommand\CalculFormelParametres[1][]{%
+	\setcounter{CFnum}{0}
+	\useKVdefault[paramfenxcas]%
+	\setKV[paramfenxcas]{#1}% on paramètres les nouvelles clés et on les simplifie
+}
+
+\defKV[paramlgxcas]{%
+	HautCmd=\def\CFhle{#1},%
+	HautRes=\def\CFhlr{#1}
+}
+\setKVdefault[paramlgxcas]{%
+	HautCmd=0.75,%
+	HautRes=0.75
+}
+
+\newcommand\CalculFormelLigne[3][]{%
+	\addtocounter{CFnum}{1}
+	\def\CFL{\theCFnum}%
+	\def\CFLA{\inteval{\CFL-1}}%
+	\useKVdefault[paramlgxcas]%
+	\setKV[paramlgxcas]{#1}% on paramètres les nouvelles clés et on les simplifie
+	\def\CFLA{\inteval{\CFL-1}}%
+	%DÉCLARATION DES NŒUDS (les "6" coins des lignes commande et résultat)
+	\xintifboolexpr{\CFL == 1}%si c'est la première ligne
+		{\coordinate (A0\CFL) at (0,0);}
+		{\coordinate (A0\CFL) at ($(A2\CFLA) + (0,{-\CFesplg})$);}
+	\coordinate (A1\CFL) at ($(A0\CFL) + (0,{-\CFhle})$);
+	\coordinate (A2\CFL) at ($(A1\CFL) + (0,{-\CFhlr})$);
+	\coordinate (A3\CFL) at ($(A0\CFL) + ({\CFlarg},0)$);
+	\coordinate (A4\CFL) at ($(A1\CFL) + ({\CFlarg},0)$);
+	\coordinate (A5\CFL) at ($(A2\CFL) + ({\CFlarg},0)$);
+	%DÉCLARATION DES NŒUDS INTERMÉDIAIRES (pour les commandes et les résultats)
+	\coordinate (C1\CFL) at ($(A0\CFL) + (0,{-0.5*\CFhle})$);
+	\coordinate (C2\CFL) at ($(A0\CFL) + ({0.5*\CFlarg},{-0.5*\CFhle})$);
+	\coordinate (C3\CFL) at ($(A0\CFL) + ({\CFlarg},{-0.5*\CFhle})$);
+	\coordinate (R1\CFL) at ($(A1\CFL) + (0,{-0.5*\CFhlr})$);
+	\coordinate (R2\CFL) at ($(A1\CFL) + ({0.5*\CFlarg},{-0.5*\CFhlr})$);
+	\coordinate (R3\CFL) at ($(A1\CFL) + ({\CFlarg},{-0.5*\CFhlr})$);
+	%RECTANGLE DE BASE
+	\draw[\CFcouleur] (A0\CFL) rectangle (A5\CFL) ;
+	%LA COMMANDE EN ROUGE
+	\IfStrEq{\CFposcmd}{centre}%si poscmd=center
+		{\draw (C2\CFL) node[\CFcoulcmd,font=\CFtaille] {#2} ;}
+		{}
+	\IfStrEq{\CFposcmd}{gauche}%si poscmd=left
+		{\draw (C1\CFL) node[right,\CFcoulcmd,font=\CFtaille] {#2} ;}
+		{}
+	\IfStrEq{\CFposcmd}{right}%si poscmd=right
+		{\draw (C3\CFL) node[left,\CFcoulcmd,font=\CFtaille] {#2} ;}
+		{}
+	%LE RÉSULTAT
+	\IfStrEq{\CFposres}{centre}%si posrep=center
+		{\draw (R2\CFL) node[\CFcoulres,font=\CFtaille] {#3} ;}
+		{}
+	\IfStrEq{\CFposres}{gauche}%si posrep=left
+		{\draw (R1\CFL) node[right,\CFcoulres,font=\CFtaille] {#3} ;}
+		{}
+	\IfStrEq{\CFposres}{right}%si posrep=right
+		{\draw (R3\CFL) node[left,\CFcoulres,font=\CFtaille] {#3} ;}
+		{}
+	\ifboolKV[paramfenxcas]{Sep}%si sep=true
+		{\draw[\CFcouleur] (A1\CFL) -- (A4\CFL);}%
+		{}
+	%LE PETIT NUMÉRO
+	\draw[\CFcouleur] (A0\CFL) rectangle ++ ({-\CFpremcol},{-\CFhpremcol}) node[\CFcouleur,midway,font=\small\sffamily\bfseries] {\CFL} ;
+	%LE RECTANGLE "MENU"
+	\ifboolKV[paramfenxcas]{Menu}%si menu=true
+		{\draw[\CFcouleur,fill=\CFcouleur!25] (A5\CFL) rectangle ++ (-0.65,0.25) node[black,midway,font=\tiny\sffamily\bfseries] {MENU} ;}%
+		{}
+	%LE BLOC "TITRE"
+	\ifboolKV[paramfenxcas]{Titre}%si titre=true
+		{\draw[\CFcouleur,fill=lightgray!25,rounded corners] ($(A01) + (0,2pt)$) rectangle ++ ($({\CFlarg},2em)$) node[ForestGreen!50!\CFcouleur,midway,font=\CFtailletitre\ttfamily\bfseries] {\CFlabeltitre};}
+		{}
+}
+
+%%------CartoucheCapytale
+\definecolor{vertcapyt}{rgb}{0.0,0.5,0.0}
+%\definecolor{vertcapyt}{HTML}{008000}
+\DeclareTotalTCBox{\CartoucheCapytale}{ s O{} m }
+	{enhanced,size=fbox,on line,arc=3pt,colback=vertcapyt,colframe=vertcapyt,fontupper=\IfBooleanTF{#1}{\ttfamily}{\sffamily}\bfseries,colupper=white}%
+	{#3#2~{\scriptsize\faLink}}
+
+%%------SUDOMATHS
+\defKV[PLTIKZSUDOM]{%
+	CouleurTexte=\def\PLSMcoultexte{#1},%
+	Epaisseur=\def\PLSMepf{#1},%
+	Epaisseurg=\def\PLSMepg{#1},%
+	Unite=\def\PLSMunite{#1},%
+	CouleurCase=\def\PLSMcoulcase{#1},%
+	NbCol=\def\PLSMnbcol{#1},%
+	NbSubCol=\def\PLSMnbsubcol{#1},%
+	NbLig=\def\PLSMnblig{#1},%
+	NbSubLig=\def\PLSMnbsublig{#1},%
+	Police=\def\PLSMfonte{#1},%
+	PoliceLeg=\def\PLSMfonteleg{#1},%
+	ListeLegV=\def\PLSMlistelegv{#1},%
+	ListeLegH=\def\PLSMlistelegh{#1},%
+	DecalLegende=\def\PLSMdecalleg{#1}
+}
+
+\setKVdefault[PLTIKZSUDOM]{%
+	Epaisseurg=1.5pt,%
+	Epaisseur=0.5pt,%
+	Unite=1cm,%
+	CouleurCase=LightBlue!50,%
+	CouleurTexte=blue,%
+	NbCol=9,%
+	NbSubCol=3,%
+	NbLig=9,%
+	NbSubLig=3,
+	Police=\normalfont\normalsize,%
+	PoliceLeg=\normalfont\sffamily,%
+	Legendes=true,%
+	ListeLegV=ABCDEFGHIJKLMNOPQRSTUVWXYZ,%
+	ListeLegH=abcdefghijklmnopqrstuvwxyz,%
+	DecalLegende=0.45
+}
+
+\NewDocumentEnvironment{EnvSudoMaths}{ O{} m }
+	{
+	\useKVdefault[PLTIKZSUDOM]
+	\setKV[PLTIKZSUDOM]{#1}% on paramètres les nouvelles clés et on les simplifie
+	%calculs intermédiaires
+	\def\larcolinter{\inteval{\PLSMnbcol/\PLSMnbsubcol}}
+	\def\larliginter{\inteval{\PLSMnblig/\PLSMnbsublig}}
+	%lecture liste
+	\IfEq{#2}{}{}%
+		{%
+			\setsepchar[.]{§./}%
+			\readlist*\SPGrilleSudoMaths{#2}%
+		}
+	%débt envtik
+	\begin{tikzpicture}[x=\PLSMunite,y=\PLSMunite,line join=miter]
+		%cases
+		\IfEq{#2}{}{}%
+		{%
+		\foreach \i in {1,2,...,\PLSMnblig}{%
+			\foreach \j in {1,2,...,\PLSMnbcol}{%
+				\itemtomacro\SPGrilleSudoMaths[\i,\j]\SMcase
+				\IfSubStr{\SMcase}{*}%si on veut colorier via *
+				{%
+					\StrDel{\SMcase}{*}[\SMcaseb]%
+					\draw[draw=none,fill=\PLSMcoulcase] ({\j-1},{1-\i}) rectangle++ (1,-1) node[inner sep=0pt,outer sep=0pt,\PLSMcoultexte,font=\PLSMfonte,midway] {\SMcaseb} ;%
+				}
+				{%
+					\draw ({\j-0.5},{0.5-\i}) node[inner sep=0pt,outer sep=0pt,\PLSMcoultexte,font=\PLSMfonte] {\SMcase} ;%
+				}
+			}
+		}%
+		}
+		%grilles
+		\draw[line width=\PLSMepg] (0,0) rectangle ({\PLSMnbcol},{-\PLSMnblig}) ;
+		\draw[line width=\PLSMepf,xstep=1,ystep=1] (0,0) grid ({\PLSMnbcol},{-\PLSMnblig}) ;
+		\draw[line width=\PLSMepg,xstep=\larcolinter,ystep=\larliginter] (0,0) grid ({\PLSMnbcol},{-\PLSMnblig}) ;
+		%légendes
+		\ifboolKV[PLTIKZSUDOM]{Legendes}
+			{%
+				\foreach \i in {1,2,...,\PLSMnbcol}{\draw ({\i-0.5},{\PLSMdecalleg}) node[inner sep=0pt,outer sep=0pt,font=\PLSMfonteleg] {\strut\StrChar{\PLSMlistelegh}{\i}} ;}
+				\foreach \j in {1,2,...,\PLSMnblig}{\draw ({-\PLSMdecalleg},{0.5-\j}) node[inner sep=0pt,outer sep=0pt,font=\PLSMfonteleg] {\StrChar{\PLSMlistelegv}{\j}} ;}
+			}{}
+	}
+	{
+	\end{tikzpicture}
+	}
+
+\NewDocumentCommand\SudoMaths{ O{} m }{%
+	\useKVdefault[PLTIKZSUDOM]
+	\setKV[PLTIKZSUDOM]{#1}% on paramètres les nouvelles clés et on les simplifie
+	%calculs intermédiaires
+	\def\larcolinter{\inteval{\PLSMnbcol/\PLSMnbsubcol}}
+	\def\larliginter{\inteval{\PLSMnblig/\PLSMnbsublig}}
+	%lecture liste
+	\IfEq{#2}{}{}%
+	{%
+		\setsepchar[.]{§./}%
+		\readlist*\SPGrilleSudoMaths{#2}%
+	}
+	%débt envtik
+	\begin{tikzpicture}[x=\PLSMunite,y=\PLSMunite,line join=miter]
+		%cases
+		\IfEq{#2}{}{}%
+		{%
+			\foreach \i in {1,2,...,\PLSMnblig}{%
+				\foreach \j in {1,2,...,\PLSMnbcol}{%
+					\itemtomacro\SPGrilleSudoMaths[\i,\j]\SMcase
+					\IfSubStr{\SMcase}{*}%si on veut colorier via *
+					{%
+						\StrDel{\SMcase}{*}[\SMcaseb]%
+						\draw[draw=none,fill=\PLSMcoulcase] ({\j-1},{1-\i}) rectangle++ (1,-1) node[inner sep=0pt,outer sep=0pt,\PLSMcoultexte,font=\PLSMfonte,midway] {\SMcaseb} ;%
+					}
+					{%
+						\draw ({\j-0.5},{0.5-\i}) node[inner sep=0pt,outer sep=0pt,\PLSMcoultexte,font=\PLSMfonte] {\SMcase} ;%
+					}
+				}
+			}%
+		}
+		%grilles
+		\draw[line width=\PLSMepg] (0,0) rectangle ({\PLSMnbcol},{-\PLSMnblig}) ;
+		\draw[line width=\PLSMepf,xstep=1,ystep=1] (0,0) grid ({\PLSMnbcol},{-\PLSMnblig}) ;
+		\draw[line width=\PLSMepg,xstep=\larcolinter,ystep=\larliginter] (0,0) grid ({\PLSMnbcol},{-\PLSMnblig}) ;
+		%légendes
+		\ifboolKV[PLTIKZSUDOM]{Legendes}
+		{%
+			\foreach \i in {1,2,...,\PLSMnbcol}{\draw ({\i-0.5},{\PLSMdecalleg}) node[inner sep=0pt,outer sep=0pt,font=\PLSMfonteleg] {\strut\StrChar{\PLSMlistelegh}{\i}} ;}
+			\foreach \j in {1,2,...,\PLSMnblig}{\draw ({-\PLSMdecalleg},{0.5-\j}) node[inner sep=0pt,outer sep=0pt,font=\PLSMfonteleg] {\StrChar{\PLSMlistelegv}{\j}} ;}
+		}{}
+	\end{tikzpicture}
+}
+
+\endinput
