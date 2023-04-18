@@ -6,7 +6,7 @@
 
 \documentclass[a4paper,french,11pt]{article}
 \def\PLversion{2.6.0}
-\def\PLdate{13 Avril 2023}
+\def\PLdate{13 avril 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 \usepackage[math-style=french]{fourier-otf}
@@ -116,8 +116,8 @@
 	}
 }
 
-\NewTCBListing{PresentationCodePL}{ O{blue} m }{%
-	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!75!Black,%
+\NewTCBListing{PresCodeTexPL}{ O{CadetBlue} m }{%
+	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!Black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
 	before skip=\baselineskip,after skip=\baselineskip,%
 	colback=white,
@@ -129,7 +129,43 @@
 	listing engine=minted,minted style=colorful,minted language=tex,
 	minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
 	#2,%
-	overlay={\draw[#1!75!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faCogs} ;}
+	overlay={\draw[#1!85!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faCode} ;}
+}
+
+\NewTCBListing{PresCodePL}{ O{CadetBlue} m }{%
+	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!Black,%
+	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
+	before skip=\baselineskip,after skip=\baselineskip,%
+	colback=white,
+	fontupper=\footnotesize,fontlower=\footnotesize,%
+	watermark text={\faCogs},watermark opacity=0.25,watermark zoom=0.50,%
+	title={{\scriptsize\faCogs} Code \LaTeX{} et sortie \LaTeX},
+	lefttitle=0.4em,
+	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!#1,%
+	listing engine=minted,minted style=colorful,minted language=tex,
+	minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
+	#2,%
+	overlay={%
+		\draw[#1!85!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faCode} ;
+		\draw[#1!85!black] ($(segmentation.west)+(-0.035\linewidth,-0.01\linewidth)$) node[scale=1.66] {\faFilePdf} ;
+		
+	}
+}
+
+\NewTCBListing{PresCodeSortiePL}{ O{CadetBlue} m }{%
+	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!Black,%
+	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
+	before skip=\baselineskip,after skip=\baselineskip,%
+	colback=white,
+	fontupper=\footnotesize,fontlower=\footnotesize,%
+	watermark text={\faFilePdf},watermark opacity=0.25,watermark zoom=0.50,%
+	title={{\scriptsize\faFilePdf} Sortie \LaTeX},
+	lefttitle=0.4em,
+	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!#1,%
+	listing engine=minted,minted style=colorful,minted language=tex,
+	minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
+	#2,%
+	overlay={\draw[#1!85!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faFilePdf} ;}
 }
 
 \newtcblisting{codetex}[1][]{%
@@ -293,7 +329,7 @@
 
 ~
 
-\hfill{}\textsl{Merci à Anne pour ses retours et sa relecture !}
+\hfill{}\textsl{Merci à Anne et quark67 pour ses retours et sa relecture !}
 
 \hfill{}\textsl{Merci à Christophe et Denis pour leurs retours et éclairages !}
 
@@ -372,22 +408,22 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 
 \subsection{Chargement du package}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %exemple de chargement pour une compilation en (pdf)latex
 \documentclass{article}
 \usepackage{ProfLycee}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 ...
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %exemple de chargement pour une compilation en (xe/lua)latex
 \documentclass{article}
 \usepackage{ProfLycee}
 \usepackage{fontspec}
 ...
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Librairies, option du package}\label{librairies}
 
@@ -395,10 +431,10 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 \cmaj{2.5.0} Le package fonctionne désormais avec un système de \clib{librairies}, qui utilisent et chargent des packages spécifiques, avec des compilations particulières, donc l'utilisateur utilisera un système de chargement similaire à celui de \textsf{tcolorbox} ou \textsf{tikz}, dans le préambule, et une fois le package appelé.
 \end{warningblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \usepackage{ProfLycee}
 \useproflyclib{...,...}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{noteblock}
 Les librairies disponibles seront indiquées dans les sections spécifiques. Pour le moment, il existe :
@@ -425,12 +461,12 @@ Avec l'option \Cle{build}, l'utilisateur a la possibilité de placer les fichier
 Dans ce cas il faut créer au préalable le répertoire \menu{build} avant de compiler un fichier, pour éviter toute erreur !
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 ...
 \usepackage[build]{ProfLycee}
 \useproflyclib{...}
 ...
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{noteblock}
 L'option \Cle{build} charge certains packages (librairies \clib{minted} et \clib{pythontex}) avec les options :
@@ -542,7 +578,7 @@ En dehors de cela, ce sont des tests multiples et variés qui permettront de dé
 Elles sont présentées de manière \textit{succincte}, mais elles sont présentées de manière \textit{détaillée} dans la suite de la documentation.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %Résolution approchée d'une équation f(x)=k
 \ResolutionApprochee[clés]{équation}[macro]
 
@@ -555,9 +591,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 
 %Mise en forme de la conclusion d'un seuil
 \SolutionSeuil[options]{fonction associée}{seuil}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %fenêtre de repérage en tikz et courbe
 \GrilleTikz[options][options grille ppale][options grille second.]
 \AxesTikz[options] \AxexTikz[options]{valeurs} \AxeyTikz[options]{valeurs}
@@ -571,9 +607,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %schémas pour le signe affine/trinôme, dans un environnement tikz
 \MiniSchemaSignes(*)[clés]<options tikz>
 \MiniSchemaSignesTkzTab[options]{numligne}[échelle][décalage horizontal]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %présentation de code Python
 \begin{CodePythonLst}(*)[largeur]{commandes tcbox}...\end{CodePythonLst}
 \begin{CodePythonLstAlt}(*)[largeur]{commandes tcbox}...\end{CodePythonLstAlt}
@@ -591,11 +627,11 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %présentation de pseudocode
 \begin{PseudoCode}(*)[largeur]{commandes tcbox}...\end{PseudoCode}
 \begin{PseudoCodeAlt}(*)[largeur]{commandes tcbox}...\end{PseudoCodeAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \pagebreak
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %terminal OS
 \begin{TerminalWin}[largeur]{clés}[options]...\end{TerminalWin}
 \begin{TerminalUnix}[largeur]{clés}[options]...\end{TerminalUnix}
@@ -603,18 +639,18 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 
 %code Capytale
 \CartoucheCapytale(*)[options]{code capytale}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %pavé et tétraèdre, dans un environnement tikz
 \PaveTikz[options]
 \TetraedreTikz[options]
 
 %cercle trigo, dans un environnement tikz
 \CercleTrigo[clés]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %paramètres d'une régression linéaire, nuage de points
 \CalculsRegLin[clés]{listeX}{listeY}
 \PointsRegLin[clés]{listeX}{listeY}
@@ -632,9 +668,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %boîte à moustaches, dans un environnement tikz
 \BoiteMoustaches[options]
 \BoiteMoustachesAxe[options]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %loi binomiale B(n,p)
 \CalcBinomP{n}{p}{k}
 \CalcBinomC{n}{p}{a}{b}
@@ -646,9 +682,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \CalcPoissC{l}{a}{b}
 \PoissonP(*)[prec]{l}{k}
 \PoissonC(*)[prec]{l}{a}{b}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %loi géométrique G(p)
 \CalcGeomP{p}{k}
 \CalcGeomC{l}{a}{b}
@@ -660,9 +696,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \CalcHypergeomP{N}{n}{m}{a}{b}
 \HypergeomP{N}{n}{m}{k}
 \HypergeomC{N}{n}{m}{a}{b}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %loi normale N(m,s)
 \CalcNormC{m}{s}{a}{b}
 \NormaleC(*)[prec]{m}{s}{a}{b}
@@ -678,9 +714,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %schémas lois continues
 \LoiNormaleGraphe[options]<options tikz>{m}{s}{a}{b}
 \LoiExpoGraphe[options]<options tikz>{l}{a}{b}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %entier aléatoire entre a et b
 \NbAlea{a}{b}{macro}
 %nombre décimal (n chiffres après la virgule) aléatoire entre a et b+1 (exclus)
@@ -689,17 +725,17 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \VarNbAlea{macro}{calcul}
 %liste d'entiers aléatoires
 \TirageAleatoireEntiers[options]{macro}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %arrangement Anp
 \Arrangement(*)[option]{p}{n}
 
 %arrangement Cnp (p parmi n)
 \Combinaison(*)[option]{p}{n}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %conversions
 \ConversionDecBin(*)[clés]{nombre}
 \ConversionBinHex[clés]{nombre}
@@ -709,9 +745,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 
 %PGCD présenté
 \PresentationPGCD[options]{a}{b}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %conversion en fraction, simplification de racine
 \ConversionFraction(*)[option]{argument}
 \SimplificationRacine{expression}
@@ -725,13 +761,13 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %mesure principale, lignes trigo
 \MesurePrincipale[options]{angle}
 \LigneTrigo(*)[booléens]{cos/sin/tan}(angle)
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %sudomaths
 \SudoMaths[options]{liste}
 \begin{EnvSudoMaths}[options]{grille}...\end{EnvSudoMaths}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \newpage
 
@@ -759,18 +795,18 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 La méthode utilisée est la \textbf{dichotomie}, pour plus de rapidité que la méthode \textit{simple} par balayage.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \ResolutionApprochee[clés]{équation}[macro]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \ResolutionApprochee[Intervalle=0:10]{x**3-2*x**2-x-1=2}%
 $x_0 \approx \num[minimum-decimal-digits=2]{\masolutiond}$ par défaut ;\\
 $x_0 \approx \num[minimum-decimal-digits=2]{\masolutione}$ par excès ;\\
 $x_0 \approx \num[minimum-decimal-digits=2]{\masolutiona}$ arrondi à $10^{-2}$.\\
 
 \hfill\includegraphics[scale=0.45]{./graphics/pl-solve_a}\hfill~
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Clés et options}
 
@@ -794,7 +830,7 @@ Quelques explications sur les \Cle{clés} et sur les arguments :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \ResolutionApprochee[Precision=4,Intervalle=0:2]{exp(0.5*x)+x**2-4=0}%
 Une valeur approchée, à $10^{-4}$ près, d'une solution de $\text{e}^{0,5x}+x^2-4=0$ sur $\left[0;2\right]$ est $\beta$ avec :
 \begin{itemize}
@@ -822,7 +858,7 @@ Une valeur approchée, à $10^{-2}$ près d'une solution de $3t\,\text{e}^{-0,5t
 \hfill\includegraphics[scale=0.45]{./graphics/pl-solve_b}~~
 \includegraphics[scale=0.45]{./graphics/pl-solve_c}~~
 \includegraphics[scale=0.45]{./graphics/pl-solve_d}\hfill~
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \newpage
 
@@ -838,9 +874,9 @@ Une valeur approchée, à $10^{-2}$ près d'une solution de $3t\,\text{e}^{-0,5t
 Le code ne trouve pas la solution, il met \textit{juste} en forme mais effectue quand même les calculs d'images et les tests.
 \end{warningblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \SolutionTVI[options]{fonction}{valeur}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Clés et arguments}
 
@@ -863,21 +899,21 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande, relative à une équ
 Le premier argument \textit{obligatoire} est la fonction, en syntaxe \ctex{xint} et avec comme variable $x$, et le second la valeur de $k$.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Pour $f(x)=0$ avec $f(x)=x^2-2$. On obtient \SolutionTVI[va=1.414,vb=1.415,Precision=3]{x**2-2}{0}.
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Avec $\varphi(t)=3t\,\rm{e}^{-0,5t+1}=5$,
 \SolutionTVI[Majuscule=false,Calculatrice,va=1.02,vb=1.03,NomFct=\varphi]
 	{3*x*exp(-0.5*x+1)}{5}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.\\
 \SolutionTVI%
 	[Balayage,Stretch=1.5,va=4.48,vb=4.49,NomFct=g,Precision=4,NomSol={x_0}]{log(x)}{1.5}.
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Interaction avec la commande de résolution approchée}
 
@@ -885,14 +921,14 @@ On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$.\\
 \cmaj{2.1.4} L'idée est de récupérer les valeurs par défaut et par excès pour le TVI grâce à la commande \ctex{\textbackslash ResolutionApprochee}.
 \end{tipblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$ sur l'intervalle $\left[3;5\right]$.
 
 \ResolutionApprochee[Intervalle=3:5]{log(x)=1.5}[SolLn]
 \SolutionTVI%
 	[Balayage,Stretch=1.5,va={\SolLnd},vb={\SolLne},
 	NomFct=g,Precision=4,NomSol={x_0}]{log(x)}{1.5}.
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 À terme, peut-être que la commande \ctex{\textbackslash ResolutionApprochee} sera intégrée dans la commande \ctex{\textbackslash SolutionTVI} afin d'automatiser encore plus le procédé.
@@ -922,13 +958,13 @@ On s'intéresse à $g(x)=\num{1,5}$ avec $g(x)=\ln(x)$ sur l'intervalle $\left[3
 \cmaj{2.0.5} Le choix a été fait de faire les calculs en mode \ctex{float} pour éviter les dépassements de capacité de \ctex{xint} liés aux boucles\ldots
 \end{warningblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %commande pour calculer et formater
 \CalculTermeRecurrence[options]{fonction associée}
 
 %mise en forme de la conclusion d'un seuil
 \SolutionSeuil[options]{fonction associée}{seuil}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Clés et arguments}
 
@@ -947,7 +983,7 @@ Plusieurs \Cle{Clés} sont disponibles pour la commande du calcul d'un terme :
 L'argument \textit{obligatoire} est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 Avec $\begin{dcases} u_0 = 50 \\ u_{n+1}=\dfrac{1}{u_n+2} \end{dcases}$.
 
 On obtient $u_{10} \approx \CalculTermeRecurrence[No=0,UNo=50,N=10]{1/(x+2)}$.
@@ -955,9 +991,9 @@ On obtient $u_{10} \approx \CalculTermeRecurrence[No=0,UNo=50,N=10]{1/(x+2)}$.
 On obtient $u_{15} \approx \CalculTermeRecurrence[Precision=4,No=0,UNo=50,N=15]{1/(x+2)}$.
 
 On obtient $u_{20} \approx \CalculTermeRecurrence[Precision=6,No=0,UNo=50,N=20]{1/(x+2)}$.
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 Avec $u_0 = 50$ et $u_{n+1}=\dfrac{1}{u_n+2}$.
 
 \smallskip
@@ -971,7 +1007,7 @@ On obtient $u_{15} \approx \CalculTermeRecurrence[Precision=4,No=0,UNo=50,N=15]{
 \smallskip
 
 On obtient $u_{20} \approx \CalculTermeRecurrence[Precision=6,No=0,UNo=50,N=20]{1/(x+2)}$ \hfill~avec choix de la précision à $10^{-6}$.
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{cautionblock}
 Plusieurs \Cle{Clés} sont disponibles pour la commande du seuil :
@@ -996,18 +1032,18 @@ Plusieurs \Cle{Clés} sont disponibles pour la commande du seuil :
 Le premier argument \textit{obligatoire} est la fonction associée à la suite, en syntaxe \ctex{xint} et avec comme variable $x$, et le second est le seuil à dépasser.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Avec $\begin{dcases} u_1 = 2 \\ u_{n+1}=1+\dfrac{1+u_n^2}{1+u_n} \end{dcases}$,
 on cherche $n$ tel que $u_n > 5$.\\
 \SolutionSeuil[Balayage,No=1,UNo=2]{1+(1+x**2)/(1+x)}{5}.
 
 \SolutionSeuil[Calculatrice,Precision=4,No=1,UNo=2,Conclusion=false]%
 {1+(1+x**2)/(1+x)}{5}.
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Exemple d'utilisation}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Avec $\begin{dcases} u_1 = 2 \\ u_{n+1}=1+\dfrac{1+u_n^2}{1+u_n} \end{dcases}$,
 on obtient le tableau de valeurs suivant : 
 \begin{tabular}{c|c}
@@ -1017,7 +1053,7 @@ on obtient le tableau de valeurs suivant :
 \end{tabular}\\
 
 \SolutionSeuil[Precision=4,No=1,UNo=2,Simple]{1+(1+x**2)/(1+x)}{10} (Ainsi $u_n > 10$ à partir de $n=\the\CompteurSeuil$)
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \newpage
 
@@ -1057,7 +1093,7 @@ Au niveau du code, il y aura donc plusieurs \textit{aspects} :
 \vspace*{-\baselineskip}\leavevmode
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %version basique
 \begin{tikzpicture}[paramètres]
 	%grille et axes
@@ -1068,9 +1104,9 @@ Au niveau du code, il y aura donc plusieurs \textit{aspects} :
 	%courbe
 	\CourbeTikz[options]{fonction}{valxmin:valxmax}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %version simplifiée
 \begin{tikzpicture}[<paramètres>]
 	%grille et axes
@@ -1078,9 +1114,9 @@ Au niveau du code, il y aura donc plusieurs \textit{aspects} :
 	%courbe
 	\CourbeTikz[options]{fonction}{valxmin:valxmax}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{tikzpicture}%
 	[x=0.1cm,y=0.0167cm, %unités
 	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
@@ -1089,7 +1125,7 @@ Au niveau du code, il y aura donc plusieurs \textit{aspects} :
 	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
 		{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Commandes, clés et options}
 
@@ -1104,17 +1140,17 @@ Les \Cle{paramètres} nécessaires à la bonne utilisation des commandes suivant
 	\item \Cle{xgrilles}, stockée dans \ctex{\textbackslash{}xgrilles}, graduation secondaire.\hfill{}défaut \Cle{0.5}
 \end{itemize}
 
-La fenêtre d'affichage (de sortie) sera donc \textit{portée} par le rectangle de coins $(\text{xmin}\,;\,\text{ymin})$ et $(\text{xmax}\,;\,\text{ymax})$ ; ce qui correspond en fait à la fenêtre \TikZ{} \textit{portée} par le rectangle de coins $(\text{xmin-Ox}\,;\,\text{ymin-Oy})$ et $(\text{xmax-Ox}\,;\,\text{ymax-Oy})$.
+La fenêtre d'affichage (de sortie) sera donc \textit{portée} par le rectangle de coins $(\text{xmin};\text{ymin})$ et $(\text{xmax};\text{ymax})$ ; ce qui correspond en fait à la fenêtre \TikZ{} \textit{portée} par le rectangle de coins $(\text{xmin-Ox};\text{ymin-Oy})$ et $(\text{xmax-Ox};\text{ymax-Oy})$.
 
 \smallskip
 
 Les commandes ont -- pour certaines -- pas mal de \Cle{clés} pour des réglages fins, mais dans la majorité des cas elles ne sont pas forcément \textit{utiles}.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 \GrilleTikz[options][options grille ppale][options grille second.]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cette commande permet de tracer une grille principale et/ou une grille secondaire :
@@ -1126,7 +1162,7 @@ Cette commande permet de tracer une grille principale et/ou une grille secondair
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}%
 	[x=0.1cm,y=0.0167cm, %unités
 	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
@@ -1140,9 +1176,9 @@ Cette commande permet de tracer une grille principale et/ou une grille secondair
 	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
 	\GrilleTikz[Affp=false][][orange,densely dotted]
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \hfill~
 \begin{tikzpicture}%
 	[x=0.1cm,y=0.0167cm, %unités
@@ -1158,14 +1194,14 @@ Cette commande permet de tracer une grille principale et/ou une grille secondair
 	\GrilleTikz[Affp=false][][orange,densely dotted]
 \end{tikzpicture}
 \hfill~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \pagebreak
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 \AxesTikz[options]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cette commande permet de tracer les axes, avec des \Cle{clés} :
@@ -1192,7 +1228,7 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %code tikz
 \AxesTikz
 
@@ -1201,9 +1237,9 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 	[AffLabel=xy,Labelx={Nombre de jours},Labely={Nombre d'individus infectés, en centaines},%
 	PosLabelx={above left},PosLabely={above right},%
 	Police=\small\sffamily,ElargirOx=0,ElargirOy=0]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \hfill~
 \begin{tikzpicture}%
 	[x=0.1cm,y=0.0167cm, %unités
@@ -1224,15 +1260,15 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 	Police=\small\sffamily]
 \end{tikzpicture}
 \hfill~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \pagebreak
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 \AxexTikz[options]{valeurs}
 \AxeyTikz[options]{valeurs}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} identiques pour les deux directions :
@@ -1259,7 +1295,7 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %code tikz
 \AxexTikz[Police=\small]{0,5,...,55}
 \AxeyTikz[Police=\small]{0,30,...,210}
@@ -1267,9 +1303,9 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 \AxexTikz[Police=\small,HautGrad=0pt/4pt]{0,5,...,55}
 \AxeyTikz[AffGrad=false,HautGrad=6pt]{0,30,...,210}
 %des axes fictifs (en gris) sont rajoutés pour la lisibilité du code de sortie
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \hfill~
 \begin{tikzpicture}%
 	[x=0.1cm,y=0.0167cm, %unités
@@ -1291,9 +1327,9 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 	\AxeyTikz[AffGrad=false,HautGrad=6pt]{0,30,...,210}
 \end{tikzpicture}
 \hfill~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}[x=2cm,y=1cm,xmin=0,xmax={2*pi},xgrille=0.5,xgrilles=0.25,
 		ymin=-1.15,ymax=1.15,ygrille=0.5,ygrilles=0.25]
 	\GrilleTikz \AxesTikz
@@ -1301,9 +1337,9 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 		{3*pi/4},{5*pi/6},pi,{7*pi/6},{5*pi/4}}
 	\CourbeTikz[thick,blue,samples=250]{cos(deg(\x))}{0:2*pi}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{tikzpicture}
 	[x=2cm,y=1cm,xmin=0,xmax={2*pi},xgrille=0.5,xgrilles=0.25,
 	ymin=-1.15,ymax=1.15,ygrille=0.5,ygrilles=0.25]
@@ -1312,16 +1348,16 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 		{3*pi/4},{5*pi/6},pi,{7*pi/6},{5*pi/4}}
 	\CourbeTikz[thick,blue,samples=250]{cos(deg(\x))}{0:2*pi}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 La clé \Cle{Trigo} utilise, en interne, une commande qui permet de \textit{transformer} les abscisses, données en langage \TikZ, en fraction en \LaTeX.
 \end{noteblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\AffAngleRadian{0}$ \quad $\AffAngleRadian{pi}$ \quad $\AffAngleRadian{pi/4}$ \quad 
 $\AffAngleRadian{2*pi/3}$ \quad $\AffAngleRadian{-2*pi/3}$ \quad $\AffAngleRadian*{-2*pi/3}$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Commandes annexes}
 
@@ -1336,21 +1372,21 @@ Il existe, de manière marginale, quelques commandes complémentaires qui ne ser
 \vspace*{-\baselineskip}\leavevmode
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %code tikz
 \FenetreTikz                %on restreint les tracés
 \FenetreSimpleTikz%
 	[options](opt axes)<opt axe Ox>{valeurs Ox}<opt axe Oy>{valeurs Oy}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{tipblock}
 L'idée est de proposer, en \textit{complément}, une commande simplifiée pour tracer une courbe en \TikZ.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 \CourbeTikz[options]{formule}{domaine}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cette commande permet de rajouter une courbe sur le graphique (sans se soucier de la transformation de son expression) avec les arguments :
@@ -1363,7 +1399,7 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}[x=0.1cm,y=0.0167cm, %unités
 	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
 	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
@@ -1373,9 +1409,9 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
 		{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{tikzpicture}%
 	[x=0.1cm,y=0.0167cm, %unités
 	xmin=0,xmax=60,xgrille=5,xgrilles=5,ymin=0,ymax=240,ygrille=30,ygrilles=30]
@@ -1384,22 +1420,22 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
 		{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Repère non centré en O}
 
 \begin{tipblock}
-Parfois on est amené à travailler dans des repères qui n'ont pas forcément pour origine $(0\,;\,0)$. De ce fait - pour éviter des erreurs de \ctex{dimension too large} liées à \TikZ{} - il faut \textit{décaler les axes} pour se ramener à une origine en $O$. L'idée est donc d'utiliser les commandes précédentes, sans se soucier des éventuelles transformations !
+Parfois on est amené à travailler dans des repères qui n'ont pas forcément pour origine $(0;0)$. De ce fait - pour éviter des erreurs de \ctex{dimension too large} liées à \TikZ{} - il faut \textit{décaler les axes} pour se ramener à une origine en $O$. L'idée est donc d'utiliser les commandes précédentes, sans se soucier des éventuelles transformations !
 \end{tipblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \begin{tikzpicture}[x=0.35cm,y=0.07cm,Ox=1992,xmin=1992,xmax=2010,%
 	xgrille=2,xgrilles=1,Oy=1640,ymin=1640,ymax=1710,ygrille=10,ygrilles=5]
 	\FenetreSimpleTikz<Annee,Police=\scriptsize>{1992,1994,...,2008}{1640,1650,...,1700}
 	\FenetreTikz
 	\CourbeTikz[line width=1.25pt,orange,samples=500]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \pagebreak
 
@@ -1435,13 +1471,13 @@ Pour déclarer les paramètres :
 
 \subsection{Code, clés et options}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}
 	...
 	\SplineTikz[options]{liste}
 	...
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Certains paramètres et \Cle{clés} peuvent être gérés directement dans la commande \ctex{splinetikz} :
@@ -1481,7 +1517,7 @@ Si jamais il existe (un ou) des points \textit{anguleux}, le plus simple est de 
 
 \subsection{Exemples}
 
-\begin{PresentationCodePL}{tikz lower}
+\begin{PresCodePL}{tikz lower}
 %code tikz
 \def\x{0.9cm}\def\y{0.9cm}
 \def\xmin{-1}\def\xmax{11}\def\xgrille{1}\def\xgrilles{0.5}
@@ -1497,7 +1533,7 @@ Si jamais il existe (un ou) des points \textit{anguleux}, le plus simple est de 
 %splines
 \def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
 \SplineTikz[AffPoints,Coeffs=3,Couleur=red]{\LISTE}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 Avec des explications utiles à la compréhension :
@@ -1535,15 +1571,15 @@ On peut dans ce cas \textit{jouer} sur les coefficients de cette portion pour \t
 \end{center}
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 ...
 %splines
 \def\LISTE{0/1/0§4/3.667/-0.333§7.5/1.75/0§9/2/-0.333§10/0/-10}
 \SplineTikz[AffPoints,Coeffs=3§3§3§2/1]{\LISTE}
 ...
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}[x=0.9cm,y=0.9cm,xmin=-1,xmax=11,xgrille=1,xgrilles=0.5,ymin=-1,ymax=5,ygrille=1,ygrilles=0.5]
 		%axes et grilles
@@ -1559,7 +1595,7 @@ On peut dans ce cas \textit{jouer} sur les coefficients de cette portion pour \t
 		\SplineTikz[AffPoints,Coeffs=3§3§3§2/1]{\LISTE}
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Conclusion}
 
@@ -1588,13 +1624,13 @@ En parallèle de l'outil \ctex{SplineTikz}, il existe l'outil \ctex{TangenteTikz
 NB : il peut fonctionner indépendamment de l'outil \ctex{SplineTikz} puisque la liste des points de travail est gérée de manière autonome !
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}
 	...
 	\TangenteTikz[options]{liste}
 	...
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cela permet de tracer la tangente :
@@ -1609,7 +1645,7 @@ Cela permet de tracer la tangente :
 
 \subsection{Exemple et illustration}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}
 	...
 	\def\LISTE{0/1.5/0§1/2/-0.333§2/0/-5}
@@ -1621,9 +1657,9 @@ Cela permet de tracer la tangente :
 	\TangenteTikz[xl=0.33,xr=0,Couleur=blue,Style=densely dashed,Point=3]{\LISTE}
 	...
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 On obtient le résultat suivant (avec les éléments rajoutés utiles à la compréhension) :
 
 \begin{center}
@@ -1648,11 +1684,11 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 		\draw[thick,darkgray] (4pt,1)--(-4pt,1) node[left,font=\sffamily] {1} ;
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Exemple avec les deux outils, et \og personnalisation \fg}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \tikzset{%
 	xmin/.store in=\xmin,xmin/.default=-5,xmin=-5,
 	xmax/.store in=\xmax,xmax/.default=5,xmax=5,
@@ -1682,9 +1718,9 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 	%la courbe en elle-même
 	\SplineTikz[AffPoints,Coeffs=3,Couleur=cyan,Style=densely dotted]{\liste}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 \begin{tikzpicture}[x=0.5cm,y=0.5cm,xmin=0,xmax=16,xgrilles=1,ymin=0,ymax=16,ygrilles=1]
 		\draw[xstep=\xgrilles,ystep=\ygrilles,line width=0.3pt,lightgray] (\xmin,\ymin) grid (\xmax,\ymax) ;
@@ -1705,7 +1741,7 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 		\SplineTikz[AffPoints,Coeffs=3,Couleur=cyan,Style=densely dotted]{\liste}
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -1727,23 +1763,23 @@ Comme pour les autres commandes \TikZ, l'idée est de laisser la possibilité à
 \cmaj{2.1.9} Il est à noter que la version \textit{étoilée} rend la commande autonome, sans besoin de créer l'environnement \TikZ.
 \end{tipblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \MiniSchemaSignes*
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Commandes}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}[<options>]
 	\MiniSchemaSignes[clés]
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 {\tikz[options] \MiniSchemaSignes[clés]}
 %ou
 \MiniSchemaSignes*[clés]<options tikzpicture>
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 \cmaj{2.1.9} La version \textit{étoilée} de la commande permet de basculer en mode \textit{autonome}, c'est-à-dire sans avoir besoin de créer son environnement \TikZ.
@@ -1778,7 +1814,7 @@ Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou
 
 \pagebreak
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{center}
 \MiniSchemaSignes*[Code=da+,Racines=-4]
 ~~~~
@@ -1800,9 +1836,9 @@ Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou
 ~~~~
 \MiniSchemaSignes*[Code=pa-d0,Racines={-1},Couleur=magenta]
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 \MiniSchemaSignes*[Code=da+,Racines=-4]
 ~~~~
@@ -1824,15 +1860,15 @@ Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou
 ~~~~
 \MiniSchemaSignes*[Code=pa-d0,Racines={-1},Couleur=magenta]
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \begin{tikzpicture}
 	\MiniSchemaSignes[Largeur=3.5,Hauteur=1.5,Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]
 \end{tikzpicture}
 
 \MiniSchemaSignes*[Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]<x=1.75cm,y=1.5cm>
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \pagebreak
 
@@ -1844,12 +1880,12 @@ Ces schémas peuvent être de plus utilisés, via la commande \ctex{MiniSchemaSi
 Pour des raisons internes, le fonctionnement de la commande \ctex{MiniSchemaSignesTkzTab} est légèrement différent et, pour des raisons que j'ignore, le code est légèrement différent en \textit{interne} (avec une \textit{déconnexion} des caractères \textsf{:} et \textsf{\textbackslash}) pour que la librairie \TikZ{} \ctex{calc} puisse fonctionner (mystère pour le moment\ldots)
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}
 	%commandes tkztab
 	\MiniSchemaSignesTkzTab[options]{numligne}[echelle][décalage horizontal]
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Les \Cle{Clés} pour le premier argument \textit{optionnel} sont les mêmes que pour la version \textit{initiale} de la commande précédente.
@@ -1865,7 +1901,7 @@ En ce qui concerne les autres arguments :
 À noter que si l'un des arguments optionnels (le n°3 et/ou le n°4) sont utilisés, il vaut mieux préciser les 2 !
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{center}
 	\begin{tikzpicture}
 		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
@@ -1878,9 +1914,9 @@ En ce qui concerne les autres arguments :
 			{3}[0.85][2]
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}
 		\tkzTabInit[]{$x$/1,$-2x+5$/1,$2x+4$/1,$p(x)$/1}{$-\infty$,$-2$,${2,5}$,$+\infty$}
@@ -1892,7 +1928,7 @@ En ce qui concerne les autres arguments :
 		\MiniSchemaSignesTkzTab[Code=pa-d+,Racines={-2/{\tfrac{5}{2}}},Couleur=orange]{3}[0.85][2]
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -1910,14 +1946,14 @@ Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur déf
 
 \subsection{Commandes}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 ...
 \begin{tikzpicture}[options]
 	...
 	\ToileRecurrence[clés][options du tracé][options supplémentaires des termes]
 	...
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Plusieurs \Cle{arguments} (optionnels) sont disponibles :
@@ -1970,7 +2006,7 @@ On va tracer la \textit{toile} des 4 premiers termes de la suite récurrente :\\
 $\begin{dcases} u_1 = 1 \\ u_{n+1} = \sqrt{5u_n}+1 \text{ pour tout entier } n \geqslant 1\end{dcases}$.
 \end{noteblock}
 
-\begin{PresentationCodePL}{tikz lower}
+\begin{PresCodePL}{tikz lower}
 %code tikz
 \def\x{1.5cm}\def\y{1.5cm}
 \def\xmin{0}\def\xmax{10}\def\xgrille{1}\def\xgrilles{0.5}
@@ -1988,7 +2024,7 @@ $\begin{dcases} u_1 = 1 \\ u_{n+1} = \sqrt{5u_n}+1 \text{ pour tout entier } n \
 %éléments supplémentaires
 \draw[very thick,blue,domain=0:8,samples=250] plot (\x,{\f}) ;
 \draw[very thick,ForestGreen,domain=0:8,samples=2] plot (\x,\x) ;
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 Peut-être que -- ultérieurement -- des options \textit{booléennes} seront disponibles pour un tracé \textit{générique} de la courbe et de la bissectrice, mais pour le moment la \textsf{macro} ne fait \textit{que} l'escalier.
@@ -1996,7 +2032,7 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 
 \subsection{Influence des paramètres}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{center}
 	\begin{tikzpicture}[x=4cm,y=3cm]
 	%axes + grilles + graduations
@@ -2011,9 +2047,9 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 	\ToileRecurrence[Fct={\f},No=0,Uno=2,Nb=5,PosLabel=above right,DecalLabel=0pt]
 \end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}[x=4cm,y=3cm]
 	\draw[xstep=0.25,ystep=0.25,line width=0.3pt,lightgray!50] (0,0) grid (2.5,1.25);
@@ -2034,9 +2070,9 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 	\ToileRecurrence[Fct={\f},No=0,Uno=2,Nb=5,PosLabel=above right,DecalLabel=0pt]
 \end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{center}
 	\begin{tikzpicture}[x=5cm,y=1.5cm]
 			...
@@ -2048,9 +2084,9 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 			\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
 		\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}[x=5cm,y=1.5cm]
 		%axes et grille
@@ -2071,7 +2107,7 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 		\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -2115,17 +2151,17 @@ Donc, si plusieurs \textit{méthodes} sont utilisées pour insérer du code \tex
 L'environnement \ctex{CodePythonLst} permet de présenter du code \textsf{Python}, dans une \ctex{tcolorbox} avec deux styles particuliers (\cmaj{2.5.8}).
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythonLst}(*)[largeur]{commandes tcbox}
 ...
 \end{CodePythonLst}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythonLstAlt}(*)[largeur]{commandes tcbox}
 ...
 \end{CodePythonLstAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Plusieurs \Cle{arguments} sont disponibles :
@@ -2154,15 +2190,15 @@ Dans ce cas, il n'est pas nécessaire d'aligner le code \og à gauche \fg, en ut
 Si cette méthode est utilisée, il ne faut oublier de charger le package \ctex{scontents}.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \usepackage{scontents} %si script déclaré dans le fichier tex
 ...
 \CodePythonLstFichier(*)[largeur]{commandes tcbox}{script}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Exemples}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythonLst}{} %les {}, même vides, sont nécessaires (bug avec # sinon !)
 #environnement par défaut
 nb = int(input("Saisir un entier positif"))
@@ -2173,9 +2209,9 @@ if (nb %7 == 0) :
 def f(x) :
 	return x**2
 \end{CodePythonLst}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{CodePythonLst}{}
 #environnement par défaut
 nb = int(input("Saisir un entier positif"))
@@ -2186,9 +2222,9 @@ if (nb %7 == 0) :
 def f(x) :
 	return x**2
 \end{CodePythonLst}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythonLstAlt}*[0.75\linewidth]{flush right}
 #largeur de 50%, sans numéro, et aligné à droite
 nb = int(input("Saisir un entier Python positif"))
@@ -2199,9 +2235,9 @@ if (nb %7 == 0) :
 def f(x) :
 	return x**2
 \end{CodePythonLstAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{CodePythonLstAlt}*[0.75\linewidth]{flush right}
 #largeur de 50%, sans numéro, et aligné à droite
 nb = int(input("Saisir un entier Python positif"))
@@ -2212,9 +2248,9 @@ if (nb %7 == 0) :
 def f(x) :
 	return x**2
 \end{CodePythonLstAlt}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{scontents}[overwrite,write-out=testscript.py]
 # Calcul de la factorielle en langage Python
 def factorielle(x):
@@ -2244,9 +2280,9 @@ def trace_parabole_tableaux():
 
 %environnement centré, avec numéros, largeur 9cm
 \CodePythonLstFichier[9cm]{center}{testscript.py}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{scontents}[overwrite,write-out=testscript.py]
 # Calcul de la factorielle en langage Python
 def factorielle(x):
@@ -2275,7 +2311,7 @@ def trace_parabole_tableaux():
 \end{scontents}
 
 \CodePythonLstFichier[9cm]{center}{testscript.py}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -2289,10 +2325,10 @@ def trace_parabole_tableaux():
 \cmaj{2.5.7} Une console \textsf{Python} est disponible, elle nécessite le package \ctex{pyluatex}, qui n'est pas chargé par \ctex{ProfLycee}, du fait de l'obligation de spécifier le \textit{chemin} pour l'exécutable \textsf{Python} !
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \usepackage[executable=...]{pyluatex} %si utilisation de la console REPL
 \useproflyclib{piton}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{noteblock}
 La \textsf{librairie} \clib{piton} (qui charge \ctex{piton}, est compatible uniquement avec \hologo{LuaLaTeX} !) permet d'insérer du code \textsf{Python} avec une coloration syntaxique en utilisant la bibliothèque \textsf{Lua LPEG}.
@@ -2324,11 +2360,11 @@ Ce package n'est chargé que si la compilation détectée est en \hologo{LuaLaTe
 
 \subsection{Présentation de code Python}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePiton}[options]{options tcbox}
 ...
 \end{CodePiton}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Plusieurs \Cle{clés} sont disponibles :
@@ -2358,7 +2394,7 @@ Du fait du paramétrage des boîtes \ctex{tcolorbox}, il se peut que le rendu so
 Pour éviter des problèmes avec le code interprété par \textsf{piton}, les \ctex{\{\}} de l'argument obligatoire sont nécessaires au bon fonctionnement du code.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePiton}{}
 #environnement piton avec numéros de ligne, pleine largeur, style moderne
 def arctan(x,n=10):
@@ -2369,7 +2405,7 @@ def arctan(x,n=10):
 	else:
 		return sum( (-1)**k/(2*k+1)*x**(2*k+1) for k in range(n) )
 \end{CodePiton}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{CodePiton}{}
 #environnement piton avec numéros de ligne, pleine largeur, style moderne
@@ -2382,7 +2418,7 @@ def arctan(x,n=10):
 		return sum( (-1)**k/(2*k+1)*x**(2*k+1) for k in range(n) )
 \end{CodePiton}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePiton}[Style=Classique,Filigrane]{}
 #environnement piton avec numéros, style classique, filigrane
 def arctan(x,n=10):
@@ -2393,7 +2429,7 @@ def arctan(x,n=10):
 	else:
 		return sum( (-1)**k/(2*k+1)*x**(2*k+1) for k in range(n) )
 \end{CodePiton}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{CodePiton}[Style=Classique,Filigrane]{}
 #environnement piton avec numéros, style classique, filigrane
@@ -2406,7 +2442,7 @@ def arctan(x,n=10):
 		return sum( (-1)**k/(2*k+1)*x**(2*k+1) for k in range(n) )
 \end{CodePiton}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePiton}[Alignement=flush right,Largeur=13cm]{}
 def f(x) :
 	return x**2
@@ -2433,7 +2469,7 @@ def f(x) :
 	\end{CodePiton}
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{CodePiton}[Alignement=flush right,Largeur=13cm]{}
 #avec numéros, de largeur 13cm, aligné à droite
@@ -2480,12 +2516,12 @@ def f(x) :
 \cmaj{2.5.0} Cette section nécessite de charger les librairies \clib{minted} et/ou \clib{pythontex} dans le préambule.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \useproflyclib{minted}
 \useproflyclib{pythontex}
 %ou
 \useproflyclib{minted,pythontex}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Introduction}
 
@@ -2518,17 +2554,17 @@ Cela peut donner -- en tout cas -- des idées de personnalisation en ayant une b
 L'environnement \ctex{CodePythontex} est donc lié à \ctex{pythontex} (chargé par \ctex{ProfLycee}, avec l'option \textit{autogobble}) permet de présenter du code \textsf{Python}, dans une \ctex{tcolorbox} avec deux styles particuliers (\cmaj{2.5.8}).
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythontex}[options]{} %les {} vides sont nécessaires
 ...
 \end{CodePythontex}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythontexAlt}[options]{} %les {} vides sont nécessaires
 	...
 \end{CodePythontexAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} modifier le style :
@@ -2543,37 +2579,37 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythontex}{} %bien mettre les {} !!
 	#environnement Python(tex) par défaut
 	def f(x) :
 		return x**2
 \end{CodePythontex}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{CodePythontex}{}
 	#environnement Python(tex) par défaut
 	def f(x) :
 		return x**2
 \end{CodePythontex}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythontexAlt}[Largeur=12cm,Centre,Lignes=false]{}
 	#environnement Python(tex) classique, centré, sans lignes
 	def f(x) :
 		return x**2
 \end{CodePythontexAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{CodePythontexAlt}[Largeur=12cm,Centre,Lignes=false]{}
 	#environnement Python(tex) classique, centré, sans lignes
 	def f(x) :
 		return x**2
 \end{CodePythontexAlt}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Présentation de code Python via le package minted}\label{pytminted}
 
@@ -2589,17 +2625,17 @@ Pour celles et ceux qui ne sont pas à l'aise avec le {package} \ctex{pythontex}
 Le package \ctex{minted} nécessite quand même une compilation avec l'option \ctex{--shell-escape} ou \ctex{-write18} !
 \end{warningblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythonMinted}(*)[largeur]{options}
 ...
 \end{CodePythonMinted}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythonMintedAlt}(*)[largeur]{options}
 ...
 \end{CodePythonMintedAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Plusieurs \Cle{arguments} sont disponibles :
@@ -2612,37 +2648,37 @@ Plusieurs \Cle{arguments} sont disponibles :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythonMinted}[13cm]{center}
 	#environnement Python(minted) centré avec numéros, de largeur 13cm
 	def f(x) :
 		return x**2
 \end{CodePythonMinted}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{CodePythonMinted}[13cm]{center}
 	#environnement Python(minted) centré avec numéros
 	def f(x) :
 		return x**2
 \end{CodePythonMinted}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{CodePythonMintedAlt}*[0.8\linewidth]{}
 	#environnement Python(minted), style alt, sans numéro, de largeur 0.8\linewidth
 	def f(x) :
 		return x**2
 \end{CodePythonMintedAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{CodePythonMintedAlt}*[0.8\linewidth]{}
 	#environnement Python(minted), style alt, sans numéro, 0.8\linewidth
 	def f(x) :
 		return x**2
 \end{CodePythonMintedAlt}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Console d'exécution Python}
 
@@ -2652,11 +2688,11 @@ Plusieurs \Cle{arguments} sont disponibles :
 C'est l'environnement \ctex{ConsolePythontex} qui permet de le faire.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{ConsolePythontex}[options]{} %les {} vides sont nécessaires
 ...
 \end{ConsolePythontex}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Les \Cle{Clés} disponibles sont :
@@ -2671,16 +2707,16 @@ Les \Cle{Clés} disponibles sont :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{ConsolePythontex}{}
 	#console Python(tex) par défaut
 	from math import sqrt
 	1+1
 	sqrt(12)
 \end{ConsolePythontex}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \smallskip
 \begin{ConsolePythontex}{}
 	#console Python(tex) par défaut
@@ -2688,9 +2724,9 @@ Les \Cle{Clés} disponibles sont :
 	1+1
 	sqrt(12)
 \end{ConsolePythontex}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{ConsolePythontex}[Largeur=14cm,Label=false,Centre]{}
 	#console Python(tex) centrée sans label, 14cm
 	table = [[1,2],[3,4]]
@@ -2701,9 +2737,9 @@ Les \Cle{Clés} disponibles sont :
 	tableau
 	len(tableau), len(tableau[0]), tableau[1][4]
 \end{ConsolePythontex}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \smallskip
 \begin{ConsolePythontex}[Largeur=14cm,Label=false,Centre]{}
 	#console Python(tex) centrée sans label, 14cm
@@ -2715,7 +2751,7 @@ Les \Cle{Clés} disponibles sont :
 	tableau
 	len(tableau), len(tableau[0]), tableau[1][4]
 \end{ConsolePythontex}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 Le package \ctex{pythontex} peut donc servir à présenter du code Python, comme \ctex{minted} ou \ctex{piton}, sa particularité est toutefois de pouvoir \textit{exécuter} du code \textsf{Python} pour une présentation de type \textit{console}.
@@ -2741,19 +2777,19 @@ Les environnements \ctex{PseudoCode} ou \ctex{PseudoCodeAlt} permet de présente
 De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gérer le paramètre \textit{autogobble}, donc il faudra être vigilant quant à la position du code (pas de tabulation en fait\ldots)
 \end{warningblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{PseudoCode}(*)[largeur]{options tcbox}
 %attention à l'indentation, gobble ne fonctionne pas...
 ...
 \end{PseudoCode}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{PseudoCodeAlt}(*)[largeur]{options tcbox}
 %attention à l'indentation, gobble ne fonctionne pas...
 ...
 \end{PseudoCodeAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Plusieurs \Cle{arguments} (optionnels) sont disponibles :
@@ -2766,7 +2802,7 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %en pas oublier les {}, même vides !
 \begin{PseudoCode}{} %non centré, de largeur par défaut (12cm) avec lignes
 List = [...]          # à déclarer au préalable
@@ -2775,9 +2811,9 @@ Pour i allant de 0 à n-1 Faire
 	Afficher(List[i])
 FinPour
 \end{PseudoCode}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{PseudoCode}{}
 List = [...]          # à déclarer au préalable
 n = longueur(List)
@@ -2785,9 +2821,9 @@ Pour i allant de 0 à n-1 Faire
 	Afficher(List[i])
 FinPour
 \end{PseudoCode}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{PseudoCodeAlt}[15cm]{center} %centré, de largeur 15cm
 List = [...]          # à déclarer au préalable
 n = longueur(List)
@@ -2795,9 +2831,9 @@ Pour i allant de 0 à n-1 Faire
 	Afficher(List[i])
 FinPour
 \end{PseudoCodeAlt}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{PseudoCodeAlt}[15cm]{center}
 List = [...]          # à déclarer au préalable
 n = longueur(List)
@@ -2805,7 +2841,7 @@ Pour i allant de 0 à n-1 Faire
 	Afficher(List[i])
 FinPour
 \end{PseudoCodeAlt}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Compléments}
 
@@ -2821,21 +2857,21 @@ Le style \ctex{listings} utilisé par la commande a l'option \Cle{mathescape} ac
 Cela permet d'insérer du code \LaTeX{} dans l'environnement \ctex{PseudoCode} (attention au fontes par contre !).
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{PseudoCode}*[12cm]{}
 #Utilisation du mode mathescape
 Afficher (*\og*) .........(*\fg*)
 m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
 \end{PseudoCode}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{PseudoCode}*[12cm]{}
 #Utilisation du mode mathescape
 Afficher (*\og*) .........(*\fg*)
 m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
 \end{PseudoCode}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -2861,7 +2897,7 @@ Comme pour le pseudo-code, pas d'\textsf{autogobble}, donc commandes à aligner 
 
 \subsection{Commandes}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{TerminalWin}[largeur]{titre=...}[options tcbox]
 ...
 \end{TerminalWin}
@@ -2873,7 +2909,7 @@ Comme pour le pseudo-code, pas d'\textsf{autogobble}, donc commandes à aligner 
 \begin{TerminalOSX}[largeur]{titre=...}[options tcbox]
 ...
 \end{TerminalOSX}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Peu d'options pour ces commandes :
@@ -2892,21 +2928,21 @@ Le \textsf{code} n'est pas formaté, ni mis en coloration syntaxique.
 De ce fait tous les caractères sont autorisés : même si l'éditeur pourra détecter le \% comme le début d'un commentaire, tout sera intégré dans le code mis en forme !
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{TerminalUnix}[12cm]{Titre=Terminal Ubuntu}[center] %12cm, avec titre modifié et centré
 test@DESKTOP:~$ ping -c 2 ctan.org
 PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \end{TerminalUnix}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{TerminalUnix}[12cm]{Titre=Terminal Ubuntu}[center]
 test@DESKTOP:~$ ping -c 2 ctan.org
 PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \end{TerminalUnix}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{TerminalWin}[15cm]{} %largeur 15cm avec titre par défaut
 Microsoft Windows [version 10.0.22000.493]
 (c) Microsoft Corporation. Tous droits réservés.
@@ -2928,9 +2964,9 @@ Minimum = 35ms, Maximum = 39ms, Moyenne = 36ms
 [test@server]$ ping -c 2 ctan.org
 PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \end{TerminalOSX}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{TerminalWin}[15cm]{}
 Microsoft Windows [version 10.0.22000.493]
 (c) Microsoft Corporation. Tous droits réservés.
@@ -2957,7 +2993,7 @@ PING ctan.org (5.35.249.60) 56(84) bytes of data.
 [test@server]$ ping -c 2 ctan.org
 PING ctan.org (5.35.249.60) 56(84) bytes of data.
 \end{TerminalOSX}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -2971,9 +3007,9 @@ L'idée est d'obtenir des \textsf{cartouches} tels que \textsf{Capytale} les pr�
 
 \subsection{Commandes}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \CartoucheCapytale(*)[options]{code capytale}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Peu d'options pour ces commandes :
@@ -2988,7 +3024,7 @@ Peu d'options pour ces commandes :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \CartoucheCapytale{abcd-12345}           %lien simple, en sf
 
 \CartoucheCapytale[~]{abcd-12345}        %lien avec ~ à la fin, en sf
@@ -2996,9 +3032,9 @@ Peu d'options pour ces commandes :
 \CartoucheCapytale*{abcd-12345}          %lien simple, en tt
 
 \CartoucheCapytale*[~]{abcd-12345}       %lien avec ~ à la fin, en tt
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \CartoucheCapytale{abcd-12345}
 
 \CartoucheCapytale[~]{abcd-12345}
@@ -3006,22 +3042,22 @@ Peu d'options pour ces commandes :
 \CartoucheCapytale*{abcd-12345}
 
 \CartoucheCapytale*[~]{abcd-12345}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 Le \textsf{cartouche} peut être \og cliquable \fg{} grâce à \ctex{href}.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \usepackage{hyperref}
 \urlstyle{same}
 ...
 \href{https://capytale2.ac-paris.fr/web/c/abcd-12345}{\CartoucheCapytale{abcd-12345}}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \href{https://capytale2.ac-paris.fr/web/c/abcd-12345}{\CartoucheCapytale{abcd-12345}}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -3039,11 +3075,11 @@ Il s'agir d'un environnement créé en \ctex{tcolorbox}, et utilisant la présen
 
 \subsection{Commandes}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{PresentationCode}[Couleur]{options tcbox}
 ...
 \end{PresentationCode}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Peu de personnalisations pour ces commandes :
@@ -3063,7 +3099,7 @@ Il est à noter que, même dans le cas d'option vide pour la \ctex{tcolorbox}, l
 On peut par exemple utiliser l'option \Cle{listing only} pour ne présenter \textit{que} le code source.
 \end{noteblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \begin{PresentationCode}{}
 \xdef\ValAleaA{\fpeval{randint(1,100)}}
 \xdef\ValAleaB{\fpeval{randint(1,100)}}
@@ -3074,7 +3110,7 @@ Avec $A=\ValAleaA$ et $B=\ValAleaB$, on a $A\times B=\inteval{\ValAleaA * \ValAl
 \begin{PresentationCode}[DarkBlue]{}
 On peut faire beaucoup de choses avec \LaTeX{} !
 \end{PresentationCode}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \pagebreak
 
@@ -3100,12 +3136,12 @@ L'idée est d'obtenir un pavé droit, dans un environnement \TikZ, avec les nœu
 
 \subsection{Commandes}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}[options tikz]
 	\PaveTikz[options]
 	...
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Quelques \Cle{clés} sont disponibles pour cette commande :
@@ -3128,15 +3164,15 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{tikz lower}
+\begin{PresCodePL}{tikz lower}
 %code tikz
 \PaveTikz
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{tikz lower}
+\begin{PresCodePL}{tikz lower}
 %code tikz
 \PaveTikz[Cube,Largeur=2]
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 La ligne est de ce fait à insérer dans un environnement \TikZ, avec les options au choix pour cet environnement.
@@ -3146,19 +3182,19 @@ Le code crée les nœuds relatifs aux sommets, et les nomme comme les sommets, c
 
 \subsection{Influence des paramètres}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}[line join=bevel]
 	\PaveTikz[Aff,Largeur=4,Profondeur=3,Hauteur=2,Epaisseur={ultra thick}]
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{tikzpicture}[line join=bevel]
 	\PaveTikz[Aff,Largeur=4,Profondeur=3,Hauteur=2,Epaisseur={ultra thick}]
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
 		\PaveTikz[Plein,Aff,Largeur=7,Profondeur=3.5,Hauteur=4,Sommets=Q§S§D§F§G§H§J§K]
@@ -3166,9 +3202,9 @@ Le code crée les nœuds relatifs aux sommets, et les nomme comme les sommets, c
 		\draw[thick,blue,densely dotted] (K)--(H) ;
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
 		\PaveTikz[Plein,Aff,Largeur=7,Profondeur=3.5,Hauteur=4,Sommets=Q§S§D§F§G§H§J§K]
@@ -3176,7 +3212,7 @@ Le code crée les nœuds relatifs aux sommets, et les nomme comme les sommets, c
 		\draw[thick,blue,densely dotted] (K)--(H) ;
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -3190,12 +3226,12 @@ L'idée est d'obtenir un tétraèdre, dans un environnement \TikZ, avec les nœu
 
 \subsection{Commandes}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}[options tikz]
 	\TetraedreTikz[options]
 	...
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Quelques \Cle{clés} sont disponibles pour cette commande :
@@ -3215,20 +3251,20 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{tikz lower}
+\begin{PresCodePL}{tikz lower}
 %code tikz
 \TetraedreTikz
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{tikz lower}
+\begin{PresCodePL}{tikz lower}
 %code tikz
 \TetraedreTikz[Aff,Largeur=2,Profondeur=0.625,Hauteur=1.5]
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{tikz lower}
+\begin{PresCodePL}{tikz lower}
 %code tikz
 \TetraedreTikz[Plein,Aff,Largeur=5,Beta=60]
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Influence des paramètres}
 
@@ -3249,23 +3285,23 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 \end{center}
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
 		\TetraedreTikz[Aff,Largeur=7,Profondeur=3,Hauteur=5,Epaisseur={ultra thick},Alpha=20,Beta=30]
 		\draw[very thick,ForestGreen,<->,>=latex] ($(A)!0.5!(D)$)--($(B)!0.5!(D)$) ;
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
 		\TetraedreTikz[Aff,Largeur=7,Profondeur=3,Hauteur=5,Epaisseur={ultra thick},Alpha=20,Beta=30]
 		\draw[very thick,ForestGreen,<->,>=latex] ($(A)!0.5!(D)$)--($(B)!0.5!(D)$) ;
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -3281,21 +3317,21 @@ L'idée est d'obtenir une commande pour tracer (en \TikZ) un cercle trigonométr
 Comme pour les autres commandes \TikZ, l'idée est de laisser l'utilisateur définir et créer son environnement \TikZ, et d'insérer la commande \ctex{CercleTrigo} pour afficher le cercle.
 \end{tipblock}
 
-\begin{PresentationCodePL}{tikz lower}
+\begin{PresCodePL}{tikz lower}
 %code tikz
 \CercleTrigo
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Commandes}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 ...
 \begin{tikzpicture}[options tikz]
 	...
 	\CercleTrigo[clés]
 	...
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Plusieurs \Cle{Clés} sont disponibles pour cette commande :
@@ -3318,7 +3354,7 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande :
 
 \pagebreak
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
 			\CercleTrigo[Rayon=2.5,AffValeurs=false,Decal=8pt]
@@ -3332,9 +3368,9 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande :
 			\CercleTrigo[Rayon=2.5,MoinsPi=false,CouleurFond=orange!15]
 		\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
 			\CercleTrigo[Rayon=2.5,AffValeurs=false,Decal=8pt]
@@ -3348,7 +3384,7 @@ Plusieurs \Cle{Clés} sont disponibles pour cette commande :
 			\CercleTrigo[Rayon=2.5,MoinsPi=false,CouleurFond=orange!15,TailleValeurs=\tiny]
 		\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Équations trigos}
 
@@ -3369,7 +3405,7 @@ Les \Cle{Clés} pour cette possibilité sont :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{center}
 	\begin{tikzpicture}
 		\CercleTrigo[%
@@ -3388,9 +3424,9 @@ Les \Cle{Clés} pour cette possibilité sont :
 		AffTraits=false,AffAngles=false,Rayon=2.5,Equationcos,cos=60,CouleurSol=purple, TailleValeurs=\tiny]
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}
 		\CercleTrigo[%
@@ -3409,7 +3445,7 @@ Les \Cle{Clés} pour cette possibilité sont :
 		AffTraits=false,AffAngles=false,Rayon=2.5,Equationcos,cos=60,CouleurSol=purple,TailleValeurs=\tiny]
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -3423,12 +3459,12 @@ L'idée est de \textit{proposer} un style \textit{tout prêt} pour simuler un tr
 Il s'agit d'un style \textit{basique} utilisant la librairie \ctex{decorations} avec \textsf{random steps}.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \tikzset{%
 	mainlevee/.style args={#1et#2}{decorate,decoration={random steps, segment length=#1,amplitude=#2}},
 	mainlevee/.default={5mm et 0.6pt}
 }
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Utilisation basique}
 
@@ -3447,7 +3483,7 @@ Concernant le style en lui-même, deux paramètres peuvent être précisés via 
 Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -- satisfaisants, mais l'utilisateur pourra modifier à loisir ces paramètres !
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %la grille a été rajoutée pour la sortie
 \begin{tikzpicture}
 	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
@@ -3460,9 +3496,9 @@ Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -
 \begin{tikzpicture}
 	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \hfill~\begin{tikzpicture}
 	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
 	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
@@ -3478,7 +3514,7 @@ Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -
 	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
 \end{tikzpicture}
 \hfill~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -3517,11 +3553,11 @@ L'idée est que cette macro calcule et stocke les paramètres dans des variables
 \vspace*{-\baselineskip}\leavevmode
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 ...
 \CalculsRegLin[clés]{listeX}{listeY}  %listes avec éléments séparés par des ,
 ...
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{noteblock}
 La commande \ctex{CalculsRegLin} va définir également des \textsf{macros} pour chaque coefficient, qui de ce fait seront réutilisables après !
@@ -3543,14 +3579,14 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %les espaces verticaux n'ont pas été écrits ici
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008, 2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661, 1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %vérif des calculs (noms non modifiables...)
 Liste des X := \showitems\LX.
 Liste des Y := \showitems\LY.
@@ -3564,9 +3600,9 @@ Coefficient $a=\COEFFa$.
 Coefficient $b=\COEFFb$.
 Coefficient $r=\COEFFr$.
 Coefficient $r^2=\COEFFrd$.
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
@@ -3612,7 +3648,7 @@ Coefficient $r=\COEFFr$.\tabto{0.5\textwidth}Coefficient $r^2=\COEFFrd$.
 %\smallskip
 %
 %Coefficient $r^2=\COEFFrd$.
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 \hfill~\includegraphics[height=3cm]{./graphics/pl-doc-stats_a}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_b}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_c}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_c2}\hfill~
@@ -3622,7 +3658,7 @@ Coefficient $r=\COEFFr$.\tabto{0.5\textwidth}Coefficient $r^2=\COEFFrd$.
 Les \textsf{macros} qui contiennent les paramètres de la régression sont donc réutilisables, en tant que nombres réels, donc exploitables par \ctex{siunitx} et \ctex{xfp} pour affichage \textit{fin} ! Ci-dessous un exemple permettant de visualiser tout cela.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %les espaces verticaux n'ont pas été écrits ici
 \def\LstX{0,1,3,4,5,6}
 \def\LstY{-35,-37.4,-37.7,-39.9,-39,-39.6}
@@ -3636,9 +3672,9 @@ Les \textsf{macros} qui contiennent les paramètres de la régression sont donc 
 %paramètres
 Les valeurs extr. de X sont \TESTmin{} et \TESTmax. Une éq. est $y=\arrond[3]{\TESTa}x \arrond*[3]{\TESTb}$.
 Le coeff. de corrélation est $r=\arrond[4]{\TESTr}$, et son carré est $r^2=\arrond[4]{\TESTrd}$.
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\LstX{0,1,3,4,5,6}\def\LstY{-35,-37.4,-37.7,-39.9,-39,-39.6}
 \CalculsRegLin[NomCoeffa=TESTa,NomCoeffb=TESTb,NomCoeffr=TESTr,NomCoeffrd=TESTrd,NomXmin=TESTmin,NomXmax=TESTmax]{\LstX}{\LstY}
 \DeclareDocumentCommand\arrond{ s O{3} m }{
@@ -3653,7 +3689,7 @@ Les valeurs extrêmes de $x$ sont \TESTmin{} et \TESTmax. Une équation de la dr
 \smallskip
 
 Le coefficient de corrélation linéaire est $r=\arrond[4]{\TESTr}$, et son carré est $r^2=\arrond[4]{\TESTrd}$.
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 \hfill~\includegraphics[height=3cm]{./graphics/pl-doc-stats_d}~~\includegraphics[height=3cm]{./graphics/pl-doc-stats_e}\hfill~
@@ -3665,7 +3701,7 @@ Le coefficient de corrélation linéaire est $r=\arrond[4]{\TESTr}$, et son carr
 La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des environnements graphiques pour permettre un tracé \textit{facile} de la droite de régression.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}
 	\begin{axis}[options des axes, non présentées ici...]
 		\addplot[teal, only marks] table{
@@ -3681,9 +3717,9 @@ La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des
 		\addlegendentry{$R^2=\fpeval{round(\COEFFrd,5)}$};
 	\end{axis}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{tikzpicture}
 	\begin{axis}[
 		/pgf/number format/.cd,
@@ -3732,20 +3768,20 @@ La commande étant \og autonome \fg{}, elle va pouvoir être intégrée dans des
 		\addlegendentry{$R^2=\fpeval{round(\COEFFrd,5)}$};
 	\end{axis}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 Il existe également une commande auxiliaire, \ctex{PointsRegLin} pour afficher le nuage de points avec quelques options, dans un environnement \TikZ{} classique (sans \textsf{pgfplot})\ldots
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 ...
 \begin{tikzpicture}[<options>]
 	...
 	\PointsRegLin[clés]{listeX}{listeY}
 	...
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour la mise en forme du nuage :
@@ -3759,7 +3795,7 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}[x=0.5cm,y=0.05cm]
 	\draw[xstep=1,ystep=5,lightgray!50,very thin] (0,0) grid (20,100);
 	\draw[xstep=2,ystep=10,lightgray,thin] (0,0) grid (20,100);
@@ -3778,9 +3814,9 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 		\node {$R^2=\num{\fpeval{round(\COEFFrd,5)}}$} ; \\
 	};
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{tikzpicture}[x=0.5cm,y=0.05cm]
 	\draw[xstep=1,ystep=5,lightgray!50,very thin] (0,0) grid (20,100);
 	\draw[xstep=2,ystep=10,lightgray,thin] (0,0) grid (20,100);
@@ -3799,7 +3835,7 @@ Quelques \Cle{Clés} sont disponibles pour cette commande, essentiellement pour 
 		\node {$R^2=\num{\fpeval{round(\COEFFrd,5)}}$} ; \\
 	};
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -3843,14 +3879,14 @@ En utilisant les commandes de \textsf{régression linéaire} du paragraphe préc
 Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situation, mais ne l'utilisant pas, j'ai préféré préparer des \textsf{macros} permettant de s'affranchir de ce package (est-ce pertinent, ça c'est une autre question\ldots).
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %Listes et calculs
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008, 2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661, 1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %tracé (simple), les options seront présentées juste après
 \begin{tikzpicture}%
 	[x=0.5cm,y=0.1cm,                                             %unités
@@ -3864,9 +3900,9 @@ Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situatio
 		{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}                       %droite de régression
 	\PointMoyenTikz                                               %point moyen
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %tracé avec options fenêtre par défaut
 \begin{tikzpicture}%
 	[....]                                                              %paramètres
@@ -3876,9 +3912,9 @@ Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situatio
 		{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}                             %droite de régression
 	\PLnuageptmoy                                                       %point moyen
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
@@ -3891,7 +3927,7 @@ Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situatio
 	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}
 	\PointMoyenTikz
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Commandes, clés et options}
 
@@ -3906,7 +3942,7 @@ Les \Cle{paramètres} nécessaires à la bonne utilisation des commandes suivant
 	\item \Cle{xgrilles}, stockée dans \ctex{\textbackslash{}xgrilles}, graduation secondaire.\hfill{}défaut \Cle{0.5}
 \end{itemize}
 
-La fenêtre d'affichage (de sortie) sera donc \textit{portée} par le rectangle de coins $(\text{xmin}\,;\,\text{ymin})$ et $(\text{xmax}\,;\,\text{ymax})$ ; ce qui correspond en fait à la fenêtre \TikZ{} \textit{portée} par le rectangle de coins $(xmin-Ox\,;\,ymin-Oy)$ et $(\text{xmax-Ox}\,;\,\text{ymax-Oy})$.
+La fenêtre d'affichage (de sortie) sera donc \textit{portée} par le rectangle de coins $(\text{xmin};\text{ymin})$ et $(\text{xmax};\text{ymax})$ ; ce qui correspond en fait à la fenêtre \TikZ{} \textit{portée} par le rectangle de coins $(\text{xmin-Ox};\text{ymin-Oy})$ et $(\text{xmax-Ox};\text{ymax-Oy})$.
 
 \smallskip
 
@@ -3917,10 +3953,10 @@ Les commandes ont -- pour certaines -- pas mal de \Cle{clés} pour des réglages
 Pour illustrer les commandes et options de ce paragraphe, la base sera le graphique présenté précédemment.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 	\GrilleTikz[options][options grille ppale][options grille second.]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cette commande permet de tracer une grille principale et/ou une grille secondaire :
@@ -3934,7 +3970,7 @@ Cette commande permet de tracer une grille principale et/ou une grille secondair
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}%
 	[x=0.3cm,y=0.06cm,%
 	Ox=1992,xmin=1992,xmax=2012,xgrille=2,xgrilles=1,%
@@ -3948,9 +3984,9 @@ Cette commande permet de tracer une grille principale et/ou une grille secondair
 	Oy=1640,ymin=1640,ymax=1730,ygrille=10,ygrilles=5]
 	\GrilleTikz[Affp=false][][orange,densely dotted]
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \hfill~
 \begin{tikzpicture}%
 	[x=0.3cm,y=0.06cm,%
@@ -3966,12 +4002,12 @@ Cette commande permet de tracer une grille principale et/ou une grille secondair
 	\GrilleTikz[Affp=false][][orange,densely dotted]
 \end{tikzpicture}
 \hfill~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 	\AxesTikz[options]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cette commande permet de tracer les axes, avec des \Cle{clés} :
@@ -3998,7 +4034,7 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %code tikz
 	\AxesTikz
 
@@ -4007,9 +4043,9 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 		[AffLabel=xy,Labelx={Année},Labely={Altitude},%
 		PosLabelx={below right},PosLabely={above left},%
 		Police=\small\sffamily]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \hfill~
 \begin{tikzpicture}%
 	[x=0.3cm,y=0.06cm,%
@@ -4028,15 +4064,15 @@ Cette commande permet de tracer les axes, avec des \Cle{clés} :
 		Police=\small\sffamily]
 \end{tikzpicture}
 \hfill~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 %les axes
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 	\AxexTikz[options]{valeurs}
 	\AxeyTikz[options]{valeurs}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} identiques pour les deux directions :
@@ -4053,7 +4089,7 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %code tikz
 	\AxexTikz[Police=\small]{1992,1994,...,2010}
 	\AxexTikz{1640,1650,...,1720}
@@ -4063,9 +4099,9 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 	\AxeyTikz[AffGrad=false,HautGrad=6pt]{1640,1650,...,1720}
 
 %des axes fictifs (en gris) sont rajoutés pour la lisibilité du code de sortie
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \hfill~
 \begin{tikzpicture}%
 	[x=0.3cm,y=0.06cm,%
@@ -4087,7 +4123,7 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 	\AxeyTikz[AffGrad=false,HautGrad=6pt]{1640,1650,...,1720}
 \end{tikzpicture}
 \hfill~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Commandes annexes}
 
@@ -4102,25 +4138,18 @@ Il existe, de manière marginale, quelques commandes complémentaires qui ne ser
 \vspace*{-\baselineskip}\leavevmode
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %code tikz
 	\FenetreTikz %on restreint les tracés
 	\FenetreSimpleTikz[opt](opt axes)<opt axe Ox>{liste valx}<opt axe Oy>{liste valy}
-\end{PresentationCodePL}
-
-%%l'origine
-%
-%\begin{PresentationCodePL}{listing only}
-%%...code tikz
-%	\PLorigine[<options>]
-%\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Interactions avec CalculsRegLin}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 	\NuagePointsTikz[options]{listeX}{listeY}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cette commande, liée à la commande \ctex{CalculsRegLin} permet de représenter le nuage de points associé aux deux listes, avec les \Cle{clés} suivantes :
@@ -4133,7 +4162,7 @@ Cette commande, liée à la commande \ctex{CalculsRegLin} permet de représenter
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008, 2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661, 1656,1649}
 
@@ -4144,9 +4173,9 @@ Cette commande, liée à la commande \ctex{CalculsRegLin} permet de représenter
 \begin{tikzpicture}[...]
 	\NuagePointsTikz[Couleur=ForestGreen,Style=x,Taille=6pt]{\LLX}{\LLY}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
@@ -4164,13 +4193,13 @@ Cette commande, liée à la commande \ctex{CalculsRegLin} permet de représenter
 	\AxeyTikz{1640,1650,...,1720}
 	\NuagePointsTikz[Couleur=ForestGreen,Style=x,Taille=6pt]{\LLX}{\LLY}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 %point moyen
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 	\PointMoyenTikz[options]
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cette commande permet de rajouter le point moyen du nuage, calculé par la commande \ctex{CalculsRegLin}, avec les \Cle{clés} :
@@ -4190,7 +4219,7 @@ Cette commande permet de rajouter le point moyen du nuage, calculé par la comma
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008, 2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661, 1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
@@ -4204,9 +4233,9 @@ Cette commande permet de rajouter le point moyen du nuage, calculé par la comma
 	\NuagePointsTikz[Couleur=ForestGreen,Style=x,Taille=6pt]{\LLX}{\LLY}
 	\PointMoyenTikz[Couleur=orange,Taille=8pt,Style=+,Nom={$G_1$},Pos=below]
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
@@ -4226,13 +4255,13 @@ Cette commande permet de rajouter le point moyen du nuage, calculé par la comma
 	\NuagePointsTikz[Couleur=ForestGreen,Style=x,Taille=6pt]{\LLX}{\LLY}
 	\PointMoyenTikz[Couleur=orange,Taille=8pt,Style=+,Nom={$G_1$},Pos=below]
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 %courbe
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %...code tikz
 	\CourbeTikz[options]{formule}{domaine}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Cette commande permet de rajouter une courbe sur le graphique (sans se soucier de la transformation de son expression) avec les arguments :
@@ -4253,7 +4282,7 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 	Toute courbe peut être tracée sur ce principe, par contre il faudra saisir la fonction \textit{à la main}.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008, 2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661, 1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
@@ -4262,9 +4291,9 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \PointMoyenTikz
 	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 \CalculsRegLin{\LLX}{\LLY}
@@ -4276,11 +4305,11 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \PointMoyenTikz
 	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Exemple complémentaire, pour illustration}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 
@@ -4291,9 +4320,9 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \FenetreTikz %on fixe la fenêtre
 	\CourbeTikz[line width=1.25pt,orange,samples=250]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\LLX{1994,1995,1996,1997,1998,1999,2000,2001,2002,2004,2005,2006,2007,2008,2009,2010}
 \def\LLY{1718,1710,1708,1700,1698,1697,1691,1688,1683,1679,1671,1670,1663,1661,1656,1649}
 
@@ -4304,7 +4333,7 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \FenetreTikz
 	\CourbeTikz[line width=1.25pt,orange,samples=250]{-(\x-2000)*(\x-2000)+1700}{\xmin:\xmax}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -4320,11 +4349,11 @@ L'idée est de proposer une commande, à intégrer dans un environnement \TikZ, 
 Le code ne calcule pas les paramètres, il ne fait \textit{que} tracer la boîte à moustaches !
 \end{tipblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \begin{tikzpicture}
 	\BoiteMoustaches{10/15/17/19/20}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 Étant donnée que la commande est intégrée dans un environnement \TikZ, les unités peuvent/doivent donc être précisées, \textit{comme d'habitude}, si besoin.
@@ -4353,14 +4382,14 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \begin{tikzpicture}
 	\BoiteMoustaches[Epaisseur=very thick,Moyenne=18.5,Couleur=blue,AffMoyenne,%
 	Pointilles,Valeurs,Hauteur=2.25,Elevation=2]{10/15/17/19/20}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %une grille a été rajoutée pour visualiser la "position verticale"
 \begin{center}
 	\begin{tikzpicture}[x=0.1cm]
@@ -4370,9 +4399,9 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 			[Elevation=4,Couleur=ForestGreen,Remplir=ForestGreen!25]{100/140/145/160/210}
 \end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{center}
 	\begin{tikzpicture}[x=0.1cm]
 		\draw[xstep=10,ystep=0.5,very thin,lightgray] (80,0) grid (210,4.5) ;
@@ -4383,7 +4412,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 		\BoiteMoustaches[Elevation=4,Couleur=ForestGreen,Remplir=ForestGreen!25]{100/140/145/160/210}
 	\end{tikzpicture}
 \end{center}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Commande pour placer un axe horizontal}
 
@@ -4391,19 +4420,19 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 L'idée est de proposer, en parallèle de la commande précédente, une commande pour tracer un axe horizontal \og sous \fg{} les éventuelles boîtes à moustaches.
 \end{tipblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \begin{tikzpicture}
 	\BoiteMoustachesAxe[Min=10,Max=20]
 	\BoiteMoustaches{10/15/17/19/20}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \begin{tikzpicture}
 	\BoiteMoustachesAxe[Min=10,Max=20]
 	\BoiteMoustaches[Valeurs,Pointilles]{10/15/17/19/20}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{cautionblock}
 Quelques \Cle{clés} sont disponibles pour cette commande :
@@ -4418,14 +4447,14 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \begin{tikzpicture}
 	\BoiteMoustachesAxe[Min=8,Max=21,AffValeurs,Valeurs={8,9,...,21},Elargir=0.02]
 	\BoiteMoustaches[Moyenne=18.5,Couleur=blue]{10/15/17/19/20}
 	\BoiteMoustaches[Elevation=2.5,Couleur=red]{8/10/11/12/15}
 	\BoiteMoustaches[Elevation=4,Couleur=ForestGreen,Remplir=ForestGreen!25]{10/14/14.5/16/21}
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 Le placement des différentes boîtes n'est pas automatique, donc il faut penser à cela avant de se lancer dans le code.
@@ -4478,7 +4507,7 @@ De ce fait, les options de \ctex{siunitx} de l'utilisateur affecterons les forma
 
 \subsection{Calculs \og simples \fg}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %loi binomiale B(n,p)
 \CalcBinomP{n}{p}{k}             %P(X=k)
 \CalcBinomC{n}{p}{a}{b}          %P(a<=X<=b)
@@ -4500,7 +4529,7 @@ De ce fait, les options de \ctex{siunitx} de l'utilisateur affecterons les forma
 
 %loi exponentielle E(l)
 \CalcExpoC{l}{a}{b}              %P(a<=X<=b)
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Les probabilités calculables sont donc -- comme pour beaucoup de modèles de calculatrices -- les probabilités \textbf{P}onctuelles ($P(X=k)$) et \textbf{C}umulées ($P(a\leqslant X\leqslant b)$).
@@ -4510,7 +4539,7 @@ Les probabilités calculables sont donc -- comme pour beaucoup de modèles de ca
 Pour les probabilités cumulées, on peut utiliser le caractère \ctex{*} comme borne ($a$ ou $b$), pour les probabilités du type $P(X\leqslant b)$ et $P(X \geqslant a)$.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 % X -> B(5,0.4)
 $P(X=3) \approx \CalcBinomP{5}{0.4}{3}$.
 $P(X\leqslant1) \approx \CalcBinomC{5}{0.4}{*}{1}$.
@@ -4530,9 +4559,9 @@ $P(T\leqslant5) \approx \CalcPoissC{0.5}{*}{5}$.
 % W -> H(50,10,5)
 $P(W=4) \approx \CalcHypergeomP{50}{10}{5}{4}$.
 $P(1\leqslant W\leqslant3) \approx \CalcHypergeomC{50}{10}{5}{1}{3}$.
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 $\bullet~~~~X \hookrightarrow \mathcal{B}(5\,; 0,4)$ :\\
 $P(X=3) \approx \CalcBinomP{5}{0.4}{3}$.\\
 $P(X\leqslant1) \approx \CalcBinomC{5}{0.4}{*}{1}$.
@@ -4560,9 +4589,9 @@ $P(T\leqslant5) \approx \CalcGeomC{0.5}{*}{5}$.
 $\bullet~~~~W \hookrightarrow \mathcal{H}(50\,; 10\,; 5)$ :\\
 $P(W=4) \approx \CalcHypergeomP{50}{10}{5}{4}$.\\
 $P(1\leqslant W\leqslant3) \approx \CalcHypergeomC{50}{10}{5}{1}{3}$.
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 % X -> N(0,1)
 $P(X\leqslant1) \approx \CalcNormC{0}{1}{*}{1}$.
 $P(-1,96\leqslant Z\leqslant1,96) \approx \CalcNormC{0}{1}{-1.96}{1.96}$.
@@ -4574,9 +4603,9 @@ $P(500\leqslant Y\leqslant600) \approx \CalcNormC{550}{30}{500}{600}$.
 % Z -> E(0.001)
 $P(Z\geqslant400) \approx \CalcExpoC{0.001}{400}{*}$.
 $P(300\leqslant Z\leqslant750) \approx \CalcExpoC{0.001}{300}{750}$.
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 $\bullet~~~~X \hookrightarrow \mathcal{N}(0\,; 1)$ :\\
 $P(X\leqslant1) \approx \CalcNormC{0}{1}{*}{1}$.\\
 $P(-1,96\leqslant Z\leqslant1,96) \approx \CalcNormC{0}{1}{-1.96}{1.96}$.
@@ -4592,7 +4621,7 @@ $P(500\leqslant Y\leqslant600) \approx \CalcNormC{550}{30}{500}{600}$.
 $\bullet~~~~Z \hookrightarrow \mathcal{E}_{0,001}$ :\\
 $P(Z\geqslant400) \approx \CalcExpoC{0.001}{400}{*}$.\\
 $P(300\leqslant Z\leqslant750) \approx \CalcExpoC{0.001}{300}{750}$.
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Complément avec sortie \og formatée \fg}
 
@@ -4604,16 +4633,16 @@ L'idée est ensuite de formater le résultat obtenu par \ctex{xintexpr}, pour un
 L'utilisateur peut donc utiliser \og sa \fg{} méthode pour formater les résultats obtenus par \ctex{xintexpr} !
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %avec un formatage manuel
 \num[exponent-mode=scientific]{\CalcBinomP{100}{0.02}{10}}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\bullet~~~~X \hookrightarrow \mathcal{B}(100\,; 0,02)$ :
 
 $P(X=10) \approx \num[exponent-mode=scientific]{\CalcBinomP{100}{0.02}{10}}$.
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{tipblock}
 Le package \ctex{ProfLycee} propose -- en complément -- des commandes pour formater, grâce à \ctex{siunitx}, le résultat.
@@ -4627,7 +4656,7 @@ Les commandes ne sont donc, dans ce cas, pas préfixées par \ctex{calc} :
 \vspace*{-\baselineskip}\leavevmode
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %loi binomiale B(n,p)
 \BinomP(*)[prec]{n}{p}{k}         %P(X=k)
 \BinomC(*)[prec]{n}{p}{a}{b}      %P(a<=X<=b)
@@ -4649,7 +4678,7 @@ Les commandes ne sont donc, dans ce cas, pas préfixées par \ctex{calc} :
 
 %loi exponentielle E(l)
 \ExpoC(*)[prec]{l}{a}{b}          %P(a<=X<=b)
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Quelques précisions sur les commandes précédentes :
@@ -4661,7 +4690,7 @@ Quelques précisions sur les commandes précédentes :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 % X -> N(550,30)
 $P(Y\geqslant600) \approx \NormaleC[4]{550}{30}{600}{*}$.
 $P(500\leqslant Y\leqslant600) \approx \NormaleC[4]{550}{30}{500}{600}$.
@@ -4677,9 +4706,9 @@ $P(300\leqslant Z\leqslant750) \approx \ExpoC{0.001}{300}{750}$.
 % T -> P(5)
 $P(T=3) \approx \PoissonP{5}{3}$.
 $P(T\geqslant2) \approx \PoissonC[4]{5}{2}{*}$.
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 $\bullet~~~~Y \hookrightarrow \mathcal{N}(550\,; 30)$ :
 
 $P(Y\geqslant600) \approx \NormaleC[4]{550}{30}{600}{*}$.
@@ -4717,7 +4746,7 @@ $\bullet~~~~T \hookrightarrow \mathcal{P}_5$ :
 $P(T=3) \approx \PoissonP{5}{3}$.
 
 $P(T\geqslant2) \approx \PoissonC[4]{5}{2}{*}$.
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 \hfill~\includegraphics[height=3cm]{./graphics/pl-doc-probas_a}~~\includegraphics[height=3cm]{./graphics/pl-doc-probas_c}~~\includegraphics[height=3cm]{./graphics/pl-doc-probas_e}~~\includegraphics[height=3cm]{./graphics/pl-doc-probas_f}\hfill~
@@ -4740,7 +4769,7 @@ L'idée est de proposer des commandes pour créer des arbres de probabilités cl
 Les (deux) commandes sont donc liées à un environnement \ctex{tikzpicture}, et elles créent les nœuds de l'arbre, pour exploitation ultérieure éventuelle.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %commande simple pour tracé de l'arbre
 \ArbreProbasTikz[options]{donnees}
 
@@ -4748,7 +4777,7 @@ Les (deux) commandes sont donc liées à un environnement \ctex{tikzpicture}, et
 \begin{EnvArbreProbasTikz}[options]{donnees}
 	code tikz supplémentaire
 \end{EnvArbreProbasTikz}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Options et arguments}
 
@@ -4784,7 +4813,7 @@ Quelques \Cle{Clés} (communes) pour les deux commandes :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \def\ArbreDeuxDeux{
 	$A$/\num{0.5}/,
 		$B$/\num{0.4}/,
@@ -4797,9 +4826,9 @@ Quelques \Cle{Clés} (communes) pour les deux commandes :
 \ArbreProbasTikz{\ArbreDeuxDeux}
 
 %des éléménts, en gris, ont été rajoutés pour illustrer certaines options
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{EnvArbreProbasTikz}{$A$/\num{0.5}/,$B$/\num{0.4}/,$\overline{B}$/.../,$\overline{A}$/.../,$B$/.../,$\overline{B}$/$\frac{1}{3}$/}
 	\draw[lightgray] (R) node[left,font=\ttfamily\small] {(R)} ;
 	\draw[lightgray] (A11) node[below,font=\ttfamily\small] {(A11)} ;
@@ -4814,7 +4843,7 @@ Quelques \Cle{Clés} (communes) pour les deux commandes :
 	\draw[lightgray,<->,>=latex] (7,-1) -- (7,-2) node[midway,right,font=\ttfamily\small] {EspaceFeuille} ;
 	\draw[lightgray,<->,>=latex] (7,-2) -- (7,-3) node[midway,right,font=\ttfamily\small] {EspaceFeuille} ;
 \end{EnvArbreProbasTikz}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 Les nœuds crées par les commandes sont :
@@ -4829,7 +4858,7 @@ Les nœuds crées par les commandes sont :
 
 \subsection{Exemples complémentaires}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \def\ArbreTroisDeux{
 	$A_1$/\num{0.5}/above,
 		$B$/\num{0.4}/above,
@@ -4846,15 +4875,15 @@ Les nœuds crées par les commandes sont :
 	{\ArbreTroisDeux}
 	\draw[ForestGreen,->] (A24)--($(A24)+(2.5,0)$) node[right,font=\sffamily] {code tikz rajouté} ;
 \end{EnvArbreProbasTikz}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \begin{EnvArbreProbasTikz}[Type=3x2,Fleche,EspaceNiveau=5,EspaceFeuille=1.25]{$A_1$/\num{0.5}/above,$B$/\num{0.4}/above,$\overline{B}$/.../below,$A_2$/.../above,$B$/.../above,$\overline{B}$/$\frac{1}{3}$/below,$A_3$/.../below,$B$/.../above,$\overline{B}$/$\frac{4}{15}$/below}
 	\draw[ForestGreen,->] (A24)--($(A24)+(2.5,0)$) node[right,font=\sffamily] {code tikz rajouté} ;
 \end{EnvArbreProbasTikz}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \def\ArbreDeuxTrois{
 	$A$/\num{0.05}/above,
 		$B_1$/\num{0.4}/above,$B_2$/\num{0.35}/,$B_3$//below,
@@ -4870,13 +4899,13 @@ Les nœuds crées par les commandes sont :
 }
 
 \ArbreProbasTikz[Type=3x3,StyleTrait={densely dashed},EspaceFeuille=0.7,PoliceProbas=\scriptsize,Police=\small]{\ArbreTroisTrois}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \ArbreProbasTikz[Type=2x3,InclineProbas=false,EspaceFeuille=1.15]{$A$/\num{0.05}/above,$B_1$/\num{0.4}/above,$B_2$/\num{0.35}/,$B_3$//below,$\overline{A}$/.../below,$B_1$/$\frac{2}{15}$/above,$B_2$/.../,$B_3$/$\frac{1}{3}$/below}
 ~~
 \ArbreProbasTikz[Type=3x3,StyleTrait={densely dashed},EspaceFeuille=0.7,PoliceProbas=\scriptsize,Police=\small]{$A_1$/\num{0.05}/,$B_1$/{1/3}/,$B_2$/{1/3}/,$B_3$/{1/3}/,$A_2$/\num{0.80}/,$B_1$/{1/3}/,$B_2$/{1/3}/,$B_3$/{1/3}/,$A_3$/\num{0.15}/,$B_1$/{1/3}/,$B_2$/{1/3}/,$B_3$/{1/3}/}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -4892,15 +4921,15 @@ L'idée est de proposer des commandes pour illustrer, sous forme de schémas en 
 Ces \og schémas \fg{} peuvent être insérés en tant que graphique explicatif, ou bien en tant que petite illustration rapide !
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \LoiNormaleGraphe[options]<options tikz>{m}{s}{a}{b}
 
 \LoiExpoGraphe[options]<options tikz>{l}{a}{b}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \hfill\LoiNormaleGraphe{100}{20}{80}{120}\hspace{3cm}\LoiExpoGraphe{0.001}{250}{1500}\hfill~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{cautionblock}
 Les probabilités \textit{illustrables} sont donc des probabilités \textbf{C}umulées ($P(a\leqslant X\leqslant b)$).
@@ -4930,14 +4959,14 @@ Quelques \Cle{Clés} sont disponibles pour ces commandes :
 Les commandes sont donc des environnements \TikZ, sans possibilité de \og rajouter \fg{} des éléments. Ces petis \textit{schémas} sont donc vraiment dédiés à \textit{montrer} rapidement une probabilité continue, sans fioriture.
 \end{noteblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Avec centrage vertical sur l'axe des abscisses :
 \LoiNormaleGraphe
 	[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>%
 	{1000}{100}{950}{*}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Avec quelques modifications :
 
 \LoiNormaleGraphe[Largeur=4,Hauteur=2]{150}{12.5}{122}{160}
@@ -4956,7 +4985,7 @@ Avec centrage vertical sur l'axe des abscisses :
 \medskip
 
 \LoiExpoGraphe[Largeur=4,Hauteur=2]{0.00025}{5000}{*}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Remarques et compléments}
 
@@ -4984,7 +5013,7 @@ Pour le moment, seules les lois (continues) exponentielles et normales sont disp
 Pour chacune des commandes, le ou les résultats sont stockés dans une \textsf{macro} dont le nom est choisi par l'utilisateur.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %entier aléatoire entre a et b
 \NbAlea{a}{b}{macro}
 
@@ -4996,9 +5025,9 @@ Pour chacune des commandes, le ou les résultats sont stockés dans une \textsf{
 
 %liste d'entiers aléatoires
 \TirageAleatoireEntiers[options]{macro}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 %nombre aléatoire entre 1 et 50, stocké dans \PremierNbAlea
 Entier entre 1 et 50 : \NbAlea{1}{50}{\PremierNbAlea}\PremierNbAlea \\
 %nombre aléatoire créé à partir du 1er, stocké dans \DeuxiemeNbAlea
@@ -5007,17 +5036,17 @@ Entier à partir du précédent : \VarNbAlea{\DeuxiemeNbAlea}{\PremierNbAlea+ran
 Décimal entre 0 et $10,999\ldots$ : \NbAlea[3]{0}{10}{\PremierDecAlea}\PremierDecAlea \\
 %liste de 6 nombres, sans répétitions, entre 1 et 50
 Liste par défaut (6 entre 1 et 50) : \TirageAleatoireEntiers{\PremiereListeAlea}\PremiereListeAlea
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 Les listes créées sont exploitables, \textit{a posteriori}, par le package \ctex{listofitems} par exemple !
 \end{noteblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Liste générée : \TirageAleatoireEntiers{\TestListeA}\TestListeA
 
 Liste traitée : \readlist*\LISTEa{\TestListeA}\showitems{\LISTEa}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \pagebreak
 
@@ -5038,7 +5067,7 @@ Quelques clés sont disponibles pour la commande \ctex{TirageAleatoireEntiers} :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Une liste de 15 valeurs (différentes), entre 10 et 100, stockée dans la macro MaListeA : \\
 Liste : \TirageAleatoireEntiers[ValMin=10,ValMax=100,NbVal=15]{\MaListeA}\MaListeA \\
 
@@ -5051,16 +5080,16 @@ Liste : \TirageAleatoireEntiers[ValMin=1,ValMax=50,NbVal=12,Tri=decroissant]%
 	{\MaListeC}\MaListeC \\
 
 15 tirages de dé à 6 faces : \\ \TirageAleatoireEntiers[ValMin=1,ValMax=6,NbVal=15,Repetition]{\TestDes}\TestDes
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Une liste (10) pour le Keno\textcopyright, ordonnée, et séparée par des \texttt{-} :
 
 \TirageAleatoireEntiers[ValMin=1,ValMax=70,NbVal=10,Tri=croissant,Sep={-}]{\ListeKeno}
 $\ListeKeno$
 
 \setsepchar{-}\readlist*\KENO{\ListeKeno}\showitems{\KENO}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \newpage
 
@@ -5072,11 +5101,11 @@ $\ListeKeno$
 L'idée est de proposer une commande pour calculer un arrangement ou une combinaison, en utilisant les capacités de calcul du package \ctex{xint} (\cmaj{2.5.4}).
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \Arrangement(*)[option]{p}{n}
 \Combinaison(*)[option]{p}{n}
 \CalculAnp{p}{n} ou \CalculCnp{p}{n} dans un calcul via \xinteval{...}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Utilisation}
 
@@ -5086,31 +5115,34 @@ Peu de paramétrage pour ces commandes qui permettent de calculer $A_n^p$ et $\b
 \begin{itemize}
 	\item les versions étoilées ne formatent pas le résultat grâce à \ctex{\textbackslash num} de \ctex{sinuitx} ;
 	\item le booléen \Cle{Notation} pour avoir la notation au début ; \hfill~défaut \Cle{false}
-	\item le booléen \Cle{Formule} permet de présenter la formule avant le résultat ; \hfill~défaut \Cle{false}
+	\item le booléen \Cle{NotationAncien} pour avoir la notation \og ancienne \fg{} des combinaisons au début ; \hfill~défaut \Cle{false}
+	\item le booléen \Cle{Formule} permet de présenter la formule avant le résultat ;
+	
+	\hfill~défaut \Cle{false}
 	\item le premier argument, \textit{obligatoire}, est la valeur de $p$ ;
 	\item le second argument, \textit{obligatoire}, est la valeur de $n$.
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 On a $A_{20}^3=\Arrangement*{3}{20}$ en non formaté,
 et $\Arrangement[Notation]{3}{20}$ en formaté avec la notation au début.
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 On a $\displaystyle\binom{20}{3}=\Combinaison*{3}{20}$ en non formaté,~
 et $\displaystyle\Combinaison[Notation]{3}{20}$ en formaté avec la notation au début.\\
 Et $\dbinom{20}{3}+\dbinom{20}{4} = \num{\xinteval{\CalculCnp{3}{20}+\CalculCnp{4}{20}}}$.
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 On a $\displaystyle\Arrangement[Notation,Formule]{3}{20}$.
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 On a $\displaystyle\Combinaison[NotationAncien,Formule]{3}{20}$. %ancienne notation FR
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \newpage
 
@@ -5148,7 +5180,7 @@ Le package \ctex{xintbinhex} est la base de ces macros, puisqu'il permet de fair
 Les macros présentées ici ne font que les intégrer dans un environnement adapté à une correction ou une présentation !
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \xintDecToHex{100}
 \xintDecToBin{51}
 \xintHexToDec{A4C}
@@ -5156,9 +5188,9 @@ Les macros présentées ici ne font que les intégrer dans un environnement adap
 \xintBinToHex{11111111}
 \xintHexToBin{ACDC}
 \xintCHexToBin{3F}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \xintDecToHex{100}
 
 \xintDecToBin{51}
@@ -5172,13 +5204,13 @@ Les macros présentées ici ne font que les intégrer dans un environnement adap
 \xintHexToBin{ACDC}
 
 \xintCHexToBin{3F}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Conversion décimal vers binaire}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \ConversionDecBin(*)[clés]{nombre}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Concernant la commande en elle même, peu de paramétrage :
@@ -5196,7 +5228,7 @@ Le formatage est géré par \ctex{sinuitx}, le mieux est donc de positionner la 
 Les nombres écrits en binaire sont, par défaut, présentés en bloc(s) de 4 chiffres.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 % Conversion avec affichage de la base et par bloc de 4
 $\ConversionDecBin{415}$
 % Conversion avec affichage de la base et sans forcément des blocs de 4
@@ -5205,9 +5237,9 @@ $\ConversionDecBin*{415}$
 $\ConversionDecBin[AffBase=false]{415}$
 % Conversion sans affichage de la base et sans forcément des blocs de 4
 $\ConversionDecBin*[AffBase=false]{415}$
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 $\ConversionDecBin{415}$
 
 \smallskip
@@ -5221,7 +5253,7 @@ $\ConversionDecBin[AffBase=false]{415}$
 \smallskip
 
 $\ConversionDecBin*[AffBase=false]{415}$
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \subsection{Conversion binaire vers hexadécimal}
 
@@ -5237,9 +5269,9 @@ L'idée est ici de présenter la conversion, grâce à la conversion \og directe
 \vspace*{-\baselineskip}\leavevmode
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \ConversionBinHex[clés]{nombre}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Quelques \Cle{clés} sont disponibles pour cette commande :
@@ -5253,22 +5285,22 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 Le formatage est géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %conversion avec détails et affichage de la base
 $\ConversionBinHex{110011111}$
 %conversion sans détails et affichage de la base
 $\ConversionBinHex[Details=false]{110011111}$
 %conversion sans détails et sans affichage de la base
 $\ConversionBinHex[AffBase=false,Details=false]{110011111}$
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 $\ConversionBinHex{110011111}$
 
 $\ConversionBinHex[Details=false]{110011111}$
 
 $\ConversionBinHex[AffBase=false,Details=false]{110011111}$
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \pagebreak
 
@@ -5285,9 +5317,9 @@ L'idée est ici de présenter la conversion, grâce à l'écriture polynômiale 
 \vspace*{-\baselineskip}\leavevmode
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \ConversionVersDec[clés]{nombre}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Quelques \Cle{clés} sont disponibles pour cette commande :
@@ -5302,7 +5334,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 Le formatage est toujours géré par le package \ctex{sinuitx}, le mieux est de positionner la commande dans un environnement mathématique.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %conversion 16->10 avec détails et affichage de la base et zéros
 $\ConversionVersDec[BaseDep=16]{19F}$
 %conversion 2->10 avec détails et affichage de la base et zéros
@@ -5313,9 +5345,9 @@ $\ConversionVersDec[Zeros=false]{110011}$
 $\ConversionVersDec[BaseDep=16,Details=false]{AC0DC}$
 %conversion 16->10 avec détails et sans affichage de la base et sans zéros
 $\ConversionVersDec[Eeros=false,Basedep=16]{AC0DC}$
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 $\ConversionVersDec[BaseDep=16]{19F}$
 
 $\ConversionVersDec{110011}$
@@ -5325,7 +5357,7 @@ $\ConversionVersDec[Zeros=false]{110011}$
 $\ConversionVersDec[BaseDep=16,Details=false]{AC0DC}$
 
 $\ConversionVersDec[Zeros=false,BaseDep=16]{AC0DC}$
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -5345,26 +5377,26 @@ Les commandes de la section précédente donne \textit{juste} les résultats, da
 La commande utilise -- par défaut -- du code \TikZ{} en mode \ctex{overlay}, donc on pourra déclarer -- si ce n'est pas fait -- dans le préambule, la commande qui suit.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 ...
 \tikzstyle{every picture}+=[remember picture]
 ...
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Code et clés}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 %conversion basique
 \ConversionDepuisBaseDix{78}{2}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 La \og tableau \fg, qui est géré par \ctex{array} est inséré dans un \ctex{ensuremath}, donc les \ctex{\$...\$} ne sont pas utiles.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \ConversionDepuisBaseDix[options]{nombre en base 10}{base d'arrivée}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{cautionblock}
 Quelques options pour cette commande :
@@ -5384,7 +5416,7 @@ Quelques options pour cette commande :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %conversion avec changement de couleur
 \ConversionDepuisBaseDix[Couleur=DarkBlue]{45}{2}
 
@@ -5399,9 +5431,9 @@ Par divisions euclidiennes successives, \ConversionDepuisBaseDix[Rect=false]{54}
 \begin{tikzpicture}
 	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \ConversionDepuisBaseDix[Couleur=DarkBlue]{45}{2}
 
 \medskip
@@ -5422,7 +5454,7 @@ On obtient donc \ConversionDepuisBaseDix[Couleur=ForestGreen,CouleurRes,Noeud=TE
 \vspace{1.5cm}
 
 ~
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -5436,19 +5468,19 @@ L'idée est de proposer une \og présentation \fg{} de l'algorithme d'Euclide po
 Le package \ctex{xintgcd} permet déjà de le faire, il s'agit ici de travailler sur la \textit{mise en forme}.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \PresentationPGCD[options]{a}{b}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \tikzstyle{every picture}+=[remember picture]
 ...
 \PresentationPGCD{150}{27}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \PresentationPGCD{150}{27}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{warningblock}
 La mise en valeur du dernier reste non nul est géré par du code \TikZ, en mode \ctex{overlay}, donc il faut bien penser à déclarer dans le préambule : \ctex{\textbackslash{}tikzstyle\{every picture\}+=[remember picture]}
@@ -5484,13 +5516,13 @@ Le rectangle de mise en valeur est donc un nœud \TikZ{} qui sera nommé, par d�
 La présentation est dans un environnement \ctex{ensuremath} donc les \ctex{\$...\$} ne sont pas indispensables.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \PresentationPGCD[CouleurResultat]{150}{27}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \pagebreak
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \PresentationPGCD[CouleurResultat,Couleur=ForestGreen]{1250}{450}.
 
 \PresentationPGCD[CouleurResultat,Couleur=DarkBlue]{13500}{2500}.
@@ -5502,7 +5534,7 @@ D'après l'algorithme d'Euclide, on a $\left| \PresentationPGCD[Couleur=LightSky
 \begin{tikzpicture}
 	\draw[overlay,LightSkyBlue,thick,<-] (FFF1.east) to[bend right] ++ (1cm,0.75cm) node[right] {dernier reste non nul} ;
 \end{tikzpicture}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Compléments}
 
@@ -5512,9 +5544,9 @@ La présentation des divisions euclidiennes est gérée par un tableau du type \
 Par défaut, les délimiteurs choisis sont donc l'accolade gauche et le trait droit, mais la clé booléenne \Cle{AfficheDelimiteurs=false} permet de choisir des délimiteurs différents.
 \end{noteblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\left[ \PresentationPGCD[AfficheConclusion=false,AfficheDelimiteurs=false]{1234}{5} \right]$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \newpage
 
@@ -5538,9 +5570,9 @@ $\left[ \PresentationPGCD[AfficheConclusion=false,AfficheDelimiteurs=false]{1234
 L'idée est d'obtenir une commande pour \textit{simplifier} un calcul sous forme de fraction irréductible.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \ConversionFraction(*)[option de formatage]{calcul}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Commande et options}
 
@@ -5563,7 +5595,7 @@ Quelques explications sur cette commande :
 À noter que la macro est dans un bloc \ctex{ensuremath} donc les \ctex{\$...\$} ne sont pas nécessaires.
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \ConversionFraction{-10+1/3*(-5/16)}          %sortie par défaut 
 \ConversionFraction*{-10+1/3*(-5/16)}         %sortie fraction avec - sur numérateur
 \ConversionFraction[d]{-10+1/3*(-5/16)}       %sortie en displaystyle
@@ -5572,9 +5604,9 @@ Quelques explications sur cette commande :
 \ConversionFraction{2+91/7}                   %entier formaté
 \ConversionFraction{111/2145}
 \ConversionFraction{111/3}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \ConversionFraction{-10+1/3*(-5/16)}
 
 \smallskip
@@ -5604,9 +5636,9 @@ Quelques explications sur cette commande :
 \smallskip
 
 \ConversionFraction{111/3}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\frac{111}{2145}=\ConversionFraction{111/2145}$ \\
 
 $\frac{3}{15}=\ConversionFraction[]{3/15}$ \\
@@ -5624,7 +5656,7 @@ $\dfrac{1}{7}-\dfrac{3}{8}=\ConversionFraction[d]{1/7-3/8}$ \\
 $\ConversionFraction[d]{1+1/2}$ \\
 
 $\ConversionFraction{0.1/0.7+30/80}$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 A priori le package \ctex{xint} permet de s'en sortir pour des calculs \og simples \fg, je ne garantis pas que tout calcul ou toute division donne un résultat \textit{satisfaisant} !
@@ -5642,9 +5674,9 @@ L'idée est d'obtenir une commande pour simplifier l'écriture d'un ensemble d'�
 Les délimiteurs de l'ensemble créé sont toujours \textsf{\{~~\}}.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \EcritureEnsemble[clés]{liste}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Commande et options}
 
@@ -5665,15 +5697,15 @@ Peu d'options pour ces commandes :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 $\EcritureEnsemble{a/b/c/d/e}$
 $\EcritureEnsemble[Mathpunct=false]{a/b/c/d/e}$
 $\EcritureEnsemble[Sep={,}]{a/b/c/d/e}$
 $\EcritureEnsemble[Option={\strut}]{a/b/c/d/e}$                      % \strut pour "augmenter" un peu la hauteur des {}
 $\EcritureEnsemble{ \frac{1}{1+\frac{1}{3}} / b / c / d / \frac{1}{2} }$
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 $\EcritureEnsemble{a/b/c/d/e}$
 
 \smallskip
@@ -5691,7 +5723,7 @@ $\EcritureEnsemble[Option={\strut}]{a/b/c/d/e}$
 \smallskip
 
 $\EcritureEnsemble{ \displaystyle\frac{1}{1+\frac{1}{3}} / b / c / d / \displaystyle\frac{1}{2} }$
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \begin{noteblock}
 Attention cependant au comportement de la commande avec des éléments en mode \textsf{mathématique}, ceux-ci peuvent générer une erreur si \textsf{displaystyle} n'est pas utilisé\ldots
@@ -5715,16 +5747,16 @@ En combinant avec le package \ctex{xfp} et fonction de générateur d'entiers al
 L'affichage des monômes est géré par le package \ctex{siunitx} et le tout est dans un environnement \ctex{ensuremath}.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \EcritureTrinome[options]{a}{b}{c}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \EcritureTrinome{1}{7}{0}\\
 \EcritureTrinome{1.5}{7.3}{2.56}\\
 \EcritureTrinome{-1}{0}{12}\\
 \EcritureTrinome{-1}{-5}{0}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Clés et options}
 
@@ -5742,7 +5774,7 @@ Quelques clés et options sont disponibles :
 La clé \Cle{Alea} va modifier la manière de saisir les coefficients, il suffira dans ce cas de  préciser les bornes, sous la forme \ctex{valmin,valmax}, de chacun des coefficients. C'est ensuite le package \ctex{xfp} qui va se charger de générer les coefficients.
 \end{noteblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 Avec $a$ entre 1 et 5 (et signe aléatoire) puis $b$ entre $-2$ et 7 puis $c$ entre $-10$ et 20 : \\
 $f(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$\\
 $g(x)=\EcritureTrinome[Alea]{1,5}{-5,5}{-10,10}$\\
@@ -5751,7 +5783,7 @@ Avec $a$ entre 1 et 10 (forcément positif) puis $b$ entre $-2$ et 2 puis $c$ en
 \EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}\\
 \EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}\\
 \EcritureTrinome[Alea,Anegatif=false]{1,10}{-2,2}{0,4}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \newpage
 
@@ -5763,14 +5795,14 @@ Avec $a$ entre 1 et 10 (forcément positif) puis $b$ entre $-2$ et 2 puis $c$ en
 \cmaj{2.1.0} L'idée est de proposer une commande pour simplifier \textit{automatiquement} une racine carrée, sous la forme $\frac{a\sqrt{b}}{c}$ avec $\frac{a}{c}$ irréductible et $b$ le \frquote{plus petit possible}.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \SimplificationRacine{expression ou calcul}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \SimplificationRacine{48} \\ \SimplificationRacine{100/34}\\
 \SimplificationRacine{99999} \\ \SimplificationRacine{1500*0.31*(1-0.31)}\\
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 C'est -- comme souvent -- le package \ctex{xint} qui s'occupe en interne des calculs, et qui devrait donner des résultats satisfaisants dans la majorité des cas (attention aux \textit{grands nombres}\ldots)
@@ -5782,7 +5814,7 @@ La commande ne fait pas office de \textit{calculatrice}, elle ne permet \textit{
 
 \subsection{Exemples}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 %Simplification d'un module de complexe
 $\left| 4+6\text{i}\right| = \sqrt{4^2+6^2} = \sqrt{\xinteval{4**2+6**2}}=\SimplificationRacine{4**2+6**2}$
 
@@ -5794,7 +5826,7 @@ $\frac{42}{\sqrt{5}}=\left(\sqrt{\frac{42^2}{5}}\right)=\SimplificationRacine{(4
 
 %Écart-type d'une loi binomiale
 $\sqrt{\num{150}\times\num{0.35}\times(1-\num{0.35})} = \displaystyle\SimplificationRacine{150*0.35*(1-0.35)}$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \newpage
 
@@ -5806,9 +5838,9 @@ $\sqrt{\num{150}\times\num{0.35}\times(1-\num{0.35})} = \displaystyle\Simplifica
 \cmaj{2.1.2} L'idée est de proposer (sur une suggestion de Marylyne Vignal) une commande pour déterminer la mesure principale d'un angle en radian.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \MesurePrincipale[booléens]{angle}   %dans un mode mathématique
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \begin{noteblock}
 La commande est à insérer dans un environnement mathématique, via \ctex{\$...\$} ou \ctex{\textbackslash[...\textbackslash]}.
@@ -5832,7 +5864,7 @@ Pour cette commande :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 $\MesurePrincipale[d]{54pi/7}$
 $\MesurePrincipale[d]{-128pi/15}$
 $\MesurePrincipale{3pi/2}$
@@ -5842,9 +5874,9 @@ $\MesurePrincipale{28pi}$
 $\MesurePrincipale[d]{14pi/4}$
 $\MesurePrincipale[Crochets]{14pi/7}$
 $\dfrac{121\pi}{12} = \MesurePrincipale[Brut]{121pi/12}$ à $2\pi$ près
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 $\MesurePrincipale[d]{54pi/7}$
 
 \medskip
@@ -5878,7 +5910,7 @@ $\MesurePrincipale[Crochets]{14pi/7}$
 \medskip
 
 $\dfrac{121\pi}{12} = \MesurePrincipale[d,Brut]{121pi/12}$ à $2\pi$ près
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \pagebreak
 
@@ -5894,9 +5926,9 @@ $\dfrac{121\pi}{12} = \MesurePrincipale[d,Brut]{121pi/12}$ à $2\pi$ près
 La commande détermine -- et affiche si demandée la réduction -- et la valeur exacte de la ligne trigonométrique demandée.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 \LigneTrigo(*)[booléens]{cos/sin/tan}(angle)
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \subsection{Commande}
 
@@ -5913,47 +5945,47 @@ Pour cette commande :
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo{cos}(56pi/3)$ et $\LigneTrigo{sin}(56pi/3)$ et $\LigneTrigo{tan}(56pi/3)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo[d,Etapes]{cos}(56pi/3)$ et $\LigneTrigo[d,Etapes]{sin}(56pi/3)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo*[d,Etapes]{cos}(2pi/3)$ et $\LigneTrigo*[d,Etapes]{sin}(2pi/3)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo[d,Etapes]{cos}(146pi)$ et $\LigneTrigo[d,Etapes]{sin}(146pi)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo[d,Etapes]{cos}(-551pi/12)$ et $\LigneTrigo[d,Etapes]{sin}(-551pi/12)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo[d,Etapes]{cos}(447pi/8)$ et $\LigneTrigo[d,Etapes]{sin}(447pi/8)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo*[d,Etapes]{cos}(-pi/8)$ et $\LigneTrigo*[d,Etapes]{sin}(-pi/8)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo[d,Etapes]{cos}(-595pi/12)$ et $\LigneTrigo[d,Etapes]{sin}(-595pi/12)$ et $\LigneTrigo[d,Etapes]{tan}(-595pi/12)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo[d,Etapes]{cos}(33pi/10)$ et $\LigneTrigo[d,Etapes]{sin}(33pi/10)$\\
 $\LigneTrigo[d,Etapes]{tan}(33pi/10)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 $\LigneTrigo[d,Etapes]{cos}(-14pi/5)$ et $\LigneTrigo[d,Etapes]{sin}(-14pi/5)$\\
 $\LigneTrigo[d,Etapes]{tan}(-14pi/5)$
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \subsection{Valeurs disponibles}
 
@@ -6037,14 +6069,14 @@ L'idée est de \textit{proposer} un environnement \TikZ, une commande permettant
 L'environnement créé, lié à \TikZ, trace la grille de SudoMaths (avec les blocs démarqués), et peut la remplir avec une liste d'éléments.
 \end{tipblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %grille classique non remplie, avec légendes H/V, {} nécessaires pour préciser que les cases seront "vides"
 \SudoMaths{}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{}
+\begin{PresCodePL}{}
 \SudoMaths{}
-\end{PresentationCodePL}
+\end{PresCodePL}
 
 \begin{noteblock}
 La commande \ctex{SudoMaths} crée donc la grille (remplie ou non), dans un environnement \TikZ, c'est \textit{c'est tout} ! 
@@ -6054,7 +6086,7 @@ La commande \ctex{SudoMaths} crée donc la grille (remplie ou non), dans un envi
 On peut également utiliser l'\textit{environnement} \ctex{EnvSudoMaths} dans lequel on peut rajouter du code \TikZ{} !
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %grille "toute seule"
 \SudoMaths[clés]{liste}
 
@@ -6062,7 +6094,7 @@ On peut également utiliser l'\textit{environnement} \ctex{EnvSudoMaths} dans le
 \begin{EnvSudoMaths}[clés]{grille}
 	%commandes tikz
 \end{EnvSudoMaths}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
 \pagebreak
 
@@ -6103,7 +6135,7 @@ Il peut donc être intéressant de \textit{déclarer} la liste au préalable pou
 La \Cle{CouleurCase} est gérée -- en interne -- par le caractère \ctex{*} qui permet de préciser qu'on veut que la case soit coloriée.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %grille 6x6 avec blocs 2x3, avec coloration de cases (présentée sous forme de "cases")
 \def\grilleSuMa{%
 	(a)* / (b)* /      /      / (c)* / (d)* §%
@@ -6117,9 +6149,9 @@ La \Cle{CouleurCase} est gérée -- en interne -- par le caractère \ctex{*} qui
 \SudoMaths[Unite=0.75cm,NbCol=6,NbSubCol=2,NbLig=6,NbSubLig=3,%
 	Police=\small\bfseries\ttfamily,CouleurTexte=red,CouleurCase=yellow!50,%
 	Legendes=false]{\grilleSuMa}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\grilleSuMa{%
 	(a)* / (b)* /      /      / (c)* / (d)* §%
 	(e)* /      /      / (f)* / (g)* / (h)* §%
@@ -6131,15 +6163,15 @@ La \Cle{CouleurCase} est gérée -- en interne -- par le caractère \ctex{*} qui
 
 \SudoMaths[Unite=0.75cm,NbCol=6,NbSubCol=2,NbLig=6,NbSubLig=3,Police=\small\bfseries\ttfamily,CouleurTexte=red,CouleurCase=yellow!50,%
 Legendes=false]{\grilleSuMa}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \pagebreak
 
 \begin{noteblock}
-La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0\,;\,0)$ et $(\text{nbcol}\,;\,-\text{nblig})$, de sorte que les labels des cases sont situés au nœuds de coordonnées $(x,5\,;\,-y,5)$.
+La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0;0)$ et $(\text{nbcol};-\text{nblig})$, de sorte que les labels des cases sont situés au nœuds de coordonnées $(x,5;-y,5)$.
 \end{noteblock}
 
-\begin{PresentationCodePL}{listing only}
+\begin{PresCodeTexPL}{listing only}
 %grille classique avec coloration de cases et commande tikz
 %graduations rajoutées pour la lecture des coordonnées
 \def\grilleSuMaB{%
@@ -6159,9 +6191,9 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 		ListeLegV=QSDFGHJKL,ListeLegH=poiuytrez]{\grilleSuMaB}
 	\draw[red,very thick,<-,>=latex] (7.5,-4.5) to[bend right] ++ (4,-1) node[right] {code rajouté...} ;
 \end{EnvSudoMaths}
-\end{PresentationCodePL}
+\end{PresCodeTexPL}
 
-\begin{PresentationCodePL}{text only}
+\begin{PresCodeSortiePL}{text only}
 \def\grilleSuMaB{%
 	*/////4///§%
 	/*///3////§%
@@ -6182,7 +6214,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 	\foreach \y in {-1,-2,...,-9} \draw[lightgray] (9,\y) node[right,font=\scriptsize\ttfamily] {\y} ;
 	\draw[lightgray] (9,0) node[right,font=\scriptsize\ttfamily] {~0} ;
 \end{EnvSudoMaths}
-\end{PresentationCodePL}
+\end{PresCodeSortiePL}
 
 \newpage
 
