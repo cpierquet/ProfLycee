@@ -520,6 +520,8 @@
 		{}%
 }
 
-
+\NewDocumentCommand\DeclareFonctionTikz{ O{f} m }{%nom_fonction+langage tikz
+	\tikzset{declare function={#1(\x)=#2;}}
+}
 
 \endinput

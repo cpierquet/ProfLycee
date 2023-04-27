@@ -382,5 +382,153 @@
 	\expandafter\def\csname#3a\endcsname{\fpeval{round(\varvalm,\DICHOTOstep)}}%
 }
 
+%==taux acroissement==
+\defKV[tauxaccroiss]{%
+	Precision=\def\TauxAccroisPrec{#1},%
+	Signe=\def\TauxAccroisEqual{#1},%
+	NomFct=\def\TauxAccroisFct{#1}
+}
+
+\setKVdefault[tauxaccroiss]{%
+	Precision=3,%
+	AffFormule=false,%
+	Displaystyle=true,%
+	ResultatBrut=false,%
+	Signe={\approx},%
+	NomFct=f
+}
+
+\NewDocumentCommand\TauxAccroissement{ O{} m m m }{%opts+fct+pt+h
+	\useKVdefault[tauxaccroiss]%
+	\setKV[tauxaccroiss]{#1}%
+	\xintdeffloatfunc varfct(x) := #2 ;%
+	\def\TmpRes{\xintfloateval{(varfct(#3+#4)-varfct(#3))/(#4)}}%
+	\ifboolKV[methodeintegr]{ResultatBrut}%
+		{\TmpRes}%
+		{%
+			\ifboolKV[tauxaccroiss]{AffFormule}%
+				{%
+					\ifboolKV[tauxaccroiss]{Displaystyle}{\displaystyle}{}%
+					\frac{\TauxAccroisFct(\num{\xinteval{#3+#4}})-\TauxAccroisFct(\num{#3})}{\num{#4}} \TauxAccroisEqual}%
+				{}%
+			\num{\xintfloateval{round(\TmpRes,\TauxAccroisPrec)}}%
+		}%
+}
+
+%==approx intégrale==
+\defKV[methodeintegr]{%
+	Precision=\def\MethIntegrPrec{#1},%
+	NbSubDiv=\def\MethIntegrNb{#1},%
+	Methode=\def\MethIntegrType{#1},%
+	Signe=\def\MethIntegrEqual{#1},%
+	Expr=\def\MethIntegrFct{#1},%
+	Variable=\def\MethIntegrVar{#1}
+}
+
+\setKVdefault[methodeintegr]{%
+	Precision=3,%
+	NbSubDiv=10,%
+	Methode=Simpson,%
+	ResultatBrut=false,%
+	AffFormule=false,%
+	Signe={\approx},%
+	Expr=f(x),%
+	Variable=x
+}
+
+\NewDocumentCommand\IntegraleApprochee{ O{} m m m }{%opts+fct+a+b
+	\useKVdefault[methodeintegr]%
+	\setKV[methodeintegr]{#1}%
+	\xintdeffloatfunc varfct(x) := #2 ;%
+	\def\TmpNmU{\xinteval{\MethIntegrNb-1}}%
+	\IfEq{\MethIntegrType}{RectanglesGauche}%
+		{%
+			\def\TmpRes{\xintfloateval{(#4-#3)/\MethIntegrNb*add(varfct(#3+i*(#4-#3)/\MethIntegrNb), i=0..\TmpNmU)}}%
+				}%
+		{}%
+	\IfEq{\MethIntegrType}{RectanglesMilieu}%
+		{%
+			\def\TmpRes{\xintfloateval{(#4-#3)/\MethIntegrNb*add(varfct(#3+(i+0.5)*(#4-#3)/\MethIntegrNb), i=0..\TmpNmU)}}%
+					}%
+		{}%
+	\IfEq{\MethIntegrType}{RectanglesDroite}%
+		{%
+			\def\TmpRes{\xintfloateval{(#4-#3)/\MethIntegrNb*add(varfct(#3+i*(#4-#3)/\MethIntegrNb), i=1..\MethIntegrNb)}}%
+				}%
+		{}%
+	\IfEq{\MethIntegrType}{Trapezes}%
+		{%
+			\def\TmpRes{\xintfloateval{(#4-#3)/\MethIntegrNb*add(0.5*varfct(#3+i*(#4-#3)/\MethIntegrNb)+0.5*varfct(#3+(i+1)*(#4-#3)/\MethIntegrNb), i=0..\TmpNmU)}}%
+				}%
+		{}%
+	\IfEq{\MethIntegrType}{Simpson}%
+		{%
+			\def\TmpRes{\xintfloateval{(#4-#3)/(6*\MethIntegrNb)*(2*add(varfct(#3+i*(#4-#3)/\MethIntegrNb), i=1..\TmpNmU)+varfct(#3)+varfct(#4)+4*add(varfct(#3+(i+0.5)*(#4-#3)/\MethIntegrNb), i=0..\TmpNmU))}}%
+				}%
+		{}%
+	\ifboolKV[methodeintegr]{ResultatBrut}%
+		{\TmpRes}%
+		{%
+			\ifboolKV[methodeintegr]{AffFormule}%
+				{%
+					\int_{#3}^{#4} \MethIntegrFct\,\text{d}\MethIntegrVar\MethIntegrEqual%
+				}%
+				{}%
+			\num{\xintfloateval{round(\TmpRes,\MethIntegrPrec)}}
+		}%
+}
+
+%==intégrale tikz==
+
+\defKV[methodeintegrtkz]{%
+	Couleur=\def\MethIntegrTkzCol{#1},%
+	CouleurRemplissage=\def\MethIntegrTkzColOpak{#1},%
+	NbSubDiv=\def\MethIntegrTkzNb{#1},%
+	Methode=\def\MethIntegrTkzType{#1},%
+	Opacite=\def\MethIntegrTkzOpak{#1},%
+	Epaisseur=\def\MethIntegrTkzThick{#1}
+}
+
+\setKVdefault[methodeintegrtkz]{%
+	Couleur=red,%
+	NbSubDiv=10,%
+	Methode=RectanglesGauche,%
+	Remplir=true,%
+	CouleurRemplissage={\MethIntegrTkzCol!25},%
+	Opacite=0.25,%
+	Epaisseur=semithick
+}
+
+\NewDocumentCommand\IntegraleApprocheeTikz{ O{} m m m }{%opts+nom_fct+a+b
+	\useKVdefault[methodeintegrtkz]%
+	\setKV[methodeintegrtkz]{#1}%
+	\tikzset{figureintegr/.style={\MethIntegrTkzThick,\MethIntegrTkzCol,fill=\MethIntegrTkzColOpak,fill opacity=\MethIntegrTkzOpak}}%
+	\def\TmpH{(#4-#3)/\MethIntegrTkzNb}
+	%rectangles gauches
+	\IfEq{\MethIntegrTkzType}{RectanglesGauche}%
+		{%
+			\foreach \i in {0,...,\inteval{\MethIntegrTkzNb-1}}%
+				\draw[figureintegr] ({#3+\i*\TmpH},{0}) rectangle++ ({\TmpH},{#2(#3+\i*\TmpH)}) ;
+		}%
+		{}%
+	\IfEq{\MethIntegrTkzType}{RectanglesDroite}%
+		{%
+			\foreach \i in {0,...,\inteval{\MethIntegrTkzNb-1}}%
+				\draw[figureintegr] ({#3+\i*\TmpH},{0}) rectangle++ ({\TmpH},{#2(#3+(\i+1)*\TmpH)}) ;
+		}%
+		{}%
+	\IfEq{\MethIntegrTkzType}{RectanglesMilieu}%
+		{%
+			\foreach \i in {0,...,\inteval{\MethIntegrTkzNb-1}}%
+				\draw[figureintegr] ({#3+\i*\TmpH},{0}) rectangle++ ({\TmpH},{#2(#3+(\i+0.5)*\TmpH)}) ;
+		}%
+		{}%
+	\IfEq{\MethIntegrTkzType}{Trapezes}%
+		{%
+			\foreach \i in {0,...,\inteval{\MethIntegrTkzNb-1}}%
+				\draw[figureintegr] ({#3+\i*\TmpH},{0}) -- ({#3+\i*\TmpH},{#2(#3+\i*\TmpH)}) -- ({#3+(\i+1)*\TmpH},{#2(#3+(\i+1)*\TmpH)}) -- ({#3+(\i+1)*\TmpH},{0}) -- cycle ;
+		}%
+		{}%
+}
 
 \endinput

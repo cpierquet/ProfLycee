@@ -51,15 +51,15 @@
 \defKV[envpythonverb]{%
 	Largeur=\def\CODPYlargeur{#1},%
 	TaillePolice=\def\CODPYfonte{#1},%
-	EspacementVertical=\def\CODPYstretch{#1},%
-	Centre=\testboolKV{#1}
-		{\def\verbcenterpre{\begin{center}}\def\verbcenterpost{\end{center}}}
-		{\def\verbcenterpre{}\def\verbcenterpost{}}
+	EspacementVertical=\def\CODPYstretch{#1}
+%	Centre=\testboolKV{#1}
+%		{\def\verbcenterpre{\begin{center}}\def\verbcenterpost{\end{center}}}
+%		{\def\verbcenterpre{}\def\verbcenterpost{}}
 }
 
 \setKVdefault[envpythonverb]{%
 	Largeur=\linewidth,%
-	Centre=false,%
+%	Centre=false,%
 	Lignes=true,%
 	TaillePolice=\footnotesize,%
 	EspacementVertical=1
@@ -70,7 +70,7 @@
 \tcbset{stylepythontex/.style={%
 	enhanced,boxrule=1.25pt,%
 	sharp corners=downhill,arc=12pt,
-	before skip=\baselineskip,after skip=\baselineskip,%
+	before skip=0.5\baselineskip,after skip=0.5\baselineskip,%
 	top=\baselineskip,bottom=1mm,right=5mm,left=0.6em,
 	attach boxed title to top right={yshift=-\tcboxedtitleheight},
 	boxed title style={
@@ -98,12 +98,12 @@
 	}
 }
 
-\newtcolorbox{tcpythontexcode}[1][\linewidth]{%
-	width=#1,stylepythonlineos
+\newtcolorbox{tcpythontexcode}[2][\linewidth]{%
+	width=#1,stylepythonlineos,#2
 }
 
-\newtcolorbox{tcpythontexcodeno}[1][\linewidth]{%
-	width=#1,stylepythonnolineos
+\newtcolorbox{tcpythontexcodeno}[2][\linewidth]{%
+	width=#1,stylepythonnolineos,#2
 }
 
 \NewDocumentEnvironment{CodePythontex}{ O{} m }
@@ -111,10 +111,10 @@
 	\useKVdefault[envpythonverb]%
 	\setKV[envpythonverb]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\VerbatimEnvironment
-	\verbcenterpre
+%	\verbcenterpre
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
-		{\begin{tcpythontexcode}[\CODPYlargeur]}
-		{\begin{tcpythontexcodeno}[\CODPYlargeur]}
+		{\begin{tcpythontexcode}[\CODPYlargeur]{#2}}
+		{\begin{tcpythontexcodeno}[\CODPYlargeur]{#2}}
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
 		{\begin{pyverbatim}[][fontsize=\CODPYfonte,numbers=left,numbersep=0.75em,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
 		{\begin{pyverbatim}[][numbers=none,numbersep=0pt,fontsize=\CODPYfonte,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
@@ -124,14 +124,14 @@
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
 		{\end{tcpythontexcode}}
 		{\end{tcpythontexcodeno}}
-	\verbcenterpost
+%	\verbcenterpost
 }
 
 %v2
 \tcbset{stylepythontexalt/.style={%
 	enhanced,boxrule=0.75pt,colframe=DarkGray!50!Black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.2em,right=5mm,%
-	before skip=\baselineskip,after skip=\baselineskip,%
+	before skip=0.5\baselineskip,after skip=0.5\baselineskip,%
 	colback=white,
 	fontupper=\footnotesize,fontlower=\footnotesize,%
 	title={{\scriptsize\faCode} Code Python},
@@ -157,22 +157,22 @@
 	}
 }
 
-\newtcolorbox{tcpythontexcodealt}[1][\linewidth]{%
-	width=#1,stylepythonlineosalt
+\newtcolorbox{tcpythontexcodealt}[2][\linewidth]{%
+	width=#1,stylepythonlineosalt,#2
 }
 
-\newtcolorbox{tcpythontexcodenoalt}[1][\linewidth]{%
-	width=#1,stylepythonnolineosalt
+\newtcolorbox{tcpythontexcodenoalt}[2][\linewidth]{%
+	width=#1,stylepythonnolineosalt,#2
 }
 \NewDocumentEnvironment{CodePythontexAlt}{ O{} m }
 {%
 	\useKVdefault[envpythonverb]%
 	\setKV[envpythonverb]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\VerbatimEnvironment
-	\verbcenterpre
+%	\verbcenterpre
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
-		{\begin{tcpythontexcodealt}[\CODPYlargeur]}
-		{\begin{tcpythontexcodenoalt}[\CODPYlargeur]}
+		{\begin{tcpythontexcodealt}[\CODPYlargeur]{#2}}
+		{\begin{tcpythontexcodenoalt}[\CODPYlargeur]{#2}}
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
 		{\begin{pyverbatim}[][fontsize=\CODPYfonte,numbers=left,numbersep=0.75em,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
 		{\begin{pyverbatim}[][numbers=none,numbersep=0pt,fontsize=\CODPYfonte,commandchars=\\\{\},mathescape,baselinestretch=\CODPYstretch]}
@@ -182,7 +182,7 @@
 	\ifboolKV[envpythonverb]{Lignes}%si lignes=true
 		{\end{tcpythontexcodealt}}
 		{\end{tcpythontexcodenoalt}}
-	\verbcenterpost
+%	\verbcenterpost
 }
 
 \endinput

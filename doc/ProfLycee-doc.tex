@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.6.0}
-\def\PLdate{13 avril 2023}
+\def\PLversion{2.6.1}
+\def\PLdate{27 avril 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 \usepackage[math-style=french]{fourier-otf}
@@ -17,6 +17,7 @@
 \usetikzlibrary{hobby}
 \usepackage[group-minimum-digits=4]{siunitx}
 \sisetup{locale=FR}
+\usepackage{enumitem}
 \usepackage{fancyvrb}
 \usepackage{fancyhdr}
 \usepackage{tabularray}
@@ -147,7 +148,7 @@
 	#2,%
 	overlay={%
 		\draw[#1!85!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faCode} ;
-		\draw[#1!85!black] ($(segmentation.west)+(-0.035\linewidth,-0.01\linewidth)$) node[scale=1.66] {\faFilePdf} ;
+		\draw[#1!85!black] ($(segmentation.west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faFilePdf} ;
 		
 	}
 }
@@ -591,6 +592,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 
 %Mise en forme de la conclusion d'un seuil
 \SolutionSeuil[options]{fonction associée}{seuil}
+
+%Valeur approchée d'une intégrale
+\IntegraleApprochee[clés]{fonction}{a}{b}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
@@ -598,6 +602,7 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \GrilleTikz[options][options grille ppale][options grille second.]
 \AxesTikz[options] \AxexTikz[options]{valeurs} \AxeyTikz[options]{valeurs}
 \FenetreSimpleTikz[options](opt axes)<opt axe Ox>{liste valx}<opt axe Oy>{liste valy}
+\DeclareFonctionTikz[nom]{expr}
 \CourbeTikz[options]{fonction}{valxmin:valxmax}
 
 %courbe d'interpolation, tangente, dans un environnement tikz
@@ -607,6 +612,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %schémas pour le signe affine/trinôme, dans un environnement tikz
 \MiniSchemaSignes(*)[clés]<options tikz>
 \MiniSchemaSignesTkzTab[options]{numligne}[échelle][décalage horizontal]
+
+%intégrales et méthodes graphiques
+\IntegraleApprocheeTikz[clés]{nom_fonction}{a}{b}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
@@ -1035,9 +1043,7 @@ Le premier argument \textit{obligatoire} est la fonction associée à la suite, 
 \begin{PresCodePL}{}
 Avec $\begin{dcases} u_1 = 2 \\ u_{n+1}=1+\dfrac{1+u_n^2}{1+u_n} \end{dcases}$,
 on cherche $n$ tel que $u_n > 5$.\\
-\SolutionSeuil[Balayage,No=1,UNo=2]{1+(1+x**2)/(1+x)}{5}.
-
-\SolutionSeuil[Calculatrice,Precision=4,No=1,UNo=2,Conclusion=false]%
+\SolutionSeuil[Balayage,No=1,UNo=2]{1+(1+x**2)/(1+x)}{5}. \SolutionSeuil[Calculatrice,Precision=4,No=1,UNo=2,Conclusion=false]%
 {1+(1+x**2)/(1+x)}{5}.
 \end{PresCodePL}
 
@@ -1054,6 +1060,120 @@ on obtient le tableau de valeurs suivant :
 
 \SolutionSeuil[Precision=4,No=1,UNo=2,Simple]{1+(1+x**2)/(1+x)}{10} (Ainsi $u_n > 10$ à partir de $n=\the\CompteurSeuil$)
 \end{PresCodePL}
+
+\newpage
+
+\section{Valeur approchée d'une intégrale}\label{calcintegr}
+
+\subsection{Idée}
+
+\begin{tipblock}
+\cmaj{2.6.1} L'idée est de proposer plusieurs approximations pour le calcul d'une intégrale, en utilisant :
+\begin{itemize}
+	\item une méthode des rectangles (Gauche, Droite ou Milieu) ;
+	\item la méthode des trapèzes ;
+	\item la méthode de Simpson.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{warningblock}
+Il s'agit de valeurs approchées, mais la méthode de Simpson donne des valeurs satisfaisantes !
+
+Les méthodes \textit{Rectangles} ou \textit{Trapèzes} seront plutôt utiles pour des résultats obtenus par algorithme par exemple.
+\end{warningblock}
+
+\begin{PresCodeTexPL}{listing only}
+\IntegraleApprochee[clés]{fonction}{a}{b}
+\end{PresCodeTexPL}
+
+\subsection{Clés et arguments}
+
+\begin{cautionblock}
+Plusieurs \Cle{Clés} sont disponibles pour la commande de calcul :
+
+\begin{itemize}
+	\item le booléen \Cle{ResultatBrut} qui donne le résultat obtenu grâce à \ctex{xint} ; \hfill~défaut : \Cle{false}
+	\item la clé \Cle{Methode}, parmi \Cle{RectanglesGauche / RectanglesDroite / RectanglesMilieu / Trapezes / Simpson} pour spécifier la méthode utilisée ;
+	
+	\hfill~défaut : \Cle{Simpson}
+	\item la clé \Cle{NbSubDiv} précise le nombre de subdivisions pour le calcul ; \hfill~défaut : \Cle{10}
+	\item le booléen \Cle{AffFormule} qui affiche au préalable l'intégrale ;\hfill{}défaut \Cle{false}
+	\item la clé \Cle{Expr} qui indique ce qui doit être affiché dans l'intégrale ; \hfill{}défaut \Cle{f(x)}
+	\item la clé \Cle{Signe} qui indique le signe à afficher entre l'intégrale et le résultat ; \hfill{}défaut \Cle{\textbackslash approx}
+	\item la clé \Cle{Variables} qui indique la variable à afficher dans le $\text{d}x$. \hfill{}défaut \Cle{x}
+\end{itemize}
+
+\smallskip
+
+Concernant les arguments obligatoires :
+
+\begin{itemize}
+	\item le premier est la fonction à intégrer, en langage \ctex{xint}, avec comme variable $x$ ;
+	\item les deux autres arguments sont les bornes de l'intégrale.
+\end{itemize}
+
+À noter que la commande, hormis dans sa version \Cle{ResultatBrut}, est à insérer de préférence dans un mode mathématique.
+\end{cautionblock}
+
+\begin{PresCodePL}{}
+On s'intéresse à $\displaystyle\int_4^{10} f(x) \,\text{d}x$ avec $f(x)=\sqrt{x}$ :\\
+\begin{itemize}[itemsep=6pt,leftmargin=4cm]
+	\item[\texttt{sortie par défaut} :] \IntegraleApprochee{sqrt(x)}{4}{10}
+	\item[\texttt{résultat brut} :] \IntegraleApprochee[ResultatBrut]{sqrt(x)}{4}{10}
+	\item[\texttt{résultat formaté} :] $\displaystyle\IntegraleApprochee[NbSubDiv=100,AffFormule,Precision=5,Expr={\sqrt{x}}]%
+		{sqrt(x)}{4}{10}$
+\end{itemize}
+\end{PresCodePL}
+
+\subsection{Exemples}
+
+\begin{PresCodeTexPL}{listing only}
+%tableau
+\IntegraleApprochee[NbSubDiv=10,ResultatBrut]{sqrt(x)}{4}{10}
+\IntegraleApprochee[NbSubDiv=10,Methode=RectanglesGauche,ResultatBrut]{sqrt(x)}{4}{10}
+\IntegraleApprochee[NbSubDiv=10,Methode=RectanglesDroite,ResultatBrut]{sqrt(x)}{4}{10}
+\IntegraleApprochee[NbSubDiv=10,Methode=RectanglesMilieu,ResultatBrut]{sqrt(x)}{4}{10}
+\IntegraleApprochee[NbSubDiv=10,Methode=Trapezes,ResultatBrut]{sqrt(x)}{4}{10}
+$\displaystyle\IntegraleApprochee[NbSubDiv=10,AffFormule,Expr={\sqrt{x}}]{sqrt(x)}{4}{10}$
+\end{PresCodeTexPL}
+
+\begin{PresCodeSortiePL}{text only}
+\begin{tblr}[B]{hlines,vlines,colspec={Q[5cm,m,l]Q[5cm,m,l]},row{1}={halign=c,font=\bfseries\sffamily,bg=lightgray}}
+	Méthode utilisée & Valeur brute obtenue \\
+	\SetCell[c=2]{c} $f(x)=\sqrt{x}$ et $n=10$ ; $\displaystyle\int_4^{10} f(x) \,\text{d}x$ & \\
+	Simpson & $\IntegraleApprochee[NbSubDiv=10,Methode=Simpson,ResultatBrut]{sqrt(x)}{4}{10}$ \\
+	rectangles Gauche & $\IntegraleApprochee[NbSubDiv=10,Methode=RectanglesGauche,ResultatBrut]{sqrt(x)}{4}{10}$ \\
+	rectangles Droite & $\IntegraleApprochee[NbSubDiv=10,Methode=RectanglesDroite,ResultatBrut]{sqrt(x)}{4}{10}$ \\
+	rectangles Milieu & $\IntegraleApprochee[NbSubDiv=10,Methode=RectanglesMilieu,ResultatBrut]{sqrt(x)}{4}{10}$ \\
+	trapèzes & $\IntegraleApprochee[NbSubDiv=10,Methode=Trapezes,ResultatBrut]{sqrt(x)}{4}{10}$ \\
+	\SetCell[c=2]{c} $\displaystyle\IntegraleApprochee[NbSubDiv=10,AffFormule,Expr={\sqrt{x}}]{sqrt(x)}{4}{10}$ & \\
+\end{tblr}~~\includegraphics[height=3cm]{integr_nwks_a}
+\end{PresCodeSortiePL}
+
+\begin{PresCodeTexPL}{listing only}
+%tableau
+\IntegraleApprochee[NbSubDiv=100,Methode=Simpson,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}
+\IntegraleApprochee[NbSubDiv=100,Methode=RectanglesGauche,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}
+\IntegraleApprochee[NbSubDiv=100,Methode=RectanglesDroite,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}
+\IntegraleApprochee[NbSubDiv=100,Methode=RectanglesMilieu,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}
+\IntegraleApprochee[NbSubDiv=100,Methode=Trapezes,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}
+$\displaystyle\IntegraleApprochee[NbSubDiv=100,AffFormule,Expr={80x\,\text{e}^{-0,2x}}]%
+	{80*x*exp(-0.2*x)}{1}{20}$
+\end{PresCodeTexPL}
+
+\begin{PresCodeSortiePL}{text only}
+\begin{tblr}[B]{hlines,vlines,colspec={Q[5cm,m,l]Q[5cm,m,l]},row{1}={halign=c,font=\bfseries\sffamily,bg=lightgray}}
+	Méthode utilisée & Valeur brute obtenue \\
+	\SetCell[c=2]{c} $f(x)=80x\,\text{e}^{-0,2x}$ et $n=100$ ; $\displaystyle\int_1^{20} f(x) \,\text{d}x$ & \\
+	Simpson & $\IntegraleApprochee[NbSubDiv=100,Methode=Simpson,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}$ \\
+	rectangles Gauche & $\IntegraleApprochee[NbSubDiv=100,Methode=RectanglesGauche,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}$ \\
+	rectangles Droite & $\IntegraleApprochee[NbSubDiv=100,Methode=RectanglesDroite,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}$ \\
+	rectangles Milieu & $\IntegraleApprochee[NbSubDiv=100,Methode=RectanglesMilieu,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}$ \\
+	trapèzes & $\IntegraleApprochee[NbSubDiv=100,Methode=Trapezes,ResultatBrut]{80*x*exp(-0.2*x)}{1}{20}$ \\
+	\SetCell[c=2]{c} $\displaystyle\IntegraleApprochee[NbSubDiv=100,AffFormule,Expr={80x\,\text{e}^{-0,2x}}]{80*x*exp(-0.2*x)}{1}{20}$ & \\
+\end{tblr}~~\includegraphics[height=3cm]{integr_nwks_b}
+\end{PresCodeSortiePL}
 
 \newpage
 
@@ -2003,7 +2123,7 @@ En effet, il y aurait trop d'options pour ces deux éléments, et l'idée est qu
 
 \begin{noteblock}
 On va tracer la \textit{toile} des 4 premiers termes de la suite récurrente :\\
-$\begin{dcases} u_1 = 1 \\ u_{n+1} = \sqrt{5u_n}+1 \text{ pour tout entier } n \geqslant 1\end{dcases}$.
+\hfill$\begin{dcases} u_1 = 1 \\ u_{n+1} = \sqrt{5u_n}+1 \text{ pour tout entier } n \geqslant 1\end{dcases}$.\hfill~
 \end{noteblock}
 
 \begin{PresCodePL}{tikz lower}
@@ -2108,6 +2228,138 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 	\end{tikzpicture}
 \end{center}
 \end{PresCodeSortiePL}
+
+\newpage
+
+\section{Méthodes graphiques et intégrales}\label{integrtikz}
+
+\subsection{Idée}
+
+\begin{tipblock}
+\cmaj{2.6.1} L'idée est de proposer plusieurs méthodes graphiques pour illustrer graphiquement une intégrale, via :
+\begin{itemize}
+	\item une méthode des rectangles (Gauche, Droite ou Milieu) ;
+	\item la méthode des trapèzes.
+\end{itemize}
+La commande n'est pas autonome, elle est de ce fait à être placée dans un environnement \ctex{tikzpicture}.
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+%commande pour déclarer une fonction réutilisable
+\DeclareFonctionTikz[nom]{expr}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{listing only}
+%environnement tikz
+\IntegraleApprocheeTikz[clés]{nom_fonction}{a}{b}
+\end{PresCodeTexPL}
+
+\subsection{Clés et arguments}
+
+\begin{cautionblock}
+Plusieurs \Cle{Clés} sont disponibles pour la commande :
+
+\begin{itemize}
+	\item la clé \Cle{Epaisseur} pour l'épaisseur des \og figures \fg{} ; \hfill~défaut : \Cle{semithick}
+	\item la clé \Cle{Couleur} pour la couleur des \og figures \fg{} ; \hfill~défaut : \Cle{red}
+	\item le booléen \Cle{Remplir}, pour remplir les \og figures \fg{} ; \hfill~défaut : \Cle{true}
+	\item la clé \Cle{Opacite} pour l'opacité du remplissage des \og figures \fg{} ;
+	
+	\hfill~défaut : \Cle{0.25}
+	\item la clé \Cle{CouleurRemplissage} pour la couleur de remplissage des \og figures \fg{} ;
+	
+	\hfill~défaut : \Cle{Couleur!25}
+	\item la clé \Cle{Methode}, parmi \Cle{RectanglesGauche / RectanglesDroite / RectanglesMilieu / Trapezes} pour spécifier la méthode utilisée ;
+	
+	\hfill~défaut : \Cle{RectanglesGauche}
+	\item la clé \Cle{NbSubDiv} précise le nombre de \og figures \fg{}. \hfill~défaut : \Cle{10}
+\end{itemize}
+
+\smallskip
+
+Concernant les arguments obligatoires :
+
+\begin{itemize}
+	\item le premier est la fonction , déclarée au préalable ;
+	\item les deux autres arguments sont les bornes de l'intégrale.
+\end{itemize}
+
+Les commandes graphiques de \ctex{Proflycee} peuvent être utilisées pour configure la fenêtre !
+\end{cautionblock}
+
+\begin{PresCodePL}{}
+\begin{tikzpicture}%
+	[x=0.66cm,y=0.033cm,xmin=0,xmax=21,xgrille=2,xgrilles=1,ymin=0,ymax=160,ygrille=20,ygrilles=10]
+	\DeclareFonctionTikz{80*\x*exp(-0.2*\x)}
+	\FenetreSimpleTikz{0,2,...,20}{0,20,...,160}
+	\CourbeTikz[very thick,samples=500,blue]{f(\x)}{1:20}
+	\IntegraleApprocheeTikz{f}{1}{20}
+	\draw[red] (10,160) node[below right]
+		{$\displaystyle%
+		\IntegraleApprochee[Methode=RectanglesGauche,AffFormule,Expr={80x\,\text{e}^{-0,2x}}]%
+		{80*x*exp(-0.2*x)}{1}{20}$} ;
+\end{tikzpicture}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\begin{tikzpicture}%
+	[x=0.66cm,y=0.033cm,xmin=0,xmax=21,xgrille=2,xgrilles=1,ymin=0,ymax=160,ygrille=20,ygrilles=10]
+	\DeclareFonctionTikz{80*\x*exp(-0.2*\x)}
+	\FenetreSimpleTikz{0,2,...,20}{0,20,...,160}
+	\CourbeTikz[very thick,samples=500,blue]{f(\x)}{1:20}
+	\IntegraleApprocheeTikz[NbSubDiv=76]{f}{1}{20}
+	\draw[red] (10,160) node[below right]
+		{$\displaystyle\IntegraleApprochee%
+		[NbSubDiv=76,Methode=RectanglesGauche,AffFormule,Expr={80x\,\text{e}^{-0,2x}}]%
+		{80*x*exp(-0.2*x)}{1}{20}$} ;
+\end{tikzpicture}
+\end{PresCodePL}
+
+\pagebreak
+
+\subsection{Exemples}
+
+\begin{PresCodePL}{}
+\begin{tikzpicture}%
+	[x=0.66cm,y=0.033cm,xmin=0,xmax=21,xgrille=2,xgrilles=1,ymin=0,ymax=160,ygrille=20,ygrilles=10]
+	\DeclareFonctionTikz{80*\x*exp(-0.2*\x)}
+	\FenetreSimpleTikz{0,2,...,20}{0,20,...,160}
+	\CourbeTikz[very thick,samples=500,blue]{f(\x)}{1:20}
+	\IntegraleApprocheeTikz[Methode=RectanglesDroite,Couleur=green]{f}{1}{20}
+	\draw[green] (10,160) node[below right]
+	{$\displaystyle\IntegraleApprochee%
+		[Methode=RectanglesDroite,AffFormule,Expr={80x\,\text{e}^{-0,2x}}]%
+		{80*x*exp(-0.2*x)}{1}{20}$} ;
+\end{tikzpicture}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\begin{tikzpicture}%
+	[x=0.66cm,y=0.033cm,xmin=0,xmax=21,xgrille=2,xgrilles=1,ymin=0,ymax=160,ygrille=20,ygrilles=10]
+	\DeclareFonctionTikz{80*\x*exp(-0.2*\x)}
+	\FenetreSimpleTikz{0,2,...,20}{0,20,...,160}
+	\CourbeTikz[very thick,samples=500,blue]{f(\x)}{1:20}
+	\IntegraleApprocheeTikz[Methode=RectanglesMilieu,Couleur=purple]{f}{1}{20}
+	\draw[purple] (10,160) node[below right]
+	{$\displaystyle\IntegraleApprochee%
+		[Methode=RectanglesMilieu,AffFormule,Expr={80x\,\text{e}^{-0,2x}}]%
+		{80*x*exp(-0.2*x)}{1}{20}$} ;
+\end{tikzpicture}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\begin{tikzpicture}%
+	[x=0.66cm,y=0.033cm,xmin=0,xmax=21,xgrille=2,xgrilles=1,ymin=0,ymax=160,ygrille=20,ygrilles=10]
+	\DeclareFonctionTikz{80*\x*exp(-0.2*\x)}
+	\FenetreSimpleTikz{0,2,...,20}{0,20,...,160}
+	\CourbeTikz[very thick,samples=500,blue]{f(\x)}{1:20}
+	\IntegraleApprocheeTikz[Methode=Trapezes,Couleur=orange]{f}{1}{20}
+	\draw[orange] (10,160) node[below right]
+	{$\displaystyle\IntegraleApprochee%
+		[Methode=Trapezes,AffFormule,Expr={80x\,\text{e}^{-0,2x}}]%
+		{80*x*exp(-0.2*x)}{1}{20}$} ;
+\end{tikzpicture}
+\end{PresCodePL}
 
 \newpage
 
@@ -6229,6 +6481,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.6.1|~:~~~~Ajout de commandes pour du calcul intégral (pages \pageref{calcintegr} et \pageref{integrtikz})
 
 {\small \bverb|v 2.6.0|~:~~~~Ajout d'une clé [Brut] pour les mesures principales + correction d'un bug} + Refonte de la doc
 
