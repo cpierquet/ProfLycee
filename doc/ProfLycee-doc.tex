@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.6.1}
-\def\PLdate{27 avril 2023}
+\def\PLversion{2.6.2}
+\def\PLdate{3 mai 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 \usepackage[math-style=french]{fourier-otf}
@@ -3652,6 +3652,9 @@ Les \Cle{Clés} pour cette possibilité sont :
 	\item un booléen \Cle{Equationsin} pour \textit{activer} \og $\sin=$ \fg;\hfill{}défaut \Cle{false}
 	\item la clé \Cle{sin} qui est la valeur de l'angle (en degrés) du sin ;\hfill{}défaut \Cle{30}
 	\item la clé \Cle{cos} qui est la valeur de l'angle (en degrés) cos ;\hfill{}défaut \Cle{45}
+	\item \cmaj{2.6.2} un booléen \Cle{AffTraitsEq} qui permet d'afficher les \textit{traits de construction secondaires} pour les équations ;
+	
+	\hfill{}défaut \Cle{true}
 	\item la clé \Cle{CouleurSol} qui est la couleur des \textit{solutions}.\hfill{}défaut \Cle{blue}
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
@@ -3661,16 +3664,16 @@ Les \Cle{Clés} pour cette possibilité sont :
 \begin{center}
 	\begin{tikzpicture}
 		\CercleTrigo[%
-		AffAngles=false,AffValeurs=false,AffTraits=false,Rayon=2,Equationsin,sin=-30, CouleurSol=red]
+		AffAngles=false,AffValeurs=false,Rayon=2,Equationsin,sin=-30, CouleurSol=red]
 	\end{tikzpicture}
-	~~~~
 	\begin{tikzpicture}
 		\CercleTrigo[%
 		AffAngles=false,AffValeurs=false,AffTraits=false,Rayon=2,Equationcos,cos=135, CouleurSol=orange]
 	\end{tikzpicture}
-	
-	\medskip
-	
+	\begin{tikzpicture}
+		\CercleTrigo[%
+		AffAngles=false,AffValeurs=false,AffTraits=false,AffTraitsEq=false,Rayon=2, Equationcos,cos=126,CouleurSol=violet]
+	\end{tikzpicture}
 	\begin{tikzpicture}
 		\CercleTrigo[%
 		AffTraits=false,AffAngles=false,Rayon=2.5,Equationcos,cos=60,CouleurSol=purple, TailleValeurs=\tiny]
@@ -3688,6 +3691,11 @@ Les \Cle{Clés} pour cette possibilité sont :
 	\begin{tikzpicture}
 		\CercleTrigo[%
 		AffAngles=false,AffValeurs=false,AffTraits=false,Rayon=2,Equationcos,cos=135,CouleurSol=orange]
+	\end{tikzpicture}
+	~~~~
+	\begin{tikzpicture}
+		\CercleTrigo[%
+		AffAngles=false,AffValeurs=false,AffTraits=false,AffTraitsEq=false,Rayon=2, Equationcos,cos=126,CouleurSol=violet]
 	\end{tikzpicture}
 	
 	\medskip
@@ -6481,6 +6489,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.6.2|~:~~~~Ajout d'une clé [AffTraitsEq] pour les équations trigo (page \pageref{cercletrigo})
 
 {\small \bverb|v 2.6.1|~:~~~~Ajout de commandes pour du calcul intégral (pages \pageref{calcintegr} et \pageref{integrtikz})
 

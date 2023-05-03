@@ -70,13 +70,13 @@
 				\draw (\PaveG) node[above right] {\ifboolKV[paramspave]{Math}{$\PaveG$}{\PaveG}} ;
 				\draw (\PaveH) node[above left] {\ifboolKV[paramspave]{Math}{$\PaveH$}{\PaveH}} ;}
 		{}%on affiche rien
-	\draw[\PFPaveThick] (\PaveA)--(\PaveB)--(\PaveF)--(\PaveE)--cycle
-	                    (\PaveB)--(\PaveC)--(\PaveG)--(\PaveF)--cycle
-	                    (\PaveG)--(\PaveH)--(\PaveE) ;
+	\draw[\PFPaveThick,line join=bevel] (\PaveA)--(\PaveB)--(\PaveF)--(\PaveE)--cycle
+	                                    (\PaveB)--(\PaveC)--(\PaveG)--(\PaveF)--cycle
+	                                    (\PaveG)--(\PaveH)--(\PaveE) ;
 	\ifboolKV[paramspave]{Plein}
 		{}
-		{\draw[dashed,\PFPaveThick] (\PaveA)--(\PaveD)--(\PaveC)
-		                            (\PaveD)--(\PaveH) ;}
+		{\draw[dashed,\PFPaveThick,line join=bevel] (\PaveA)--(\PaveD)--(\PaveC)
+		                                            (\PaveD)--(\PaveH) ;}
 }
 
 %%------TétraèdreTikZ
@@ -122,11 +122,11 @@
 		\draw (\TetraC) node[right] {\ifboolKV[paramstetra]{Math}{$\TetraC$}{\TetraC}} ;
 		\draw (\TetraD) node[above] {\ifboolKV[paramstetra]{Math}{$\TetraD$}{\TetraD}} ;}
 		{}%on affiche rien
-	\draw[\PFTetraThick] (\TetraA)--(\TetraD)--(\TetraC)--(\TetraB)--cycle
-						(\TetraD)--(\TetraB) ;
+	\draw[\PFTetraThick,line join=bevel] (\TetraA)--(\TetraD)--(\TetraC)--(\TetraB)--cycle
+						                 (\TetraD)--(\TetraB) ;
 	\ifboolKV[paramstetra]{Plein}
 		{}
-		{\draw[dashed,\PFTetraThick] (\TetraA)--(\TetraC) ;}
+		{\draw[dashed,\PFTetraThick,line join=bevel] (\TetraA)--(\TetraC) ;}
 }
 
 %%------MainLevée TikZ

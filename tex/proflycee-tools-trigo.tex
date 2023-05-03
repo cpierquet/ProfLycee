@@ -31,6 +31,7 @@
 	EpaisseurSol=very thick,%
 	AffAngles=true,%
 	AffTraits=true,%
+	AffTraitsEq=true,%
 	AffValeurs=true,%
 	MoinsPi=true,%
 	TailleValeurs=\scriptsize,%
@@ -82,24 +83,30 @@
 	%equations
 	\ifboolKV[cercletrigo]{Equationcos}
 	{%traitsdeconstructioncos
-		\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon) -- (135:\PLcerclerayon)
-		(-135:\PLcerclerayon) -- (45:\PLcerclerayon)
-		(30:\PLcerclerayon) -- (150:\PLcerclerayon)
-		(-30:\PLcerclerayon) -- (-150:\PLcerclerayon)
-		(-60:\PLcerclerayon)--(60:\PLcerclerayon)
-		(-120:\PLcerclerayon)--(120:\PLcerclerayon) ;
+		\ifboolKV[cercletrigo]{AffTraitsEq}
+			{%
+				\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon) -- (135:\PLcerclerayon)
+												  (-135:\PLcerclerayon) -- (45:\PLcerclerayon)
+												  (30:\PLcerclerayon) -- (150:\PLcerclerayon)
+												  (-30:\PLcerclerayon) -- (-150:\PLcerclerayon)
+												  (-60:\PLcerclerayon)--(60:\PLcerclerayon)
+												  (-120:\PLcerclerayon)--(120:\PLcerclerayon) ;
+			}{}%
 		\draw[\PLcerclesolthick,\PLcerclecoleq] ({\PLcerclevalcos}:\PLcerclerayon)--({-\PLcerclevalcos}:\PLcerclerayon) ;
 		\filldraw[\PLcerclecoleq] ({\PLcerclevalcos}:\PLcerclerayon) circle[radius=2pt] ({-\PLcerclevalcos}:\PLcerclerayon) circle[radius=2pt] ;%
 	}
 	{}
 	\ifboolKV[cercletrigo]{Equationsin}
 	{%traitsdeconstructioncos
-		\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon) -- (135:\PLcerclerayon)
-		(-135:\PLcerclerayon) -- (45:\PLcerclerayon)
-		(30:\PLcerclerayon) -- (150:\PLcerclerayon)
-		(-30:\PLcerclerayon) -- (-150:\PLcerclerayon)
-		(-60:\PLcerclerayon)--(60:\PLcerclerayon)
-		(-120:\PLcerclerayon)--(120:\PLcerclerayon) ;
+		\ifboolKV[cercletrigo]{AffTraitsEq}
+			{%
+				\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon) -- (135:\PLcerclerayon)
+				(-135:\PLcerclerayon) -- (45:\PLcerclerayon)
+				(30:\PLcerclerayon) -- (150:\PLcerclerayon)
+				(-30:\PLcerclerayon) -- (-150:\PLcerclerayon)
+				(-60:\PLcerclerayon)--(60:\PLcerclerayon)
+				(-120:\PLcerclerayon)--(120:\PLcerclerayon) ;
+			}{}%
 		\draw[\PLcerclesolthick,\PLcerclecoleq] ({\PLcerclevalsin}:\PLcerclerayon)--({180-\PLcerclevalsin}:\PLcerclerayon) ;
 		\filldraw[\PLcerclecoleq] ({\PLcerclevalsin}:\PLcerclerayon) circle[radius=2pt] ({180-\PLcerclevalsin}:\PLcerclerayon) circle[radius=2pt] ;%
 	}
