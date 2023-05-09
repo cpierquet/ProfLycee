@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.6.2}
-\def\PLdate{3 mai 2023}
+\def\PLversion{2.6.3}
+\def\PLdate{9 mai 2023}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
 \usepackage[math-style=french]{fourier-otf}
@@ -595,6 +595,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 
 %Valeur approchée d'une intégrale
 \IntegraleApprochee[clés]{fonction}{a}{b}
+
+%Équation réduite d'une droite
+\EquationReduite[option]{A/xa/ya,B/xb/yb}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
@@ -1174,6 +1177,80 @@ $\displaystyle\IntegraleApprochee[NbSubDiv=100,AffFormule,Expr={80x\,\text{e}^{-
 	\SetCell[c=2]{c} $\displaystyle\IntegraleApprochee[NbSubDiv=100,AffFormule,Expr={80x\,\text{e}^{-0,2x}}]{80*x*exp(-0.2*x)}{1}{20}$ & \\
 \end{tblr}~~\includegraphics[height=3cm]{integr_nwks_b}
 \end{PresCodeSortiePL}
+
+\newpage
+
+\section{Équation réduite d'une droite}\label{eqreduite}
+
+\subsection{Idée}
+
+\begin{tipblock}
+\cmaj{2.6.3} L'idée est de proposer une commande pour déterminer l'équation réduite d'une droite passant par deux points :
+\begin{itemize}
+	\item en traitant les cas particuliers \textit{horizontale}, \textit{verticale} ;
+	\item en affichant une méthode de résolution ;
+	\item en travaillant sous forme exacte fractionnaire (les racines carrées ou autres ne seront pas gérés).
+\end{itemize}
+
+À noter que les calculs et résultats sont traités par la commande de \textit{conversion de fraction} de \ctex{ProfLycee}.
+\end{tipblock}
+
+\begin{warningblock}
+La commande se charge de formater (normalement !) correctement les différentes étapes de calculs (il se peut quand même que cela puisse ne pas donner le résultat réellement escompté\ldots) :
+
+\begin{itemize}
+	\item en travaillant en fraction ;
+	\item en mettant les parenthèses nécessaires devant les éventuels nombres négatifs ;
+	\item en traitant les cas particuliers $m=\pm1$ et $b=0$.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{warningblock}
+
+\begin{PresCodeTexPL}{listing only}
+\EquationReduite[option]{A/xa/ya,B/xb/yb}
+\end{PresCodeTexPL}
+
+\subsection{Clés et arguments}
+
+\begin{cautionblock}
+Concernant le fonctionnement de la commande :
+
+\begin{itemize}
+	\item le premier argument, optionnel et entre \ctex{[...]} et valant \Cle{[d]} par défaut, permet de formater les fractions éventuelles en mode \ctex{\textbackslash displaystyle} ;
+	\item le second argument, obligatoire et entre \ctex{\{...\}}, permet de donner les coordonnées des points concernés.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{cautionblock}
+
+\begin{PresCodePL}{}
+\EquationReduite{C/2/0,D/-2/-8}
+\end{PresCodePL}
+
+\subsection{Exemples}
+
+\begin{PresCodePL}{}
+\EquationReduite{I/-4/5,J/-4/12}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\EquationReduite{U/-4/5,V/-4/5}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\EquationReduite{L/10/7,M/-2/7}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\EquationReduite{L/{1/3}/2.5,M/{-5/7}/{3/5}}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\EquationReduite{P/4/-4,Q/-2/2}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\EquationReduite{G/-4/5,H/10/4}
+\end{PresCodePL}
 
 \newpage
 
@@ -6489,6 +6566,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.6.3|~:~~~~Ajout d'une commande pour déterminer une équation réduite (page \pageref{eqreduite})
 
 {\small \bverb|v 2.6.2|~:~~~~Ajout d'une clé [AffTraitsEq] pour les équations trigo (page \pageref{cercletrigo})
 

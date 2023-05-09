@@ -531,4 +531,102 @@
 		{}%
 }
 
+%==fonction affine==
+\NewDocumentCommand\AffCoeffFAm{ O{d} m }{%
+	\xintifboolexpr{#2 == 0}{}{}%
+	\xintifboolexpr{#2 == 1}{x}{}%
+	\xintifboolexpr{#2 == -1}{-x}{}%
+	\xintifboolexpr{#2 != 0 'and' #2 !=1 'and' #2 != -1}{\ConversionFraction[#1]{#2} x}{}%
+}
+
+\NewDocumentCommand\AffCoeffFAp{ O{d} m }{%
+	\xintifboolexpr{#2 == 0}%
+		{}%
+		{%
+			\xintifboolexpr{#2 > 0}{+\ConversionFraction[#1]{#2}}{\ConversionFraction[#1]{#2}}%
+		}%
+}
+
+\NewDocumentCommand\AffCoeffFloatPa{ O{d} m }{%
+	\IfDecimal{#2}%
+		{%
+			\xintifboolexpr{#2 < 0}%
+				{\left(\num{#2}\right)}%
+				{\num{#2}}%
+		}%
+		{%
+			\xintifboolexpr{#2 < 0}%
+				{\left(\ConversionFraction[#1]{#2}\right)}%
+				{\ConversionFraction[#1]{#2}}%
+		}%
+}
+
+\NewDocumentCommand\AffCoeffFloat{ O{d} m }{%
+	\IfDecimal{#2}%
+		{%
+			{\num{#2}}%
+		}%
+		{%
+			{\ConversionFraction[#1]{#2}}%
+		}%
+}
+
+\NewDocumentCommand\AffCoeffPa{ O{d} m }{%
+	\xintifboolexpr{#2 < 0}%
+		{\left(\ConversionFraction[#1]{#2}\right)}%
+		{\ConversionFraction[#1]{#2}}%
+}
+
+\NewDocumentCommand\EquationReduite{ O{d} m}{%
+	\setsepchar[*]{,*/}%
+	\readlist*\ListePoints{#2}%
+	%Les cas particuliers
+	\xintifboolexpr{\ListePoints[2,2] == \ListePoints[1,2] 'and' \ListePoints[2,3] == \ListePoints[1,3] }%
+		{
+			Les deux points donnés sont identiques, donc pas de droite\ldots
+		}%
+		{}%
+	\xintifboolexpr{\ListePoints[2,2] == \ListePoints[1,2] 'and' \ListePoints[2,3] != \ListePoints[1,3] }%
+		{
+			Étant donné que $x_{\ListePoints[1,1]} = x_{\ListePoints[2,1]}$, la droite $(\ListePoints[1,1]\ListePoints[2,1])$ est verticale, dont une équation est $x=\ConversionFraction[#1]{\ListePoints[1,2]}$.
+		}%
+		{}%
+	\xintifboolexpr{\ListePoints[2,2] != \ListePoints[1,2] 'and' \ListePoints[2,3] == \ListePoints[1,3] }%
+		{%
+			Étant donné que $y_{\ListePoints[1,1]} = y_{\ListePoints[2,1]}$, la droite $(\ListePoints[1,1]\ListePoints[2,1])$ est horizontale, dont une équation est $y=\ConversionFraction[#1]{\ListePoints[1,3]}$.
+		}%
+		{}%
+	\xintifboolexpr{\ListePoints[2,2] != \ListePoints[1,2] 'and' \ListePoints[2,3] != \ListePoints[1,3] }%
+		{%
+			\itemtomacro\ListePoints[1,1]\NomA%
+			\itemtomacro\ListePoints[2,1]\NomB%
+			\itemtomacro\ListePoints[1,2]\xA%
+			\itemtomacro\ListePoints[1,3]\yA%
+			\itemtomacro\ListePoints[2,2]\xB%
+			\itemtomacro\ListePoints[2,3]\yB%
+			\xdef\CoeffDirBrut{\xinteval{(\yB-\yA)/(\xB-\xA)}}%
+			\xdef\OrdoOrigBrut{\xinteval{\yB-(\CoeffDirBrut*\xB)}}%
+			\xdef\CoeffDirConv{\ConversionFraction{(\yB-\yA)/(\xB-\xA)}}%
+			\xdef\OrdoOrigConv{\ConversionFraction{\yB-(\CoeffDirBrut*\xB)}}%
+			Afin de déterminer l'équation réduite d'une droite passant par les points $\NomA$ et $\NomB$, on doit d'abord déterminer le coefficient directeur $m$ :
+			\[m=\frac{y_\NomB-y_\NomA}{x_\NomB-x_\NomA}=
+			\frac{\AffCoeffFloat[]{\yB}-\AffCoeffFloatPa[]{\yA}}{\AffCoeffFloat[]{\xB}-\AffCoeffFloatPa[]{\xA}}=
+			\frac{\ConversionFraction{\xinteval{\yB-\yA}}}{\ConversionFraction{\xinteval{\xB-\xA}}}=
+			\ConversionFraction{\CoeffDirBrut}\]%
+			%
+			L'équation réduite de la droite est donc de la forme $(\NomA\NomB)$ : $y=\AffCoeffFAm[#1]{\CoeffDirBrut}+p$.\par
+			%
+			Il faut enfin déterminer l'ordonnée à l'origine $p$.\par
+			%
+			On sait que la droite passe par le point $\NomA$, donc les coordonnées $\NomA\left(\AffCoeffFloat[]{\xA};\AffCoeffFloat[]{\yA}\right)$ vérifient l'équation. On a alors :
+			%
+			\[y_\NomA=\ConversionFraction{\CoeffDirBrut} \times x_\NomA+p
+			\implies 
+			\AffCoeffFloat[#1]{\yA} = \ConversionFraction{\CoeffDirBrut} \times \AffCoeffFloatPa[#1]{\xA} + p \implies p = \AffCoeffFloat[#1]{\yA} - \left(\ConversionFraction{\CoeffDirBrut} \times \AffCoeffFloatPa{\xA}\right) \implies p = \OrdoOrigConv\]
+			%
+			Donc l'équation réduite de $(\NomA\NomB)$ est $y=\AffCoeffFAm[#1]{\CoeffDirBrut} \AffCoeffFAp[#1]{\OrdoOrigBrut}$.
+		}%
+		{}%
+}
+
 \endinput
