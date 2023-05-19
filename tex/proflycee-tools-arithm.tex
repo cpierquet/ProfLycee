@@ -16,12 +16,12 @@
 \NewDocumentCommand\ConversionDecBin{ s O{} m }{%
 	\useKVdefault[CONVDECBIN]
 	\setKV[CONVDECBIN]{#2}% on paramètres les nouvelles clés et on les simplifie
-	\def\resbrut{\xintDecToBin{#3}}
-	\StrLen{\resbrut}[\nbchiffres]
-	\def\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}}
-	\IfBooleanTF{#1}
-		{\num{#3}\ifboolKV[CONVDECBIN]{AffBase}{_{10}}{}=\num[digit-group-size=4]{\resbrut}\ifboolKV[CONVDECBIN]{AffBase}{_{2}}{}}
-		{\num{#3}\ifboolKV[CONVDECBIN]{AffBase}{_{10}}{}=\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resbrut}\ifboolKV[CONVDECBIN]{AffBase}{_{2}}{}}
+	\def\resbrut{\xintDecToBin{#3}}%
+	\StrLen{\resbrut}[\nbchiffres]%
+	\def\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}}%
+	\IfBooleanTF{#1}%
+		{\num{#3}\ifboolKV[CONVDECBIN]{AffBase}{_{10}}{}=\num[digit-group-size=4]{\resbrut}\ifboolKV[CONVDECBIN]{AffBase}{_{2}}{}}%
+		{\num{#3}\ifboolKV[CONVDECBIN]{AffBase}{_{10}}{}=\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resbrut}\ifboolKV[CONVDECBIN]{AffBase}{_{2}}{}}%
 }
 
 \setKVdefault[CONVBINHEX]{%
@@ -43,35 +43,35 @@
 
 %la conversion complète
 \newcommand\ConversionBinHex[2][]{%
-	\useKVdefault[CONVBINHEX]
+	\useKVdefault[CONVBINHEX]%
 	\setKV[CONVBINHEX]{#1}% on paramètres les nouvelles clés et on les simplifie
-	\def\chbrut{#2}
+	\def\chbrut{#2}%
 	\StrLen{\chbrut}[\nbchiffres] %nb de chiffres du binaire
 	\xdef\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}} %nb de chiffres avec blocs de 4
 	\xdef\nbblocs{\fpeval{\nbgrp/4}} %nb de blocs
 	%on rajoute des zeros si besoin := OK
-	\xdef\resinter{\chbrut}
-	\num[digit-group-size=4]{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{2}}{}=
+	\xdef\resinter{\chbrut}%
+	\num[digit-group-size=4]{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{2}}{}=%
 	\ifboolKV[CONVBINHEX]{Details}{%
-	\ifnum\nbchiffres<\nbgrp
-		\xdef\nbz{\inteval{\nbgrp-\nbchiffres}}
-		\xdef\resinter{\PLstrzeros{\nbz}\chbrut}
-		\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resinter}=
-	\fi
+	\ifnum\nbchiffres<\nbgrp%
+		\xdef\nbz{\inteval{\nbgrp-\nbchiffres}}%
+		\xdef\resinter{\PLstrzeros{\nbz}\chbrut}%
+		\num[digit-group-size=4,minimum-integer-digits=\nbgrp]{\resinter}=%
+	\fi%
 	%découpage par blocs et conversion en hexa := OK
-	\newcount\cpt
-	\cpt0
-	\loop\ifnum \cpt<\nbblocs
+	\newcount\cpt%
+	\cpt0%
+	\loop\ifnum \cpt<\nbblocs%
 		\def\iinit{\fpeval{4*\cpt+1}}%
 		\def\ifinal{\fpeval{4*(\cpt+1)}}%
 		\StrMid{\resinter}{\iinit}{\ifinal}[\blocinter]%
-		{\underbracket{\blocinter}_{\xintBinToHex{\blocinter}}\,}
-		\advance\cpt by 1
-	\repeat
-	\!=
+		{\underbracket{\blocinter}_{\xintBinToHex{\blocinter}}\,}%
+		\advance\cpt by 1%
+	\repeat%
+	\!=%
 	}%
-	{}
-	\xintBinToHex{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{16}}{}
+	{}%
+	\xintBinToHex{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{16}}{}%
 }
 
 %hexa/bin->dec avec écriture polynomiale
@@ -94,62 +94,62 @@
 \newcommand\ConversionVersDec[2][]{%
 	\useKVdefault[CONVTODEC]
 	\setKV[CONVTODEC]{#1}% on paramètres les nouvelles clés et on les simplifie
-	\def\nbdepart{#2}
-	\StrLen{\nbdepart}[\nbchiffres]
-	\StrChar{\nbdepart}{1}[\chiffre]
+	\def\nbdepart{#2}%
+	\StrLen{\nbdepart}[\nbchiffres]%
+	\StrChar{\nbdepart}{1}[\chiffre]%
 	%si on est en base 16
 	\xintifboolexpr{\basedepart == 16}%
 	{%
-		\nbdepart\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
+		\nbdepart\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =%
 		\ifboolKV[CONVTODEC]{Details}{%
 			\xintHexToDec{\chiffre}\times\basedepart^{\inteval{\nbchiffres-1}}%
-			\newcount\cpt
-			\cpt2
-			\loop\ifnum \cpt<\inteval{\nbchiffres+1}
-				\def\puiss{\inteval{\nbchiffres-\cpt}}
-				\StrChar{\nbdepart}{\cpt}[\chiffre]
+			\newcount\cpt%
+			\cpt2%
+			\loop\ifnum \cpt<\inteval{\nbchiffres+1}%
+				\def\puiss{\inteval{\nbchiffres-\cpt}}%
+				\StrChar{\nbdepart}{\cpt}[\chiffre]%
 				\ifboolKV[CONVTODEC]{Zeros}%
 					{%
 						+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
-					}
-					{
-						\ifnum\xintHexToDec{\chiffre} > 0
+					}%
+					{%
+						\ifnum\xintHexToDec{\chiffre} > 0%
 							+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
-						\fi
-					}
-				\advance\cpt by 1
-			\repeat
-			=
-			}
-			{}
-		\num{\xintHexToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
+						\fi%
+					}%
+				\advance\cpt by 1%
+			\repeat%
+			=%
+			}%
+			{}%
+		\num{\xintHexToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}%
 	}%
-	{}
+	{}%
 	\xintifboolexpr{\basedepart == 2}%
 	{%
-		\num[digit-group-size=4]{\nbdepart}\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
+		\num[digit-group-size=4]{\nbdepart}\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =%
 		\ifboolKV[CONVTODEC]{Details}{%
 			\chiffre\times\basedepart^{\inteval{\nbchiffres-1}}%
-			\newcount\cpt
-			\cpt2
-			\loop\ifnum \cpt<\inteval{\nbchiffres+1}
-				\def\puiss{\inteval{\nbchiffres-\cpt}}
-				\StrChar{\nbdepart}{\cpt}[\chiffre]
+			\newcount\cpt%
+			\cpt2%
+			\loop\ifnum \cpt<\inteval{\nbchiffres+1}%
+				\def\puiss{\inteval{\nbchiffres-\cpt}}%
+				\StrChar{\nbdepart}{\cpt}[\chiffre]%
 				\ifboolKV[CONVTODEC]{Zeros}%
 				{%
 					+\chiffre\times\basedepart^{\puiss}%
 				}
 				{
-					\ifnum\chiffre > 0
+					\ifnum\chiffre > 0%
 						+\chiffre\times\basedepart^{\puiss}%
-					\fi
-				}
-			\advance\cpt by 1
-			\repeat
-			=
-			}
-			{}
-		\num{\xintBinToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}
+					\fi%
+				}%
+			\advance\cpt by 1%
+			\repeat%
+			=%
+			}%
+			{}%
+		\num{\xintBinToDec{\nbdepart}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}%
 	}%
 	{}%
 }
@@ -157,30 +157,30 @@
 \newcommand\ConversionBaseDix[3][]{%1=options,%2=nb,%3=basedep ??
 	\useKVdefault[CONVTODEC]
 	\setKV[CONVTODEC]{#1}% on paramètres les nouvelles clés et on les simplifie
-	\def\NBdepart{#2}
-	\def\basedepart{#3}
-	\StrLen{\NBdepart}[\nbchiffres]
-	\StrChar{\NBdepart}{1}[\chiffre]
-	\NBdepart\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =
+	\def\NBdepart{#2}%
+	\def\basedepart{#3}%
+	\StrLen{\NBdepart}[\nbchiffres]%
+	\StrChar{\NBdepart}{1}[\chiffre]%
+	\NBdepart\ifboolKV[CONVTODEC]{AffBase}{_{\basedepart}}{} =%
 	\ifboolKV[CONVTODEC]{Details}{%
 		\xintHexToDec{\chiffre}\times\basedepart^{\inteval{\nbchiffres-1}}%
-		\newcount\cpt
-		\cpt2
-		\loop\ifnum \cpt<\inteval{\nbchiffres+1}
-			\def\puiss{\inteval{\nbchiffres-\cpt}}
-			\StrChar{\NBdepart}{\cpt}[\chiffre]
+		\newcount\cpt%
+		\cpt2%
+		\loop\ifnum \cpt<\inteval{\nbchiffres+1}%
+			\def\puiss{\inteval{\nbchiffres-\cpt}}%
+			\StrChar{\NBdepart}{\cpt}[\chiffre]%
 			\ifboolKV[CONVTODEC]{Zeros}%
 				{%
 					+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
-				}
-				{
-					\ifnum\xintHexToDec{\chiffre} > 0
+				}%
+				{%
+					\ifnum\xintHexToDec{\chiffre} > 0%
 						+\xintHexToDec{\chiffre}\times\basedepart^{\puiss}%
-					\fi
-				}
-			\advance\cpt by 1
-		\repeat
-		=
+					\fi%
+				}%
+			\advance\cpt by 1%
+		\repeat%
+		=%
 		}%
 		{}%
 	\num{\convertbasetobasedix{#2}{#3}}\ifboolKV[CONVTODEC]{AffBase}{_{10}}{}%
@@ -231,7 +231,7 @@
 			}
 			%dernière
 			\xdef\ValQ{\fpeval{trunc(\ValTMP/#3,0)}}\xdef\ValR{\fpeval{\ValTMP-#3*\ValQ}}%
-			\\ \num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\PLnoeud{\PLConvNoeud2}{\num{\ValR}}
+			\\ \num{\ValTMP}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}\PLnoeud{\PLConvNoeud2}{\num{\ValR}}%
 		\end{array} \right| \Rightarrow \num{#2}_{10}=\ifboolKV[convfromten]{CouleurRes}{\mathcolor{\PLConvCouleur}{\convertbasedixtobase{#2}{#3}_{#3}}}{\convertbasedixtobase{#2}{#3}_{#3}}}%
 	\ifboolKV[convfromten]{Rect}%
 	{%
@@ -263,6 +263,8 @@
 	AfficheDelimiteurs=true
 }
 
+\RequirePackage{xintgcd}
+
 \newcommand\PresentationPGCD[3][]{%
 	\useKVdefault[prespgcd]%
 	\setKV[prespgcd]{#1}%
@@ -274,7 +276,7 @@
 		{}%
 		\begin{array}{@{\,}r@{\;=\;}l@{\;+\;}r}
 			%1ère division
-			\xdef\ValQ{\fpeval{trunc(\ValA/\ValB,0)}}\xdef\ValR{\fpeval{\ValA-\ValB*\ValQ}}
+			\xdef\ValQ{\fpeval{trunc(\ValA/\ValB,0)}}\xdef\ValR{\fpeval{\ValA-\ValB*\ValQ}}%
 			\num{\ValA}\uppercase{&}\num{\ValB}\times\num{\ValQ}\uppercase{&}%
 			\xintifboolexpr{\ValR == \respgcd}%
 			{\PLnoeud{\PLPGCDNoeud1}{\num{\ValR}}}%noeud si c'est le pgcd
@@ -306,6 +308,152 @@
 			\draw[overlay,rounded corners=4pt,\PLPGCDCouleur,thick] ($(\PLPGCDNoeud1.north west)+(-\PLPGCDDecal,\PLPGCDDecal)$) rectangle ($(\PLPGCDNoeud1.south east)+(\PLPGCDDecal,-\PLPGCDDecal)$) ;
 		\end{tikzpicture}%
 	}{}%
+}
+
+%%===égalité de Bezout
+\NewDocumentCommand\AffCoeffBezout{ m }{%
+	\xintifboolexpr{#1 < 0}%
+		{\left( \num{#1} \right)}%
+		{\num{#1}}%
+}
+\NewDocumentCommand\EgaliteBezout{ O{black} m m }{%
+	\xintAssign{\xintBezout{#2}{#3}}\to\TmpU\TmpV\TmpD%
+	\ensuremath{\num{#2} \times \mathcolor{#1}{\AffCoeffBezout{\TmpU}} + \AffCoeffBezout{#3} \times \mathcolor{#1}{\AffCoeffBezout{\TmpV}} = \num{\TmpD}}%
+}
+
+%%===Équations diophantiennes
+\RequirePackage{cancel}
+\NewDocumentCommand\AffCoeffDioph{ m }{%
+	\xintifboolexpr{#1 < 0}%
+		{\left( \num{#1} \right)}%
+		{\num{#1}}%
+}
+\NewDocumentCommand\AffCoeffDiophSign{ m }{%
+	\xintifboolexpr{#1 < 0}%
+		{\num{#1}}%
+		{+\num{#1}}%
+}
+
+\defKV[eqdioph]{%
+	Lettre=\def\LettreSolEDioph{#1},%
+	Couleur=\def\CouleurSolEDioph{#1},%
+	Inconnues=\def\InconnuesSolEDioph{#1},%
+	Entier=\def\KKK{#1}
+}
+
+\setKVdefault[eqdioph]{%
+	Lettre=E,%
+	Couleur=black,%
+	Inconnues=x/y,%
+	Entier=k,%
+	Cadres=false,%
+	PresPGCD=true
+}
+
+\NewDocumentCommand\EquationDiophantienne{ O{} m }{%v2 avec équation en "dur"
+	\useKVdefault[eqdioph]%
+	\setKV[eqdioph]{#1}%
+	\setlength{\parindent}{0pt}%
+	%extractions des paramètres
+	\StrBefore[1]{\InconnuesSolEDioph}{/}[\XXX]%
+	\StrBehind[1]{\InconnuesSolEDioph}{/}[\YYY]%
+	\StrBefore{#2}{\XXX}[\AA]%
+	\StrBetween{#2}{\XXX}{\YYY}[\BB]%
+	\StrBehind{#2}{=}[\CC]%
+	\IfStrEq{\AA}{}%
+		{\def\AA{1}}{}%
+	\IfStrEq{\AA}{-}%
+		{\def\AA{-1}}{}%
+	\StrLen{\BB}[\lgtB]%
+	\xintifboolexpr{ \lgtB > 1 }%+b ou -b
+		{%
+			\StrDel{\BB}{+}[\BB]%
+		}%
+		{%
+			\IfStrEq{\BB}{-}%
+				{\def\BB{-1}}{}%
+			\IfStrEq{\BB}{+}%
+				{\def\BB{1}}{}%
+		}%
+	%Calcul du PGCD
+	\xdef\PGCDD{\xinteval{gcd(\AA,\BB)}}%
+	On cherche à résoudre l'équation diophantienne :\[ \num{\AA}\XXX + \AffCoeffDioph{\BB}\YYY=\num{\CC} \xintifboolexpr{ \PGCDD == 1 'or' \xintiiRem{\CC}{\PGCDD} != 0 }{\qquad (\LettreSolEDioph)}{} \]%
+	\ifboolKV[eqdioph]{PresPGCD}%
+		{D'après l'algorithme d'Euclide : \PresentationPGCD[Rectangle=false]{\xinteval{abs(\AA)}}{\xinteval{abs(\BB)}}.}%
+		{Le PGCD de \num{\AA} et de \num{\BB} vaut \num{\PGCDD}.}%
+	\par\smallskip
+	\xintifboolexpr{ \xintiiRem{\CC}{\PGCDD} == 0 }%solutions obligatoires
+		{%
+			\xintifboolexpr{ \PGCDD == 1}%
+				{%
+					Les entiers \num{\xinteval{abs(\AA)}} et \num{\xinteval{abs(\BB)}} sont premiers entre eux, donc l'équation $(\LettreSolEDioph)$ admet une infinité de solutions.\par
+					\xdef\AAA{\AA}\xdef\BBB{\BB}\xdef\CCC{\CC}%
+				}%
+				{%
+					Le PGCD de \num{\AA} et \num{\BB} divise \num{\CC}, donc on peut simplifier l'équation diophantienne par \num{\PGCDD}.%
+					\xdef\AAA{\xintiieval{\AA/\PGCDD}}\xdef\BBB{\xintiieval{\BB/\PGCDD}}\xdef\CCC{\xintiieval{\CC/\PGCDD}}%
+					%
+					\[ \num{\AA}\XXX+\AffCoeffDioph{\BB}\YYY=\num{\CC} \underset{\div\num{\PGCDD}}{\Longleftrightarrow} \num{\AAA}\XXX+\AffCoeffDioph{\BBB}\YYY=\num{\CCC} \qquad (\LettreSolEDioph) \]%
+					Les entiers \num{\AAA} et \num{\BBB} sont premiers entre eux, donc l'équation $(\LettreSolEDioph)$ admet une infinité de solutions.\par
+				}%
+			\xintAssign{\xintBezout{\AAA}{\BBB}}\to\TmpU\TmpV\TmpD
+			%
+			On détermine une solution particulière de $(E)$ : \[ \num{\AAA} \times \mathcolor{\CouleurSolEDioph}{\AffCoeffBezout{\TmpU}} + \AffCoeffBezout{\BBB} \times \mathcolor{\CouleurSolEDioph}{\AffCoeffBezout{\TmpV}} = \num{\TmpD}
+			\xintifboolexpr{ \CCC != 1}%
+				{%
+					\underset{\times\AffCoeffDioph{\CCC}}{\implies}
+					\num{\AAA} \times \mathcolor{\CouleurSolEDioph}{\AffCoeffDioph{\xinteval{\TmpU*\CCC}}} + \AffCoeffBezout{\BBB} \times \mathcolor{\CouleurSolEDioph}{\AffCoeffDioph{\xinteval{\TmpV*\CCC}}} = \num{\CCC}
+				}%
+				{}%
+				\qquad ({\LettreSolEDioph}_0)
+			 \]%
+			%
+			Par soustraction :
+			%
+			\[%
+			{\renewcommand\arraystretch{1.25}%
+				\begin{array}{ @{\,} c @{\,} c @{\;\times\;} c @{\;+\;} c @{\;\times\;} c @{\;=\;} c }
+					& \num{\AAA} & \XXX & \AffCoeffDioph{\BBB} & \YYY & \num{\CCC} \\
+					-~~~~~ & \num{\AAA} & \mathcolor{\CouleurSolEDioph}{\AffCoeffDioph{\xinteval{\TmpU*\CCC}}} & \AffCoeffDioph{\BBB} & \mathcolor{\CouleurSolEDioph}{\AffCoeffDioph{\xinteval{\TmpV*\CCC}}} & \num{\CCC} \\ \hline
+					& \num{\AAA} & \left( \XXX \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpU*\CCC}}} \right)& \AffCoeffDioph{\BBB} & \left( \YYY \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpV*\CCC}}} \right) & 0\\
+				\end{array}}
+			\]%
+			\xdef\TmpPartieA{\XXX \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpU*\CCC}}}}%
+			\xdef\TmpPartieB{\YYY \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpV*\CCC}}}}%
+			%
+			On en déduit que $\num{\AAA} \times \underbrace{\left( \TmpPartieA \right)}_{\text{entier}} = \num{\xinteval{-\BBB}} \times \left( \TmpPartieB \right)$, et donc que $\num{\AAA} \mid \num{\xinteval{-\BBB}} \times \left( \TmpPartieB \right)$.\par\smallskip
+			Or \num{\xinteval{abs(\AAA)}} et \num{\xinteval{abs(\BBB)}} sont premiers entre eux, donc d'après le théorème de Gauss, on a $\num{\AAA} \mid \TmpPartieB$.\par
+			Il existe donc un entier $\KKK$ tel que $\TmpPartieB = \num{\AAA} \times \KKK$, ce qui donne 
+			$\ifboolKV[eqdioph]{Cadres}
+				{\boxed{\YYY = \mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpV}}}  \AffCoeffDiophSign{\AAA}\KKK}}
+				{\YYY = \mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpV}}}  \AffCoeffDiophSign{\AAA}\KKK}
+			$.\par
+			En remplaçant, on obtient :
+			%
+			\begin{align*}
+				\num{\AAA} \times \left( \TmpPartieA \right) = \num{\xinteval{-\BBB}} \times \left( \TmpPartieB \right) & \implies \num{\AAA} \times \left( \TmpPartieA \right) = \num{\xinteval{-\BBB}} \times \big( \underbrace{\mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpV}}} \AffCoeffDiophSign{\AAA}\KKK}_{\mathclap{\YYY}}  \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\CCC*\TmpV}}} \big) \\
+				& \implies \num{\AAA} \times \left( \TmpPartieA \right) = \num{\xinteval{-\BBB}} \times \left( \num{\AAA}\KKK \right) \\
+				& \implies \TmpPartieA = \num{\xinteval{-\BBB}}\KKK \\
+				& \implies \ifboolKV[eqdioph]{Cadres}
+					{\boxed{\XXX = \mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpU}}} \AffCoeffDiophSign{\xinteval{-\BBB}}\KKK}}
+					{\XXX = \mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpU}}} \AffCoeffDiophSign{\xinteval{-\BBB}}\KKK}
+			\end{align*}
+			%
+			Ainsi, si $\XXX$ et $\YYY$ sont solutions de $(\LettreSolEDioph)$, alors il existe un entier $\KKK$ tel que ${\XXX=\mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpU}}} \AffCoeffDiophSign{\xinteval{-\BBB}}\KKK}$ et ${\YYY=\mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpV}}}  \AffCoeffDiophSign{\AAA}\KKK}$.\par\medskip
+			Réciproquement, soit $\KKK$ un entier quelconque :
+			%
+			\begin{align*}
+				\num{\AAA} \times \left( \mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpU}}} \AffCoeffDiophSign{\xinteval{-\BBB}}\KKK \right) + \AffCoeffDioph{\BBB} \times  \left( \mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpV}}}  \AffCoeffDiophSign{\AAA}\KKK \right) & = \num{\AAA} \times \mathcolor{\CouleurSolEDioph}{\AffCoeffDioph{\xinteval{\CCC*\TmpU}}} + \cancel{\AffCoeffDioph{\AAA} \times \AffCoeffDioph{\xinteval{-\BBB}} \KKK} + \AffCoeffDioph{\BBB} \times \mathcolor{\CouleurSolEDioph}{\AffCoeffDioph{\xinteval{\CCC*\TmpV}}} +  \cancel{\AffCoeffDioph{\BBB} \times \AffCoeffDioph{\AAA} \KKK} \\
+				& = \underbrace{\num{\AAA} \times \mathcolor{\CouleurSolEDioph}{\AffCoeffDioph{\xinteval{\CCC*\TmpU}}} +  \AffCoeffDioph{\BBB} \times \mathcolor{\CouleurSolEDioph}{\AffCoeffDioph{\xinteval{\CCC*\TmpV}}}}_{=\,\num{\CCC} \text{ d'après } ({\LettreSolEDioph}_0)} \\
+				& = \num{\CCC}
+			\end{align*}
+			%
+			On en déduit que $\left(\mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpU}}} \AffCoeffDiophSign{\xinteval{-\BBB}}\KKK \mathpunct{}; \mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpV}}}  \AffCoeffDiophSign{\AAA}\KKK \right)$ est solution de $(\LettreSolEDioph)$.\par\medskip
+			En conclusion, les solutions de $(E)$ sont donc les couples $\left(\mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpU}}} \AffCoeffDiophSign{\xinteval{-\BBB}}\KKK \mathpunct{}; \mathcolor{\CouleurSolEDioph}{\num{\xinteval{\CCC*\TmpV}}} \AffCoeffDiophSign{\AAA}\KKK \right)$, avec $\KKK$ un entier relatif.
+		}%
+		{%
+			Le PGCD de \num{\AA} et \num{\BB} ne divise pas \num{\CC}, donc l'équation $(\LettreSolEDioph)$ n'admet aucune solution.
+		}%
 }
 
 \endinput
