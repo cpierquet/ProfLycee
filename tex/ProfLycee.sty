@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/05/19 2.6.4 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/05/20 2.6.5 Aide pour l'utilisation de LaTeX en lycee]
+% 2.6.5	Ajout d'une option[noamssymb] pour éviter les clashs avec fourier (merci PfC) + Corections de bugs + Bug avec ; et pdflatex (utlisation de | à la place !)
 % 2.6.4	Correction d'un dysfonctionnement avec les racines (oubli du \num) + Equation diophantienne ax+by=c + Eq cartésiennes (plan & droite) + Corrections de bugs mineurs
 % 2.6.3	Ajout d'une commande pour rédiger l'obtention de l'équation affine d'une droite passant par deux points
 % 2.6.2	Correction de commandes pour la pseudo3d + nouvelle clé pour la trigo
@@ -46,14 +47,21 @@
 % 2.0.1	Chargement de piton uniquement si lua...
 % 2.0.0	Refonte des commandes, des options, et de la documentation !!!
 
+%------Mathtools
+\RequirePackage{mathtools}
+
 %------Option(s)
 \newif\if@build \@buildfalse
-\DeclareOption{build}{\@buildtrue}
+\newif\if@loadamssymb \@loadamssymbtrue
+\DeclareOption{build}{\@buildtrue}%
+\DeclareOption{nonamssymb}{\@loadamssymbfalse}%
 \DeclareOption*{}
 \ProcessOptions\relax
 
 %------Packages utiles
-\RequirePackage{mathtools}
+\if@loadamssymb
+	\RequirePackage{amssymb}
+\fi
 \RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
 \RequirePackage{tikz}
 \RequirePackage{tkz-tab}

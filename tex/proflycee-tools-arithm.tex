@@ -322,7 +322,7 @@
 }
 
 %%===Équations diophantiennes
-\RequirePackage{cancel}
+\RequirePackage[thicklines]{cancel}%comme PfC
 \NewDocumentCommand\AffCoeffDioph{ m }{%
 	\xintifboolexpr{#1 < 0}%
 		{\left( \num{#1} \right)}%
@@ -418,8 +418,8 @@
 					& \num{\AAA} & \left( \XXX \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpU*\CCC}}} \right)& \AffCoeffDioph{\BBB} & \left( \YYY \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpV*\CCC}}} \right) & 0\\
 				\end{array}}
 			\]%
-			\xdef\TmpPartieA{\XXX \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpU*\CCC}}}}%
-			\xdef\TmpPartieB{\YYY \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpV*\CCC}}}}%
+			\def\TmpPartieA{\XXX \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpU*\CCC}}}}%
+			\def\TmpPartieB{\YYY \mathcolor{\CouleurSolEDioph}{\AffCoeffDiophSign{\xinteval{-\TmpV*\CCC}}}}%
 			%
 			On en déduit que $\num{\AAA} \times \underbrace{\left( \TmpPartieA \right)}_{\text{entier}} = \num{\xinteval{-\BBB}} \times \left( \TmpPartieB \right)$, et donc que $\num{\AAA} \mid \num{\xinteval{-\BBB}} \times \left( \TmpPartieB \right)$.\par\smallskip
 			Or \num{\xinteval{abs(\AAA)}} et \num{\xinteval{abs(\BBB)}} sont premiers entre eux, donc d'après le théorème de Gauss, on a $\num{\AAA} \mid \TmpPartieB$.\par

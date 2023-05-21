@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.6.4}
-\def\PLdate{19 mai 2023}
+\def\PLversion{2.6.5}
+\def\PLdate{20 mai 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
@@ -330,7 +330,6 @@
 {\deblst} calculer les lignes trigonométriques d'angles \og classiques \fg{} \\
 {\deblst} résoudre une équation diophantienne \og classique \fg{} \\
 {\deblst} travailler avec un peu de géométrie analytique \\
-
 {\deblst} \ldots}
 
 ~
@@ -398,6 +397,7 @@ L'utilisateur est libre de charger ses autres {packages} utiles et habituels, ai
 Le {package} \ctex{ProfLycee} charge et utilise les {packages} :
 
 \begin{itemize}
+	\item \ctex{mathtools}, \ctex{amssymb} ;
 	\item \ctex{xcolor} avec l' option \textsf{[table,svgnames]} ;
 	\item \ctex{tikz}, \ctex{pgf}, \ctex{pgffor}, \ctex{nicefrac}, \ctex{nicematrix} ;
 	\item \ctex{tcolorbox} avec l'option \textsf{[most]} ;
@@ -431,7 +431,9 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 ...
 \end{PresCodeTexPL}
 
-\subsection{Librairies, option du package}\label{librairies}
+\pagebreak
+
+\subsection{Librairies}\label{librairies}
 
 \begin{warningblock}
 \cmaj{2.5.0} Le package fonctionne désormais avec un système de \clib{librairies}, qui utilisent et chargent des packages spécifiques, avec des compilations particulières, donc l'utilisateur utilisera un système de chargement similaire à celui de \textsf{tcolorbox} ou \textsf{tikz}, dans le préambule, et une fois le package appelé.
@@ -483,6 +485,26 @@ L'option \Cle{build} charge certains packages (librairies \clib{minted} et \clib
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
 \end{noteblock}
+
+\subsection{Gestion des fontes}\label{amssymb}
+
+\begin{warningblock}
+\cmaj{2.6.5} Sous \hologo{XeLaTeX} \& \hologo{LuaLaTeX}, \ctex{ProfLycee} utilisant le package \ctex{mathtools}, il est nécessaire de placer l'appel à \ctex{ProfLycee} {\em avant} l'appel des fontes.
+
+\smallskip
+
+Sous \hologo{XeLaTeX} \& \hologo{LuaLaTeX}, certaines fontes (par exemple \textsf{fourier-otf}) redéfinissent les fontes générées par le package \ctex{amssymb} et peuvent provoquer un \og warning \fg{} au mieux, une erreur de compilation au pire.
+
+\smallskip
+
+Pour cela, on pourra appeler \ctex{ProfLycee} avec l'option \Cle{nonamssymb} (idée reprise de \ctex{ProfCollege}).
+\end{warningblock}
+
+\begin{PresCodeTexPL}{listing only}
+\documentclass{article}
+\usepackage[noamssymb]{ProfLycee}
+\usepackage{fourier-otf}
+\end{PresCodeTexPL}
 
 \pagebreak
 
@@ -3832,6 +3854,16 @@ Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -
 
 \part{Outils pour la géométrie analytique}
 
+\section{Conseils d'utilisation}
+
+\begin{warningblock}
+\cmaj{2.6.5} Il est conseillé d'utiliser \hologo{LuaLaTeX} pour les commandes (vectorielles) de géométrie analytique, même s'il est toutefois possible d'utiliser \hologo{pdfLaTeX}.
+
+\smallskip
+
+Il est possible que les simplifications demandées (coefficients entiers, ou premiers entre eux) ne donnent pas entière satisfaction, donc prudence sur l'utilisation de celles-ci (ce sont des tests et retours de \textit{bugs} qui montreront les limites des commandes).
+\end{warningblock}
+
 \section{Affichage de coordonnées}\label{affcoord}
 
 \subsection{Idée}
@@ -3861,7 +3893,7 @@ Dans cette partie liée à la géométrie analytique, j'ai choisi de saisir les 
 
 \begin{itemize}
 	\item avec le séparateur \ctex{,} pour les points ;
-	\item avec le séparateur \ctex{;} pour les vecteurs.
+	\item avec le séparateur \ctex{;}.
 \end{itemize}
 
 De ce fait, le code \textit{sait} s'il est face à un point ou à un vecteur, et adapte sa méthode de calcul en conséquence !
@@ -3881,7 +3913,11 @@ Concernant les arguments des commandes :
 		\item \Cle{dec} : pour la forme décimale (brute) ;
 		\item \Cle{dec=k} : pour la forme décimale à $10^{-k}$.
 	\end{itemize}
-	Il est possible de spécifier des formatages différents en utilisant une \textit{liste} sous la forme \Cle{f1,f2} ou \Cle{f1,f2,f3} ;
+	Il est possible de spécifier des formatages différents en utilisant une \textit{liste} sous la forme :
+	\begin{itemize}
+		\item \Cle{f1,f2} ou \Cle{f1,f2,f3} pour les points ;
+		\item \Cle{f1;f2} ou \Cle{f1;f2;f3} ;
+	\end{itemize}
 	\item l'argument \textit{optionnel} et entre \ctex{<...>} (uniquement pour les vecteurs !) permet de spécifier des options de type \textit{nicematrix} ;
 	\item l'argument obligatoire, et entre \ctex{\{...\}} est quant à lui la liste des coordonnées, en ligne et au format \textit{naturel xint}.
 \end{itemize}
@@ -4106,6 +4142,66 @@ Une équation cartésienne de la droite $\mathcal{D}$ de vecteur directeur $\vec
 
 \begin{PresCodePL}{}
 Une équation cartésienne de la droite $\mathcal{D}$ passant par les points $\AffPoint(2,4)$ et $\AffPoint(-4,2)$ est \[\mathcal{D}  \text{ : } \TrouveEqCartDroite(2,4)(-4,2) \Leftrightarrow \TrouveEqCartDroite[SimplifCoeffs](2,4)(-4,2)\]
+\end{PresCodePL}
+
+\newpage
+
+\section{Norme d'un vecteur, distance entre deux points}\label{normevect}
+
+\subsection{Idée et commande}
+
+\begin{tipblock}
+\cmaj{2.6.5} L'idée est de proposer une commande pour déterminer la distance entre deux points, ou la norme d'un vecteur :
+
+\begin{itemize}
+	\item en donnant le vecteur ;
+	\item en donnant deux points.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+%Avec le vecteur
+\TrouveNorme(vecteur)
+%Avec deux points
+\TrouveNorme(point 1)(point 2)
+\end{PresCodeTexPL}
+
+\begin{noteblock}
+Le résultat étant souvent écrit à l'aide d'une racine carrée, le code se charge de simplifier le résultat sous la forme $\frac{a\sqrt{n}}{b}$.
+
+Dans le cas où les coordonnées ne seraient pas rationnelles, le résultat risque de ne pas être conforme à celui attendu.
+\end{noteblock}
+
+\subsection{Clés et arguments}
+
+\begin{cautionblock}
+Concernant les arguments de cette commande :
+
+\begin{itemize}
+	\item les séparateurs \ctex{,} ou \ctex{;} permettent de spécifier point ou vecteur pour les arguments 1 et 2.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{cautionblock}
+
+\begin{PresCodePL}{}
+La distance $AB$ avec $A\AffPoint(-5,2)$ et $B\AffPoint(4,-3)$ vaut
+$d =\displaystyle\TrouveNorme(-5,2)(4,-3)$
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+La distance $AB$ avec $A\AffPoint(2,1,2)$ et $B\AffPoint(-4,1,1)$ vaut
+$d =\displaystyle\TrouveNorme(2,1,2)(-4,1,1)$
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+La norme de $\AffVecteur(2;4)$ vaut
+$d =\displaystyle\TrouveNorme(2;4)$
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+La norme de $\AffVecteur[d;d;n](2;4;0.5)$ vaut
+$d =\displaystyle\TrouveNorme(2;4;0.5)$
 \end{PresCodePL}
 
 \newpage
@@ -7049,6 +7145,10 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
+{\small \bverb|v 2.6.5|~:~~~~Ajout d'une option \Cle{noamssymb} pour éviter de charger \textsf{amssymb} (page \pageref{amssymb})
+
+{\small \bverb|       |~:~~~~Ajout d'une commande pour la distance entre deux points (page \pageref{normevect})}
+
 {\small \bverb|v 2.6.4|~:~~~~Résolution d'une équation diophantienne $ax+by=c$ (page \pageref{eqdioph})
 
 {\small \bverb|       |~:~~~~Correction de bugs mineurs
@@ -7057,15 +7157,15 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v 2.6.3|~:~~~~Ajout d'une commande pour déterminer une équation réduite (page \pageref{eqreduite})
 
-{\small \bverb|v 2.6.2|~:~~~~Ajout d'une clé [AffTraitsEq] pour les équations trigo (page \pageref{cercletrigo})
+{\small \bverb|v 2.6.2|~:~~~~Ajout d'une clé \Cle{AffTraitsEq} pour les équations trigo (page \pageref{cercletrigo})
 
 {\small \bverb|v 2.6.1|~:~~~~Ajout de commandes pour du calcul intégral (pages \pageref{calcintegr} et \pageref{integrtikz})
 
-{\small \bverb|v 2.6.0|~:~~~~Ajout d'une clé [Brut] pour les mesures principales + correction d'un bug} + Refonte de la doc
+{\small \bverb|v 2.6.0|~:~~~~Ajout d'une clé \Cle{Brut} pour les mesures principales + correction d'un bug} + Refonte de la doc
 
 {\small \bverb|       |~:~~~~Commande calcul ligne trigo (pages \pageref{mesureprincipale} et \pageref{lignestrigo})
 
-{\small \bverb|v 2.5.9|~:~~~~Ajout clé [CouleurNombres] pour \textsf{Piton} (v1.5 mini) (page \pageref{pythonpiton})
+{\small \bverb|v 2.5.9|~:~~~~Ajout clé \Cle{CouleurNombres} pour \textsf{Piton} (v1.5 mini) (page \pageref{pythonpiton})
 
 {\small \bverb|v 2.5.8|~:~~~~Ajout d'un style \textsf{Alt} pour les codes (pages \pageref{pythonsimple} et \pageref{pytminted})
 
@@ -7075,7 +7175,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v 2.5.6|~:~~~~Ajout d'une clé \Cle{Trigo} pour l'axe $(Ox)$ (page \pageref{reperagetikz})
 
-{\small \bverb|v 2.5.5|~:~~~~Externalisation de la fenêtre XCas (dans la package \textsf{FentreCas})
+{\small \bverb|v 2.5.5|~:~~~~Externalisation de la fenêtre XCas (dans le package \textsf{FentreCas})
 
 {\small \bverb|v 2.5.4|~:~~~~Modification des calculs (via \textsf{xint}) en combinatoire (page \pageref{combinatoire})
 
@@ -7093,7 +7193,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v 2.1.8|~:~~~~Suppression des commandes de PixelArt, désormais dans le package \textsf{PixelArtTikz}
 
-{\small \bverb|v 2.1.7|~:~~~~Ajout d'une clé \textsf{Math} pour les sommets des figures de l'espace (pages \pageref{pave} et \pageref{tetra})
+{\small \bverb|v 2.1.7|~:~~~~Ajout d'une clé \Cle{Math} pour les sommets des figures de l'espace (pages \pageref{pave} et \pageref{tetra})
 
 {\small \bverb|v 2.1.6|~:~~~~Correction d'un bug lié au chargement de \textsf{hvlogos}, remplacé par \textsf{hologo}
 
@@ -7134,79 +7234,79 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 {\small \bverb|v 2.0.0|~:~~~~Refonte du code source avec modification des commandes, et de la documentation}
 
 \hrulefill
-
-{\small \bverb|v 1.3.7|~:~~~~Commandes pour du code python via piton, en compilation \hologo{LuaLaTeX} (page \pageref{pythonpiton})
-
-{\small \bverb|       |~:~~~~Corrections et modifications mineures de la documentation
-
-{\small \bverb|v 1.3.6|~:~~~~Présentation de l'algorithme d'Euclide pour le PGCD (page \pageref{prespgcd})
-
-{\small \bverb|       |~:~~~~Affichage d'un trinôme par coefficients, aléatoires ou non (page \pageref{trinome})
-
-{\small \bverb|v 1.3.5|~:~~~~Correction d'un bug avec la loi géométrique (page \pageref{calcprobas})
-	
-{\small \bverb|v 1.3.4|~:~~~~Ajout de petits schémas, en \TikZ{}, de lois normales et exponentielles (page \pageref{schemasprobas})
-
-{\small \bverb|       |~:~~~~Calculs de probas avec les lois géométriques et hypergéométriques (page \pageref{calcprobas})
-	
-{\small \bverb|v 1.3.3|~:~~~~Ajout d'un environnement pour des arbres de probas classiques, en \TikZ{} (page \pageref{arbresprobas})
-	
-{\small \bverb|v 1.3.2|~:~~~~Correction d'un bug sur les conversions bintohex avec lualatex (page \pageref{conversions})
-
-{\small \bverb|v 1.3.1|~:~~~~Ajout d'une option pour ne pas afficher les bordures des corrections de pixelart
-
-{\small \bverb|v 1.3.0|~:~~~~Commande pour présenter une conversion depuis la base 10 (page \pageref{convrestes})
-
-{\small \bverb|v 1.2.9|~:~~~~Correction des commandes avec \textsf{simplekv}
-
-{\small \bverb|v 1.2.7|~:~~~~Ajout de commandes pour des calculs de probabilités (page \pageref{calcprobas})
-
-{\small \bverb|v 1.2.6|~:~~~~Ajout d'un environnement pour des SudoMaths (page \pageref{sudomaths})
-
-{\small \bverb|v 1.2.5|~:~~~~Ajout de commandes pour des boîtes à moustaches (page \pageref{boiteamoustaches})
-
-{\small \bverb|v 1.2.4|~:~~~~Correction de quelques bugs mineurs, et mise à jour de la doc
-
-{\small \bverb|v 1.2.3|~:~~~~Commandes pour du code python "simple", sans compilation particulière (page \pageref{pythonsimple})
-
-{\small \bverb|v 1.2.2|~:~~~~Commandes pour travailler sur des stats à 2 variables (page \pageref{statsdeuxvars})
-
-{\small \bverb|v 1.2.1|~:~~~~Amélioration de la gestion du csv pour Pixelart
-
-{\small \bverb|v 1.1.9|~:~~~~Pixelart en \TikZ{}
-
-{\small \bverb|v 1.1.8|~:~~~~Style "Mainlevée" basique pour \TikZ (page \pageref{mainlevee})
-
-{\small \bverb|v 1.1.7|~:~~~~Conversions bin/hex/dec (basées sur \textsf{xintbinhex}) avec quelques détails (page \pageref{conversions})
-
-{\small \bverb|v 1.1.6|~:~~~~Commande pour déterminer les paramètres d'une régression linéaire par moindres carrés (page \pageref{reglin})
-
-{\small \bverb|v 1.1.5|~:~~~~Ajout de deux commandes pour, en \TikZ, créer des petits schémas \og de signe \fg{} (page \pageref{aidesigne})
-
-{\small \bverb|v 1.1.4|~:~~~~Ajout d'une commande pour, en \TikZ, créer facilement un cercle trigo avec \textit{options} (page \pageref{cercletrigo})
-
-{\small \bverb|v 1.1.3|~:~~~~Ajout des commandes pour fractions, ensembles et récurrence (pages \pageref{convfrac}, \pageref{ensembles} et \pageref{recurr})
-
-{\small \bverb|v 1.1.1|~:~~~~Modification mineure de l'environnement calcul formel, avec prise de charge de la taille du texte
-
-{\small \bverb|v 1.1.0|~:~~~~Ajout d'une commande pour créer des tétraèdres (avec nœuds) en \TikZ{} (page \pageref{tetra})
-
-{\small \bverb|v 1.0.9|~:~~~~Ajout d'une commande pour créer des pavés droits (avec nœuds) en \TikZ{} (page \pageref{pave})
-
-{\small \bverb|v 1.0.8|~:~~~~Ajout d'une commande pour créer des cartouches de lien "comme capytale" (page \pageref{capytale})
-
-{\small \bverb|v 1.0.7|~:~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire externe
-
-{\small \bverb|v 1.0.6|~:~~~~Ajout d'une option \textsf{nominted} pour ne pas charger (pas besoin de compiler avec \textsf{shell-escape})
-
-{\small \bverb|v 1.0.5|~:~~~~Ajout d'un environnement pour Python (\textsf{minted}) (page \pageref{pytminted})
-
-{\small \bverb|v 1.0.4|~:~~~~Ajout des environnements pour Terminal (win, osx, unix) (page \pageref{terms})
-
-{\small \bverb|v 1.0.3|~:~~~~Ajout des environnements pour PseudoCode (page \pageref{pseudocode})
-
-{\small \bverb|v 1.0.2|~:~~~~Ajout des environnements pour Python (\textsf{pythontex}) (page \pageref{pythontex})
-
-{\small \bverb|v 1.0  |~:~~~~Version initiale}
+%
+%{\small \bverb|v 1.3.7|~:~~~~Commandes pour du code python via piton, en compilation \hologo{LuaLaTeX} (page \pageref{pythonpiton})
+%
+%{\small \bverb|       |~:~~~~Corrections et modifications mineures de la documentation
+%
+%{\small \bverb|v 1.3.6|~:~~~~Présentation de l'algorithme d'Euclide pour le PGCD (page \pageref{prespgcd})
+%
+%{\small \bverb|       |~:~~~~Affichage d'un trinôme par coefficients, aléatoires ou non (page \pageref{trinome})
+%
+%{\small \bverb|v 1.3.5|~:~~~~Correction d'un bug avec la loi géométrique (page \pageref{calcprobas})
+%	
+%{\small \bverb|v 1.3.4|~:~~~~Ajout de petits schémas, en \TikZ{}, de lois normales et exponentielles (page \pageref{schemasprobas})
+%
+%{\small \bverb|       |~:~~~~Calculs de probas avec les lois géométriques et hypergéométriques (page \pageref{calcprobas})
+%	
+%{\small \bverb|v 1.3.3|~:~~~~Ajout d'un environnement pour des arbres de probas classiques, en \TikZ{} (page \pageref{arbresprobas})
+%	
+%{\small \bverb|v 1.3.2|~:~~~~Correction d'un bug sur les conversions bintohex avec lualatex (page \pageref{conversions})
+%
+%{\small \bverb|v 1.3.1|~:~~~~Ajout d'une option pour ne pas afficher les bordures des corrections de pixelart
+%
+%{\small \bverb|v 1.3.0|~:~~~~Commande pour présenter une conversion depuis la base 10 (page \pageref{convrestes})
+%
+%{\small \bverb|v 1.2.9|~:~~~~Correction des commandes avec \textsf{simplekv}
+%
+%{\small \bverb|v 1.2.7|~:~~~~Ajout de commandes pour des calculs de probabilités (page \pageref{calcprobas})
+%
+%{\small \bverb|v 1.2.6|~:~~~~Ajout d'un environnement pour des SudoMaths (page \pageref{sudomaths})
+%
+%{\small \bverb|v 1.2.5|~:~~~~Ajout de commandes pour des boîtes à moustaches (page \pageref{boiteamoustaches})
+%
+%{\small \bverb|v 1.2.4|~:~~~~Correction de quelques bugs mineurs, et mise à jour de la doc
+%
+%{\small \bverb|v 1.2.3|~:~~~~Commandes pour du code python "simple", sans compilation particulière (page \pageref{pythonsimple})
+%
+%{\small \bverb|v 1.2.2|~:~~~~Commandes pour travailler sur des stats à 2 variables (page \pageref{statsdeuxvars})
+%
+%{\small \bverb|v 1.2.1|~:~~~~Amélioration de la gestion du csv pour Pixelart
+%
+%{\small \bverb|v 1.1.9|~:~~~~Pixelart en \TikZ{}
+%
+%{\small \bverb|v 1.1.8|~:~~~~Style "Mainlevée" basique pour \TikZ (page \pageref{mainlevee})
+%
+%{\small \bverb|v 1.1.7|~:~~~~Conversions bin/hex/dec (basées sur \textsf{xintbinhex}) avec quelques détails (page \pageref{conversions})
+%
+%{\small \bverb|v 1.1.6|~:~~~~Commande pour déterminer les paramètres d'une régression linéaire par moindres carrés (page \pageref{reglin})
+%
+%{\small \bverb|v 1.1.5|~:~~~~Ajout de deux commandes pour, en \TikZ, créer des petits schémas \og de signe \fg{} (page \pageref{aidesigne})
+%
+%{\small \bverb|v 1.1.4|~:~~~~Ajout d'une commande pour, en \TikZ, créer facilement un cercle trigo avec \textit{options} (page \pageref{cercletrigo})
+%
+%{\small \bverb|v 1.1.3|~:~~~~Ajout des commandes pour fractions, ensembles et récurrence (pages \pageref{convfrac}, \pageref{ensembles} et \pageref{recurr})
+%
+%{\small \bverb|v 1.1.1|~:~~~~Modification mineure de l'environnement calcul formel, avec prise de charge de la taille du texte
+%
+%{\small \bverb|v 1.1.0|~:~~~~Ajout d'une commande pour créer des tétraèdres (avec nœuds) en \TikZ{} (page \pageref{tetra})
+%
+%{\small \bverb|v 1.0.9|~:~~~~Ajout d'une commande pour créer des pavés droits (avec nœuds) en \TikZ{} (page \pageref{pave})
+%
+%{\small \bverb|v 1.0.8|~:~~~~Ajout d'une commande pour créer des cartouches de lien "comme capytale" (page \pageref{capytale})
+%
+%{\small \bverb|v 1.0.7|~:~~~~Ajout d'une option \textsf{build} pour placer certains fichiers auxiliaires dans un répertoire externe
+%
+%{\small \bverb|v 1.0.6|~:~~~~Ajout d'une option \textsf{nominted} pour ne pas charger (pas besoin de compiler avec \textsf{shell-escape})
+%
+%{\small \bverb|v 1.0.5|~:~~~~Ajout d'un environnement pour Python (\textsf{minted}) (page \pageref{pytminted})
+%
+%{\small \bverb|v 1.0.4|~:~~~~Ajout des environnements pour Terminal (win, osx, unix) (page \pageref{terms})
+%
+%{\small \bverb|v 1.0.3|~:~~~~Ajout des environnements pour PseudoCode (page \pageref{pseudocode})
+%
+%{\small \bverb|v 1.0.2|~:~~~~Ajout des environnements pour Python (\textsf{pythontex}) (page \pageref{pythontex})
+%
+%{\small \bverb|v 1.0  |~:~~~~Version initiale}
 
 \end{document}

@@ -137,6 +137,8 @@
 
 %%Equations Cartésiennes + Affichages coordonnées
 \RequirePackage{nicematrix}
+%\RequirePackage{ifpdf}
+
 \NewDocumentCommand\AffCoeffSgn{ s O{} m m D<>{} }{%
 	\IfStrEq{#5}{}%si argument vide, on convertit en fraction
 		{%
@@ -159,7 +161,7 @@
 		}%
 		%sinon on met en brut
 		{%
-			#3#4
+			#3#4%
 		}%
 }
 
@@ -173,19 +175,19 @@
 						{%
 							\IfBooleanTF{#1}{}{+}%
 							\xintifboolexpr{\xinteval{#3} == 1}%
-								{#3}%
+								{+1}%
 								{+\ConversionFraction[#2]{#3}}%
 						}%
 						{%
 							\xintifboolexpr{\xinteval{#3} == -1}%
-								{#3\relax}%
+								{-1}%
 								{\ConversionFraction[#2]{#3}}%
 					}	%
 				}%
 		}%
 	%sinon on met en brut
 		{%
-			#3
+			#3%
 		}%
 }
 
@@ -200,7 +202,14 @@
 	Facteur=1
 }
 
-\NewDocumentCommand\TrouveEqCartPlan{ O{} r() r() d() }{%test commande générique avec VP ou PPP ou PVV
+\NewDocumentCommand\TrouveEqCartPlan{ }{%
+	\begingroup
+	\catcode`\;12
+	\TrouveEqCartPlanAux
+}
+
+\NewDocumentCommand\TrouveEqCartPlanAux{ O{} r() r() d() }{%test commande générique avec VP ou PPP ou PVV
+	\endgroup
 	\restoreKV[eqcartplan]% revenir au valeurs par défaut
 	\setKV[eqcartplan]{#1}% lit les arguments optionnels
 	\IfNoValueTF{#4}%c'est Vect+Point
@@ -327,11 +336,45 @@
 	Facteur=1
 }
 
-\NewDocumentCommand\TrouveEqCartDroite{ O{} r() r() }{%vect/point ou point/point
+\NewDocumentCommand\TrouveEqCartDroite{ }{%
+	\begingroup
+	\catcode`\;12
+	\TrouveEqCartDroiteAux
+}
+
+\NewDocumentCommand\TrouveEqCartDroiteAux{ O{} r() r() }{%vect/point ou point/point
+	\endgroup
 	\restoreKV[eqcartdroite]% revenir au valeurs par défaut
 	\setKV[eqcartdroite]{#1}% lit les arguments optionnels
 	%on teste si c'est point/point
-	\IfSubStr{#2}{;}%c'est vecteur+point, sinon c'est point+point
+	\IfSubStr{#2}{,}%c'est point+point, sinon c'est vecteur+point
+		{%
+			\setsepchar{,}\readlist*\CoordPtA{#2}%
+			\setsepchar{,}\readlist*\CoordPtB{#3}%
+			\itemtomacro\CoordPtA[1]\xpta%
+			\itemtomacro\CoordPtA[2]\ypta%
+			\itemtomacro\CoordPtB[1]\xptb%
+			\itemtomacro\CoordPtB[2]\yptb%
+			\xdef\vecnx{((\xptb)-(\xpta))}%
+			\xdef\vecny{((\yptb)-(\ypta))}%
+			%calculs
+			\xdef\coeffd{((\xpta)*(\vecny)-(\ypta)*(\vecnx))}%
+			\xdef\PPCMDenom{\xinteval{lcm([\xintDenominator{\xintIrr{\xinteval{\vecnx}}},\xintDenominator{\xintIrr{\xinteval{\vecny}}},\xintDenominator{\xintIrr{\xinteval{\coeffd}}}])}}%
+			\xdef\PGCDsiEntiers{1}%
+			\xintifboolexpr{\xinteval{isint(\vecnx)}*\xinteval{isint(\vecny)}*\xinteval{isint(\coeffd)} == 1}%tous les coeffs sont entiers
+				{%
+					\xdef\PGCDsiEntiers{\xinteval{gcd([\xinteval{\vecnx},\xinteval{\vecny},\xinteval{\coeffd}])}}%
+				}%
+				{}%
+			%affichages
+			\ifboolKV[eqcartdroite]{SimplifCoeffs}%
+				{%
+					\AffCoeffSgn*[\eqcartdteformat]{-\vecny*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers}{x} \AffCoeffSgn[\eqcartdteformat]{\vecnx*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{\coeffd*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers} = 0%
+				}%
+				{%
+					\AffCoeffSgn*[\eqcartdteformat]{-(\vecny)}{x} \AffCoeffSgn[\eqcartdteformat]{(\vecnx)}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{(\coeffd)} = 0%
+				}%
+		}
 		{%
 			\setsepchar{;}\readlist*\CoordVec{#2}%
 			\setsepchar{,}\readlist*\CoordPt{#3}%
@@ -359,56 +402,36 @@
 				{%
 					\ifboolKV[eqcartdroite]{VectDirecteur}%
 						{%
-							\AffCoeffSgn*[\eqcartdteformat]{-(\vecny)*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers}{x} \AffCoeffSgn[\eqcartdteformat]{(\vecnx)*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{\coeffd*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers} = 0%
+							\AffCoeffSgn*[\eqcartdteformat]{-(\vecny)*(\eqcartdtefact)*(\PPCMDenom)/(\PGCDsiEntiers)}{x} \AffCoeffSgn[\eqcartdteformat]{(\vecnx)*(\eqcartdtefact)*(\PPCMDenom)/(\PGCDsiEntiers)}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{(\coeffd)*(\eqcartdtefact)*(\PPCMDenom)/(\PGCDsiEntiers)} = 0%
 						}%
 						{%
-							\AffCoeffSgn*[\eqcartdteformat]{(\vecnx)*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers}{x} \AffCoeffSgn[\eqcartdteformat]{(\vecny)*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{\coeffd*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers} = 0%
+							\AffCoeffSgn*[\eqcartdteformat]{(\vecnx)*(\eqcartdtefact)*(\PPCMDenom)/(\PGCDsiEntiers)}{x} \AffCoeffSgn[\eqcartdteformat]{(\vecny)*(\eqcartdtefact)*(\PPCMDenom)/(\PGCDsiEntiers)}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{(\coeffd)*(\eqcartdtefact)*(\PPCMDenom)/(\PGCDsiEntiers)} = 0%
 						}%
 				}%
 				{%
 					\ifboolKV[eqcartdroite]{VectDirecteur}%
 						{%
-							\AffCoeffSgn*[\eqcartdteformat]{-(\vecny)}{x} \AffCoeffSgn[\eqcartdteformat]{\vecnx}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{\coeffd} = 0%
+							\AffCoeffSgn*[\eqcartdteformat]{-(\vecny)}{x} \AffCoeffSgn[\eqcartdteformat]{\vecnx}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{(\coeffd)} = 0%
 						}%
 						{%
-							\AffCoeffSgn*[\eqcartdteformat]{\vecnx}{x} \AffCoeffSgn[\eqcartdteformat]{\vecny}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{\coeffd} = 0%
+							\AffCoeffSgn*[\eqcartdteformat]{\vecnx}{x} \AffCoeffSgn[\eqcartdteformat]{\vecny}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{(\coeffd)} = 0%
 						}%
 				}%
-		}%
-		{%
-			\setsepchar{,}\readlist*\CoordPtA{#2}%
-			\setsepchar{,}\readlist*\CoordPtB{#3}%
-			\itemtomacro\CoordPtA[1]\xpta%
-			\itemtomacro\CoordPtA[2]\ypta%
-			\itemtomacro\CoordPtB[1]\xptb%
-			\itemtomacro\CoordPtB[2]\yptb%
-			\xdef\vecnx{((\xptb)-(\xpta))}%
-			\xdef\vecny{((\yptb)-(\ypta))}%
-			%calculs
-			\xdef\coeffd{((\xpta)*(\vecny)-(\ypta)*(\vecnx))}%
-			\xdef\PPCMDenom{\xinteval{lcm([\xintDenominator{\xintIrr{\xinteval{\vecnx}}},\xintDenominator{\xintIrr{\xinteval{\vecny}}},\xintDenominator{\xintIrr{\xinteval{\coeffd}}}])}}%
-			\xdef\PGCDsiEntiers{1}%
-			\xintifboolexpr{\xinteval{isint(\vecnx)}*\xinteval{isint(\vecny)}*\xinteval{isint(\coeffd)} == 1}%tous les coeffs sont entiers
-				{%
-					\xdef\PGCDsiEntiers{\xinteval{gcd([\xinteval{\vecnx},\xinteval{\vecny},\xinteval{\coeffd}])}}%
-				}%
-				{}%
-			%affichages
-			\ifboolKV[eqcartdroite]{SimplifCoeffs}%
-				{%
-					\AffCoeffSgn*[\eqcartdteformat]{-(\vecny)*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers}{x} \AffCoeffSgn[\eqcartdteformat]{(\vecnx)*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{\coeffd*(\eqcartdtefact)*\PPCMDenom/\PGCDsiEntiers} = 0%
-				}%
-				{%
-					\AffCoeffSgn*[\eqcartdteformat]{-(\vecny)}{x} \AffCoeffSgn[\eqcartdteformat]{(\vecnx)}{y} \AffCoeffSgnSimpl*[\eqcartdteformat]{\coeffd} = 0%
-				}%
-		}%
+		}%%
 }
 
-\NewDocumentCommand\AffVecteur{ O{d} D<>{} r() }{%
+\NewDocumentCommand\AffVecteur{ }{%
+	\begingroup
+	\catcode`\;12
+	\AffVecteurAux
+}
+
+\NewDocumentCommand\AffVecteurAux{ O{d} D<>{} r() }{%
+	\endgroup
 	\setsepchar{;}\readlist*\CoordVec{#3}%
 	\xintifboolexpr{\CoordVeclen == 2}%
 		{%
-			\IfSubStr{#1}{;}%si l'option est globale...
+			\IfSubStr{#1}{;}%
 				{%
 					\setsepchar{;}\readlist*\OptVec{#1}%
 					\itemtomacro\OptVec[1]\optvecx%
@@ -423,23 +446,23 @@
 		}%
 		{}%
 	\xintifboolexpr{\CoordVeclen == 3}%
-	{%
-		\IfSubStr{#1}{;}%si l'option est globale...
-			{%
-				\setsepchar{;}\readlist*\OptVec{#1}%
-				\itemtomacro\OptVec[1]\optvecx%
-				\itemtomacro\OptVec[2]\optvecy%
-				\itemtomacro\OptVec[3]\optvecz%
-			}%
-			{%
-				\xdef\optvecx{#1}\xdef\optvecy{#1}\xdef\optvecz{#1}%
-			}%
-		\itemtomacro\CoordVec[1]\vecx%
-		\itemtomacro\CoordVec[2]\vecy%
-		\itemtomacro\CoordVec[3]\vecz%
-		\begin{pNiceMatrix}[#2] \ConversionFraction[\optvecx]{\vecx} \\ \ConversionFraction[\optvecy]{\vecy} \\ \ConversionFraction[\optvecz]{\vecz} \end{pNiceMatrix}%
-	}%
-	{}%
+		{%
+			\IfSubStr{#1}{;}%
+				{%
+					\setsepchar{;}\readlist*\OptVec{#1}%
+					\itemtomacro\OptVec[1]\optvecx%
+					\itemtomacro\OptVec[2]\optvecy%
+					\itemtomacro\OptVec[3]\optvecz%
+				}%
+				{%
+					\xdef\optvecx{#1}\xdef\optvecy{#1}\xdef\optvecz{#1}%
+				}%
+			\itemtomacro\CoordVec[1]\vecx%
+			\itemtomacro\CoordVec[2]\vecy%
+			\itemtomacro\CoordVec[3]\vecz%
+			\begin{pNiceMatrix}[#2] \ConversionFraction[\optvecx]{\vecx} \\ \ConversionFraction[\optvecy]{\vecy} \\ \ConversionFraction[\optvecz]{\vecz} \end{pNiceMatrix}%
+		}%
+		{}%
 }
 
 \NewDocumentCommand\AffPoint{ O{d} r() }{%
@@ -509,21 +532,18 @@
 	\restmp%
 }
 
-\NewDocumentCommand\TrouveEqParamDroite{ O{} r() r() }{%vect/point ou point/point
+\NewDocumentCommand\TrouveEqParamDroite{ }{%
+	\begingroup
+	\catcode`\;12
+	\TrouveEqParamDroiteAux
+}
+
+\NewDocumentCommand\TrouveEqParamDroiteAux{ O{} r() r() }{%vect/point ou point/point
+	\endgroup
 	\restoreKV[eqparamdroite]% revenir au valeurs par défaut
 	\setKV[eqparamdroite]{#1}% lit les arguments optionnels
 	%on teste si c'est point/point
-	\IfSubStr{#2}{;}%c'est vecteur+point, sinon c'est point+point
-		{%
-			\setsepchar{;}\readlist*\CoordVec{#2}%
-			\setsepchar{,}\readlist*\CoordPt{#3}%
-			\itemtomacro\CoordVec[1]\vecdirx%
-			\itemtomacro\CoordVec[2]\vecdiry%
-			\itemtomacro\CoordVec[3]\vecdirz%
-			\itemtomacro\CoordPt[1]\xpta%
-			\itemtomacro\CoordPt[2]\ypta%
-			\itemtomacro\CoordPt[3]\zpta%
-		}%
+	\IfSubStr{#2}{,}%c'est point+point, sinon c'est vecteur+point
 		{%
 			\setsepchar{,}\readlist*\CoordPtA{#2}%
 			\setsepchar{,}\readlist*\CoordPtB{#3}%
@@ -545,6 +565,16 @@
 					\xdef\vecdirz{((\zptb)-(\zpta))}%
 				}%
 		}%
+		{%
+			\setsepchar{;}\readlist*\CoordVec{#2}%
+			\setsepchar{,}\readlist*\CoordPt{#3}%
+			\itemtomacro\CoordVec[1]\vecdirx%
+			\itemtomacro\CoordVec[2]\vecdiry%
+			\itemtomacro\CoordVec[3]\vecdirz%
+			\itemtomacro\CoordPt[1]\xpta%
+			\itemtomacro\CoordPt[2]\ypta%
+			\itemtomacro\CoordPt[3]\zpta%
+		}%
 	\ifboolKV[eqparamdroite]{Aligne}%
 		{%
 			\left\lbrace\begin{array}{@{\,}l@{\;=\;}l@{\;}r}
@@ -564,7 +594,14 @@
 		}%
 }
 
-\NewDocumentCommand\TrouveDistancePtPlan{ r() r() d() }{%pt+vect+pt
+\NewDocumentCommand\TrouveDistancePtPlan{ }{%
+	\begingroup
+	\catcode`\;12
+	\TrouveDistancePtPlanAux
+}
+
+\NewDocumentCommand\TrouveDistancePtPlanAux{ r() r() d() }{%pt+vect+pt
+	\endgroup
 	\IfNoValueTF{#3}%c'est Point + Equation // sinon c'est point + vectnorm + point
 		{%
 			\StrDel{#2}{=0}[\tmpeq]%
@@ -620,6 +657,60 @@
 			\itemtomacro\CoordPtB[2]\yb%
 			\itemtomacro\CoordPtB[3]\zb%
 			\def\restmp{((\vectx)*((\xb)-(\xa))+(\vecty)*((\yb)-(\ya))+(\vectz)*((\zb)-(\za)))**2/((\vectx)**2+(\vecty)**2+(\vectz)**2)}%
+		}%
+	\SimplificationRacine{\restmp}%
+}
+
+\NewDocumentCommand\TrouveNorme{ }{%
+	\begingroup
+	\catcode`\;12
+	\TrouveNormeAux
+}
+
+\NewDocumentCommand\TrouveNormeAux{ r() d() }{%pt+vect+pt
+	\endgroup
+	\IfNoValueTF{#2}%c'est Vecteur // sinon c'est point point
+		{%
+			\setsepchar{;}\readlist*\CoordVec{#1}%
+			\xintifboolexpr{\CoordVeclen == 2}%
+				{%
+					\itemtomacro\CoordVec[1]\xveca%
+					\itemtomacro\CoordVec[2]\yveca%
+					\xdef\restmp{(\xveca)**2+(\yveca)**2}%
+				}
+				{}%
+			\xintifboolexpr{\CoordVeclen == 3}%%
+				{%
+					\itemtomacro\CoordVec[1]\xveca%
+					\itemtomacro\CoordVec[2]\yveca%
+					\itemtomacro\CoordVec[3]\zveca%
+					\xdef\restmp{(\xveca)**2+(\yveca)**2+(\zveca)**2}%
+				}%
+				{}%
+		}%
+		{%
+			\setsepchar{,}\readlist*\CoordPtA{#1}%
+			\setsepchar{,}\readlist*\CoordPtB{#2}%
+			\xintifboolexpr{\CoordPtAlen == 2}%
+				{%
+					\itemtomacro\CoordPtA[1]\xa%
+					\itemtomacro\CoordPtA[2]\ya%
+					\itemtomacro\CoordPtB[1]\xb%
+					\itemtomacro\CoordPtB[2]\yb%
+					\xdef\restmp{((\xb)-(\xa))**2+((\yb)-(\ya))**2}%
+				}%
+				{}
+			\xintifboolexpr{\CoordPtAlen == 3}%
+				{%
+					\itemtomacro\CoordPtA[1]\xa%
+					\itemtomacro\CoordPtA[2]\ya%
+					\itemtomacro\CoordPtA[3]\za%
+					\itemtomacro\CoordPtB[1]\xb%
+					\itemtomacro\CoordPtB[2]\yb%
+					\itemtomacro\CoordPtB[3]\zb%
+					\xdef\restmp{((\xb)-(\xa))**2+((\yb)-(\ya))**2+((\zb)-(\za))**2}
+				}%
+				{}%
 		}%
 	\SimplificationRacine{\restmp}%
 }
