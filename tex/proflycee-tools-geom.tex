@@ -129,12 +129,6 @@
 		{\draw[dashed,\PFTetraThick,line join=bevel] (\TetraA)--(\TetraC) ;}
 }
 
-%%------MainLevée TikZ
-\tikzset{%
-	mainlevee/.style args={#1et#2}{decorate,decoration={random steps,segment length=#1,amplitude=#2}},
-	mainlevee/.default={5mm et 0.6pt}
-}
-
 %%Equations Cartésiennes + Affichages coordonnées
 \RequirePackage{nicematrix}
 %\RequirePackage{ifpdf}

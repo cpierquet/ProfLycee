@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.6.5}
-\def\PLdate{20 mai 2023}
+\def\PLversion{2.6.6}
+\def\PLdate{28 mai 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
@@ -3771,74 +3771,74 @@ Les \Cle{Clés} pour cette possibilité sont :
 \end{center}
 \end{PresCodeSortiePL}
 
-\newpage
-
-\section{Style \og main levée \fg{} en \TikZ}\label{mainlevee}
-
-\subsection{Idée}
-
-\begin{tipblock}
-L'idée est de \textit{proposer} un style \textit{tout prêt} pour simuler un tracé, en \TikZ, à \og main levée \fg.
-
-Il s'agit d'un style \textit{basique} utilisant la librairie \ctex{decorations} avec \textsf{random steps}.
-\end{tipblock}
-
-\begin{PresCodeTexPL}{listing only}
-\tikzset{%
-	mainlevee/.style args={#1et#2}{decorate,decoration={random steps, segment length=#1,amplitude=#2}},
-	mainlevee/.default={5mm et 0.6pt}
-}
-\end{PresCodeTexPL}
-
-\subsection{Utilisation basique}
-
-\begin{noteblock}
-Il s'agit ni plus ni moins d'un style \TikZ{} à intégrer dans les tracés et constructions \TikZ !
-\end{noteblock}
-
-\begin{cautionblock}
-Concernant le style en lui-même, deux paramètres peuvent être précisés via \Cle{mainlevee=\#1 et \#2} :
-
-\begin{itemize}
-	\item \Cle{\#1} correspond à l'option \textsf{segment length} (longueur des segments \textit{types}) ;\hfill{}défaut \Cle{5mm}
-	\item \Cle{\#2} correspond à l'option \textsf{amplitude} (amplitude maximale de la \textit{déformation}).\hfill{}défaut \Cle{0.6pt}
-\end{itemize}
-
-Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -- satisfaisants, mais l'utilisateur pourra modifier à loisir ces paramètres !
-\end{cautionblock}
-
-\begin{PresCodeTexPL}{listing only}
-%la grille a été rajoutée pour la sortie
-\begin{tikzpicture}
-	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-
-\begin{tikzpicture}
-	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-
-\begin{tikzpicture}
-	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-\end{PresCodeTexPL}
-
-\begin{PresCodeSortiePL}{text only}
-\hfill~\begin{tikzpicture}
-	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
-	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-\hspace{1cm}
-\begin{tikzpicture}
-	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
-	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-\hspace{1cm}
-\begin{tikzpicture}
-	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
-	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
-\end{tikzpicture}
-\hfill~
-\end{PresCodeSortiePL}
+%\newpage
+%
+%\section{Style \og main levée \fg{} en \TikZ}\label{mainlevee}
+%
+%\subsection{Idée}
+%
+%\begin{tipblock}
+%L'idée est de \textit{proposer} un style \textit{tout prêt} pour simuler un tracé, en \TikZ, à \og main levée \fg.
+%
+%Il s'agit d'un style \textit{basique} utilisant la librairie \ctex{decorations} avec \textsf{random steps}.
+%\end{tipblock}
+%
+%\begin{PresCodeTexPL}{listing only}
+%\tikzset{%
+%	mainlevee/.style args={#1et#2}{decorate,decoration={random steps, segment length=#1,amplitude=#2}},
+%	mainlevee/.default={5mm et 0.6pt}
+%}
+%\end{PresCodeTexPL}
+%
+%\subsection{Utilisation basique}
+%
+%\begin{noteblock}
+%Il s'agit ni plus ni moins d'un style \TikZ{} à intégrer dans les tracés et constructions \TikZ !
+%\end{noteblock}
+%
+%\begin{cautionblock}
+%Concernant le style en lui-même, deux paramètres peuvent être précisés via \Cle{mainlevee=\#1 et \#2} :
+%
+%\begin{itemize}
+%	\item \Cle{\#1} correspond à l'option \textsf{segment length} (longueur des segments \textit{types}) ;\hfill{}défaut \Cle{5mm}
+%	\item \Cle{\#2} correspond à l'option \textsf{amplitude} (amplitude maximale de la \textit{déformation}).\hfill{}défaut \Cle{0.6pt}
+%\end{itemize}
+%
+%Les valeurs \Cle{mainlevee=5mm et 0.6pt} donnent des résultats -- à mon sens -- satisfaisants, mais l'utilisateur pourra modifier à loisir ces paramètres !
+%\end{cautionblock}
+%
+%\begin{PresCodeTexPL}{listing only}
+%%la grille a été rajoutée pour la sortie
+%\begin{tikzpicture}
+%	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+%\end{tikzpicture}
+%
+%\begin{tikzpicture}
+%	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+%\end{tikzpicture}
+%
+%\begin{tikzpicture}
+%	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+%\end{tikzpicture}
+%\end{PresCodeTexPL}
+%
+%\begin{PresCodeSortiePL}{text only}
+%\hfill~\begin{tikzpicture}
+%	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+%	\draw[thick,mainlevee] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+%\end{tikzpicture}
+%\hspace{1cm}
+%\begin{tikzpicture}
+%	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+%	\draw[thick,mainlevee=5mm et 2pt] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+%\end{tikzpicture}
+%\hspace{1cm}
+%\begin{tikzpicture}
+%	\draw[xstep=0.5,ystep=0.5,ultra thin,lightgray] (0,0) grid (4,4);
+%	\draw[thick,mainlevee=10mm et 3mm] (0,0) --++ (4,0) --++ (0,4) --++ (-4,0) --cycle ;
+%\end{tikzpicture}
+%\hfill~
+%\end{PresCodeSortiePL}
 
 \pagebreak
 
@@ -7144,6 +7144,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.6.6|~:~~~~Style \textsf{mainlevee} en \TikZ{} désormais dans le package \textsf{tikz2d-fr}
 
 {\small \bverb|v 2.6.5|~:~~~~Ajout d'une option \Cle{noamssymb} pour éviter de charger \textsf{amssymb} (page \pageref{amssymb})
 
