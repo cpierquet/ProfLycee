@@ -331,13 +331,13 @@
 	\def\axesenlargyD{\fpeval{\axeselargyD*(\ymax-\ymin)}}
 	%on affiche les deux axes
 	\draw[line width=\axeswidth,-{\axestypefleche[scale=\axesechellefleche]}] ({\xmin-\axexOx-\axesenlargxG},0) -- ({\xmax-\axexOx+\axesenlargxD},0) ;
-	\draw[line width=\axeswidth,-{\axestypefleche[scale=\axesechellefleche]}] (0,{\ymin-\axeyOy-\axesenlargyG}) -- (0,{\ymax-\axeyOy++\axesenlargyD}) ;
+	\draw[line width=\axeswidth,-{\axestypefleche[scale=\axesechellefleche]}] (0,{\ymin-\axeyOy-\axesenlargyG}) -- (0,{\ymax-\axeyOy+\axesenlargyD}) ;
 	%les labels éventuels
 	\IfSubStr{\axesafflabel}{x}%
-		{\draw ({\xmax-\axexOx},0) node[\axesposlabelx,font=\axesfont] {\axeslabelx} ;}
+		{\draw ({\xmax-\axexOx+\axesenlargxD},0) node[\axesposlabelx,font=\axesfont] {\axeslabelx} ;}
 		{}
 	\IfSubStr{\axesafflabel}{y}%
-		{\draw (0,{\ymax-\axeyOy}) node[\axesposlabely,font=\axesfont] {\axeslabely} ;}
+		{\draw (0,{\ymax-\axeyOy+\axesenlargyD}) node[\axesposlabely,font=\axesfont] {\axeslabely} ;}
 		{}
 }
 

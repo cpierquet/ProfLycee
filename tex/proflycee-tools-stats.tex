@@ -8,6 +8,8 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.6.7	Histogrammes
+
 %%------RegressionLinéaire
 %calcul des paramètres
 \defKV[coeffreglin]{%
@@ -193,6 +195,258 @@
 			\filldraw (\BaMmax,0) circle[radius=2pt] node[below=4pt] {\num{\BaMmax}} ;
 		}
 		{}
+}
+
+%%------HISTOGRAMME
+\defKV[histostats]{%
+	ListeCouleurs=\def\HistoCouleurs{#1},%
+	Largeur=\def\HistoLargeur{#1},%
+	Hauteur=\def\HistoHauteur{#1},%
+	GradX=\def\HistoGradX{#1},%
+	GradY=\def\HistoGradY{#1},%
+	PosEffectifs=\def\HistoPosEff{#1},%
+	LabelX=\def\HistoLabelx{#1},%
+	LabelY=\def\HistoLabely{#1},%
+	ElargirX=\def\HistoElargirx{#1},%
+	ElargirY=\def\HistoElargiry{#1},%
+	PoliceAxes=\def\HistoFonte{#1},%
+	PoliceEffectifs=\def\HistoFonteEff{#1},%
+	Opacite=\def\HistoOpac{#1},%
+	DebutOx=\def\HistoDebX{#1},%
+	FinOx=\def\HistoFinX{#1},%
+	EpaisseurTraits=\def\HistoEptraits{#1}
+}
+
+\setKVdefault[histostats]{%
+	ListeCouleurs=orange,%
+	Largeur=10,%
+	Hauteur=5,%
+	GradX={},%
+	GradY={},%
+	AffEffectifs=true,%
+	PosEffectifs=milieu,%
+	ElargirX=5mm,%
+	ElargirY=5mm,%
+	LabelX={},%
+	LabelY={},%
+	PoliceAxes=\normalsize\normalfont,%
+	PoliceEffectifs=\normalsize\normalfont,%
+	AffBornes=false,%
+	Remplir=true,%
+	Opacite=0.5,%
+	GrilleV=true,%
+	DebutOx={},%
+	FinOx={},%
+	EpaisseurTraits=semithick
+}
+
+\NewDocumentCommand\Histogramme{ s O{} m }{%
+	\useKVdefault[histostats]%
+	\setKV[histostats]{#2}%
+	\setsepchar[.]{ ./}%
+	\readlist*\LISTDONNEES{#3}%
+	\IfEq{\HistoDebX}{}%on stocke le début de l'axe Ox si besoin
+		{\itemtomacro\LISTDONNEES[1,1]{\HistoDebX}}{}%
+	\IfEq{\HistoFinX}{}%on stocke la fin de l'axe Ox si besoin
+		{\itemtomacro\LISTDONNEES[-1,2]{\HistoFinX}}{}%
+	\setsepchar{,}%
+	\readlist*\LISTCOUL{\HistoCouleurs}%
+	%distinction suivant largeur classes
+	\IfBooleanTF{#1}%étoilé := classe d'amplitudes différentes
+		{%
+			
+			\xdef\ListeHauteurs{\fpeval{(\LISTDONNEES[1,3])/(\LISTDONNEES[1,2]-\LISTDONNEES[1,1])}}
+			\foreach \i in {2,...,\LISTDONNEESlen}
+				{%
+					\xdef\ListeHauteurs{\ListeHauteurs,\fpeval{(\LISTDONNEES[\i,3])/(\LISTDONNEES[\i,2]-\LISTDONNEES[\i,1])}}%
+				}%
+			\xdef\maxhauteurs{\xinteval{round(max(\ListeHauteurs),3)}}%
+			\xdef\HistoUniteY{\xinteval{round(\HistoHauteur/max(\ListeHauteurs),3)}}%
+			\xdef\HistoUniteX{\xinteval{round(\HistoLargeur/(\HistoFinX-\HistoDebX),3)}}%
+			%fenêtre graphique
+			\begin{tikzpicture}[x=\HistoUniteX cm,y=\HistoUniteY cm]
+				\foreach \i in {1,...,\LISTDONNEESlen}
+					{%
+						\xintifboolexpr{\LISTCOULlen == 1}%
+							{\def\couleurhisto{\HistoCouleurs}}%
+							{\itemtomacro\LISTCOUL[\i]{\couleurhisto}}%
+						\ifboolKV[histostats]{AffBornes}%
+							{%
+								\draw[\HistoEptraits] ({\LISTDONNEES[\i,1]},3pt)--++(0,-6pt) node[below,font=\HistoFonte] {\LISTDONNEES[\i,1]} ;
+								\draw[\HistoEptraits] ({\LISTDONNEES[\i,2]},3pt)--++(0,-6pt) node[below,font=\HistoFonte] {\LISTDONNEES[\i,2]} ;
+							}%
+							{}%
+						\ifboolKV[histostats]{Remplir}%
+							{%
+								\draw[\HistoEptraits,fill=\couleurhisto,fill opacity=\HistoOpac] ({\LISTDONNEES[\i,1]},0) rectangle ({\LISTDONNEES[\i,2]},{(\LISTDONNEES[\i,3])/(\LISTDONNEES[\i,2]-\LISTDONNEES[\i,1])}) ;
+							}%
+							{%
+								\draw[\HistoEptraits] ({\LISTDONNEES[\i,1]},0) rectangle ({\LISTDONNEES[\i,2]},{(\LISTDONNEES[\i,3])/(\LISTDONNEES[\i,2]-\LISTDONNEES[\i,1])}) ;
+							}%
+					}%
+				\foreach \x in \HistoGradX
+					{%
+						\draw[\HistoEptraits] (\x,3pt)--++(0,-6pt) node[below,font=\HistoFonte] {\num{\x}} ;
+					}%
+				\ifboolKV[histostats]{AffEffectifs}
+					{%
+						\IfStrEq{\HistoPosEff}{milieu}%
+							{%
+								\foreach \i in {1,...,\LISTDONNEESlen}
+									\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]},{0.5*(\LISTDONNEES[\i,3])/(\LISTDONNEES[\i,2]-\LISTDONNEES[\i,1])}) node[font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+							}%
+							{}%
+						\IfStrEq{\HistoPosEff}{bas}%
+							{%
+								\foreach \i in {1,...,\LISTDONNEESlen}
+									\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]},{0}) node[above,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+							}%
+							{}%
+						\IfStrEq{\HistoPosEff}{haut}%
+							{%
+								\foreach \i in {1,...,\LISTDONNEESlen}
+									\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]},{(\LISTDONNEES[\i,3])/(\LISTDONNEES[\i,2]-\LISTDONNEES[\i,1])}) node[below,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+							}%
+							{}%
+						\IfStrEq{\HistoPosEff}{dessus}%
+							{%
+								\foreach \i in {1,...,\LISTDONNEESlen}
+									\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]},{(\LISTDONNEES[\i,3])/(\LISTDONNEES[\i,2]-\LISTDONNEES[\i,1])}) node[above,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+							}%
+							{}%
+					}%
+					{}%
+				\draw[\HistoEptraits,->,>=latex] ({\HistoDebX},0) -- ({\HistoFinX},0) --++ ({\HistoElargirx},0) node[right,font=\HistoFonte] {\HistoLabelx} ;
+			\end{tikzpicture}%
+		}%
+		{%
+			\xdef\ListeHauteurs{\LISTDONNEES[1,3]}
+			\foreach \i in {2,...,\LISTDONNEESlen}
+				{%
+					\xdef\ListeHauteurs{\ListeHauteurs,\LISTDONNEES[\i,3]}%
+				}%
+			\xdef\maxhauteurs{\xinteval{round(max(\ListeHauteurs),3)}}%
+			\xdef\HistoUniteY{\xinteval{round(\HistoHauteur/max(\ListeHauteurs),3)}}%
+			\xdef\HistoUniteX{\xinteval{round(\HistoLargeur/(\HistoFinX-\HistoDebX),3)}}%
+			%fenêtre graphique
+			\begin{tikzpicture}[x=\HistoUniteX cm,y=\HistoUniteY cm]
+				\ifboolKV[histostats]{GrilleV}%
+					{%
+						\foreach \y in \HistoGradY
+						{%
+							\draw[line width=0.4pt,lightgray] ({\HistoDebX},\y) -- ({\HistoFinX},\y) --++ ({\HistoElargirx},0) ;
+						}%
+					}%
+					{}%
+				\foreach \i in {1,...,\LISTDONNEESlen}
+					{%
+						\xintifboolexpr{\LISTCOULlen == 1}%
+							{\def\couleurhisto{\HistoCouleurs}}%
+							{\itemtomacro\LISTCOUL[\i]{\couleurhisto}}%
+						\ifboolKV[histostats]{AffBornes}%
+							{%
+								\draw[\HistoEptraits] ({\LISTDONNEES[\i,1]},3pt)--++(0,-6pt) node[below,font=\HistoFonte] {\LISTDONNEES[\i,1]} ;
+								\draw[\HistoEptraits] ({\LISTDONNEES[\i,2]},3pt)--++(0,-6pt) node[below,font=\HistoFonte] {\LISTDONNEES[\i,2]} ;
+							}%
+							{}%
+						\ifboolKV[histostats]{Remplir}%
+						{%
+							\draw[\HistoEptraits,fill=\couleurhisto,fill opacity=\HistoOpac] ({\LISTDONNEES[\i,1]},0) rectangle ({\LISTDONNEES[\i,2]},{\LISTDONNEES[\i,3]}) ;
+						}%
+						{%
+							\draw[\HistoEptraits] ({\LISTDONNEES[\i,1]},0) rectangle ({\LISTDONNEES[\i,2]},{\LISTDONNEES[\i,3]}) ;
+						}%
+					}%
+				\foreach \x in \HistoGradX
+					{%
+						\draw[\HistoEptraits] (\x,3pt)--++(0,-6pt) node[below,font=\HistoFonte] {\num{\x}} ;
+					}%
+				\foreach \y in \HistoGradY
+					{%
+						\draw[\HistoEptraits] ($({\HistoDebX},\y)+(3pt,0)$) --++ (-6pt,0) node[left,font=\HistoFonte] {\num{\y}} ;
+					}%
+				\ifboolKV[histostats]{AffEffectifs}
+					{%
+						\IfStrEq{\HistoPosEff}{milieu}%
+							{%
+								\foreach \i in {1,...,\LISTDONNEESlen}
+									\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]},{0.5*\LISTDONNEES[\i,3]}) node[font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+							}%
+							{}%
+						\IfStrEq{\HistoPosEff}{bas}%
+							{%
+								\foreach \i in {1,...,\LISTDONNEESlen}
+									\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]},{0}) node[above,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+							}%
+							{}%
+						\IfStrEq{\HistoPosEff}{haut}%
+							{%
+								\foreach \i in {1,...,\LISTDONNEESlen}
+									\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]},{\LISTDONNEES[\i,3]}) node[below,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+							}%
+							{}%
+						\IfStrEq{\HistoPosEff}{dessus}%
+							{%
+								\foreach \i in {1,...,\LISTDONNEESlen}
+									\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]},{\LISTDONNEES[\i,3]}) node[above,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+							}%
+							{}%
+					}%
+					{}%
+			\draw[\HistoEptraits,->,>=latex] ({\HistoDebX},0) -- ({\HistoFinX},0) --++ ({\HistoElargirx},0) node[right,font=\HistoFonte] {\HistoLabelx} ;
+			\draw[\HistoEptraits,->,>=latex] ({\HistoDebX},0) -- ({\HistoDebX},{\maxhauteurs}) --++ (0,{\HistoElargiry}) node[above,font=\HistoFonte] {\HistoLabely} ;
+		\end{tikzpicture}%
+		}%
+}
+
+\NewDocumentCommand\HistogrammeTikz{ O{} m }{%
+	\useKVdefault[histostats]%
+	\setKV[histostats]{#1}%
+	\setsepchar[.]{ ./}%
+	\readlist*\LISTDONNEES{#2}%
+	\setsepchar{,}%
+	\readlist*\LISTCOUL{\HistoCouleurs}%
+	\foreach \i in {1,...,\LISTDONNEESlen}
+		{%
+			\xintifboolexpr{\LISTCOULlen == 1}%
+				{\def\couleurhisto{\HistoCouleurs}}%
+				{\itemtomacro\LISTCOUL[\i]{\couleurhisto}}%
+		\ifboolKV[histostats]{Remplir}%
+			{%
+				\draw[line width=1pt,fill=\couleurhisto,fill opacity=\HistoOpac] ({\LISTDONNEES[\i,1]-\axexOx},0) rectangle ({\LISTDONNEES[\i,2]-\axexOx},{\LISTDONNEES[\i,3]}) ;
+			}%
+			{%
+				\draw[line width=1pt] ({\LISTDONNEES[\i,1]-\axexOx},0) rectangle ({\LISTDONNEES[\i,2]-\axexOx},{\LISTDONNEES[\i,3]}) ;
+			}%
+		}%
+	\ifboolKV[histostats]{AffEffectifs}
+		{%
+			\IfStrEq{\HistoPosEff}{milieu}%
+				{%
+					\foreach \i in {1,...,\LISTDONNEESlen}
+						\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]-\axexOx},{0.5*\LISTDONNEES[\i,3]}) node[font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+				}%
+				{}%
+			\IfStrEq{\HistoPosEff}{bas}%
+				{%
+					\foreach \i in {1,...,\LISTDONNEESlen}
+						\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]-\axexOx},{0}) node[above,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+				}%
+				{}%
+			\IfStrEq{\HistoPosEff}{haut}%
+				{%
+					\foreach \i in {1,...,\LISTDONNEESlen}
+						\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]-\axexOx},{\LISTDONNEES[\i,3]}) node[below,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+				}%
+				{}%
+			\IfStrEq{\HistoPosEff}{dessus}%
+				{%
+					\foreach \i in {1,...,\LISTDONNEESlen}
+						\draw ({0.5*\LISTDONNEES[\i,1]+0.5*\LISTDONNEES[\i,2]-\axexOx},{\LISTDONNEES[\i,3]}) node[above,font=\HistoFonteEff] {\num{\LISTDONNEES[\i,3]}} ;
+				}%
+				{}%
+		}%
+		{}%
 }
 
 \endinput

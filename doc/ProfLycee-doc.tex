@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.6.6}
-\def\PLdate{28 mai 2023}
+\def\PLversion{2.6.7}
+\def\PLdate{2 juin 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
@@ -118,6 +118,36 @@
 	}
 }
 
+\tcbset{StyleCodeTex/.style={%
+	listing engine=listings,%
+	listing options={%
+		breaklines=true,%
+		breakatwhitespace=true,%
+		style=tcblatex,basicstyle=\footnotesize\ttfamily,%
+		tabsize=4,%
+		commentstyle={\itshape\color{gray}},
+		keywordstyle={\color{blue}},%
+		classoffset=0,%
+		keywords={useproflyclib,includegraphics},%
+		alsoletter={-},%
+		keywordstyle={\color{blue}},%
+		classoffset=1,%
+		alsoletter={-},%
+		morekeywords={ProfLycee,CodePythonLst,CodePythonLstAlt,CodePiton,PitonConsole,CodePythontex,CodePythontexAlt,ConsolePythontex,CodePythonMinted,CodePythonMintedAlt,PseudoCode,PseudoCodeAlt,TerminalWin,TerminalUnix,TerminalOSX,EnvArbreProbasTikz,EnvSudoMaths},%
+		keywordstyle={\color{violet}},%
+		classoffset=2,%
+		alsoletter={-},%
+		morekeywords={\ResolutionApprochee,\SolutionTVI,\CalculTermeRecurrence,\ToileRecurrence,\SolutionSeuil,\IntegraleApprochee,\GrilleTikz,\AxesTikz,\AxexTikz,\AxeyTikz,\FenetreTikz,\FenetreSimpleTikz,\DeclareFonctionTikz,\CourbeTikz,\OrigineTikz,\SplineTikz,\TangenteTikz,\MiniSchemaSignes,\MiniSchemaSignesTkzTab,\IntegraleApprocheeTikz,\CartoucheCapytale,\PaveTikz,\TetraedreTikz,\CercleTrigo,\AffPoint,\AffVecteur,\TrouveEqCartPlan,\TrouveEqParamDroite,\TrouveEqCartDroite,\TrouveNorme,\TrouveDistancePtPlan,\EquationReduite,\CalculsRegLin,\PointsRegLin,\NuagePointsTikz,\PointMoyenTikz,\BoiteMoustaches,\BoiteMoustachesAxe,\Histogramme,\CalcBinomP,\CalcBinomC,\BinomP,\BinomC,\CalcPoissP,\CalcPoissC,\PoissonP,\PoissonC,\CalcGeomP,\CalcGeomC,\GeomP,\GeomC,\CalcHypergeomP,\CalcHypergeomP,\HypergeomP,\HypergeomC,\CalcNormC,\NormaleC,\CalcExpoC,\ExpoC,\ArbreProbasTikz,\LoiNormaleGraphe,\LoiExpoGraphe,\NbAlea,\VarNbAlea,\TirageAleatoireEntiers,\Arrangement,\Combinaison,\ConversionDecBin,\ConversionBinHex,\ConversionVersDec,\ConversionBaseDix,\ConversionDepuisBaseDix,\PresentationPGCD,\EquationDiophantienne,\ConversionFraction,\SimplificationRacine,\EcritureEnsemble,\EcritureTrinome,\MesurePrincipale,\LigneTrigo,\SudoMaths
+		},%
+		keywordstyle={\color{green!75!black}},%
+		classoffset=3,%
+		alsoletter={-},%
+		morekeywords={minimum-decimal-digits,scale,nonamssymb,build,Precision,Intervalle,Variable,NomFct,NomSol,va,vb,Stretch,Balayage,Calculatrice,Majuscule,No,UNo,NomSuite,Simple,Exact,Conclusion,Sens,ResultatBrut,Methode,NbSubDiv,AffFormule,Expr,Signe,Variables,Affp,Affs,Epaisseur,Police,ElargirOx,ElargirOy,Labelx,Labely,AffLabel,PosLabelx,PosLabely,EchelleFleche,TypeFleche,PosGrad,HautGrad,AffGrad,AffOrigine,Annee,Trigo,Dfrac,Style,Coeffs,AffPoints,TaillePoints,xl,xr,Code,Racines,Largeur,Hauteur,Cadre,Fct,Nom,PosLabel,DecalLabel,TailleLabel,AffTermes,RemplirbOpacite,CouleurRemplissage,Lignes,Gobble,Alignement,Filigrane,BarreTitre,CouleurNombres,Centre,EspacementVertical,Label,Titre,Profondeur,Angle,Fuite,Sommets,Math,Aff,Plein,Cube,Alpha,Beta,Rayon,Marge,TailleValeurs,TailleAngles,CouleurFond,Decal,MoinsPi,AffAngles,AffTraits,AffValeurs,Equationcos,Equationsin,sin,cos,AffTraitsEq,CouleurSol,OptionCoeffs,SimplifCoeffs,Facteur,OptionCoeffs,Reel,Oppose,Rgras,SimplifCoeffs,VectDirecteur,NomCoeffa,NomCoeffb,NomCoeffr,NomCoeffrd,NomXmin,NomXmax,Ox,Oy,xg,yg,AffNom,Elevation,Moyenne,AffMoyenne,Pointilles,Valeurs,Elargir,Min,Max,DebutOx,FinOx,ListeCouleurs,ElargirX,ElargirY,LabelX,LabelY,GradX,GradY,AffEffectifs,PosEffectifs,Opacite,AffBornes,GrilleV,PoliceAxes,PoliceEffectifs,EpaisseurTraits,Unite,EspaceNiveau,EspaceFeuille,Type,PoliceProbas,InclineProbas,Fleche,StyleTrait,EpaisseurTrait,CouleurAire,CouleurCourbe,AfficheM,AfficheCadre,ValMin,ValMax,NbVal,Sep,Tri,Repetition,Notation,NotationAncien,Formule,AffBase,Details,BaseDep,Zeros,DecalH,DecalV,Noeud,Rect,CouleurRes,DecalRect,Rectangle,CouleurResultat,AfficheConclusion,AfficheDelimiteurs,Lettre,Inconnues,Entier,Cadres,PresPGCD,Mathpunct,Option,Alea,Anegatif,Crochets,Brut,Etapes,Epaisseurg,CouleurCase,CouleurTexte,NbSubCol,NbLig,NbCol,Legendes,PoliceLeg,ListeLegV,ListeLegH,DecalLegende,Couleur,Uno},%
+		keywordstyle={\color{orange!75!black}}
+		}
+	}
+}
+
 \NewTCBListing{PresCodeTexPL}{ O{CadetBlue} m }{%
 	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!Black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
@@ -128,8 +158,9 @@
 	title={{\scriptsize\faCode} Code \LaTeX},
 	lefttitle=0.4em,
 	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!#1,%
-	listing engine=minted,minted style=colorful,minted language=tex,
-	minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
+	StyleCodeTex,
+	%listing engine=minted,minted style=colorful,minted language=tex,
+	%minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
 	#2,%
 	overlay={\draw[#1!85!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faCode} ;}
 }
@@ -144,8 +175,9 @@
 	title={{\scriptsize\faCogs} Code \LaTeX{} et sortie \LaTeX},
 	lefttitle=0.4em,
 	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!#1,%
-	listing engine=minted,minted style=colorful,minted language=tex,
-	minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
+	StyleCodeTex,
+	%listing engine=minted,minted style=colorful,minted language=tex,
+	%minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
 	#2,%
 	overlay={%
 		\draw[#1!85!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faCode} ;
@@ -164,8 +196,9 @@
 	title={{\scriptsize\faFilePdf} Sortie \LaTeX},
 	lefttitle=0.4em,
 	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!#1,%
-	listing engine=minted,minted style=colorful,minted language=tex,
-	minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
+	StyleCodeTex,
+%	listing engine=minted,minted style=colorful,minted language=tex,
+%	minted options={tabsize=4,fontsize=\footnotesize,autogobble,breaklines=true},
 	#2,%
 	overlay={\draw[#1!85!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faFilePdf} ;}
 }
@@ -289,7 +322,7 @@
 }
 \date{Version \PLversion{} -- \PLdate}
 
-\newcommand\Cle[1]{{\bfseries\sffamily\textlangle #1\textrangle}}
+\newcommand\Cle[1]{{\bfseries\sffamily\textlangle \textcolor{orange!75!black}{#1}\textrangle}}
 \newcommand\deblst{{\tiny\faCode}~}
 
 \begin{document}
@@ -316,18 +349,17 @@
 {\deblst} présenter du code \textsf{python} ou \textsf{pseudocode}, une console d'exécution \textsf{Python} \\
 {\deblst} tracer rapidement un pavé, un tétraèdre \\
 {\deblst} simplifier des calculs sous forme fractionnaire, simplifier des racines \\
-{\deblst} effectuer des calculs avec des suites récurrentes \\
-{\deblst} créer la \textit{toile} pour une suite récurrente \\
+{\deblst} effectuer des calculs avec des suites récurrentes, créer la \textit{toile} pour une suite récurrente \\
 {\deblst} afficher et utiliser un cercle trigo \\
 {\deblst} afficher un petit schéma pour le signe d'une fonction affine ou d'un trinôme \\
 {\deblst} travailler sur les statistiques à deux variables (algébriques et graphiques) \\
+{\deblst} tracer un histogramme, avec classes régulières ou non \\
 {\deblst} convertir entre bin/dec/hex avec détails \\
 {\deblst} présenter un calcul de PGCD \\
 {\deblst} effectuer des calculs de probas (lois binomiale, exponentielle, de Poisson, normale) \\
 {\deblst} créer des arbres de probas \og classiques \fg \\
-{\deblst} générer des listes d'entiers aléatoires (avec ou sans répétitions)\\
-{\deblst} déterminer la mesure principale d'un angle \\
-{\deblst} calculer les lignes trigonométriques d'angles \og classiques \fg{} \\
+{\deblst} générer des listes d'entiers aléatoires (avec ou sans répétitions) \\
+{\deblst} déterminer la mesure principale d'un angle, calculer les lignes trigonométriques d'angles \og classiques \fg{} \\
 {\deblst} résoudre une équation diophantienne \og classique \fg{} \\
 {\deblst} travailler avec un peu de géométrie analytique \\
 {\deblst} \ldots}
@@ -339,6 +371,8 @@
 \hfill{}\textsl{Merci à Christophe et Denis pour leurs retours et éclairages !}
 
 \hfill{}\textsl{Merci aux membres du groupe \faFacebook{} du \og Coin \LaTeX{} \fg{} pour leur aide et leurs idées !}
+
+~
 
 \vfill
 
@@ -502,7 +536,7 @@ Pour cela, on pourra appeler \ctex{ProfLycee} avec l'option \Cle{nonamssymb} (id
 
 \begin{PresCodeTexPL}{listing only}
 \documentclass{article}
-\usepackage[noamssymb]{ProfLycee}
+\usepackage[nonamssymb]{ProfLycee}
 \usepackage{fourier-otf}
 \end{PresCodeTexPL}
 
@@ -712,6 +746,11 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \TrouveDistancePtPlan(point)(vec normal du plan)(point du plan)
 %Avec le point et le plan via vect normal + point
 \TrouveDistancePtPlan(point)(équation cartésienne)
+
+%Avec le vecteur
+\TrouveNorme(vecteur)
+%Avec deux points
+\TrouveNorme(point 1)(point 2)
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
@@ -737,6 +776,9 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %boîte à moustaches, dans un environnement tikz
 \BoiteMoustaches[options]
 \BoiteMoustachesAxe[options]
+
+%histogrammes
+\Histogramme(*)[options]{données}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
@@ -886,7 +928,7 @@ $x_0 \approx \num[minimum-decimal-digits=2]{\masolutiona}$ arrondi à $10^{-2}$.
 Quelques explications sur les \Cle{clés} et sur les arguments :
 
 \begin{itemize}
-	\item la clé \Cle{Précision} pour le nombre de chiffres après la virgule de la solution ; \hfill{}défaut \Cle{2}
+	\item la clé \Cle{Precision} pour le nombre de chiffres après la virgule de la solution ; \hfill{}défaut \Cle{2}
 	\item la clé (obligatoire !) \Cle{Intervalle} qui permet de préciser l'intervalle initial de recherche ;
 	\item la clé \Cle{Variable} qui permet de spécifier la variable de l'équation ;\hfill{}défaut \Cle{x}
 	\item l'argument \textit{obligatoire} est l'équation, sous la forme $f(\ldots)=k$ (ou $f(\ldots)$ pour $f(\ldots)=0$) ;
@@ -1461,7 +1503,7 @@ Ces commande permet de tracer les graduations des axes, avec des \Cle{clés} ide
 	\item \Cle{Epaisseur} qui est l'épaisseur des graduations ; \hfill~défaut \Cle{1pt}
 	\item \Cle{Police} qui est le style des labels des graduations ; \hfill~défaut \Cle{\textbackslash{}normalsize\textbackslash{}normalfont}
 	\item \Cle{PosGrad} qui est la position des graduations par rapport à l'axe ; \hfill~défaut \Cle{below} et \Cle{left}
-	\item \Cle{HautGrad} qui est la position des graduations (sous la forme \Cle{lgt} ou \Cle{lgta/lgtb}) ;
+	\item \Cle{HautGrad} qui est la hauteur des graduations (sous la forme \Cle{lgt} ou \Cle{lgta/lgtb}) ;
 	
 	\hfill~défaut \Cle{4pt}
 	\item le booléen \Cle{AffGrad} pour afficher les valeurs (formatés avec \ctex{num} donc dépendant de \ctex{sisetup}) des graduations  ; \hfill~défaut \Cle{true}
@@ -3232,7 +3274,7 @@ Peu d'options pour ces commandes :
 
 \begin{itemize}
 	\item le premier, \textit{optionnel}, est la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
-	\item le deuxième, \textit{obligatoire}, permet de spécifier le titre par la clé \Cle{titre}.\hfill{}défaut \Cle{Terminal Windows/UNiX/OSX}
+	\item le deuxième, \textit{obligatoire}, permet de spécifier le titre par la clé \Cle{Titre}.\hfill{}défaut \Cle{Terminal Windows/UNiX/OSX}
 	\item le troisième, \textit{optionnel}, concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}.\hfill{}défaut \Cle{vide}
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
@@ -5208,7 +5250,9 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 
 \begin{itemize}
 	\item la clé \Cle{Couleur} qui est la couleur de la boîte ; \hfill~défaut \Cle{black}
-	\item la clé \Cle{Elevation} qui est la position verticale (ordonnée des moustaches) de la boîte ; \hfill~défaut \Cle{1.5}
+	\item la clé \Cle{Elevation} qui est la position verticale (ordonnée des moustaches) de la boîte ;
+	
+	\hfill~défaut \Cle{1.5}
 	\item la clé \Cle{Hauteur} qui est la hauteur de la boîte ; \hfill~défaut \Cle{1}
 	\item la clé \Cle{Moyenne} qui est la moyenne (optionnelle) de la série ;
 	\item la clé \Cle{Epaisseur} qui est l'épaisseur des traits de la boîte ; \hfill~défaut \Cle{thick}
@@ -5305,6 +5349,150 @@ Le placement des différentes boîtes n'est pas automatique, donc il faut penser
 
 Sachant que la hauteur par défaut est de 1, il est -- a priori -- intéressant de placer les boîtes à des \Cle{élévations} de \num{1} puis \num{2.5} puis \num{4} etc
 \end{noteblock}
+
+\newpage
+
+\section{Histogrammes}\label{histo}
+
+\subsection{Introduction}
+
+\begin{tipblock}
+\cmaj{2.6.7} L'idée est de proposer une commande pour tracer un histogramme à classes régulières ou non.
+
+\smallskip
+
+La commande, qui utilise \TikZ, est autonome (ceci étant dû à la gestion en interne des unités !), et ne permet pas de rajout une fois le graphique affiché.
+\end{tipblock}
+
+\begin{noteblock}
+La commande fonctionne avec des données classe/effectif, qui seront à traduire sous la forme \ctex{BorneInf/BorneSup/Effectif}.
+\end{noteblock}
+
+\begin{PresCodeTexPL}{listing only}
+\Histogramme(*)[options]{données}
+\end{PresCodeTexPL}
+
+\begin{PresCodePL}{}
+%classes régulières
+\Histogramme{7/9/130 9/11/175 11/13/182 13/15/95}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+%classes non régulières
+\Histogramme*{0/20/15 20/50/34 50/60/8 60/85/10 90/100/13}
+\end{PresCodePL}
+
+\begin{cautionblock}
+Contrairement aux autres commandes graphiques, qui sont souvent à intégrer dans un environnement \TikZ, la commande \ctex{\textbackslash Histogramme} aura besoin de connaître les dimensions finales du graphique pour fonctionner !
+\end{cautionblock}
+
+\subsection{Clés et options}
+
+\begin{cautionblock}
+La version \textit{étoilée} permet de préciser que les classes ne sont pas d'amplitudes régulières.
+
+\medskip
+
+Le premier argument, optionnel et entre \ctex{[...]} propose les \Cle{clés} principales suivantes :
+
+\begin{itemize}
+	\item \Cle{DebutOx} : permet de préciser le début de l'axe horizontal (sinon c'est par défaut la borne inférieure de la première classe) ;
+	
+	\hfill{}défaut : \Cle{vide}
+	\item \Cle{FinOx} : permet de préciser la fin de l'axe horizontal (sinon c'est par défaut la borne supérieure de la dernière classe) ;
+	
+	\hfill{}défaut : \Cle{vide}
+	\item \Cle{Largeur} : largeur en cm du graphique créé (entre \Cle{DebutOx} et \Cle{FinOx}) ; \hfill{}défaut : \Cle{10}
+	\item \Cle{Hauteur} : hauteur en cm du graphique créé (par rapport à l'effectif maximal) ; \hfill{}défaut : \Cle{5}
+	\item \Cle{ListeCouleurs} : liste des couleurs des rectangles (unique ou sous la forme \ctex{\{CoulA,CoulB,...\}}) ;
+	
+	\hfill{}défaut : \Cle{orange}
+	\item \Cle{ElargirX} et \Cle{ElargirY} : pour rajouter une petite longueur au bout des axes ; \hfill{}défaut : \Cle{5mm}
+	\item \Cle{LabelX} et \Cle{LabelY} : pour les labels des axes ; \hfill{}défaut : \Cle{vide}
+	\item \Cle{GradX} et \Cle{GradY} : pour les graduations et valeurs des axes (langage \ctex{tikz}) ; \hfill{}défaut : \Cle{vide}
+	\item \Cle{AffEffectifs} : booléen pour afficher les effectifs ; \hfill{}défaut : \Cle{true}
+	\item \Cle{PosEffectifs} : choix de la position des effectifs parmi \Cle{bas,milieu,haut,dessus} ;
+	
+	\hfill{}défaut : \Cle{milieu}
+	\item \Cle{Remplir} : booléen pour remplir les rectangles ; \hfill{}défaut : \Cle{true}
+	\item \Cle{Opacite} : choix de l'opacité du remplissage ; \hfill{}défaut : \Cle{0.5}
+	\item \Cle{AffBornes} : booléen pour afficher les bornes des classes ; \hfill{}défaut : \Cle{false}
+	\item \Cle{GrilleV} : booléen pour afficher une grille verticale (pour les classes régulières, à la manière d'un tableur) ;
+	
+	\hfill{}défaut : \Cle{true}
+	\item \Cle{PoliceAxes} : police pour les axes ; \hfill{}défaut : \Cle{\textbackslash normalsize\textbackslash normalfont}
+	\item \Cle{PoliceEffectifs} : police pour les effectifs ; \hfill{}défaut : \Cle{\textbackslash normalsize\textbackslash normalfont}
+	\item \Cle{EpaisseurTraits} : épaisseur des traits (langage \ctex{tikz}). \hfill{}défaut : \Cle{semithick}
+\end{itemize}
+
+Le second argument, obligatoire et entre \ctex{\{...\}} permet de préciser les données utilisées sous la forme \ctex{BorneInf/BorneSup/Effectif BorneInf/BorneSup/Effectif ...}.
+\end{cautionblock}
+
+\subsection{Exemple avec des classes régulières}
+
+\begin{tipblock}
+Avec la série suivante :
+
+\medskip
+
+\hfill
+\begin{tblr}{hlines,vlines,width=10cm,colspec={Q[l,m]*{4}{X[m,c]}}}
+	Classes & $[7\mathpunct{};9[$ & $[9\mathpunct{};11[$ & $[11\mathpunct{};13[$ & $[13\mathpunct{};15]$ \\
+	Effectifs & 130 & 175 & 182 & 95 \\
+\end{tblr}
+\hfill~
+\end{tipblock}
+
+\begin{PresCodePL}{}
+\Histogramme[%
+		ListeCouleurs={white},Opacite=1,%
+		GradX={7,8,...,15},LabelX={données},%
+		GradY={0,25,...,175},LabelY={effectifs},%
+		PoliceEffectifs=\small\sffamily,PosEffectifs=dessus]%
+	{7/9/130 9/11/175 11/13/182 13/15/95}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\Histogramme[%
+		Largeur=11,Hauteur=8,%
+		ListeCouleurs={yellow,blue,pink,red},%
+		DebutOx=5,FinOx=17,%
+		GradX={5,6,...,17},%
+		GradY={0,25,...,175},%
+		AffEffectifs=false]%
+	{7/9/130 9/11/175 11/13/182 13/15/95}
+\end{PresCodePL}
+
+\subsection{Exemple avec des classes non régulières}
+
+\begin{tipblock}
+Avec la série suivante :
+
+\medskip
+
+\hfill
+\begin{tblr}{hlines,vlines,width=14cm,colspec={Q[l,m]*{6}{X[m,c]}}}
+	Classes & $[0\mathpunct{};20[$ & $[20\mathpunct{};50[$ & $[50\mathpunct{};60[$ & $[60\mathpunct{};85[$ & $[85\mathpunct{};100]$ \\
+	Effectifs & 15 & 34 & 8 & 10 & 13 \\
+\end{tblr}
+\hfill~
+\end{tipblock}
+
+\begin{PresCodePL}{}
+\Histogramme*[%
+		ListeCouleurs={yellow,red,blue,green,purple},%
+		PosEffectifs=dessus,AffBornes]
+	{0/20/15 20/50/34 50/60/8 60/85/10 85/100/13}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\Histogramme*[%
+		Largeur=14,Hauteur=7,FinOx=110,%
+		ListeCouleurs={yellow,red,blue,green,purple},Opacite=0.25,%
+		GradX={0,10,...,110},%
+		PosEffectif=heut]
+	{0/20/15 20/50/34 50/60/8 60/85/10 85/100/13}
+\end{PresCodePL}
 
 \newpage
 
@@ -6272,7 +6460,7 @@ Par divisions euclidiennes successives, \ConversionDepuisBaseDix[Rect=false]{54}
 %conversion avec gestion du decalh pour le placement précis du rectangle
 \ConversionDepuisBaseDix[Couleur=Goldenrod,DecalH=6pt/2pt]{1012}{16}
 
-%conversion avec nœud personnalisé et réutilisation
+%conversion avec noeud personnalisé et réutilisation
 \ConversionDepuisBaseDix[Couleur=ForestGreen,CouleurRes,Noeud=TEST]{100}{9}.
 \begin{tikzpicture}
 	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
@@ -7145,9 +7333,11 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
+{\small \bverb|v 2.6.7|~:~~~~Histogramme à classes régulières ou non (page \pageref{histo}) + Correction de bugs mineurs
+
 {\small \bverb|v 2.6.6|~:~~~~Style \textsf{mainlevee} en \TikZ{} désormais dans le package \textsf{tikz2d-fr}
 
-{\small \bverb|v 2.6.5|~:~~~~Ajout d'une option \Cle{noamssymb} pour éviter de charger \textsf{amssymb} (page \pageref{amssymb})
+{\small \bverb|v 2.6.5|~:~~~~Ajout d'une option \Cle{nonamssymb} pour éviter de charger \textsf{amssymb} (page \pageref{amssymb})
 
 {\small \bverb|       |~:~~~~Ajout d'une commande pour la distance entre deux points (page \pageref{normevect})}
 
