@@ -255,7 +255,8 @@
 	HautGrad=4pt,%
 	AffGrad=true,%
 	AffOrigine=true,%
-	Annee=false
+	Annee=false,%
+	Frac=false
 }
 
 \DeclareDocumentCommand\AxeyTikz{ O{} m }{%
@@ -264,26 +265,42 @@
 	\IfSubStr{\axeytickwidth}{/}
 	{\StrCut{\axeytickwidth}{/}{\axeytickwidthA}{\axeytickwidthB}}
 	{\def\axeytickwidthA{\axeytickwidth}\def\axeytickwidthB{\axeytickwidth}}
-	\foreach \y in {#2}{%
-		\draw[line width=\axeywidth] ({\axeytickwidthA},{\y-\axeyOy}) -- ({-\axeytickwidthB},{\y-\axeyOy})%
-		\ifboolKV[PLaxeytkz]{AffGrad}%on affiche les graduations
+	\ifboolKV[PLaxeytkz]{Frac}%
 		{%
-			\ifboolKV[PLaxeytkz]{AffOrigine}%si on demande d'afficher l'origine
-			{node[\axeyposlabel,font=\axeyfont] 
-				{\ifboolKV[PLaxeytkz]{Annee}%
-					{\num[group-digits=none]{\y}}%
-					{\num[text-family-to-math=true,text-series-to-math=true]{\y}}%
-				}
-			}
-			{\xintifboolexpr{\y==\axeyOy}{}{node[\axeyposlabel,font=\axeyfont] {\ifboolKV[PLaxeytkz]{Annee}%
-						{\num[group-digits=none]{\y}}%
-						{\num[text-family-to-math=true,text-series-to-math=true]{\y}}%
-					}
-				}
-			}
-		}
-		{}
-		;}
+			\ifboolKV[PLaxeytkz]{AffGrad}%on affiche les graduations
+				{%
+					\foreach \y in {#2}
+						{\draw[line width=\axeywidth] ({\axeytickwidthA},{\y-\axeyOy}) -- ({-\axeytickwidthB},{\y-\axeyOy}) %
+						\xintifboolexpr{\y==\axeyOy}{}{node[\axeyposlabel,font=\axeyfont] {\ConversionFraction{\y}}} ;}
+				}%
+				{%
+					\foreach \y in {#2}
+						{\draw[line width=\axeywidth] ({\axeytickwidthA},{\y-\axeyOy}) -- ({-\axeytickwidthB},{\y-\axeyOy}) ;}
+				}%
+		}%
+		{%
+			\foreach \y in {#2}{%
+				\draw[line width=\axeywidth] ({\axeytickwidthA},{\y-\axeyOy}) -- ({-\axeytickwidthB},{\y-\axeyOy})%
+				\ifboolKV[PLaxeytkz]{AffGrad}%on affiche les graduations
+					{%
+						\ifboolKV[PLaxeytkz]{AffOrigine}%si on demande d'afficher l'origine
+							{node[\axeyposlabel,font=\axeyfont] 
+								{%
+									\ifboolKV[PLaxeytkz]{Annee}%
+										{\num[group-digits=none]{\y}}%
+										{\num[text-family-to-math=true,text-series-to-math=true]{\y}}%
+								}%
+							}
+							{\xintifboolexpr{\y==\axeyOy}{}{node[\axeyposlabel,font=\axeyfont] {\ifboolKV[PLaxeytkz]{Annee}%
+								{\num[group-digits=none]{\y}}%
+								{\num[text-family-to-math=true,text-series-to-math=true]{\y}}%
+							}
+						}
+						}%
+					}%
+					{}
+				;}
+		}%
 }
 
 %axes

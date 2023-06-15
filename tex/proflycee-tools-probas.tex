@@ -745,4 +745,75 @@
 		{\num{\xinteval{\CalculCnp{#3}{#4}}}}%formaté
 }
 
+%%------Fonction de répartition
+\NewDocumentCommand\CrochetFctRepart{ m m }{
+	\draw[red,\FctRepartThickness] ({#1 + 0.1}, {#2 + 0.025}) -- (#1,#2 + 0.025) -- (#1,#2 - 0.025) -- ({#1 + 0.1}, {#2 - 0.025});
+}
+
+\defKV[fctrepart]{%
+	Couleur=\def\FctRepartColor{#1},%
+	Epaisseur=\def\FctRepartThickness{#1},%
+	Extremite=\def\FctRepartExtremite{#1}
+}
+
+\setKVdefault[fctrepart]{%
+	Couleur=red,%
+	Epaisseur=thick,%
+	Pointilles=true,%
+	Extremite=crochet
+}
+
+\NewDocumentCommand\FonctionRepartTikz{ O{} m }{%
+	\restoreKV[fctrepart]%
+	\setKV[fctrepart]{#1}%
+	\setsepchar[.]{/.,}%
+	\readlist*\ListeFonctRepart{#2}%
+	\def\NbPortions{\ListeFonctRepartlen}
+	\foreach \i in {1,2,...,\ListeFonctRepartlen}
+		{%
+			\IfStrEq{\ListeFonctRepart[\i,2]}{*}%
+				{%
+					\def\valxdeb{\xmin}%
+				}%
+				{%
+					\itemtomacro\ListeFonctRepart[\i,2]\valxdeb%
+					\IfStrEq{\FctRepartExtremite}{crochet}%
+						{
+							\CrochetFctRepart{\ListeFonctRepart[\i,2]}{\ListeFonctRepart[\i,1]}%
+						}{}%
+					\IfStrEq{\FctRepartExtremite}{point}%
+						{
+							\filldraw[\FctRepartColor] ({\valxdeb},{\ListeFonctRepart[\i,1]}) circle[radius=1.5pt] ;%
+						}{}%
+				}%
+			\IfStrEq{\ListeFonctRepart[\i,3]}{*}%
+				{%
+					\def\valxfin{\xmax}%
+				}%
+				{%
+					\itemtomacro\ListeFonctRepart[\i,3]\valxfin%
+					\IfStrEq{\FctRepartExtremite}{crochet}%
+						{
+							\CrochetFctRepart{\ListeFonctRepart[\i,3]}{\ListeFonctRepart[\i,1]}%
+						}{}%
+					\IfStrEq{\FctRepartExtremite}{point}%
+						{
+							\draw[\FctRepartColor,fill=white] ({\valxfin},{\ListeFonctRepart[\i,1]}) circle[radius=1.5pt] ;%
+						}{}%
+				}%
+			\ifboolKV[fctrepart]{Pointilles}%
+				{%
+					\xintifboolexpr{\valxdeb * \valxfin > 0 'and' \valxdeb > 0}%
+						{%
+							\draw[semithick,dashed] (0,{\ListeFonctRepart[\i,1]})--({\valxdeb},{\ListeFonctRepart[\i,1]}) ;%
+						}{}%
+					\xintifboolexpr{\valxdeb * \valxfin > 0 'and' \valxdeb < 0}%
+						{%
+							\draw[semithick,dashed] (0,{\ListeFonctRepart[\i,1]})--({\valxfin},{\ListeFonctRepart[\i,1]}) ;%
+						}{}%
+				}{}%
+			\draw[\FctRepartThickness,\FctRepartColor] ({\valxdeb},{\ListeFonctRepart[\i,1]})--({\valxfin},{\ListeFonctRepart[\i,1]}) ;%
+		}%
+}
+
 \endinput

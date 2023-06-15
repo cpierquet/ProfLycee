@@ -8,6 +8,7 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.6.9	Amalioration de la gestion des style := intégration directe dans la tcbox !
 %2.5.9	Ajout d'une clé pour la couleur des nombres
 %2.5.8	Modification des marges
 %2.5.7	Style alternatif
@@ -74,13 +75,13 @@
 	thonnystyle,%
 	underlay={%
 		\begin{tcbclipinterior}
-			\filldraw[lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
+			\draw[draw=none,fill=lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
 		\end{tcbclipinterior}%
 		}
 	}
 }
 
-%==Création de la boîte
+%==Création de la boîte (essai v2 ?)
 \ifluatex
 \RequirePackage{piton}
 \NewPitonEnvironment{CodePiton}{ O{} m }%
@@ -100,38 +101,40 @@
 	%------les styles tcbox
 	\IfEq{\CODPITstyle}{Moderne}%style Moderne (défaut)
 		{%
-			\tcbset{stylepiton,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign,leftupper=0.75em}
+			\tcbset{cadre/.style={}}
+			\tcbset{titre/.style={}}
+			\tcbset{stylebase/.style={stylepiton,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign,leftupper=0.75em}}
 			\ifboolKV[envpiton]{Filigrane}%si filigrane
-				{\tcbset{watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50}}%
-				{}%
+				{\tcbset{filigrane/.style={watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50}}}%
+				{\tcbset{filigrane/.style={}}}%
 		}
 		{}%
 	\IfEq{\CODPITstyle}{Classique}%style Classique
 		{%
 			\ifboolKV[envpiton]{Lignes}%si lignes=true
-				{\tcbset{thonnystylelineos,leftupper=0.75em}}%
-				{\tcbset{thonnystyle,leftupper=0.4em}}%
-			\tcbset{width=\CODPITlargeur,colframe=DarkGray!50!Black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}
+				{\tcbset{stylebase/.style={thonnystylelineos,leftupper=0.75em,width=\CODPITlargeur,colframe=DarkGray!50!Black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}}}%
+				{\tcbset{stylebase/.style={thonnystyle,leftupper=0.4em,width=\CODPITlargeur,colframe=DarkGray!50!Black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}}}%
+			%\tcbset{width=\CODPITlargeur,colframe=DarkGray!50!Black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}
 			\ifboolKV[envpiton]{Filigrane}%si filigrane
-				{\tcbset{watermark text={\faPython},watermark opacity=0.25,watermark zoom=0.50}}%
-				{}%
+				{\tcbset{filigrane/.style={watermark text={\faPython},watermark opacity=0.25,watermark zoom=0.50}}}%
+				{\tcbset{filigrane/.style={}}}%
 			\ifboolKV[envpiton]{BarreTitre}%
 				{%
 					\ifboolKV[envpiton]{Cadre}
-						{}
-						{\tcbset{boxrule=0pt,frame hidden}}
-					\tcbset{lefttitle=0.4em,title={\CODPITtitre},fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!50!Black}
+						{\tcbset{cadre/.style={}}}%
+						{\tcbset{cadre/.style={boxrule=0pt,frame hidden}}}%
+					\tcbset{titre/.style={lefttitle=0.4em,title={\CODPITtitre},fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!50!Black}}
 				}%
 				{%
-					\tcbset{notitle}
+					\tcbset{titre/.style={notitle}}
 					\ifboolKV[envpiton]{Cadre}
-						{}
-						{\tcbset{boxrule=0pt,frame hidden}}
+						{\tcbset{cadre/.style={}}}
+						{\tcbset{cadre/.style={boxrule=0pt,frame hidden}}}
 				}
 		}
 		{}%
 	%on crée la boîte
-	\begin{tcolorbox}[#2]
+	\begin{tcolorbox}[stylebase,filigrane,cadre,titre]
 }%
 {%
 	\end{tcolorbox}%
@@ -185,9 +188,15 @@
 	\PitonOptions{#1}
 	\PyLTVerbatimEnv
 	\ifboolKV[consolepyluatex]{Logo}
-		{\tcbset{consolepyluatexlogo,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
-		{\tcbset{consolepyluatex,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
-	\begin{tcolorbox}
+		{%
+			\begin{tcolorbox}[consolepyluatexlogo,width=\ConsPyluaLarg,\ConsPyluaAlign,#3]
+		}%
+		{%
+			\begin{tcolorbox}[consolepyluatex,width=\ConsPyluaLarg,\ConsPyluaAlign,#3]
+		}%
+%		{\tcbset{consolepyluatexlogo,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
+%		{\tcbset{consolepyluatex,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
+	%\begin{tcolorbox}
 		\begin{pythonrepl}
 }
 {

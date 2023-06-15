@@ -8,6 +8,7 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.6.8	Grille histogrammes non réguliers
 %2.6.7	Histogrammes
 
 %%------RegressionLinéaire
@@ -214,7 +215,10 @@
 	Opacite=\def\HistoOpac{#1},%
 	DebutOx=\def\HistoDebX{#1},%
 	FinOx=\def\HistoFinX{#1},%
-	EpaisseurTraits=\def\HistoEptraits{#1}
+	EpaisseurTraits=\def\HistoEptraits{#1},%
+	Grille=\def\HistoGrille{#1},%
+	ExtraGrilleY=\def\HistoExtraGridY{#1},%
+	PosLegende=\def\HistoPosLeg{#1}
 }
 
 \setKVdefault[histostats]{%
@@ -237,7 +241,10 @@
 	GrilleV=true,%
 	DebutOx={},%
 	FinOx={},%
-	EpaisseurTraits=semithick
+	EpaisseurTraits=semithick,%
+	Grille={},%
+	ExtraGrilleY=0,%
+	PosLegende={}
 }
 
 \NewDocumentCommand\Histogramme{ s O{} m }{%
@@ -255,16 +262,48 @@
 	\IfBooleanTF{#1}%étoilé := classe d'amplitudes différentes
 		{%
 			
-			\xdef\ListeHauteurs{\fpeval{(\LISTDONNEES[1,3])/(\LISTDONNEES[1,2]-\LISTDONNEES[1,1])}}
+			\xdef\ListeHauteurs{\xintfloateval{(\LISTDONNEES[1,3])/(\LISTDONNEES[1,2]-\LISTDONNEES[1,1])}}
 			\foreach \i in {2,...,\LISTDONNEESlen}
 				{%
-					\xdef\ListeHauteurs{\ListeHauteurs,\fpeval{(\LISTDONNEES[\i,3])/(\LISTDONNEES[\i,2]-\LISTDONNEES[\i,1])}}%
+					\xdef\ListeHauteurs{\ListeHauteurs,\xintfloateval{(\LISTDONNEES[\i,3])/(\LISTDONNEES[\i,2]-\LISTDONNEES[\i,1])}}%
 				}%
-			\xdef\maxhauteurs{\xinteval{round(max(\ListeHauteurs),3)}}%
-			\xdef\HistoUniteY{\xinteval{round(\HistoHauteur/max(\ListeHauteurs),3)}}%
-			\xdef\HistoUniteX{\xinteval{round(\HistoLargeur/(\HistoFinX-\HistoDebX),3)}}%
+			\IfEq{\HistoGrille}{}%on lit les infos de la grille PasX/UniteAire
+				{}%
+				{%
+					\StrCut{\HistoGrille}{/}{\HistoPasX}{\HistoUnAire}%
+					\def\HistoPasY{\xintfloateval{\HistoUnAire/\HistoPasX}}%
+				}%
+			\xdef\maxhauteurs{\xintfloateval{round(max(\ListeHauteurs),3)}}%
+			
+			\IfEq{\HistoGrille}{}%
+				{%
+					\xdef\HistoUniteY{\xintfloateval{round(\HistoHauteur/max(\ListeHauteurs),3)}}%
+				}%
+				{%
+					\xdef\maxhauteurgrille{\xinteval{(floor((\maxhauteurs)/(\HistoPasY))+1+\HistoExtraGridY)*\HistoPasY}}%
+					\xdef\HistoUniteY{\xintfloateval{round((\HistoHauteur)/(\maxhauteurgrille),3)}}%
+				}%
+			\xdef\HistoUniteX{\xintfloateval{round(\HistoLargeur/(\HistoFinX-\HistoDebX),3)}}%
 			%fenêtre graphique
 			\begin{tikzpicture}[x=\HistoUniteX cm,y=\HistoUniteY cm]
+				%Essai de grille
+				\IfEq{\HistoGrille}{}%
+					{}%
+					{%
+						\draw[line width=0.4pt,lightgray,xstep=\HistoPasX,ystep=\HistoPasY] ({\HistoDebX},0) grid ({\HistoFinX},{\xinteval{floor((\maxhauteurs)/(\HistoPasY))+1+\HistoExtraGridY}*\HistoPasY}) ;
+						\IfSubStr{\HistoPosLeg}{/}%
+							{%
+								\StrCut{\HistoPosLeg}{/}{\HistoPosLegX}{\HistoPosLegY}%
+								\draw[\HistoEptraits,fill=lightgray,fill opacity=\HistoOpac] ({\HistoDebX+(\HistoPosLegX)*(\HistoPasX)},{(\HistoPasY)*(\HistoPosLegY)}) rectangle++ ({\HistoPasX},{\HistoPasY}) ; %
+								\draw ({\HistoDebX+(\HistoPosLegX+1)*(\HistoPasX)},{(\HistoPasY)*(\HistoPosLegY+0.5)}) node[right,font=\HistoFonteEff] {\num{\HistoUnAire}} ;%
+							}%
+							{}%
+						%\draw ({\HistoDebX},{0}) node[below left] {\xinteval{floor((\maxhauteurs)/(\HistoPasY))+1}} ;
+						%\draw ({\HistoDebX},{\HistoPasY}) node[left] {\num{\HistoPasY}} ;
+						%\draw ({\HistoDebX},{\maxhauteurs}) node[left] {\num{\maxhauteurs}} ;
+						
+					}%
+				%rectangles
 				\foreach \i in {1,...,\LISTDONNEESlen}
 					{%
 						\xintifboolexpr{\LISTCOULlen == 1}%
