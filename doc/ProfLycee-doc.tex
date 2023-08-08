@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.7.0}
-\def\PLdate{15 juin 2023}
+\def\PLversion{2.7.1}
+\def\PLdate{08 août 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
@@ -434,7 +434,7 @@ Le {package} \ctex{ProfLycee} charge et utilise les {packages} :
 	\item \ctex{mathtools}, \ctex{amssymb} ;
 	\item \ctex{xcolor} avec l' option \textsf{[table,svgnames]} ;
 	\item \ctex{tikz}, \ctex{pgf}, \ctex{pgffor}, \ctex{nicefrac}, \ctex{nicematrix} ;
-	\item \ctex{tcolorbox} avec l'option \textsf{[most]} ;
+	\item \ctex{tcolorbox} avec les librairies \ctex{breakable,fitting,skins,listings,listingsutf8,hooks} ;
 	\item \ctex{xparse}, \ctex{xstring}, \ctex{simplekv}, \ctex{xinttools} ;
 	\item \ctex{listofitems}, \ctex{xintexpr} , \ctex{xintbinhex}, \ctex{xintgcd} ;
 	\item \ctex{tabularray}, \ctex{fontawesome5}, \ctex{randomlist}, \ctex{fancyvrb}.
@@ -7443,6 +7443,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.7.1|~:~~~~Chargement de \textsf{tcolorbox} par librairies (au lieu de \textsf{[most]})
 
 {\small \bverb|v 2.7.0|~:~~~~Ajout de la clé \Cle{Frac} pour les axes verticaux (\pageref{reperagetikz})
 
