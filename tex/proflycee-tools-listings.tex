@@ -23,7 +23,7 @@
 	language          = python,
 	inputencoding     = utf8,
 	basicstyle        = \ttfamily\footnotesize,
-	keywordstyle      = \color{ForestGreen},
+	keywordstyle      = \color{CouleurVertForet},
 	keywordstyle      = [2]\color{magenta},
 	commentstyle      = \color{gray}\itshape,
 	stringstyle       = \color{red!75},
@@ -47,7 +47,7 @@
 	language          = python,
 	inputencoding     = utf8/latin1,
 	basicstyle        = \ttfamily\footnotesize,
-	keywordstyle      = \color{ForestGreen},
+	keywordstyle      = \color{CouleurVertForet},
 	keywordstyle      = [2]\color{magenta},
 	commentstyle      = \color{gray}\itshape,
 	stringstyle       = \color{red!75},
@@ -73,14 +73,14 @@
 	top=\baselineskip,bottom=1mm,right=5mm,
 	attach boxed title to top right={yshift=-\tcboxedtitleheight},
 	boxed title style={
-		size=small,colback=ForestGreen!25,boxrule=1.25pt,
-		colframe=Green,boxsep=1.25pt,
+		size=small,colback=CouleurVertForet!25,boxrule=1.25pt,
+		colframe=green,boxsep=1.25pt,
 		sharp corners=downhill,
 		arc=12pt,
 		top=2pt,bottom=1pt,left=6pt,right=6pt
 	},
-	colframe=Green,colback=ForestGreen!5,%
-	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
+	colframe=green,colback=CouleurVertForet!5,%
+	fonttitle=\color{CouleurVertForet}\itshape\ttfamily\footnotesize,
 	title={\scriptsize\faPython}\:Code Python\vphantom{p},
 	watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50,
 	listing only,listing engine=listings,%
@@ -112,7 +112,7 @@
 
 %v2
 \tcbset{StylPythonB/.style={%
-	enhanced,boxrule=0.75pt,colframe=DarkGray!50!Black,%
+	enhanced,boxrule=0.75pt,colframe=darkgray!50!black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.2em,right=5mm,%
 	before skip=0.5\baselineskip,after skip=0.5\baselineskip,%
 	colback=white,
@@ -121,7 +121,7 @@
 	watermark text={\faPython},watermark opacity=0.25,watermark zoom=0.50,%
 	title={{\scriptsize\faCode} Code Python},
 	lefttitle=0.4em,
-	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!50!Black
+	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!black
 	}
 }
 
@@ -265,7 +265,7 @@
 }
 
 \tcbset{stylepseudocodePLalt/.style={%
-	enhanced,boxrule=0.75pt,colframe=DarkGray!50!Black,%
+	enhanced,boxrule=0.75pt,colframe=darkgray!50!black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
 	before skip=0.5\baselineskip,after skip=0.5\baselineskip,%
 	colback=white,
@@ -274,7 +274,7 @@
 	watermark text={\faCode},watermark opacity=0.25,watermark zoom=0.50,%
 	title={{\scriptsize\faCode} PseudoCode},
 	lefttitle=0.4em,
-	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!50!Black
+	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!black
 	}
 }
 
@@ -314,9 +314,9 @@
 }
 
 %%------PRESENTATIONDECODES CLASSIQUES
-\NewTCBListing{PresentationCode}{ O{ForestGreen} m }{%
+\NewTCBListing{PresentationCode}{ O{CouleurVertForet} m }{%
 	sharp corners=downhill,enhanced,arc=12pt,skin=bicolor,%
-	colback=#1!5!white,colframe=#1!75!black,colbacklower=White,%
+	colback=#1!5!white,colframe=#1!75!black,colbacklower=white,%
 	attach boxed title to top right={yshift=-\tcboxedtitleheight},title=Code \LaTeX,%
 	boxed title style={%
 		colframe=#1!75!black,colback=#1!15!white,%
@@ -325,7 +325,7 @@
 	fonttitle=\color{#1!90!black}\itshape\ttfamily\footnotesize,%
 	listing options={%
 		style=tcblatex,basicstyle=\footnotesize\ttfamily,%
-		keywordstyle=\bfseries\color{Blue},tabsize=2,%
+		keywordstyle=\bfseries\color{blue},tabsize=2,%
 	},%
 	#2
 }
@@ -445,9 +445,9 @@
 	\end{tikzpicture}%
 }
 
-\newcommand{\PLOSXGreen}{%
+\newcommand{\PLOSXgreen}{%
 	\begin{tikzpicture}[thick,anchor=base,baseline]
-		\filldraw[ForestGreen] (0,0.25em) circle[radius=0.45em] ;
+		\filldraw[CouleurVertForet] (0,0.25em) circle[radius=0.45em] ;
 	\end{tikzpicture}%
 }
 
@@ -463,7 +463,7 @@
 	\restoreKV[fakeTERMosx]
 	\setKV[fakeTERMosx]{#1}
 	\begin{tblr}{colsep=0pt,rowsep=0pt,width=\linewidth,colspec={lX[c]r}}
-		\PLOSXRed~\PLOSXOrange~\PLOSXGreen & \vphantom{p}\useKV[fakeTERMosx]{Titre} & \PLOSXLG~\PLOSXLG~\PLOSXLG \\
+		\PLOSXRed~\PLOSXOrange~\PLOSXgreen & \vphantom{p}\useKV[fakeTERMosx]{Titre} & \PLOSXLG~\PLOSXLG~\PLOSXLG \\
 	\end{tblr}
 }
 

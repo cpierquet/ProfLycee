@@ -51,20 +51,20 @@
 	top=\baselineskip,bottom=0mm,left=0.6em,right=5mm,%
 	attach boxed title to top right={yshift=-\tcboxedtitleheight},
 	boxed title style={
-		size=small,colback=ForestGreen!25,boxrule=1.25pt,
-		colframe=Green,boxsep=1.25pt,
+		size=small,colback=CouleurVertForet!25,boxrule=1.25pt,
+		colframe=green,boxsep=1.25pt,
 		sharp corners=downhill,
 		arc=12pt,
 		top=2pt,bottom=1pt,left=6pt,right=6pt
 		},
-	fonttitle=\color{ForestGreen}\itshape\ttfamily\footnotesize,
+	fonttitle=\color{CouleurVertForet}\itshape\ttfamily\footnotesize,
 	title={{\scriptsize\faPython}\:Code Python}
 	}
 }
 
 %==Style Classique
 \tcbset{thonnystyle/.style={%
-	enhanced,boxrule=0.75pt,colframe=DarkGray!50!Black,%
+	enhanced,boxrule=0.75pt,colframe=darkgray!50!black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
 	before skip=\CODPITespV,after skip=\CODPITespV,%
 	colback=white
@@ -103,7 +103,7 @@
 		{%
 			\tcbset{cadre/.style={}}
 			\tcbset{titre/.style={}}
-			\tcbset{stylebase/.style={stylepiton,colframe=Green,colback=ForestGreen!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign,leftupper=0.75em}}
+			\tcbset{stylebase/.style={stylepiton,colframe=green,colback=CouleurVertForet!5,width=\CODPITlargeur,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign,leftupper=0.75em}}
 			\ifboolKV[envpiton]{Filigrane}%si filigrane
 				{\tcbset{filigrane/.style={watermark text={\faPython},watermark opacity=0.175,watermark zoom=0.50}}}%
 				{\tcbset{filigrane/.style={}}}%
@@ -112,9 +112,9 @@
 	\IfEq{\CODPITstyle}{Classique}%style Classique
 		{%
 			\ifboolKV[envpiton]{Lignes}%si lignes=true
-				{\tcbset{stylebase/.style={thonnystylelineos,leftupper=0.75em,width=\CODPITlargeur,colframe=DarkGray!50!Black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}}}%
-				{\tcbset{stylebase/.style={thonnystyle,leftupper=0.4em,width=\CODPITlargeur,colframe=DarkGray!50!Black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}}}%
-			%\tcbset{width=\CODPITlargeur,colframe=DarkGray!50!Black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}
+				{\tcbset{stylebase/.style={thonnystylelineos,leftupper=0.75em,width=\CODPITlargeur,colframe=darkgray!50!black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}}}%
+				{\tcbset{stylebase/.style={thonnystyle,leftupper=0.4em,width=\CODPITlargeur,colframe=darkgray!50!black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}}}%
+			%\tcbset{width=\CODPITlargeur,colframe=darkgray!50!black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}
 			\ifboolKV[envpiton]{Filigrane}%si filigrane
 				{\tcbset{filigrane/.style={watermark text={\faPython},watermark opacity=0.25,watermark zoom=0.50}}}%
 				{\tcbset{filigrane/.style={}}}%
@@ -123,7 +123,7 @@
 					\ifboolKV[envpiton]{Cadre}
 						{\tcbset{cadre/.style={}}}%
 						{\tcbset{cadre/.style={boxrule=0pt,frame hidden}}}%
-					\tcbset{titre/.style={lefttitle=0.4em,title={\CODPITtitre},fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=DarkGray!50!Black}}
+					\tcbset{titre/.style={lefttitle=0.4em,title={\CODPITtitre},fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!black}}
 				}%
 				{%
 					\tcbset{titre/.style={notitle}}
@@ -144,7 +144,7 @@
 
 %======CONSOLE PYLUATEX (package à charger manuellement !!)
 \tcbset{consolepylua/.style={%base de la boîte
-	enhanced,colback=white,colframe=ForestGreen,sharp corners,boxrule=1pt,%
+	enhanced,colback=white,colframe=CouleurVertForet,sharp corners,boxrule=1pt,%
 	top=1.5mm,bottom=1.5mm,left=2mm,right=2mm,fontupper=\footnotesize,%
 	before skip=0.5\baselineskip,after skip=0.5\baselineskip,%
 	}
@@ -153,8 +153,8 @@
 \tcbset{consolepyluatexlogo/.style={%avec logo python
 	consolepylua,%
 	overlay={%
-		\draw ([yshift=0.5pt]frame.south) node[ForestGreen!50!black,fill=white,font=\scriptsize\ttfamily] {\scalebox{0.8}[0.8]{\faPython} Fin de la Console Python \scalebox{0.8}[0.8]{\faPython}} ;
-		\draw ([yshift=-0.5pt]frame.north) node[ForestGreen!50!black,fill=white,font=\scriptsize\ttfamily] {\scalebox{0.8}[0.8]{\faPython} Début de la Console Python \scalebox{0.8}[0.8]{\faPython}} ;
+		\draw ([yshift=0.5pt]frame.south) node[CouleurVertForet!50!black,fill=white,font=\scriptsize\ttfamily] {\scalebox{0.8}[0.8]{\faPython} Fin de la Console Python \scalebox{0.8}[0.8]{\faPython}} ;
+		\draw ([yshift=-0.5pt]frame.north) node[CouleurVertForet!50!black,fill=white,font=\scriptsize\ttfamily] {\scalebox{0.8}[0.8]{\faPython} Début de la Console Python \scalebox{0.8}[0.8]{\faPython}} ;
 		}
 	}
 }
@@ -162,8 +162,8 @@
 \tcbset{consolepyluatex/.style={%sans logo python
 	consolepylua,%
 	overlay={%
-		\draw ([yshift=0.5pt]frame.south) node[ForestGreen!50!black,fill=white,font=\scriptsize\ttfamily] {Fin de la Console Python} ;
-		\draw ([yshift=-0.5pt]frame.north) node[ForestGreen!50!black,fill=white,font=\scriptsize\ttfamily] {Début de la Console Python} ;
+		\draw ([yshift=0.5pt]frame.south) node[CouleurVertForet!50!black,fill=white,font=\scriptsize\ttfamily] {Fin de la Console Python} ;
+		\draw ([yshift=-0.5pt]frame.north) node[CouleurVertForet!50!black,fill=white,font=\scriptsize\ttfamily] {Début de la Console Python} ;
 		}
 	}
 }

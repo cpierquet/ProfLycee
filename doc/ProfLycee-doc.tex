@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.7.1}
-\def\PLdate{08 août 2023}
+\def\PLversion{2.7.2}
+\def\PLdate{25 août 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
@@ -64,10 +64,15 @@
 \geometry{margin=1.5cm}
 \usepackage{babel}
 \usepackage{newverbs}
+
+\definecolor{BleuCadet}{HTML}{5E9EA0}
+\definecolor{Chair}{HTML}{FDDBB8}
+\definecolor{BleuAcier}{HTML}{4483B8}
+
 \newverbcommand{\pverb}{\color{purple}}{}
 \newverbcommand{\rverb}{\color{red}}{}
-\newverbcommand{\vverb}{\color{ForestGreen}}{}
-\newverbcommand{\averb}{\color{CadetBlue}}{}
+\newverbcommand{\vverb}{\color{CouleurVertForet}}{}
+\newverbcommand{\averb}{\color{BleuCadet}}{}
 \newverbcommand{\overb}{\color{orange}}{}
 \newverbcommand{\bverb}{\color{blue}}{}
 \setlength{\parindent}{0pt}
@@ -76,8 +81,8 @@
 \newtcolorbox{PART}[1][]{%
 	enhanced,top=3mm,bottom=3mm,
 	bottomtitle=2mm,arc=2pt,outer arc=0pt,
-	colframe=LightSteelBlue,colback=white,bicolor,
-	colbacklower=LightSteelBlue!15,coltitle=black,
+	colframe=teal,colback=white,bicolor,
+	colbacklower=teal!15,coltitle=black,
 	fonttitle=\large\sffamily,
 	title=\centering Thème,
 	#1%
@@ -91,9 +96,9 @@
 \tcbset{vignettelatex/.style={%
 	fontupper={\vphantom{pf}\footnotesize\ttfamily},
 	vignettes,%
-	colframe=CadetBlue,coltitle=white,colback=CadetBlue!5,%
+	colframe=BleuCadet,coltitle=white,colback=BleuCadet!5,%
 	overlay={\begin{tcbclipinterior}%
-		\fill[fill=lightgray!50]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{CadetBlue}{\scalebox{0.6}[0.75]{\textbf{\LaTeX}}}}} ($(interior.north west)+(5pt,0pt)$);%
+		\fill[fill=lightgray!50]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{BleuCadet}{\scalebox{0.6}[0.75]{\textbf{\LaTeX}}}}} ($(interior.north west)+(5pt,0pt)$);%
 	\end{tcbclipinterior}}
 	}
 }
@@ -101,9 +106,9 @@
 \tcbset{vignettelib/.style={%
 	fontupper={\vphantom{pf}\footnotesize\ttfamily},
 	vignettes,%
-	colframe=ForestGreen,coltitle=white,colback=white,%
+	colframe=CouleurVertForet,coltitle=white,colback=white,%
 	overlay={\begin{tcbclipinterior}%
-			\fill[fill=green!25]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{ForestGreen}{\scalebox{0.85}[0.75]{\textbf{LIB}}}}} ($(interior.north west)+(5pt,0pt)$);%
+			\fill[fill=green!25]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{CouleurVertForet}{\scalebox{0.85}[0.75]{\textbf{LIB}}}}} ($(interior.north west)+(5pt,0pt)$);%
 	\end{tcbclipinterior}}
 	}
 }
@@ -111,9 +116,9 @@
 \tcbset{vignetteMaJ/.style={%
 	fontupper={\vphantom{pf}\footnotesize\ttfamily},
 	vignettes,%
-	colframe=ForestGreen!50!black,coltitle=white,colback=ForestGreen!25,%
+	colframe=CouleurVertForet!50!black,coltitle=white,colback=CouleurVertForet!25,%
 	overlay={\begin{tcbclipinterior}%
-		\fill[fill=ForestGreen!75]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{Black}{\scalebox{0.85}[0.75]{\textbf{MàJ}}}}} ($(interior.north west)+(5pt,0pt)$);%
+		\fill[fill=CouleurVertForet!75]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{black}{\scalebox{0.85}[0.75]{\textbf{MàJ}}}}} ($(interior.north west)+(5pt,0pt)$);%
 	\end{tcbclipinterior}}
 	}
 }
@@ -139,7 +144,7 @@
 		alsoletter={-},%
 		morekeywords={\ResolutionApprochee,\SolutionTVI,\CalculTermeRecurrence,\ToileRecurrence,\SolutionSeuil,\IntegraleApprochee,\GrilleTikz,\AxesTikz,\AxexTikz,\AxeyTikz,\FenetreTikz,\FenetreSimpleTikz,\DeclareFonctionTikz,\CourbeTikz,\OrigineTikz,\SplineTikz,\TangenteTikz,\MiniSchemaSignes,\MiniSchemaSignesTkzTab,\IntegraleApprocheeTikz,\CartoucheCapytale,\PaveTikz,\TetraedreTikz,\CercleTrigo,\AffPoint,\AffVecteur,\TrouveEqCartPlan,\TrouveEqParamDroite,\TrouveEqCartDroite,\TrouveNorme,\TrouveDistancePtPlan,\EquationReduite,\CalculsRegLin,\PointsRegLin,\NuagePointsTikz,\PointMoyenTikz,\BoiteMoustaches,\BoiteMoustachesAxe,\Histogramme,\CalcBinomP,\CalcBinomC,\BinomP,\BinomC,\CalcPoissP,\CalcPoissC,\PoissonP,\PoissonC,\CalcGeomP,\CalcGeomC,\GeomP,\GeomC,\CalcHypergeomP,\CalcHypergeomP,\HypergeomP,\HypergeomC,\CalcNormC,\NormaleC,\CalcExpoC,\ExpoC,\ArbreProbasTikz,\LoiNormaleGraphe,\LoiExpoGraphe,\NbAlea,\VarNbAlea,\TirageAleatoireEntiers,\Arrangement,\Combinaison,\ConversionDecBin,\ConversionBinHex,\ConversionVersDec,\ConversionBaseDix,\ConversionDepuisBaseDix,\PresentationPGCD,\EquationDiophantienne,\ConversionFraction,\SimplificationRacine,\EcritureEnsemble,\EcritureTrinome,\MesurePrincipale,\LigneTrigo,\SudoMaths,\FonctionRepartTikz
 		},%
-		keywordstyle={\color{green!75!black}},%
+		keywordstyle={\color{CouleurVertForet}},%
 		classoffset=3,%
 		alsoletter={-},%
 		morekeywords={minimum-decimal-digits,scale,nonamssymb,build,Precision,Intervalle,Variable,NomFct,NomSol,va,vb,Stretch,Balayage,Calculatrice,Majuscule,No,UNo,NomSuite,Simple,Exact,Conclusion,Sens,ResultatBrut,Methode,NbSubDiv,AffFormule,Expr,Signe,Variables,Affp,Affs,Epaisseur,Police,ElargirOx,ElargirOy,Labelx,Labely,AffLabel,PosLabelx,PosLabely,EchelleFleche,TypeFleche,PosGrad,HautGrad,AffGrad,AffOrigine,Annee,Trigo,Dfrac,Style,Coeffs,AffPoints,TaillePoints,xl,xr,Code,Racines,Largeur,Hauteur,Cadre,Fct,Nom,PosLabel,DecalLabel,TailleLabel,AffTermes,RemplirbOpacite,CouleurRemplissage,Lignes,Gobble,Alignement,Filigrane,BarreTitre,CouleurNombres,Centre,EspacementVertical,Label,Titre,Profondeur,Angle,Fuite,Sommets,Math,Aff,Plein,Cube,Alpha,Beta,Rayon,Marge,TailleValeurs,TailleAngles,CouleurFond,Decal,MoinsPi,AffAngles,AffTraits,AffValeurs,Equationcos,Equationsin,sin,cos,AffTraitsEq,CouleurSol,OptionCoeffs,SimplifCoeffs,Facteur,OptionCoeffs,Reel,Oppose,Rgras,SimplifCoeffs,VectDirecteur,NomCoeffa,NomCoeffb,NomCoeffr,NomCoeffrd,NomXmin,NomXmax,Ox,Oy,xg,yg,AffNom,Elevation,Moyenne,AffMoyenne,Pointilles,Valeurs,Elargir,Min,Max,DebutOx,FinOx,ListeCouleurs,ElargirX,ElargirY,LabelX,LabelY,GradX,GradY,AffEffectifs,PosEffectifs,Opacite,AffBornes,GrilleV,PoliceAxes,PoliceEffectifs,EpaisseurTraits,Unite,EspaceNiveau,EspaceFeuille,Type,PoliceProbas,InclineProbas,Fleche,StyleTrait,EpaisseurTrait,CouleurAire,CouleurCourbe,AfficheM,AfficheCadre,ValMin,ValMax,NbVal,Sep,Tri,Repetition,Notation,NotationAncien,Formule,AffBase,Details,BaseDep,Zeros,DecalH,DecalV,Noeud,Rect,CouleurRes,DecalRect,Rectangle,CouleurResultat,AfficheConclusion,AfficheDelimiteurs,Lettre,Inconnues,Entier,Cadres,PresPGCD,Mathpunct,Option,Alea,Anegatif,Crochets,Brut,Etapes,Epaisseurg,CouleurCase,CouleurTexte,NbSubCol,NbLig,NbCol,Legendes,PoliceLeg,ListeLegV,ListeLegH,DecalLegende,Couleur,Uno,Grille,ExtraGrilleY,PosLegende,Pointilles,Extremite,Frac},%
@@ -148,8 +153,8 @@
 	}
 }
 
-\NewTCBListing{PresCodeTexPL}{ O{CadetBlue} m }{%
-	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!Black,%
+\NewTCBListing{PresCodeTexPL}{ O{BleuCadet} m }{%
+	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
 	before skip=\baselineskip,after skip=\baselineskip,%
 	colback=white,
@@ -165,8 +170,8 @@
 	overlay={\draw[#1!85!black] ($(frame.north west)+(-0.035\linewidth,-0.025\linewidth)$) node[scale=1.66] {\faCode} ;}
 }
 
-\NewTCBListing{PresCodePL}{ O{CadetBlue} m }{%
-	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!Black,%
+\NewTCBListing{PresCodePL}{ O{BleuCadet} m }{%
+	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
 	before skip=\baselineskip,after skip=\baselineskip,%
 	colback=white,
@@ -186,8 +191,8 @@
 	}
 }
 
-\NewTCBListing{PresCodeSortiePL}{ O{CadetBlue} m }{%
-	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!Black,%
+\NewTCBListing{PresCodeSortiePL}{ O{BleuCadet} m }{%
+	enhanced,width=0.93\linewidth,flush right,boxrule=0.75pt,colframe=#1!85!black,%
 	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
 	before skip=\baselineskip,after skip=\baselineskip,%
 	colback=white,
@@ -207,19 +212,19 @@
 	colback=white,colframe=red!75!black,title={\small \faCode} Code \LaTeX,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
 
 \newtcolorbox{codeattention}[1][]{%
-	colback=Yellow!50,colframe=Yellow!50!Black,title={\small \faBomb} Attention,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
+	colback=Yellow!50,colframe=yellow!50!black,title={\small \faBomb} Attention,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
 
 \newtcolorbox{codesortie}[1][]{%
 	colback=white,colframe=red!75!black,title={\small \faArrowAltCircleRight[regular]} Sortie \LaTeX,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
 
 \newtcolorbox{condeidee}[1][]{%
-	colback=white,colframe=PeachPuff!75!black,title={\small \faLightbulb[regular]} Idée(s),fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
+	colback=white,colframe=Chair!75!black,title={\small \faLightbulb[regular]} Idée(s),fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
 
 \newtcolorbox{codeinfo}[1][]{%
-	colback=white,colframe=SteelBlue,title={\small \faPuzzlePiece} Information(s),fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
+	colback=white,colframe=BleuAcier,title={\small \faPuzzlePiece} Information(s),fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
 
 \newtcolorbox{codecles}[1][]{%
-	colback=white,colframe=ForestGreen!75,title={\small \faPaperclip} Clés et options,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
+	colback=white,colframe=CouleurVertForet!75,title={\small \faPaperclip} Clés et options,fonttitle=\sffamily\bfseries,left=3pt,right=3pt,top=2pt,bottom=2pt,#1}
 
 %petite vignette tex
 \newcommand\ctex[1]{\tcbox[vignettelatex]{#1}}
@@ -259,7 +264,7 @@
 	\tikzset{noeudexpl/.style={purple,font=\sffamily\small}}
 	\tikzset{portionexpl/.style={orange,thick,<->,>=latex}}
 	\tikzset{expl/.style={midway,inner sep=1pt,above right=0,orange,font=\sffamily\scriptsize,rotate=45}}
-	\tikzset{coeffs/.style={CadetBlue!50!black,circle,draw=CadetBlue,thick,fill=CadetBlue!5,font=\small\ttfamily}}
+	\tikzset{coeffs/.style={BleuCadet!50!black,circle,draw=BleuCadet,thick,fill=BleuCadet!5,font=\small\ttfamily}}
 	\tikzset{tangente/.style={teal,line width=1pt,dashed}}
 	%grilles & axes
 	\tgrilles[line width=0.3pt,lightgray!50]
@@ -294,7 +299,7 @@
 }
 
 \newcommand\listecoeffs[4]{%
-	\draw (0,5.5) node[left,CadetBlue,font=\small\ttfamily] {Coeffs} ;
+	\draw (0,5.5) node[left,BleuCadet,font=\small\ttfamily] {Coeffs} ;
 	\node[coeffs] at (2,5.5) {#1} ;
 	\node[coeffs] at ({(4+7.5)/2},5.5) {#2} ;
 	\node[coeffs] at ({(7.5+9)/2},5.5) {#3} ;
@@ -427,12 +432,18 @@ Il se charge de manière classique, dans le préambule, par \ctex{\textbackslash
 L'utilisateur est libre de charger ses autres {packages} utiles et habituels, ainsi que ses \textsf{polices} et \textsf{encodages} habituels !
 \end{noteblock}
 
+\begin{cautionblock}
+\cmaj{2.7.2} Pour des soucis de compatibilités, \ctex{xcolor} n'est plus chargé, par défaut, avec les options \textsf{[table,svgnames]}, les couleurs de base de \ctex{xcolor} sont toutefois accessibles (une seule couleur, \textsf{CouleurVertForet} a été définie) !
+
+Il est cependant possible, grâce à l'option \Cle{[xcolor]} à passer au chargement du package, de charger \ctex{xcolor} avec l' option \textsf{[table,svgnames]}.
+\end{cautionblock}
+
 \begin{importantblock}
 Le {package} \ctex{ProfLycee} charge et utilise les {packages} :
 
 \begin{itemize}
 	\item \ctex{mathtools}, \ctex{amssymb} ;
-	\item \ctex{xcolor} avec l' option \textsf{[table,svgnames]} ;
+%	\item \ctex{xcolor} avec l' option \textsf{[table,svgnames]} ;
 	\item \ctex{tikz}, \ctex{pgf}, \ctex{pgffor}, \ctex{nicefrac}, \ctex{nicematrix} ;
 	\item \ctex{tcolorbox} avec les librairies \ctex{breakable,fitting,skins,listings,listingsutf8,hooks} ;
 	\item \ctex{xparse}, \ctex{xstring}, \ctex{simplekv}, \ctex{xinttools} ;
@@ -451,7 +462,7 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 \begin{PresCodeTexPL}{listing only}
 %exemple de chargement pour une compilation en (pdf)latex
 \documentclass{article}
-\usepackage{ProfLycee}
+\usepackage{ProfLycee}       % ou \usepackage[xcolor]{ProfLycee}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 ...
@@ -460,7 +471,7 @@ J'ai utilisé les {packages} de C. Tellechea, je vous conseille d'aller jeter un
 \begin{PresCodeTexPL}{listing only}
 %exemple de chargement pour une compilation en (xe/lua)latex
 \documentclass{article}
-\usepackage{ProfLycee}
+\usepackage{ProfLycee}       % ou \usepackage[xcolor]{ProfLycee}
 \usepackage{fontspec}
 ...
 \end{PresCodeTexPL}
@@ -599,9 +610,9 @@ En ce qui concerne les codes \textsf{librairies}, il faudra :
 \begin{noteblock}
 Certaines \textsf{commandes} sont à intégrer dans un environnement \TikZ, afin de pouvoir rajouter des éléments, elles ont été testés dans des environnement \ctex{tikzpicture}, à vérifier que la gestion des axes par l'environnement \ctex{axis} est compatible\ldots
 
-\smallskip
-
-Certains packages ont une fâcheuse tendance à être tatillons sur leurs options (les \textit{fameux} \textsf{option clash for} \ldots) ou leur \textit{position} dans le chargement, donc attention notamment au chargement de \ctex{xcolor} et de \ctex{amssymb} !
+%\smallskip
+%
+%Certains packages ont une fâcheuse tendance à être tatillons sur leurs options (les \textit{fameux} \textsf{option clash for} \ldots) ou leur \textit{position} dans le chargement, donc attention notamment au chargement de \ctex{xcolor} et de \ctex{amssymb} !
 
 \smallskip
 
@@ -1351,7 +1362,7 @@ Au niveau du code, il y aura donc plusieurs \textit{aspects} :
 	xmin=0,xmax=60,xgrille=5,xgrilles=5, %axe Ox
 	ymin=0,ymax=240,ygrille=30,ygrilles=30] %axe Oy
 	\FenetreSimpleTikz<Police=\small>{0,5,...,55}<Police=\small>{0,30,...,210} %repère
-	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
+	\CourbeTikz[line width=1.25pt,CouleurVertForet,samples=250]%
 		{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
 \end{tikzpicture}
 \end{PresCodeSortiePL}
@@ -1640,7 +1651,7 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 	\FenetreSimpleTikz%
 		<Police=\small>{0,5,...,60}%
 		<Police=\small>{0,30,...,240} %repère
-	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
+	\CourbeTikz[line width=1.25pt,CouleurVertForet,samples=250]%
 		{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
 \end{tikzpicture}
 \end{PresCodeTexPL}
@@ -1651,7 +1662,7 @@ Cette commande permet de rajouter une courbe sur le graphique (sans se soucier d
 	xmin=0,xmax=60,xgrille=5,xgrilles=5,ymin=0,ymax=240,ygrille=30,ygrilles=30]
 	\FenetreSimpleTikz%
 		<Police=\small>{0,5,...,60}<Police=\small>{0,30,...,240} %repère
-	\CourbeTikz[line width=1.25pt,ForestGreen,samples=250]%
+	\CourbeTikz[line width=1.25pt,CouleurVertForet,samples=250]%
 		{\x*\x*exp(-0.05*\x)+1}{0:60} %courbe
 \end{tikzpicture}
 \end{PresCodeSortiePL}
@@ -1682,8 +1693,8 @@ On va utiliser les notions suivantes pour paramétrer le tracé \og automatique 
 %
 \begin{itemize}
 	\item il faut rentrer les \textcolor{purple}{\textsf{points de contrôle}} ;
-	\item il faut préciser les \textcolor{ForestGreen}{\textsf{pentes des tangentes}} (pour le moment on travaille avec les mêmes à gauche et à droite\ldots) ;
-	\item on peut \og affiner \fg{} les portions de courbe en paramétrant des \textcolor{CadetBlue}{\textsf{coefficients}} (voir un peu plus loin\ldots).
+	\item il faut préciser les \textcolor{CouleurVertForet}{\textsf{pentes des tangentes}} (pour le moment on travaille avec les mêmes à gauche et à droite\ldots) ;
+	\item on peut \og affiner \fg{} les portions de courbe en paramétrant des \textcolor{BleuCadet}{\textsf{coefficients}} (voir un peu plus loin\ldots).
 \end{itemize}
 
 \medskip
@@ -1886,7 +1897,7 @@ Cela permet de tracer la tangente :
 	%spline
 	\SplineTikz[AffPoints,Coeffs=3§2,Couleur=red]{\LISTE}
 	%tangente
-	\TangenteTikz[xl=0,xr=0.5,Couleur=ForestGreen,Style=dashed]{\LISTE}
+	\TangenteTikz[xl=0,xr=0.5,Couleur=CouleurVertForet,Style=dashed]{\LISTE}
 	\TangenteTikz[xl=0.5,xr=0.75,Couleur=orange,Style=dotted,Point=2]{\LISTE}
 	\TangenteTikz[xl=0.33,xr=0,Couleur=blue,Style=densely dashed,Point=3]{\LISTE}
 	...
@@ -1908,7 +1919,7 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 		%spline
 		\SplineTikz[AffPoints,Coeffs=3§2,Couleur=red]{0/1.5/0§1/2/-0.333§2/0/-5}
 		%tangente
-		\TangenteTikz[xl=0,xr=0.5,Couleur=ForestGreen,Style=dashed]{0/1.5/0§1/2/-0.333§2/0/-5}
+		\TangenteTikz[xl=0,xr=0.5,Couleur=CouleurVertForet,Style=dashed]{0/1.5/0§1/2/-0.333§2/0/-5}
 		\TangenteTikz[xl=0.5,xr=0.75,Couleur=orange,Style=dotted,Point=2]{0/1.5/0§1/2/-0.333§2/0/-5}
 		\TangenteTikz[xl=0.33,xr=0,Couleur=blue,Style=densely dashed,Point=3]{0/1.5/0§1/2/-0.333§2/0/-5}
 		%explications
@@ -1948,7 +1959,7 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 	\TangenteTikz[xl=0,xr=1,Couleur=blue,Style=dashed]{\liste}
 	\TangenteTikz[xl=2,xr=2,Couleur=purple,Style=dotted,Point=2]{\liste}
 	\TangenteTikz[xl=2,xr=2,Couleur=orange,Style=<->,Point=3]{\liste}
-	\TangenteTikz[xl=2,xr=0,Couleur=ForestGreen,Point=5]{\liste}
+	\TangenteTikz[xl=2,xr=0,Couleur=CouleurVertForet,Point=5]{\liste}
 	%la courbe en elle-même
 	\SplineTikz[AffPoints,Coeffs=3,Couleur=cyan,Style=densely dotted]{\liste}
 \end{tikzpicture}
@@ -1970,7 +1981,7 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 		\TangenteTikz[xl=0,xr=1,Couleur=blue,Style=dashed]{\liste}
 		\TangenteTikz[xl=2,xr=2,Couleur=purple,Style=dotted,Point=2]{\liste}
 		\TangenteTikz[xl=2,xr=2,Couleur=orange,Style=<->,Point=3]{\liste}
-		\TangenteTikz[xl=2,xr=0,Couleur=ForestGreen,Point=5]{\liste}
+		\TangenteTikz[xl=2,xr=0,Couleur=CouleurVertForet,Point=5]{\liste}
 		%la courbe en elle-même
 		\SplineTikz[AffPoints,Coeffs=3,Couleur=cyan,Style=densely dotted]{\liste}
 	\end{tikzpicture}
@@ -2058,7 +2069,7 @@ Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou
 \begin{center}
 \MiniSchemaSignes*[Code=pa+d+,Racines={1/2},Couleur=orange]
 ~~~~
-\MiniSchemaSignes*[Code=pa+d-,Couleur=ForestGreen]
+\MiniSchemaSignes*[Code=pa+d-,Couleur=CouleurVertForet]
 ~~~~
 \MiniSchemaSignes*[Code=pa+d0,Racines={5},Couleur=purple]
 \end{center}
@@ -2082,7 +2093,7 @@ Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou
 \begin{center}
 \MiniSchemaSignes*[Code=pa+d+,Racines={1/2},Couleur=orange]
 ~~~~
-\MiniSchemaSignes*[Code=pa+d-,Couleur=ForestGreen]
+\MiniSchemaSignes*[Code=pa+d-,Couleur=CouleurVertForet]
 ~~~~
 \MiniSchemaSignes*[Code=pa+d0,Racines={5},Couleur=purple]
 \end{center}
@@ -2098,10 +2109,10 @@ Pour la clé \Cle{code}, il est construit par le type (\textsf{a} pour affine ou
 
 \begin{PresCodePL}{}
 \begin{tikzpicture}
-	\MiniSchemaSignes[Largeur=3.5,Hauteur=1.5,Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]
+	\MiniSchemaSignes[Largeur=3.5,Hauteur=1.5,Code=da-,Racines=\tfrac{-b}{a},Couleur=pink]
 \end{tikzpicture}
 
-\MiniSchemaSignes*[Code=da-,Racines=\tfrac{-b}{a},Couleur=Plum]<x=1.75cm,y=1.5cm>
+\MiniSchemaSignes*[Code=da-,Racines=\tfrac{-b}{a},Couleur=pink]<x=1.75cm,y=1.5cm>
 \end{PresCodePL}
 
 \pagebreak
@@ -2257,7 +2268,7 @@ On va tracer la \textit{toile} des 4 premiers termes de la suite récurrente :\\
 \ToileRecurrence[Fct={\f},No=1,Uno=1,Nb=4,DecalLabel=4pt]
 %éléments supplémentaires
 \draw[very thick,blue,domain=0:8,samples=250] plot (\x,{\f}) ;
-\draw[very thick,ForestGreen,domain=0:8,samples=2] plot (\x,\x) ;
+\draw[very thick,CouleurVertForet,domain=0:8,samples=2] plot (\x,\x) ;
 \end{PresCodePL}
 
 \begin{noteblock}
@@ -2313,7 +2324,7 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 			\def\f{1+1/\x}
 			\ToileRecurrence%
 				[Fct={\f},No=0,Uno=1,Nb=7,PosLabel=above right,DecalLabel=0pt,AffTermes=false]%
-				[line width=1.25pt,ForestGreen,densely dashed][]
+				[line width=1.25pt,CouleurVertForet,densely dashed][]
 			\draw[line width=1.25pt,blue,domain=0:2.25,samples=2] plot(\x,{\x});
 			\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
 		\end{tikzpicture}
@@ -2336,7 +2347,7 @@ Peut-être que -- ultérieurement -- des options \textit{booléennes} seront dis
 		%tracés
 		\ToileRecurrence%
 			[Fct={\f},No=0,Uno=1,Nb=7,PosLabel=above right,DecalLabel=0pt,AffTermes=false]%
-			[line width=1.25pt,ForestGreen,densely dashed][]
+			[line width=1.25pt,CouleurVertForet,densely dashed][]
 		\draw[line width=1.25pt,blue,domain=0:2.25,samples=2] plot(\x,{\x});
 		\draw[line width=1.25pt,red,domain=0.8:2.5,samples=250] plot(\x,{\f});
 	\end{tikzpicture}
@@ -3451,7 +3462,7 @@ Il s'agir d'un environnement créé en \ctex{tcolorbox}, et utilisant la présen
 Peu de personnalisations pour ces commandes :
 
 \begin{itemize}
-	\item le premier argument, \textit{optionnel}, permet de préciser la \textit{couleur} de la présentation ;\hfill{}défaut \Cle{ForestGreen}
+	\item le premier argument, \textit{optionnel}, permet de préciser la \textit{couleur} de la présentation ;\hfill{}défaut \Cle{CouleurVertForet}
 	\item le second, \textit{obligatoire}, correspond aux éventuelles options liées à la \ctex{tcolorbox}.
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
@@ -3473,7 +3484,7 @@ On peut par exemple utiliser l'option \Cle{listing only} pour ne présenter \tex
 Avec $A=\ValAleaA$ et $B=\ValAleaB$, on a $A\times B=\inteval{\ValAleaA * \ValAleaB}$.
 \end{PresentationCode}
 
-\begin{PresentationCode}[DarkBlue]{}
+\begin{PresentationCode}[blue]{}
 On peut faire beaucoup de choses avec \LaTeX{} !
 \end{PresentationCode}
 \end{PresCodePL}
@@ -3640,9 +3651,9 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 \begin{center}
 	\begin{tikzpicture}[x=1.25cm,y=1.25cm,line width=1pt,line join=bevel]
 		\TetraedreTikz[Largeur=5,Profondeur=1.95,Hauteur=2.75,Alpha=45,Beta=70]
-		\draw[draw=none] (A)--(C) node[midway,sloped,above,font=\small\sffamily,CadetBlue] {Largeur} ;
-		\draw[draw=none] (A)--(B) node[midway,sloped,below,font=\small\sffamily,CadetBlue] {Profondeur} ;
-		\draw[draw=none] (A)--(D) node[midway,sloped,above,font=\small\sffamily,CadetBlue] {Hauteur} ;
+		\draw[draw=none] (A)--(C) node[midway,sloped,above,font=\small\sffamily,BleuCadet] {Largeur} ;
+		\draw[draw=none] (A)--(B) node[midway,sloped,below,font=\small\sffamily,BleuCadet] {Profondeur} ;
+		\draw[draw=none] (A)--(D) node[midway,sloped,above,font=\small\sffamily,BleuCadet] {Hauteur} ;
 		\draw[purple] (0.5,0) arc (0:-45:0.5) ;
 		\draw (-22.5:0.5) node[purple,right] {$\alpha$} ;
 		\draw[orange] (0.75,0) arc (0:70:0.75) ;
@@ -3655,7 +3666,7 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
 		\TetraedreTikz[Aff,Largeur=7,Profondeur=3,Hauteur=5,Epaisseur={ultra thick},Alpha=20,Beta=30]
-		\draw[very thick,ForestGreen,<->,>=latex] ($(A)!0.5!(D)$)--($(B)!0.5!(D)$) ;
+		\draw[very thick,CouleurVertForet,<->,>=latex] ($(A)!0.5!(D)$)--($(B)!0.5!(D)$) ;
 	\end{tikzpicture}
 \end{center}
 \end{PresCodeTexPL}
@@ -3664,7 +3675,7 @@ Pour \textit{illustrer} un peu les \Cle{clés}, un petit schéma, avec les diff�
 \begin{center}
 	\begin{tikzpicture}[line join=bevel]
 		\TetraedreTikz[Aff,Largeur=7,Profondeur=3,Hauteur=5,Epaisseur={ultra thick},Alpha=20,Beta=30]
-		\draw[very thick,ForestGreen,<->,>=latex] ($(A)!0.5!(D)$)--($(B)!0.5!(D)$) ;
+		\draw[very thick,CouleurVertForet,<->,>=latex] ($(A)!0.5!(D)$)--($(B)!0.5!(D)$) ;
 	\end{tikzpicture}
 \end{center}
 \end{PresCodeSortiePL}
@@ -4774,7 +4785,7 @@ Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situatio
 	\AxexTikz[Annee]{1992,1994,...,2010}                          %axeOx
 	\AxeyTikz{1640,1650,...,1720}                                 %axeOy
 	\NuagePointsTikz{\LLX}{\LLY}                                  %nuage
-	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]%
+	\CourbeTikz[line width=1.25pt,CouleurVertForet,samples=2]%
 		{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}                       %droite de régression
 	\PointMoyenTikz                                               %point moyen
 \end{tikzpicture}
@@ -4786,7 +4797,7 @@ Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situatio
 	[....]                                                              %paramètres
 	\FenetreSimpleTikz<Annee>{1992,1994,...,2010}{1640,1650,...,1720}   %fenêtre "simple"
 	\NuagePointsTikz{\LLX}{\LLY}                                        %nuage
-	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]%
+	\CourbeTikz[line width=1.25pt,CouleurVertForet,samples=2]%
 		{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}                             %droite de régression
 	\PLnuageptmoy                                                       %point moyen
 \end{tikzpicture}
@@ -4802,7 +4813,7 @@ Le package \ctex{pgfplots} peut être utilisé pour traiter ce genre de situatio
 	\AxexTikz[Annee]{1992,1994,...,2010}
 	\AxeyTikz{1640,1650,...,1720}
 	\NuagePointsTikz{\LLX}{\LLY}
-	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}
+	\CourbeTikz[line width=1.25pt,CouleurVertForet,samples=2]{\COEFFa*\x+\COEFFb}{\LXmin:\LXmax}
 	\PointMoyenTikz
 \end{tikzpicture}
 \end{PresCodeSortiePL}
@@ -5070,7 +5081,7 @@ Cette commande, liée à la commande \ctex{CalculsRegLin} permet de représenter
 
 \begin{PresCodeTexPL}{listing only}
 \begin{tikzpicture}[...]
-	\NuagePointsTikz[Couleur=ForestGreen,Style=x,Taille=6pt]{\LLX}{\LLY}
+	\NuagePointsTikz[Couleur=CouleurVertForet,Style=x,Taille=6pt]{\LLX}{\LLY}
 \end{tikzpicture}
 \end{PresCodeTexPL}
 
@@ -5083,7 +5094,7 @@ Cette commande, liée à la commande \ctex{CalculsRegLin} permet de représenter
 	\GrilleTikz \AxesTikz
 	\AxexTikz[Annee,Police=\small]{1992,1994,...,2010}
 	\AxeyTikz{1640,1650,...,1720}
-	\NuagePointsTikz[Couleur=ForestGreen,Style=x,Taille=6pt]{\LLX}{\LLY}
+	\NuagePointsTikz[Couleur=CouleurVertForet,Style=x,Taille=6pt]{\LLX}{\LLY}
 \end{tikzpicture}
 \end{PresCodeSortiePL}
 
@@ -5122,7 +5133,7 @@ Cette commande permet de rajouter le point moyen du nuage, calculé par la comma
 \end{tikzpicture}
 ~~
 \begin{tikzpicture}[...]
-	\NuagePointsTikz[Couleur=ForestGreen,Style=x,Taille=6pt]{\LLX}{\LLY}
+	\NuagePointsTikz[Couleur=CouleurVertForet,Style=x,Taille=6pt]{\LLX}{\LLY}
 	\PointMoyenTikz[Couleur=orange,Taille=8pt,Style=+,Nom={$G_1$},Pos=below]
 \end{tikzpicture}
 \end{PresCodeTexPL}
@@ -5144,7 +5155,7 @@ Cette commande permet de rajouter le point moyen du nuage, calculé par la comma
 	\GrilleTikz \AxesTikz
 	\AxexTikz[Annee,Police=\small]{1992,1994,...,2010}
 	\AxeyTikz{1640,1650,...,1720}
-	\NuagePointsTikz[Couleur=ForestGreen,Style=x,Taille=6pt]{\LLX}{\LLY}
+	\NuagePointsTikz[Couleur=CouleurVertForet,Style=x,Taille=6pt]{\LLX}{\LLY}
 	\PointMoyenTikz[Couleur=orange,Taille=8pt,Style=+,Nom={$G_1$},Pos=below]
 \end{tikzpicture}
 \end{PresCodeSortiePL}
@@ -5181,7 +5192,7 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 
 \begin{tikzpicture}[...]
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \PointMoyenTikz
-	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
+	\CourbeTikz[line width=1.25pt,CouleurVertForet,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
 \end{tikzpicture}
 \end{PresCodeTexPL}
 
@@ -5195,7 +5206,7 @@ L'idée principale est de récupérer les variables de la régression linéaire 
 	\AxexTikz[Annee,Police=\footnotesize]{1992,1994,...,2010}
 	\AxeyTikz{1640,1650,...,1720}
 	\NuagePointsTikz[Couleur=blue/red]{\LLX}{\LLY} \PointMoyenTikz
-	\CourbeTikz[line width=1.25pt,ForestGreen,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
+	\CourbeTikz[line width=1.25pt,CouleurVertForet,samples=2]{\COEFFa*\x+\COEFFb}{\xmin:\xmax}
 \end{tikzpicture}
 \end{PresCodeSortiePL}
 
@@ -5292,7 +5303,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 		\BoiteMoustaches[Epaisseur=ultra thick,Couleur=blue]{100/150/170/190/200}
 		\BoiteMoustaches[Epaisseur=thin,Elevation=2.5,Couleur=red]{80/100/110/120/150}
 		\BoiteMoustaches%
-			[Elevation=4,Couleur=ForestGreen,Remplir=ForestGreen!25]{100/140/145/160/210}
+			[Elevation=4,Couleur=CouleurVertForet,Remplir=CouleurVertForet!25]{100/140/145/160/210}
 \end{tikzpicture}
 \end{center}
 \end{PresCodeTexPL}
@@ -5305,7 +5316,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 		\foreach \y in {0,0.5,...,4.5} \draw[very thin,lightgray] ($(210,\y)+(-3pt,0)$)--($(210,\y)+(3pt,0)$) node[right] {\num{\y}} ;
 		\BoiteMoustaches[Epaisseur=ultra thick,Couleur=blue]{100/150/170/190/200}
 		\BoiteMoustaches[Epaisseur=thin,Elevation=2.5,Couleur=red]{80/100/110/120/150}
-		\BoiteMoustaches[Elevation=4,Couleur=ForestGreen,Remplir=ForestGreen!25]{100/140/145/160/210}
+		\BoiteMoustaches[Elevation=4,Couleur=CouleurVertForet,Remplir=CouleurVertForet!25]{100/140/145/160/210}
 	\end{tikzpicture}
 \end{center}
 \end{PresCodeSortiePL}
@@ -5348,7 +5359,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 	\BoiteMoustachesAxe[Min=8,Max=21,AffValeurs,Valeurs={8,9,...,21},Elargir=0.02]
 	\BoiteMoustaches[Moyenne=18.5,Couleur=blue]{10/15/17/19/20}
 	\BoiteMoustaches[Elevation=2.5,Couleur=red]{8/10/11/12/15}
-	\BoiteMoustaches[Elevation=4,Couleur=ForestGreen,Remplir=ForestGreen!25]{10/14/14.5/16/21}
+	\BoiteMoustaches[Elevation=4,Couleur=CouleurVertForet,Remplir=CouleurVertForet!25]{10/14/14.5/16/21}
 \end{tikzpicture}
 \end{PresCodePL}
 
@@ -5950,13 +5961,13 @@ Les nœuds crées par les commandes sont :
 
 \begin{EnvArbreProbasTikz}[Type=3x2,Fleche,EspaceNiveau=5,EspaceFeuille=1.25]%
 	{\ArbreTroisDeux}
-	\draw[ForestGreen,->] (A24)--($(A24)+(2.5,0)$) node[right,font=\sffamily] {code tikz rajouté} ;
+	\draw[CouleurVertForet,->] (A24)--($(A24)+(2.5,0)$) node[right,font=\sffamily] {code tikz rajouté} ;
 \end{EnvArbreProbasTikz}
 \end{PresCodeTexPL}
 
 \begin{PresCodeSortiePL}{text only}
 \begin{EnvArbreProbasTikz}[Type=3x2,Fleche,EspaceNiveau=5,EspaceFeuille=1.25]{$A_1$/\num{0.5}/above,$B$/\num{0.4}/above,$\overline{B}$/.../below,$A_2$/.../above,$B$/.../above,$\overline{B}$/$\frac{1}{3}$/below,$A_3$/.../below,$B$/.../above,$\overline{B}$/$\frac{4}{15}$/below}
-	\draw[ForestGreen,->] (A24)--($(A24)+(2.5,0)$) node[right,font=\sffamily] {code tikz rajouté} ;
+	\draw[CouleurVertForet,->] (A24)--($(A24)+(2.5,0)$) node[right,font=\sffamily] {code tikz rajouté} ;
 \end{EnvArbreProbasTikz}
 \end{PresCodeSortiePL}
 
@@ -6039,7 +6050,7 @@ Les commandes sont donc des environnements \TikZ, sans possibilité de \og rajou
 \begin{PresCodePL}{}
 Avec centrage vertical sur l'axe des abscisses :
 \LoiNormaleGraphe
-	[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>%
+	[AfficheM=false,CouleurCourbe=blue,CouleurAire=cyan]<baseline=0pt>%
 	{1000}{100}{950}{*}
 \end{PresCodePL}
 
@@ -6057,7 +6068,7 @@ Avec centrage vertical :
 
 Avec centrage vertical sur l'axe des abscisses :
 \LoiExpoGraphe
-	[AfficheM=false,CouleurCourbe=Blue,CouleurAire=LightBlue]<baseline=0pt>{0.05}{*}{32}
+	[AfficheM=false,CouleurCourbe=blue,CouleurAire=cyan]<baseline=0pt>{0.05}{*}{32}
 
 \medskip
 
@@ -6563,23 +6574,23 @@ Quelques options pour cette commande :
 
 \begin{PresCodeTexPL}{listing only}
 %conversion avec changement de couleur
-\ConversionDepuisBaseDix[Couleur=DarkBlue]{45}{2}
+\ConversionDepuisBaseDix[Couleur=blue]{45}{2}
 
 %conversion sans le rectangle
 Par divisions euclidiennes successives, \ConversionDepuisBaseDix[Rect=false]{54}{3}.
 
 %conversion avec gestion du decalh pour le placement précis du rectangle
-\ConversionDepuisBaseDix[Couleur=Goldenrod,DecalH=6pt/2pt]{1012}{16}
+\ConversionDepuisBaseDix[Couleur=brown,DecalH=6pt/2pt]{1012}{16}
 
 %conversion avec noeud personnalisé et réutilisation
-\ConversionDepuisBaseDix[Couleur=ForestGreen,CouleurRes,Noeud=TEST]{100}{9}.
+\ConversionDepuisBaseDix[Couleur=CouleurVertForet,CouleurRes,Noeud=TEST]{100}{9}.
 \begin{tikzpicture}
-	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
+	\draw[overlay,CouleurVertForet,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
 \end{tikzpicture}
 \end{PresCodeTexPL}
 
 \begin{PresCodeSortiePL}{text only}
-\ConversionDepuisBaseDix[Couleur=DarkBlue]{45}{2}
+\ConversionDepuisBaseDix[Couleur=blue]{45}{2}
 
 \medskip
 
@@ -6587,13 +6598,13 @@ Par divisions euclidiennes successives, \ConversionDepuisBaseDix[Rect=false]{54}
 
 \medskip
 
-\ConversionDepuisBaseDix[Couleur=Goldenrod,DecalH=6pt/2pt]{1012}{16}
+\ConversionDepuisBaseDix[Couleur=brown,DecalH=6pt/2pt]{1012}{16}
 
 \medskip
 
-On obtient donc \ConversionDepuisBaseDix[Couleur=ForestGreen,CouleurRes,Noeud=TEST]{100}{9}.
+On obtient donc \ConversionDepuisBaseDix[Couleur=CouleurVertForet,CouleurRes,Noeud=TEST]{100}{9}.
 \begin{tikzpicture}
-	\draw[overlay,ForestGreen,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
+	\draw[overlay,CouleurVertForet,thick,->] (TEST2.south east) to[bend right] ++ (3cm,-1cm) node[right] {test } ;
 \end{tikzpicture}
 
 \vspace{1.5cm}
@@ -6666,16 +6677,16 @@ La présentation est dans un environnement \ctex{ensuremath} donc les \ctex{\$..
 \end{PresCodePL}
 
 \begin{PresCodePL}{}
-\PresentationPGCD[CouleurResultat,Couleur=ForestGreen]{1250}{450}.
+\PresentationPGCD[CouleurResultat,Couleur=CouleurVertForet]{1250}{450}.
 
-\PresentationPGCD[CouleurResultat,Couleur=DarkBlue]{13500}{2500}.
+\PresentationPGCD[CouleurResultat,Couleur=blue]{13500}{2500}.
 
 \PresentationPGCD[Rectangle=false]{420}{540}. \\
 
-D'après l'algorithme d'Euclide, on a $\left| \PresentationPGCD[Couleur=LightSkyBlue,AfficheConclusion=false, AfficheDelimiteurs=false]%
+D'après l'algorithme d'Euclide, on a $\left| \PresentationPGCD[Couleur=lime,AfficheConclusion=false, AfficheDelimiteurs=false]%
 	{123456789}{9876} \right.$
 \begin{tikzpicture}
-	\draw[overlay,LightSkyBlue,thick,<-] (FFF1.east) to[bend right] ++ (1cm,0.75cm) node[right] {dernier reste non nul} ;
+	\draw[overlay,lime,thick,<-] (FFF1.east) to[bend right] ++ (1cm,0.75cm) node[right] {dernier reste non nul} ;
 \end{tikzpicture}
 \end{PresCodePL}
 
@@ -7321,7 +7332,7 @@ Quelques \Cle{clés} sont disponibles pour cette commande :
 	\item la clé \Cle{Epaisseurg} pour gérer l'épaisseur des traits épais ; \hfill~défaut \Cle{1.5pt}
 	\item la clé \Cle{Epaisseur} pour gérer l'épaisseur des traits fins ; \hfill~défaut \Cle{0.5pt}
 	\item la clé \Cle{Unite} qui est l'unité graphique de la figure ; \hfill~défaut \Cle{1cm}
-	\item la clé \Cle{CouleurCase} pour la couleur (éventuelles) des cases ; \hfill~défaut \Cle{LightBlue!50}
+	\item la clé \Cle{CouleurCase} pour la couleur (éventuelles) des cases ; \hfill~défaut \Cle{cyan!50}
 	\item la clé \Cle{CouleurTexte} pour gérer la couleur du label des cases ; \hfill~défaut \Cle{blue}
 	\item la clé \Cle{NbCol} qui est le nombre de colonnes ; \hfill~défaut \Cle{9}
 	\item la clé \Cle{NbSubCol} qui est le nombre de sous-colonnes ; \hfill~défaut \Cle{3}
@@ -7401,7 +7412,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 }
 
 \begin{EnvSudoMaths}[%
-		Unite=0.66cm,Police=\footnotesize\bfseries\ttfamily,CouleurCase=ForestGreen!50,%
+		Unite=0.66cm,Police=\footnotesize\bfseries\ttfamily,CouleurCase=violet!50,%
 		ListeLegV=QSDFGHJKL,ListeLegH=poiuytrez]{\grilleSuMaB}
 	\draw[red,very thick,<-,>=latex] (7.5,-4.5) to[bend right] ++ (4,-1) node[right] {code rajouté...} ;
 \end{EnvSudoMaths}
@@ -7421,7 +7432,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 }
 
 \begin{EnvSudoMaths}[%
-		Unite=0.66cm,Police=\footnotesize\bfseries\ttfamily,CouleurCase=ForestGreen!50,%
+		Unite=0.66cm,Police=\footnotesize\bfseries\ttfamily,CouleurCase=violet!50,%
 		ListeLegV=QSDFGHJKL,ListeLegH=poiuytrez]{\grilleSuMaB}
 	\draw[red,very thick,<-,>=latex] (7.5,-4.5) to[bend right] ++ (4,-1) node[right] {code rajouté pour montrer la case \textsf{Ge}} ;
 	\foreach \x in {0,1,...,9} \draw[lightgray] (\x,-9) node[below,font=\scriptsize\ttfamily] {\x} ;
@@ -7443,6 +7454,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.7.2|~:~~~~\textsf{xcolor} n'est plus chargé par défaut (option \textsf{[xcolor]} pour le charger)
 
 {\small \bverb|v 2.7.1|~:~~~~Chargement de \textsf{tcolorbox} par librairies (au lieu de \textsf{[most]})
 

@@ -649,7 +649,7 @@
 }
 
 \setKVdefault[GRPHPROBCONTINUES]{%
-	CouleurAire=LightGray,%
+	CouleurAire=lightgray,%
 	CouleurCourbe=red,%
 	Largeur=2,%
 	Hauteur=1,%
@@ -673,7 +673,7 @@
 			{\draw (0,-0.0375) node[font=\tiny,scale={2*\UNITEX}] {#3} ;}
 			{}
 		\ifboolKV[GRPHPROBCONTINUES]{AfficheCadre}%
-			{\draw[Gray] (-4,-0.075) rectangle (4,0.425) ;}
+			{\draw[gray] (-4,-0.075) rectangle (4,0.425) ;}
 			{}
 		\clip (-4,-0.075) rectangle (4,0.425) ;
 		\draw[black,semithick,fill=\GRPHPROBcoulsurf] ({\BorneInf},0) -- plot [domain={\BorneInf}:{\BorneSup},samples=100] (\x,{\densnorm{\x}}) -- ({\BorneSup},0) -- cycle;
@@ -697,7 +697,7 @@
 	%tikzpicture
 	\begin{tikzpicture}[x=\UNITEX cm,y=\UNITEY cm,#2]
 		\ifboolKV[GRPHPROBCONTINUES]{AfficheCadre}%
-			{\draw[Gray] (-0.2,-0.15) rectangle (3.8,0.85) ;}
+			{\draw[gray] (-0.2,-0.15) rectangle (3.8,0.85) ;}
 			{}
 		\clip (-0.2,-0.15) rectangle (3.8,0.85) ;
 		\draw[black,semithick,fill=\GRPHPROBcoulsurf] ({\BorneInf},0) -- plot [domain={\BorneInf}:{\BorneSup},samples=100] (\x,{0.7*\densexpo{\x}}) -- ({\BorneSup},0) -- cycle;

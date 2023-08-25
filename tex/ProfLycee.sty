@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/08/08 2.7.1 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/08/25 2.7.2 Aide pour l'utilisation de LaTeX en lycee]
+% 2.7.2	Modification du chargement de xcolor pour éviter les clash errors (couleurs adaptées du coup), passage en option (test)
 % 2.7.1	Modification du chargement de tcolorbox
 % 2.7.0	Ajout de la clé [Frac] pour \AxeyTikz + \FonctionRepartTikz
 % 2.6.9	Correction de bugs et améliorations des boîtes de codes
@@ -57,8 +58,10 @@
 \RequirePackage{mathtools}
 
 %------Option(s)
+\newif\if@xcolor \@xcolorfalse
 \newif\if@build \@buildfalse
 \newif\if@loadamssymb \@loadamssymbtrue
+\DeclareOption{xcolor}{\@xcolortrue}%
 \DeclareOption{build}{\@buildtrue}%
 \DeclareOption{nonamssymb}{\@loadamssymbfalse}%
 \DeclareOption*{}
@@ -68,7 +71,9 @@
 \if@loadamssymb
 	\RequirePackage{amssymb}
 \fi
-\RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
+\if@xcolor
+	\RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
+\fi
 \RequirePackage{tikz}
 \RequirePackage{tkz-tab}
 \RequirePackage{pgf,pgffor}
@@ -111,6 +116,9 @@
 \tcbuselibrary{breakable,fitting,skins,listings,listingsutf8,hooks}
 %divers
 \RequirePackage{iftex}
+
+%couleurs
+\definecolor{CouleurVertForet}{HTML}{1F8B36} %ForestGreen
 
 %%------LIBRAIRIES/BIBIOTHÈQUES
 \newcommand\useproflyclib[1]{%ajout d'une commande "librairie" pour charger des modules
