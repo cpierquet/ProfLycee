@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.7.2}
-\def\PLdate{25 août 2023}
+\def\PLversion{2.7.3}
+\def\PLdate{27 août 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex}
@@ -7454,6 +7454,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.7.3|~:~~~~Correction de la couleur de bordures vertes pour les codes python}
 
 {\small \bverb|v 2.7.2|~:~~~~\textsf{xcolor} n'est plus chargé par défaut (option \textsf{[xcolor]} pour le charger)
 
