@@ -1,0 +1,264 @@
+% proflycee-tools-ecritures.tex
+% Copyright 2023  Cédric Pierquet
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+
+%===PACKAGE
+\RequirePackage{interval}
+\RequirePackage{esvect}
+\RequirePackage{ifthen}
+\RequirePackage{xspace}
+%\RequirePackage{mathrsfs}%pour \mathscr (à voir...)
+
+%===ENSEMBLES CLASSIQUES
+\ifthenelse{\isundefined{\N}}%
+	{%
+		\NewDocumentCommand\N{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{N}^{*}}\xspace}{\ensuremath{\mathbb{N}}\xspace}}%
+	}%
+	{%
+		\RenewDocumentCommand\N{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{N}^{*}}\xspace}{\ensuremath{\mathbb{N}}\xspace}}%
+	}%
+\ifthenelse{\isundefined{\Z}}%
+	{%
+		\NewDocumentCommand\Z{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{Z}^{*}}\xspace}{\ensuremath{\mathbb{Z}}\xspace}}%
+	}%
+	{%
+		\RenewDocumentCommand\Z{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{Z}^{*}}\xspace}{\ensuremath{\mathbb{Z}}\xspace}}%
+	}%
+\ifthenelse{\isundefined{\D}}%
+	{%
+		\NewDocumentCommand\D{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{D}^{*}}\xspace}{\ensuremath{\mathbb{D}}\xspace}}%
+	}%
+	{%
+		\RenewDocumentCommand\D{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{D}^{*}}\xspace}{\ensuremath{\mathbb{D}}\xspace}}%
+	}%
+\ifthenelse{\isundefined{\Q}}%
+	{%
+		\NewDocumentCommand\Q{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{Q}^{*}}\xspace}{\ensuremath{\mathbb{Q}}\xspace}}%
+	}%
+	{%
+		\RenewDocumentCommand\Q{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{Q}^{*}}\xspace}{\ensuremath{\mathbb{Q}}\xspace}}%
+	}%
+\ifthenelse{\isundefined{\R}}%
+	{%
+		\NewDocumentCommand\R{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{R}^{*}}\xspace}{\ensuremath{\mathbb{R}}\xspace}}%
+	}%
+	{%
+		\RenewDocumentCommand\R{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{R}^{*}}\xspace}{\ensuremath{\mathbb{R}}\xspace}}%
+	}%
+\ifthenelse{\isundefined{\C}}%
+	{%
+		\NewDocumentCommand\C{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{C}^{*}}\xspace}{\ensuremath{\mathbb{C}}\xspace}}%
+	}%
+	{%
+		\RenewDocumentCommand\C{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{C}^{*}}\xspace}{\ensuremath{\mathbb{C}}\xspace}}%
+	}%
+\ifthenelse{\isundefined{\ensH}}%
+	{%
+		\NewDocumentCommand\ensH{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{H}^{*}}\xspace}{\ensuremath{\mathbb{H}}\xspace}}%
+	}%
+	{%
+		\RenewDocumentCommand\ensH{ s }{\IfBooleanTF{#1}{\ensuremath{\mathbb{H}^{*}}\xspace}{\ensuremath{\mathbb{H}}\xspace}}%
+	}%
+
+%====INTERVALLES
+\intervalconfig{separator symbol=;}
+\NewDocumentCommand\IntervalleFF{ O{scaled} m m }{\ensuremath{\interval[#1]{#2}{#3}}}
+\NewDocumentCommand\IntervalleOF{ O{scaled} m m }{\ensuremath{\interval[#1,open left]{#2}{#3}}}
+\NewDocumentCommand\IntervalleFO{ O{scaled} m m }{\ensuremath{\interval[#1,open right]{#2}{#3}}}
+\NewDocumentCommand\IntervalleOO{ O{scaled} m m }{\ensuremath{\interval[#1,open]{#2}{#3}}}
+
+%====ARRONDI
+\DeclareDocumentCommand\Arrondi{ s O{3} m }{% * pour afficher signe / opt = précision / argument = nb
+	\IfBooleanTF{#1}{\num[print-implicit-plus]{\xinteval{round(#3,#2)}}}{\num{\xinteval{round(#3,#2)}}}%
+}
+
+%====MODULO
+\NewDocumentCommand\Modulo{ s O{Cro} m }{%
+	\IfStrEq{#2}{Cro}%
+		{\IfBooleanTF{#1}{\quad}{\:\:}[#3]}{}%
+	\IfStrEq{#2}{Par}%
+		{\IfBooleanTF{#1}{\quad}{\:\:}(#3)}{}%
+	\IfStrEq{#2}{Txt}%
+		{\IfBooleanTF{#1}{\:\:}{\:}\text{modulo }#3}{}%
+}
+
+%====COURBE
+\NewDocumentCommand\Courbe{ s O{} }{%
+	\IfBooleanTF{#1}%
+	{%
+		\IfNoValueTF{#2}%
+			{\ensuremath{{\mathscr{C}}}\xspace}%
+			{\ensuremath{{\mathscr{C}}_{#2}}\xspace}%
+	}%
+	{%
+		\IfNoValueTF{#2}%
+			{\ensuremath{{\mathcal{C}}}\xspace}%
+			{\ensuremath{{\mathcal{C}}_{#2}}\xspace}%
+	}%
+}
+
+%====SUITE
+\NewDocumentCommand\Suite{ O{n} m }{%
+	\ensuremath{\left( #2_{#1} \right)}%
+}
+
+%===DIVERS
+\AtBeginDocument{%voir hyperref...
+	\ifthenelse{\isundefined{\i}}{\newcommand\i{{\rm i}}}{\renewcommand\i{{\rm i}}}%
+	\ifthenelse{\isundefined{\e}}{\newcommand\e{{\rm e}}}{\renewcommand\e{{\rm e}}}%
+	\ifthenelse{\isundefined{\j}}{\newcommand\j{{\rm j}}}{\renewcommand\j{{\rm j}}}%
+}
+
+\ifthenelse{\isundefined{\jfexp}}%
+	{\newcommand\jfexp{\ensuremath{\e^{\i\frac{\pi}{3}}}}}%
+	{\renewcommand\jfexp{\ensuremath{\e^{\i\frac{\pi}{3}}}}}%
+
+\ifthenelse{\isundefined{\jfalg}}%
+	{\newcommand\jfalg{\ensuremath{\frac{1}{2}+\i\frac{\sqrt{3}}{2}}}}%
+	{\renewcommand\jfalg{\ensuremath{\frac{1}{2}+\i\frac{\sqrt{3}}{2}}}}%
+
+\ifthenelse{\isundefined{\Esper}}%
+	{\newcommand\Esper[2][\mathbb{E}]{\ensuremath{{#1}{\left({#2}\right)}}}}%
+	{\renewcommand\Esper[2][\mathbb{E}]{\ensuremath{{#1}{\left({#2}\right)}}}}%
+
+\ifthenelse{\isundefined{\Varianc}}%
+	{\newcommand\Varianc[2][\mathbb{V}]{\ensuremath{{#1}{\left({#2}\right)}}}}%
+	{\renewcommand\Varianc[2][\mathbb{V}]{\ensuremath{{#1}{\left({#2}\right)}}}}%
+
+\ifthenelse{\isundefined{\EcType}}%
+	{\newcommand\EcType[1]{\ensuremath{\sigma{\left({#1}\right)}}}}%
+	{\renewcommand\EcType[1]{\ensuremath{\sigma{\left({#1}\right)}}}}%
+
+\ifthenelse{\isundefined{\dx}}%
+	{\newcommand\dx[1][x]{\ensuremath{~\text{d}#1}}}%
+	{\renewcommand\dx[1][x]{\ensuremath{~\text{d}#1}}}%
+
+\ifthenelse{\isundefined{\Integrale}}%
+	{\newcommand\Integrale{\displaystyle\int}}%
+	{\renewcommand\Integrale{\displaystyle\int}}%
+
+
+%====PROBAS
+\NewDocumentCommand\LoiNormale{ s m m }{%
+	\IfBooleanTF{#1}{\ensuremath{\mathscr{N}{\left(#2;#3\right)}}}{\ensuremath{\mathcal{N}{\left(#2;#3\right)}}}%
+}
+\NewDocumentCommand\LoiBinomiale{ s m m }{%
+	\IfBooleanTF{#1}{\ensuremath{\mathscr{B}{\left(#2;#3\right)}}}{\ensuremath{\mathcal{B}{\left(#2;#3\right)}}}%
+}
+\NewDocumentCommand\LoiPoisson{ s m }{%
+	\IfBooleanTF{#1}{\ensuremath{\mathscr{P}_{#2}}}{\ensuremath{\mathcal{P}_{#2}}}%
+}
+\NewDocumentCommand\LoiUnif{ s m }{%
+	\IfBooleanTF{#1}{\ensuremath{\mathscr{U}_{#2}}}{\ensuremath{\mathcal{U}_{#2}}}%
+}
+\NewDocumentCommand\LoiExpo{ s m }{%
+	\IfBooleanTF{#1}{\ensuremath{\mathscr{E}_{#2}}}{\ensuremath{\mathcal{E}_{#2}}}%
+}
+
+%====COORDONNEES, VECTEURS
+\NewDocumentCommand\CoordPtPl{ m m }{\ensuremath{\left(#1;#2\right)}}
+\NewDocumentCommand\CoordPtEsp{ m m m }{\ensuremath{\left(#1;#2;#3\right)}}
+\NewDocumentCommand\CoordVecPl{ m m }{\ensuremath{\begin{pmatrix} #1 \\ #2 \end{pmatrix}}}
+\NewDocumentCommand\CoordVecEsp{ m m m }{\ensuremath{\begin{pmatrix} #1 \\ #2 \\ #3 \end{pmatrix}}}
+\NewDocumentCommand\MatDeux{ m m m m }{\ensuremath{\begin{pmatrix} #1 & #2 \\ #3 & #4 \end{pmatrix}}}
+\NewDocumentCommand\Vecteur{ s m O{} }{%
+	\IfBooleanTF{#1}{\ensuremath{\vv*{#2}{#3}}}{\ensuremath{\vv{#2}}}%
+}
+
+%====REPÈRES
+\setKVdefault[ecrituresreperes]{%
+	Sep={;}
+}
+
+\NewDocumentCommand\RepereOij{ s O{} }{%
+	\useKVdefault[ecrituresreperes]%
+	\setKV[ecrituresreperes]{#2}%
+	\IfBooleanTF{#1}%si étoilé := on n'aligne pas les flèches + nosmash
+		{%
+			\ensuremath{\left(O\useKV[ecrituresreperes]{Sep}\Vecteur{\imath},\Vecteur{\jmath}\right)}\xspace%
+		}%
+		{%
+			\ensuremath{\left(O\useKV[ecrituresreperes]{Sep}\Vecteur{\vphantom{t}\imath},\Vecteur{\vphantom{t}\jmath}\right)}\xspace%
+		}%
+}
+
+\NewDocumentCommand\RepereOuv{ s O{} }{%
+	\useKVdefault[ecrituresreperes]%
+	\setKV[ecrituresreperes]{#2}%
+	\IfBooleanTF{#1}%si étoilé := on n'aligne pas les flèches + nosmash
+		{%
+			\ensuremath{\left(O\useKV[ecrituresreperes]{Sep}\Vecteur{u},\Vecteur{v}\right)}\xspace%
+		}%
+		{%
+			\ensuremath{\left(O\useKV[ecrituresreperes]{Sep}\Vecteur{\vphantom{t}u},\Vecteur{\vphantom{t}v}\right)}\xspace%
+		}%
+}
+
+\NewDocumentCommand\RepereOijk{ s O{} }{%
+	\useKVdefault[ecrituresreperes]%
+	\setKV[ecrituresreperes]{#2}%
+	\IfBooleanTF{#1}%si étoilé := on n'aligne pas les flèches + nosmash
+		{%
+			\ensuremath{\left(O\useKV[ecrituresreperes]{Sep}\Vecteur{\imath},\Vecteur{\jmath},\Vecteur{k}\right)}\xspace%
+		}%
+		{%
+			\ensuremath{\left(O\useKV[ecrituresreperes]{Sep}\Vecteur{\vphantom{t}\imath},\Vecteur{\vphantom{t}\jmath},\Vecteur{\vphantom{t}\smash{k}}\right)}\xspace%
+		}%
+}
+
+\NewDocumentCommand\ReperePlan{ s O{} m m m }{%
+	\useKVdefault[ecrituresreperes]%
+	\setKV[ecrituresreperes]{#2}%
+	\IfBooleanTF{#1}%si étoilé := on n'aligne pas les flèches + nosmash
+		{%
+			\def\vecteurun{#4}\def\vecteurdeux{#5}%
+		}%
+		{%
+			\def\vecteurun{\smash{#4}}\def\vecteurdeux{\smash{#5}}%
+		}%
+	\IfStrEq{#4}{i}{\def\vecteurun{\imath}}{}%
+	\IfStrEq{#4}{j}{\def\vecteurun{\jmath}}{}%
+	\IfStrEq{#5}{i}{\def\vecteurdeux{\imath}}{}%
+	\IfStrEq{#5}{j}{\def\vecteurdeux{\jmath}}{}%
+	\IfBooleanTF{#1}%si étoilé := on n'aligne pas les flèches + nosmash
+		{%
+			\ensuremath{\left(#3\useKV[ecrituresreperes]{Sep}\Vecteur{\vecteurun},\Vecteur{\vecteurdeux}\right)}%
+		}%
+		{%
+			\ensuremath{\left(#3\useKV[ecrituresreperes]{Sep}\Vecteur{\vphantom{t}\vecteurun},\Vecteur{\vphantom{t}\vecteurdeux}\right)}%
+		}%
+}
+
+\NewDocumentCommand\RepereEspace{ s O{} m m m m }{%
+	\useKVdefault[ecrituresreperes]%
+	\setKV[ecrituresreperes]{#2}%
+	\IfBooleanTF{#1}%si étoilé := on n'aligne pas les flèches + nosmash
+		{%
+			\def\vecteurun{#4}\def\vecteurdeux{#5}\def\vecteurtrois{#6}%
+		}%
+		{%
+			\def\vecteurun{\smash{#4}}\def\vecteurdeux{\smash{#5}}\def\vecteurtrois{\smash{#6}}%
+		}%
+	\IfStrEq{#4}{i}{\def\vecteurun{\imath}}{}%
+	\IfStrEq{#4}{j}{\def\vecteurun{\jmath}}{}%
+	\IfStrEq{#5}{i}{\def\vecteurdeux{\imath}}{}%
+	\IfStrEq{#5}{j}{\def\vecteurdeux{\jmath}}{}%
+	\IfStrEq{#6}{i}{\def\vecteurtrois{\imath}}{}%
+	\IfStrEq{#6}{j}{\def\vecteurtrois{\jmath}}{}%
+	\IfBooleanTF{#1}%si étoilé := on n'aligne pas les flèches + nosmash
+		{%
+			\ensuremath{\left(#3\useKV[ecrituresreperes]{Sep}\Vecteur{\vecteurun},\Vecteur{\vecteurdeux},\Vecteur{\vecteurtrois}\right)}%
+		}%
+		{%
+			\ensuremath{\left(#3\useKV[ecrituresreperes]{Sep}\Vecteur{\vphantom{t}\vecteurun},\Vecteur{\vphantom{t}\vecteurdeux},\Vecteur{\vphantom{t}\vecteurtrois}\right)}%
+		}%
+}
+
+
+\endinput

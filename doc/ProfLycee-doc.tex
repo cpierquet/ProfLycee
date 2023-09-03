@@ -5,12 +5,13 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.7.3}
-\def\PLdate{27 août 2023}
+\def\PLversion{2.7.4}
+\def\PLdate{3 septembre 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
-\useproflyclib{piton,minted,pythontex}
+\useproflyclib{piton,minted,pythontex,ecritures}
 \usepackage[math-style=french]{fourier-otf}
+\usepackage{mathrsfs}%pour mathscr
 \usepackage{awesomebox}
 \usepackage[lua]{tkz-euclide}
 \usepackage{tkz-tab}
@@ -23,6 +24,7 @@
 \usepackage{fancyhdr}
 \usepackage{tabularray}
 \usepackage{multicol}
+\DeclareMathSymbol{;}\mathbin{operators}{'73} %espacement avec ;
 %fancy
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
@@ -133,7 +135,7 @@
 		commentstyle={\itshape\color{gray}},
 		keywordstyle={\color{blue}},%
 		classoffset=0,%
-		keywords={useproflyclib,includegraphics},%
+		keywords={dfrac,useproflyclib,includegraphics},%
 		alsoletter={-},%
 		keywordstyle={\color{blue}},%
 		classoffset=1,%
@@ -142,7 +144,7 @@
 		keywordstyle={\color{violet}},%
 		classoffset=2,%
 		alsoletter={-},%
-		morekeywords={\ResolutionApprochee,\SolutionTVI,\CalculTermeRecurrence,\ToileRecurrence,\SolutionSeuil,\IntegraleApprochee,\GrilleTikz,\AxesTikz,\AxexTikz,\AxeyTikz,\FenetreTikz,\FenetreSimpleTikz,\DeclareFonctionTikz,\CourbeTikz,\OrigineTikz,\SplineTikz,\TangenteTikz,\MiniSchemaSignes,\MiniSchemaSignesTkzTab,\IntegraleApprocheeTikz,\CartoucheCapytale,\PaveTikz,\TetraedreTikz,\CercleTrigo,\AffPoint,\AffVecteur,\TrouveEqCartPlan,\TrouveEqParamDroite,\TrouveEqCartDroite,\TrouveNorme,\TrouveDistancePtPlan,\EquationReduite,\CalculsRegLin,\PointsRegLin,\NuagePointsTikz,\PointMoyenTikz,\BoiteMoustaches,\BoiteMoustachesAxe,\Histogramme,\CalcBinomP,\CalcBinomC,\BinomP,\BinomC,\CalcPoissP,\CalcPoissC,\PoissonP,\PoissonC,\CalcGeomP,\CalcGeomC,\GeomP,\GeomC,\CalcHypergeomP,\CalcHypergeomP,\HypergeomP,\HypergeomC,\CalcNormC,\NormaleC,\CalcExpoC,\ExpoC,\ArbreProbasTikz,\LoiNormaleGraphe,\LoiExpoGraphe,\NbAlea,\VarNbAlea,\TirageAleatoireEntiers,\Arrangement,\Combinaison,\ConversionDecBin,\ConversionBinHex,\ConversionVersDec,\ConversionBaseDix,\ConversionDepuisBaseDix,\PresentationPGCD,\EquationDiophantienne,\ConversionFraction,\SimplificationRacine,\EcritureEnsemble,\EcritureTrinome,\MesurePrincipale,\LigneTrigo,\SudoMaths,\FonctionRepartTikz
+		morekeywords={\ResolutionApprochee,\SolutionTVI,\CalculTermeRecurrence,\ToileRecurrence,\SolutionSeuil,\IntegraleApprochee,\GrilleTikz,\AxesTikz,\AxexTikz,\AxeyTikz,\FenetreTikz,\FenetreSimpleTikz,\DeclareFonctionTikz,\CourbeTikz,\OrigineTikz,\SplineTikz,\TangenteTikz,\MiniSchemaSignes,\MiniSchemaSignesTkzTab,\IntegraleApprocheeTikz,\CartoucheCapytale,\PaveTikz,\TetraedreTikz,\CercleTrigo,\AffPoint,\AffVecteur,\TrouveEqCartPlan,\TrouveEqParamDroite,\TrouveEqCartDroite,\TrouveNorme,\TrouveDistancePtPlan,\EquationReduite,\CalculsRegLin,\PointsRegLin,\NuagePointsTikz,\PointMoyenTikz,\BoiteMoustaches,\BoiteMoustachesAxe,\Histogramme,\CalcBinomP,\CalcBinomC,\BinomP,\BinomC,\CalcPoissP,\CalcPoissC,\PoissonP,\PoissonC,\CalcGeomP,\CalcGeomC,\GeomP,\GeomC,\CalcHypergeomP,\CalcHypergeomP,\HypergeomP,\HypergeomC,\CalcNormC,\NormaleC,\CalcExpoC,\ExpoC,\ArbreProbasTikz,\LoiNormaleGraphe,\LoiExpoGraphe,\NbAlea,\VarNbAlea,\TirageAleatoireEntiers,\Arrangement,\Combinaison,\ConversionDecBin,\ConversionBinHex,\ConversionVersDec,\ConversionBaseDix,\ConversionDepuisBaseDix,\PresentationPGCD,\EquationDiophantienne,\ConversionFraction,\SimplificationRacine,\EcritureEnsemble,\EcritureTrinome,\MesurePrincipale,\LigneTrigo,\SudoMaths,\FonctionRepartTikz,\IntervalleFF,\IntervalleFO,\IntervalleOF,\IntervalleOO,\RepereOij,\RepereOuv,\RepereOijk,\ReperePlan,\RepereEspace,\jfalg,\jfexp,\LoiNormale,\LoiBinomiale,\LoiPoisson,\LoiExpo,\LoiUnif,\Courbe,\Suite,\CoordPtPl,\CoordPtEsp,\CoordVecPl,\CoordVecEsp,\MatDeux,\Vecteur,\Esper,\Varianc,\EcType,\dx,\Integrale,\Modulo,\Arrondi
 		},%
 		keywordstyle={\color{CouleurVertForet}},%
 		classoffset=3,%
@@ -367,7 +369,7 @@
 {\deblst} déterminer la mesure principale d'un angle, calculer les lignes trigonométriques d'angles \og classiques \fg{} \\
 {\deblst} résoudre une équation diophantienne \og classique \fg{} \\
 {\deblst} travailler avec un peu de géométrie analytique \\
-{\deblst} \ldots}
+{\deblst} composer des mathématiques}
 
 ~
 
@@ -442,7 +444,7 @@ Il est cependant possible, grâce à l'option \Cle{[xcolor]} à passer au charge
 Le {package} \ctex{ProfLycee} charge et utilise les {packages} :
 
 \begin{itemize}
-	\item \ctex{mathtools}, \ctex{amssymb} ;
+	\item \ctex{mathtools}, \ctex{amssymb}, \ctex{xspace}, \ctex{esvect}, \ctex{interval} ;
 %	\item \ctex{xcolor} avec l' option \textsf{[table,svgnames]} ;
 	\item \ctex{tikz}, \ctex{pgf}, \ctex{pgffor}, \ctex{nicefrac}, \ctex{nicematrix} ;
 	\item \ctex{tcolorbox} avec les librairies \ctex{breakable,fitting,skins,listings,listingsutf8,hooks} ;
@@ -495,7 +497,8 @@ Les librairies disponibles seront indiquées dans les sections spécifiques. Pou
 \begin{itemize}
 	\item \clib{piton} (page \pageref{pythonpiton}) ;
 	\item \clib{minted} (page \pageref{pytminted}) ;
-	\item \clib{pythontex} (page \pageref{pythontex}).
+	\item \clib{pythontex} (page \pageref{pythontex}) ;
+	\item \clib{ecritures} (page \pageref{ecrituresmath}).
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
 \end{noteblock}
@@ -896,6 +899,294 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \SudoMaths[options]{liste}
 \begin{EnvSudoMaths}[options]{grille}...\end{EnvSudoMaths}
 \end{PresCodeTexPL}
+
+\newpage
+
+\phantom{t}\par\vfill\par
+\begin{PART}
+	\begin{center}
+		\Huge\MakeUppercase{Écritures mathématiques}
+	\end{center}
+\end{PART}
+\par\vfill\par\phantom{t}
+
+\newpage
+
+\part{Écritures d'objets mathématiques}\label{ecrituresmath}
+
+\section{Introduction}
+
+\begin{tipblock}
+Les commandes de cette section sont disponibles en chargeant la librairie \clib{ecritures}, car elles peuvent redéfinir des commandes personnelles déjà existantes !
+\end{tipblock}
+
+\section{Commandes}
+
+\subsection{Arrondi}
+
+\begin{tipblock}
+Il est possible de calculer/arrondir/formater un calcul mathématique, grâce aux package \ctex{siunitx} et \ctex{xinteval}.
+
+\begin{itemize}
+	\item la version étoilée force l'affichage du \og + \fg{} pour les nombres positifs ;
+	\item l'argument optionnel est la précision demandée (3 par défaut)
+	\item l'argument obligatoire est le calcul, au langage \ctex{xinteval}.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{PresCodeTexPL}{}
+$1+\dfrac{7}{11} \approx \Arrondi{1+7/11} \approx \Arrondi[5]{1+7/11} \approx \Arrondi*[2]{1+7/11}$
+
+$\ln\big(1+\e^{4}\big) \approx \Arrondi[6]{log(1+exp(4))}$
+\end{PresCodeTexPL}
+
+\subsection{Ensembles et intervalles}
+
+\begin{tipblock}
+Les commandes suivantes permettent de composer les ensembles traditionnels, en mode \textit{tableau noir}.
+
+Elles sont dans un bloc \textsf{ensuremath}, donc les \textsf{\$...\$} ne sont pas nécessaires.
+
+\smallskip
+
+À noter la macro particulière pour l'ensemble des quaternions, pour éviter des erreurs éventuelles de \textit{re}définition.
+\end{tipblock}
+
+\begin{PresCodeTexPL}{}
+\N, \Z, \D, \Q, \R, \C, \ensH, \N*, \Z*, \D*, \Q*, \R*, \C*, \ensH*
+\end{PresCodeTexPL}
+
+\begin{tipblock}
+Des intervalles peuvent être composés, grâce à la commande \ctex{\textbackslash IntervalleXX}, dont la base est le package \ctex{interval} :
+
+\begin{itemize}
+	\item la commande est insérée dans un bloc \textsf{ensuremath} ;
+	\item le séparateur est le point-virgule ;
+	\item l'espacement autour du point-virgule est laissé aux réglages du document (\ctex{babel}, \ctex{frenchmath}, etc).
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{PresCodeTexPL}{}
+\IntervalleFO{0}{+\infty} ou \IntervalleOO{0}{+\infty} ou \IntervalleOO{-\infty}{0} ou \IntervalleOF{-\infty}{0}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+\IntervalleFF{\frac12}{\sqrt{26}} ou \IntervalleOO{\frac12}{\sqrt{26}} ou 
+\IntervalleFO{\dfrac12}{\sqrt{26}} ou \IntervalleFO{\dfrac12}{\sqrt{26}}
+\end{PresCodeTexPL}
+
+\subsection{Repères et coordonnées}
+
+\begin{tipblock}
+Des vecteurs/repères/coordonnées peuvent être composées :
+
+\begin{itemize}
+	\item les vecteurs sont mis en forme par le package \ctex{esvect} (y compris en version étoilée pour les indices) ;
+	\item des coordonnées de point/vecteur dans le plan ou l'espace ;
+	\item des repères génériques, avec choix du séparateur entre le point et les vecteurs ;
+	\item les versions étoilées des repères n'alignent pas les flèches.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{PresCodeTexPL}{}
+%vecteurs
+\Vecteur{\imath} et \Vecteur{u} et \Vecteur{AB}
+
+$\Vecteur{AB}+\Vecteur{BC} = \Vecteur{AC}$
+
+$\Vecteur*{u}[1]+\Vecteur*{v}[2] = \Vecteur*{w}[3]$
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%coordonnées points
+\CoordPtPl{4}{-2} ou \CoordPtPl{\frac12}{\frac47}
+
+\CoordPtEsp{4}{-2}{7} ou \CoordPtEsp{-2}{\frac12}{\frac47}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%coordonnées vecteurs
+\CoordVecPl{4}{-2} ou \CoordVecPl{\frac12}{\frac47}
+
+\CoordVecEsp{4}{-2}{7} ou \CoordVecEsp{-2}{\frac12}{\frac47}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%matrices 2x2
+\MatDeux{4}{-2}{1}{-5}
+
+\MatDeux{\frac47}{-1}{0}{-\frac17}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%repères classiques
+\RepereOij ou \RepereOij* ou \RepereOij[Sep={,}] ou \RepereOij*[Sep={,}]
+
+\RepereOijk ou \RepereOijk* ou \RepereOijk[Sep={,}] ou \RepereOijk*[Sep={,}]
+
+\RepereOuv ou \RepereOuv* ou \RepereOuv[Sep={,}] ou \RepereOuv*[Sep={,}]
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%repères personnalisés
+\ReperePlan{A}{AB}{AC} ou \ReperePlan*{A}{AB}{AC} ou \ReperePlan*{O}{OI}{OJ} ou \ReperePlan[Sep={,}]{O}{OI}{OK}
+
+\RepereEspace{A}{AB}{AC}{AD} ou \RepereEspace*{A}{AB}{AC}{k} ou \RepereEspace{D}{i}{j}{k}
+\end{PresCodeTexPL}
+
+\subsection{Divers}
+
+\begin{tipblock}
+La librairie \clib{ecritures} permet également de définir des commandes pour :
+
+\begin{itemize}
+	\item composer le nom d'une courbe ;
+	\item composer le \og i \fg{} et le \og e \fg{} en romain ;
+	\item composer le complexe $\j$ en mode algébrique ou exponentielle ;
+	\item composer un modulo avec choix de la congruence ;
+	\item composer une suite numérique ;
+	\item composer une intégrale (mode \textsf{displaystyle}).
+\end{itemize}
+
+À noter que les commandes sont dans un bloc \textsf{ensuremath}.
+\end{tipblock}
+
+\begin{PresCodeTexPL}{}
+%version normale := mathcal
+%version étoilée := mathscr (si chargé)
+
+\Courbe et \Courbe[f] et \Courbe[g^{-1}]
+
+\Courbe* et \Courbe*[f] et \Courbe*[g^{-1}]
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+$\e^{\i \pi} = -1$
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+On a $\j = \jfalg = \jfexp$
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%La version étoilée augmente l'espacement, l'argument optionnel change la présentation
+$21 \equiv 1 \Modulo{5} \equiv 1 \Modulo[Par]{5} \equiv 1 \Modulo[Txt]{5}$
+
+$21 \equiv 1 \Modulo*{5} \equiv 1 \Modulo*[Par]{5} \equiv 1 \Modulo*[Txt]{5}$
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+Soient les suites \Suite{u} et \Suite[p]{v} et \Suite[q]{\Omega}.
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+$I = \Integrale f(x) \dx = \Integrale f(t) \dx[t]$
+\end{PresCodeTexPL}
+
+\subsection{Probabilités}
+
+\begin{tipblock}
+La librairie \clib{ecritures} permet également de définir des commandes pour :
+
+\begin{itemize}
+	\item composer une loi classique (binomiale, exponentielle, etc) avec \textsf{mathcal} ou \textsf{mathscr} ;
+	\item composer espérance, variance et écart-type.
+\end{itemize}
+
+À noter que les commandes sont dans un bloc \textsf{ensuremath}.
+\end{tipblock}
+
+\begin{PresCodeTexPL}{}
+%version normale := mathcal
+%version étoilée := mathscr (si chargé)
+
+\LoiNormale{150}{25} ou \LoiNormale*{150}{25}
+
+\LoiBinomiale{150}{\num{0.45}} ou \LoiBinomiale*{150}{\num{0.45}}
+
+\LoiPoisson{5} ou \LoiPoisson*{5}
+
+\LoiExpo{\num{0.001}} ou \LoiExpo*{\num{0.001}}
+
+\LoiUnif{\IntervalleFF{5}{60}} ou \LoiUnif*{\IntervalleFF{5}{60}}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%par défaut E et V en \mathbb
+\Esper{X} ou \Esper[E]{X} \\
+\Varianc{X^2} ou \Varianc[V]{X^2} \\
+\EcType{X^2}
+\end{PresCodeTexPL}
+
+\pagebreak
+
+\section{Collection d'objets}\label{ensembles}
+
+\subsection{Idée}
+
+\begin{tipblock}
+L'idée est d'obtenir une commande pour simplifier l'écriture d'un ensemble d'éléments, en laissant gérer les espaces.
+
+Les délimiteurs de l'ensemble créé sont toujours \textsf{\{~~\}}.
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+\EcritureEnsemble[clés]{liste}
+\end{PresCodeTexPL}
+
+\subsection{Commande et options}
+
+\begin{cautionblock}
+Peu d'options pour ces commandes :
+
+\begin{itemize}
+	\item le premier argument, \textit{optionnel}, permet de spécifier les \Cle{Clés} :
+	\begin{itemize}
+		\item clé \Cle{Sep} qui correspond au délimiteur des éléments de l'ensemble ; \hfill{}défaut \Cle{;}
+		\item clé \Cle{Option} qui est un code (par exemple \textsf{strut}\dots) inséré avant les éléments ;\hfill{}défaut \Cle{vide}
+		\item un booléen \Cle{Mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct}.
+		
+		\hfill{}défaut \Cle{true}
+	\end{itemize}
+	\item le second, \textit{obligatoire}, est la \textsf{liste} des éléments, séparés par \textsf{/}.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{cautionblock}
+
+\begin{PresCodeTexPL}{listing only}
+$\EcritureEnsemble{a/b/c/d/e}$
+$\EcritureEnsemble[Mathpunct=false]{a/b/c/d/e}$
+$\EcritureEnsemble[Sep={,}]{a/b/c/d/e}$
+$\EcritureEnsemble[Option={\strut}]{a/b/c/d/e}$                      % \strut pour "augmenter" un peu la hauteur des {}
+$\EcritureEnsemble{ \frac{1}{1+\frac{1}{3}} / b / c / d / \frac{1}{2} }$
+\end{PresCodeTexPL}
+
+\begin{PresCodeSortiePL}{text only}
+$\EcritureEnsemble{a/b/c/d/e}$
+
+\smallskip
+
+$\EcritureEnsemble[Mathpunct=false]{a/b/c/d/e}$
+
+\smallskip
+
+$\EcritureEnsemble[Sep={,}]{a/b/c/d/e}$
+
+\smallskip
+
+$\EcritureEnsemble[Option={\strut}]{a/b/c/d/e}$
+
+\smallskip
+
+$\EcritureEnsemble{ \displaystyle\frac{1}{1+\frac{1}{3}} / b / c / d / \displaystyle\frac{1}{2} }$
+\end{PresCodeSortiePL}
+
+\begin{noteblock}
+Attention cependant au comportement de la commande avec des éléments en mode \textsf{mathématique}, ceux-ci peuvent générer une erreur si \textsf{displaystyle} n'est pas utilisé\ldots
+\end{noteblock}
 
 \newpage
 
@@ -6887,73 +7178,6 @@ $\ConversionFraction{0.1/0.7+30/80}$
 A priori le package \ctex{xint} permet de s'en sortir pour des calculs \og simples \fg, je ne garantis pas que tout calcul ou toute division donne un résultat \textit{satisfaisant} !
 \end{noteblock}
 
-\pagebreak
-
-\section{Ensembles}\label{ensembles}
-
-\subsection{Idée}
-
-\begin{tipblock}
-L'idée est d'obtenir une commande pour simplifier l'écriture d'un ensemble d'éléments, en laissant gérer les espaces.
-
-Les délimiteurs de l'ensemble créé sont toujours \textsf{\{~~\}}.
-\end{tipblock}
-
-\begin{PresCodeTexPL}{listing only}
-\EcritureEnsemble[clés]{liste}
-\end{PresCodeTexPL}
-
-\subsection{Commande et options}
-
-\begin{cautionblock}
-Peu d'options pour ces commandes :
-
-\begin{itemize}
-\item le premier argument, \textit{optionnel}, permet de spécifier les \Cle{Clés} :
-\begin{itemize}
-	\item clé \Cle{Sep} qui correspond au délimiteur des éléments de l'ensemble ; \hfill{}défaut \Cle{;}
-	\item clé \Cle{Option} qui est un code (par exemple \textsf{strut}\dots) inséré avant les éléments ;\hfill{}défaut \Cle{vide}
-	\item un booléen \Cle{Mathpunct} qui permet de préciser si on utilise l'espacement mathématique \textsf{mathpunct}.
-	
-	\hfill{}défaut \Cle{true}
-\end{itemize}
-\item le second, \textit{obligatoire}, est la \textsf{liste} des éléments, séparés par \textsf{/}.
-\end{itemize}
-\vspace*{-\baselineskip}\leavevmode
-\end{cautionblock}
-
-\begin{PresCodeTexPL}{listing only}
-$\EcritureEnsemble{a/b/c/d/e}$
-$\EcritureEnsemble[Mathpunct=false]{a/b/c/d/e}$
-$\EcritureEnsemble[Sep={,}]{a/b/c/d/e}$
-$\EcritureEnsemble[Option={\strut}]{a/b/c/d/e}$                      % \strut pour "augmenter" un peu la hauteur des {}
-$\EcritureEnsemble{ \frac{1}{1+\frac{1}{3}} / b / c / d / \frac{1}{2} }$
-\end{PresCodeTexPL}
-
-\begin{PresCodeSortiePL}{text only}
-$\EcritureEnsemble{a/b/c/d/e}$
-
-\smallskip
-
-$\EcritureEnsemble[Mathpunct=false]{a/b/c/d/e}$
-
-\smallskip
-
-$\EcritureEnsemble[Sep={,}]{a/b/c/d/e}$
-
-\smallskip
-
-$\EcritureEnsemble[Option={\strut}]{a/b/c/d/e}$
-
-\smallskip
-
-$\EcritureEnsemble{ \displaystyle\frac{1}{1+\frac{1}{3}} / b / c / d / \displaystyle\frac{1}{2} }$
-\end{PresCodeSortiePL}
-
-\begin{noteblock}
-Attention cependant au comportement de la commande avec des éléments en mode \textsf{mathématique}, ceux-ci peuvent générer une erreur si \textsf{displaystyle} n'est pas utilisé\ldots
-\end{noteblock}
-
 \newpage
 
 \section{Écriture d'un trinôme, trinôme aléatoire}\label{trinome}
@@ -7454,6 +7678,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.7.4|~:~~~~Ajout de macros pour des écritures mathématiques classiques (\pageref{ecrituresmath})}
 
 {\small \bverb|v 2.7.3|~:~~~~Correction de la couleur de bordures vertes pour les codes python}
 

@@ -3,7 +3,8 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2023/08/27 2.7.3 Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2023/09/03 2.7.4 Aide pour l'utilisation de LaTeX en lycee]
+% 2.7.4	Ajout de commandes pour des écritures mathématiques (avec librairie ?)
 % 2.7.3	Correction de la couleur de bordures vertes pour les codes python
 % 2.7.2	Modification du chargement de xcolor pour éviter les clash errors (couleurs adaptées du coup), passage en option (test)
 % 2.7.1	Modification du chargement de tcolorbox
@@ -145,6 +146,11 @@
 				\setpythontexoutputdir{./build/pythontex-files-\jobname} %essai de modif pythontex répertoire build
 			\fi
 			\input{proflycee-tools-pythontex.tex}
+		}%
+		{}%
+	\IfSubStr{#1}{ecritures}%
+		{%
+			\input{proflycee-tools-ecritures.tex}
 		}%
 		{}%
 }
