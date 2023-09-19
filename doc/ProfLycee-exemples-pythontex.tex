@@ -5,7 +5,7 @@
 % arara: lualatex: {shell: no, synctex: yes, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[french,a4paper,10pt]{article}
-\def\PLver{2.7.3}
+\def\PLver{2.7.5}
 \usepackage[margin=1.5cm]{geometry}
 \usepackage{ProfLycee}
 \useproflyclib{pythontex}
@@ -58,7 +58,7 @@ def valeur_absolue(x):
 
 {\small \begin{codehigh}
 %Sortie avec Style=Classique, Largeur=10cm, centré
-\begin{CodePythontexAlt}[Largeur=10cm,Centre]{}
+\begin{CodePythontexAlt}[Largeur=10cm,Centre,PremLigne=10]{}
 def valeur_absolue(x):
     "Renvoie la valeur absolue de x"
     #le petit test qui va bien
@@ -69,7 +69,7 @@ def valeur_absolue(x):
 \end{CodePythontexAlt}
 \end{codehigh}}
 
-\begin{CodePythontexAlt}[Largeur=10cm,Centre]{}
+\begin{CodePythontexAlt}[Largeur=10cm,Centre,PremLigne=10]{}
 def valeur_absolue(x):
 	"Renvoie la valeur absolue de x"
 	#le petit test qui va bien

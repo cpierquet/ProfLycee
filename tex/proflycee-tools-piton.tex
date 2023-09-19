@@ -8,6 +8,7 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.7.5	Ajout d'un argument optionnel pour commencer les codes python à un numéro de ligne différent de 1
 %2.7.3	Correction de la couleur des bordures
 %2.6.9	Amalioration de la gestion des style := intégration directe dans la tcbox !
 %2.5.9	Ajout d'une clé pour la couleur des nombres
@@ -85,7 +86,7 @@
 %==Création de la boîte (essai v2 ?)
 \ifluatex
 \RequirePackage{piton}
-\NewPitonEnvironment{CodePiton}{ O{} m }%
+\NewPitonEnvironment{CodePiton}{ O{} m D<>{} }%
 {%
 	\tcbset{reset}
 	\useKVdefault[envpiton]%
@@ -93,7 +94,7 @@
 	%------les styles piton
 	\SetPitonStyle{ Number = \color{\CODPITcolnb} }%
 	\ifboolKV[envpiton]{Lignes}%si lignes=true
-		{\PitonOptions{left-margin=0.75em,all-line-numbers}}%left-margin=auto,
+		{\PitonOptions{left-margin=0.75em,all-line-numbers,line-numbers={#3}}}%left-margin=auto,
 		{}%
 	\ifboolKV[envpiton]{Gobble}%si gobble=true
 		{\PitonOptions{tabs-auto-gobble}}%
@@ -135,10 +136,10 @@
 		}
 		{}%
 	%on crée la boîte
-	\begin{tcolorbox}[stylebase,filigrane,cadre,titre]
+	\tcolorbox[stylebase,filigrane,cadre,titre]
 }%
 {%
-	\end{tcolorbox}%
+	\endtcolorbox%
 }
 \fi
 

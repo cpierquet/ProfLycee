@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.7.4}
-\def\PLdate{3 septembre 2023}
+\def\PLversion{2.7.5}
+\def\PLdate{19 septembre 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex,ecritures}
@@ -144,12 +144,12 @@
 		keywordstyle={\color{violet}},%
 		classoffset=2,%
 		alsoletter={-},%
-		morekeywords={\ResolutionApprochee,\SolutionTVI,\CalculTermeRecurrence,\ToileRecurrence,\SolutionSeuil,\IntegraleApprochee,\GrilleTikz,\AxesTikz,\AxexTikz,\AxeyTikz,\FenetreTikz,\FenetreSimpleTikz,\DeclareFonctionTikz,\CourbeTikz,\OrigineTikz,\SplineTikz,\TangenteTikz,\MiniSchemaSignes,\MiniSchemaSignesTkzTab,\IntegraleApprocheeTikz,\CartoucheCapytale,\PaveTikz,\TetraedreTikz,\CercleTrigo,\AffPoint,\AffVecteur,\TrouveEqCartPlan,\TrouveEqParamDroite,\TrouveEqCartDroite,\TrouveNorme,\TrouveDistancePtPlan,\EquationReduite,\CalculsRegLin,\PointsRegLin,\NuagePointsTikz,\PointMoyenTikz,\BoiteMoustaches,\BoiteMoustachesAxe,\Histogramme,\CalcBinomP,\CalcBinomC,\BinomP,\BinomC,\CalcPoissP,\CalcPoissC,\PoissonP,\PoissonC,\CalcGeomP,\CalcGeomC,\GeomP,\GeomC,\CalcHypergeomP,\CalcHypergeomP,\HypergeomP,\HypergeomC,\CalcNormC,\NormaleC,\CalcExpoC,\ExpoC,\ArbreProbasTikz,\LoiNormaleGraphe,\LoiExpoGraphe,\NbAlea,\VarNbAlea,\TirageAleatoireEntiers,\Arrangement,\Combinaison,\ConversionDecBin,\ConversionBinHex,\ConversionVersDec,\ConversionBaseDix,\ConversionDepuisBaseDix,\PresentationPGCD,\EquationDiophantienne,\ConversionFraction,\SimplificationRacine,\EcritureEnsemble,\EcritureTrinome,\MesurePrincipale,\LigneTrigo,\SudoMaths,\FonctionRepartTikz,\IntervalleFF,\IntervalleFO,\IntervalleOF,\IntervalleOO,\RepereOij,\RepereOuv,\RepereOijk,\ReperePlan,\RepereEspace,\jfalg,\jfexp,\LoiNormale,\LoiBinomiale,\LoiPoisson,\LoiExpo,\LoiUnif,\Courbe,\Suite,\CoordPtPl,\CoordPtEsp,\CoordVecPl,\CoordVecEsp,\MatDeux,\Vecteur,\Esper,\Varianc,\EcType,\dx,\Integrale,\Modulo,\Arrondi
+		morekeywords={\ResolutionApprochee,\SolutionTVI,\CalculTermeRecurrence,\ToileRecurrence,\SolutionSeuil,\IntegraleApprochee,\GrilleTikz,\AxesTikz,\AxexTikz,\AxeyTikz,\FenetreTikz,\FenetreSimpleTikz,\DeclareFonctionTikz,\CourbeTikz,\OrigineTikz,\SplineTikz,\TangenteTikz,\MiniSchemaSignes,\MiniSchemaSignesTkzTab,\IntegraleApprocheeTikz,\CartoucheCapytale,\PaveTikz,\TetraedreTikz,\CercleTrigo,\AffPoint,\AffVecteur,\TrouveEqCartPlan,\TrouveEqParamDroite,\TrouveEqCartDroite,\TrouveNorme,\TrouveDistancePtPlan,\EquationReduite,\CalculsRegLin,\PointsRegLin,\NuagePointsTikz,\PointMoyenTikz,\BoiteMoustaches,\BoiteMoustachesAxe,\Histogramme,\CalcBinomP,\CalcBinomC,\BinomP,\BinomC,\CalcPoissP,\CalcPoissC,\PoissonP,\PoissonC,\CalcGeomP,\CalcGeomC,\GeomP,\GeomC,\CalcHypergeomP,\CalcHypergeomP,\HypergeomP,\HypergeomC,\CalcNormC,\NormaleC,\CalcExpoC,\ExpoC,\ArbreProbasTikz,\LoiNormaleGraphe,\LoiExpoGraphe,\NbAlea,\VarNbAlea,\TirageAleatoireEntiers,\Arrangement,\Combinaison,\ConversionDecBin,\ConversionBinHex,\ConversionVersDec,\ConversionBaseDix,\ConversionDepuisBaseDix,\PresentationPGCD,\EquationDiophantienne,\ConversionFraction,\SimplificationRacine,\EcritureEnsemble,\EcritureTrinome,\MesurePrincipale,\LigneTrigo,\SudoMaths,\FonctionRepartTikz,\IntervalleFF,\IntervalleFO,\IntervalleOF,\IntervalleOO,\RepereOij,\RepereOuv,\RepereOijk,\ReperePlan,\RepereEspace,\jfalg,\jfexp,\LoiNormale,\LoiBinomiale,\LoiPoisson,\LoiExpo,\LoiUnif,\Courbe,\Suite,\CoordPtPl,\CoordPtEsp,\CoordVecPl,\CoordVecEsp,\MatDeux,\Vecteur,\Esper,\Varianc,\EcType,\dx,\Integrale,\Modulo,\Arrondi,\CodePythonLstFichier,\CodePythonLstFichierAlt,\colorlet
 		},%
 		keywordstyle={\color{CouleurVertForet}},%
 		classoffset=3,%
 		alsoletter={-},%
-		morekeywords={minimum-decimal-digits,scale,nonamssymb,build,Precision,Intervalle,Variable,NomFct,NomSol,va,vb,Stretch,Balayage,Calculatrice,Majuscule,No,UNo,NomSuite,Simple,Exact,Conclusion,Sens,ResultatBrut,Methode,NbSubDiv,AffFormule,Expr,Signe,Variables,Affp,Affs,Epaisseur,Police,ElargirOx,ElargirOy,Labelx,Labely,AffLabel,PosLabelx,PosLabely,EchelleFleche,TypeFleche,PosGrad,HautGrad,AffGrad,AffOrigine,Annee,Trigo,Dfrac,Style,Coeffs,AffPoints,TaillePoints,xl,xr,Code,Racines,Largeur,Hauteur,Cadre,Fct,Nom,PosLabel,DecalLabel,TailleLabel,AffTermes,RemplirbOpacite,CouleurRemplissage,Lignes,Gobble,Alignement,Filigrane,BarreTitre,CouleurNombres,Centre,EspacementVertical,Label,Titre,Profondeur,Angle,Fuite,Sommets,Math,Aff,Plein,Cube,Alpha,Beta,Rayon,Marge,TailleValeurs,TailleAngles,CouleurFond,Decal,MoinsPi,AffAngles,AffTraits,AffValeurs,Equationcos,Equationsin,sin,cos,AffTraitsEq,CouleurSol,OptionCoeffs,SimplifCoeffs,Facteur,OptionCoeffs,Reel,Oppose,Rgras,SimplifCoeffs,VectDirecteur,NomCoeffa,NomCoeffb,NomCoeffr,NomCoeffrd,NomXmin,NomXmax,Ox,Oy,xg,yg,AffNom,Elevation,Moyenne,AffMoyenne,Pointilles,Valeurs,Elargir,Min,Max,DebutOx,FinOx,ListeCouleurs,ElargirX,ElargirY,LabelX,LabelY,GradX,GradY,AffEffectifs,PosEffectifs,Opacite,AffBornes,GrilleV,PoliceAxes,PoliceEffectifs,EpaisseurTraits,Unite,EspaceNiveau,EspaceFeuille,Type,PoliceProbas,InclineProbas,Fleche,StyleTrait,EpaisseurTrait,CouleurAire,CouleurCourbe,AfficheM,AfficheCadre,ValMin,ValMax,NbVal,Sep,Tri,Repetition,Notation,NotationAncien,Formule,AffBase,Details,BaseDep,Zeros,DecalH,DecalV,Noeud,Rect,CouleurRes,DecalRect,Rectangle,CouleurResultat,AfficheConclusion,AfficheDelimiteurs,Lettre,Inconnues,Entier,Cadres,PresPGCD,Mathpunct,Option,Alea,Anegatif,Crochets,Brut,Etapes,Epaisseurg,CouleurCase,CouleurTexte,NbSubCol,NbLig,NbCol,Legendes,PoliceLeg,ListeLegV,ListeLegH,DecalLegende,Couleur,Uno,Grille,ExtraGrilleY,PosLegende,Pointilles,Extremite,Frac},%
+		morekeywords={minimum-decimal-digits,scale,nonamssymb,build,Precision,Intervalle,Variable,NomFct,NomSol,va,vb,Stretch,Balayage,Calculatrice,Majuscule,No,UNo,NomSuite,Simple,Exact,Conclusion,Sens,ResultatBrut,Methode,NbSubDiv,AffFormule,Expr,Signe,Variables,Affp,Affs,Epaisseur,Police,ElargirOx,ElargirOy,Labelx,Labely,AffLabel,PosLabelx,PosLabely,EchelleFleche,TypeFleche,PosGrad,HautGrad,AffGrad,AffOrigine,Annee,Trigo,Dfrac,Style,Coeffs,AffPoints,TaillePoints,xl,xr,Code,Racines,Largeur,Hauteur,Cadre,Fct,Nom,PosLabel,DecalLabel,TailleLabel,AffTermes,RemplirbOpacite,CouleurRemplissage,Lignes,Gobble,Alignement,Filigrane,BarreTitre,CouleurNombres,Centre,EspacementVertical,Label,Titre,Profondeur,Angle,Fuite,Sommets,Math,Aff,Plein,Cube,Alpha,Beta,Rayon,Marge,TailleValeurs,TailleAngles,CouleurFond,Decal,MoinsPi,AffAngles,AffTraits,AffValeurs,Equationcos,Equationsin,sin,cos,AffTraitsEq,CouleurSol,OptionCoeffs,SimplifCoeffs,Facteur,OptionCoeffs,Reel,Oppose,Rgras,SimplifCoeffs,VectDirecteur,NomCoeffa,NomCoeffb,NomCoeffr,NomCoeffrd,NomXmin,NomXmax,Ox,Oy,xg,yg,AffNom,Elevation,Moyenne,AffMoyenne,Pointilles,Valeurs,Elargir,Min,Max,DebutOx,FinOx,ListeCouleurs,ElargirX,ElargirY,LabelX,LabelY,GradX,GradY,AffEffectifs,PosEffectifs,Opacite,AffBornes,GrilleV,PoliceAxes,PoliceEffectifs,EpaisseurTraits,Unite,EspaceNiveau,EspaceFeuille,Type,PoliceProbas,InclineProbas,Fleche,StyleTrait,EpaisseurTrait,CouleurAire,CouleurCourbe,AfficheM,AfficheCadre,ValMin,ValMax,NbVal,Sep,Tri,Repetition,Notation,NotationAncien,Formule,AffBase,Details,BaseDep,Zeros,DecalH,DecalV,Noeud,Rect,CouleurRes,DecalRect,Rectangle,CouleurResultat,AfficheConclusion,AfficheDelimiteurs,Lettre,Inconnues,Entier,Cadres,PresPGCD,Mathpunct,Option,Alea,Anegatif,Crochets,Brut,Etapes,Epaisseurg,CouleurCase,CouleurTexte,NbSubCol,NbLig,NbCol,Legendes,PoliceLeg,ListeLegV,ListeLegH,DecalLegende,Couleur,Uno,Grille,ExtraGrilleY,PosLegende,Pointilles,Extremite,Frac,PremLigne},%
 		keywordstyle={\color{orange!75!black}}
 		}
 	}
@@ -694,22 +694,22 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 
 \begin{PresCodeTexPL}{listing only}
 %présentation de code Python
-\begin{CodePythonLst}(*)[largeur]{commandes tcbox}...\end{CodePythonLst}
-\begin{CodePythonLstAlt}(*)[largeur]{commandes tcbox}...\end{CodePythonLstAlt}
+\begin{CodePythonLst}(*)[clés]{commandes tcbox}...\end{CodePythonLst}
+\begin{CodePythonLstAlt}(*)[clés]{commandes tcbox}...\end{CodePythonLstAlt}
 %:=librairie piton
-\begin{CodePiton}[options piton]{commandes tcbox}...\end{CodePiton}
-\begin{PitonConsole}<Clés>{commandes tcbox}...\end{PitonConsole}
+\begin{CodePiton}[options piton]{commandes tcbox}<1ère ligne>...\end{CodePiton}
+\begin{PitonConsole}<clés>{commandes tcbox}...\end{PitonConsole}
 %:=librairie pythontex
-\begin{CodePythontex}[options]{}...\end{CodePythontex}
-\begin{CodePythontexAlt}[options]{}...\end{CodePythontexAlt}
+\begin{CodePythontex}[clés]{commandes tcbox}...\end{CodePythontex}
+\begin{CodePythontexAlt}[clés]{commandes tcbox}...\end{CodePythontexAlt}
 \begin{ConsolePythontex}[options]{}...\end{ConsolePythontex}
 %:=librairie minted
-\begin{CodePythonMinted}(*)[largeur]{commandes tcbox}...\end{CodePythonMinted}
-\begin{CodePythonMintedAlt}(*)[largeur]{commandes tcbox}...\end{CodePythonMintedAlt}
+\begin{CodePythonMinted}(*)[clés]{commandes tcbox}...\end{CodePythonMinted}
+\begin{CodePythonMintedAlt}(*)[largeur][clés]{commandes tcbox}...\end{CodePythonMintedAlt}
 
 %présentation de pseudocode
-\begin{PseudoCode}(*)[largeur]{commandes tcbox}...\end{PseudoCode}
-\begin{PseudoCodeAlt}(*)[largeur]{commandes tcbox}...\end{PseudoCodeAlt}
+\begin{PseudoCode}(*)[clés]{commandes tcbox}...\end{PseudoCode}
+\begin{PseudoCodeAlt}(*)[largeur][clés]{commandes tcbox}...\end{PseudoCodeAlt}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
@@ -2791,6 +2791,36 @@ Les commandes graphiques de \ctex{Proflycee} peuvent être utilisées pour confi
 
 \part{Présentation de codes}
 
+\section{Précautions}\label{codenumlignes}
+
+\begin{tipblock}
+L'idée est de proposer des environnements pour présenter du code :
+
+\begin{itemize}
+	\item \textsf{Python} ;
+	\item \textsf{PseudoCode}.
+\end{itemize}
+
+Dans la mesure du possible (mis à part pour certains points avec l'utilisation des packages \ctex{piton} et \ctex{pythontex}), les environnements seront composés :
+
+\begin{itemize}
+	\item dans une boîte \ctex{tcolorbox} ;
+	\item de deux styles :\ctex{CodeXXXX} ou \ctex{CodeXXXXAlt} ;
+	\item de clés pour paramétrer la \Cle{Largeur} et le début de la numérotation \Cle{PremLigne} ;
+	\item d'une version étoilée pour ne pas numérotée les lignes ;
+	\item d'options éventuelles à donner en langage \ctex{tcolorbox}.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{warningblock}
+Avec la mise à jour \cmaj{2.7.5} et la possibilité de modifier la numérotation des lignes, certains environnements ont vu leur fonctionnement légèrement modifié, donc il est conseillé d'être prudent avec les nouvelles spécificités.
+
+\smallskip
+
+Il est prévu, à plus ou moyen terme, d'uniformiser le fonctionnement de tous les environnements, mais cela demande de reprendre une bonne partie du code.
+\end{warningblock}
+
 \section{Code Python \og simple \fg{} via le package listings}\label{pythonsimple}
 
 \subsection{Introduction}
@@ -2820,13 +2850,13 @@ L'environnement \ctex{CodePythonLst} permet de présenter du code \textsf{Python
 \end{tipblock}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythonLst}(*)[largeur]{commandes tcbox}
+\begin{CodePythonLst}(*)[clés]{commandes tcbox}
 ...
 \end{CodePythonLst}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythonLstAlt}(*)[largeur]{commandes tcbox}
+\begin{CodePythonLstAlt}(*)[clés]{commandes tcbox}
 ...
 \end{CodePythonLstAlt}
 \end{PresCodeTexPL}
@@ -2836,14 +2866,14 @@ Plusieurs \Cle{arguments} sont disponibles :
 
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
-	\item le premier argument (\textit{optionnel}), concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
+	\item le premier argument (\textit{optionnel}), comprend la clé \Cle{Largeur} de la \ctex{tcbox} (\Cle{\textbackslash linewidth} par défaut) et la clé \Cle{PremLigne} (\Cle{1} par défaut) ;
 	\item le second argument (\textit{obligatoire}), concerne des \Cle{options} de la \ctex{tcbox} en \textit{langage tcolorbox}, comme l'alignement.
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
 \begin{warningblock}
-Les environnements \ctex{DeclareTCBListing} créés par \ctex{tcolorbox} et \ctex{listings} ne sont pas compatibles avec les options \Cle{gobble} (pour supprimer les tabulations d'environnement), donc il faut bien penser à \og aligner \fg{} le code à gauche, pour éviter des tabulations non esthétiques !
+Les environnements créés par \ctex{tcolorbox} et \ctex{listings} ne sont pas compatibles avec les options \Cle{gobble} (pour supprimer les tabulations d'environnement), donc il faut bien penser à \og aligner \fg{} le code à gauche, pour éviter des tabulations non esthétiques !
 \end{warningblock}
 
 \subsection{Insertion via un fichier \og externe \fg}
@@ -2855,7 +2885,7 @@ Dans ce cas, il n'est pas nécessaire d'aligner le code \og à gauche \fg, en ut
 
 \smallskip
 
-Si cette méthode est utilisée, il ne faut oublier de charger le package \ctex{scontents}.
+Si cette méthode est utilisée, il ne faut oublier de charger le package \ctex{scontents}, et être attentif à la syntaxe.
 \end{tipblock}
 
 \begin{PresCodeTexPL}{listing only}
@@ -2867,7 +2897,7 @@ Si cette méthode est utilisée, il ne faut oublier de charger le package \ctex{
 \subsection{Exemples}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythonLst}{} %les {}, même vides, sont nécessaires (bug avec # sinon !)
+\begin{CodePythonLst}{} %les {}, même vides, peuvent être nécessaires (bug avec # sinon !)
 #environnement par défaut
 nb = int(input("Saisir un entier positif"))
 if (nb %7 == 0) :
@@ -2893,8 +2923,26 @@ def f(x) :
 \end{PresCodeSortiePL}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythonLstAlt}*[0.75\linewidth]{flush right}
-#largeur de 50%, sans numéro, et aligné à droite
+\begin{CodePythonLst}[PremLigne=10]{}
+nb = int(input("Saisir un entier positif"))
+if (nb %7 == 0) :
+	print(f"{nb} est bien divisible par 7")
+#endif
+\end{CodePythonLst}
+\end{PresCodeTexPL}
+
+\begin{PresCodeSortiePL}{text only}
+\begin{CodePythonLst}[PremLigne=10]{}
+nb = int(input("Saisir un entier positif"))
+if (nb %7 == 0) :
+	print(f"{nb} est bien divisible par 7")
+#endif
+\end{CodePythonLst}
+\end{PresCodeSortiePL}
+
+\begin{PresCodeTexPL}{listing only}
+\begin{CodePythonLstAlt}*[Largeur=0.75\linewidth]{flush right}
+#largeur de 75%, sans numéro, et aligné à droite
 nb = int(input("Saisir un entier Python positif"))
 if (nb %7 == 0) :
 	print(f"{nb} est bien divisible par 7")
@@ -2906,7 +2954,7 @@ def f(x) :
 \end{PresCodeTexPL}
 
 \begin{PresCodeSortiePL}{text only}
-\begin{CodePythonLstAlt}*[0.75\linewidth]{flush right}
+\begin{CodePythonLstAlt}*[Largeur=0.75\linewidth]{flush right}
 #largeur de 50%, sans numéro, et aligné à droite
 nb = int(input("Saisir un entier Python positif"))
 if (nb %7 == 0) :
@@ -3012,6 +3060,8 @@ Depuis la version \ctex{0.95} de \ctex{piton}, \Cle{left-margin=auto} est dispon
 Depuis la version \ctex{0.99} de \ctex{piton}, \Cle{break-lines} est disponible et activée dans \ctex{ProfLycee}.
 
 Depuis la version \ctex{1.0} de \ctex{piton}, \Cle{tabs-auto-gobble} est disponible et activée dans \ctex{ProfLycee}.
+
+Depuis la version \ctex{2.2a} de \ctex{piton}, des options pour \Cle{line-numbers} sont disponibles.
 \end{noteblock}
 
 \begin{warningblock}
@@ -3029,7 +3079,7 @@ Ce package n'est chargé que si la compilation détectée est en \hologo{LuaLaTe
 \subsection{Présentation de code Python}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePiton}[options]{options tcbox}
+\begin{CodePiton}[options]{options tcbox}<option line-numbers>
 ...
 \end{CodePiton}
 \end{PresCodeTexPL}
@@ -3063,7 +3113,7 @@ Pour éviter des problèmes avec le code interprété par \textsf{piton}, les \c
 \end{noteblock}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePiton}{}
+\begin{CodePiton}{} %pour éviter un bug avec le caractère #
 #environnement piton avec numéros de ligne, pleine largeur, style moderne
 def arctan(x,n=10):
 	if x < 0:
@@ -3087,8 +3137,8 @@ def arctan(x,n=10):
 \end{CodePiton}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePiton}[Style=Classique,Filigrane]{}
-#environnement piton avec numéros, style classique, filigrane
+\begin{CodePiton}[Style=Classique,Filigrane]{}<start=10>
+#environnement piton avec numéros (début=10), style classique, filigrane
 def arctan(x,n=10):
 	if x < 0:
 		return -arctan(-x) #> (appel récursif)
@@ -3099,7 +3149,7 @@ def arctan(x,n=10):
 \end{CodePiton}
 \end{PresCodeTexPL}
 
-\begin{CodePiton}[Style=Classique,Filigrane]{}
+\begin{CodePiton}[Style=Classique,Filigrane]{}<start=10>
 #environnement piton avec numéros, style classique, filigrane
 def arctan(x,n=10):
 	if x < 0:
@@ -3223,13 +3273,13 @@ L'environnement \ctex{CodePythontex} est donc lié à \ctex{pythontex} (chargé 
 \end{tipblock}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythontex}[options]{} %les {} vides sont nécessaires
+\begin{CodePythontex}[clés]{} %les {} vides sont nécessaires
 ...
 \end{CodePythontex}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythontexAlt}[options]{} %les {} vides sont nécessaires
+\begin{CodePythontexAlt}[clés]{} %les {} vides sont nécessaires
 	...
 \end{CodePythontexAlt}
 \end{PresCodeTexPL}
@@ -3239,7 +3289,7 @@ Comme précédemment, des \Cle{Clés} qui permettent de \textit{légèrement} mo
 
 \begin{itemize}
 	\item \Cle{Largeur} : largeur de la \textit{tcbox} ;\hfill{}défaut \Cle{\textbackslash linewidth}
-	\item \Cle{Centre} : booléen pour centrer ou non la \textit{tcbox} ;\hfill{}défaut \Cle{false}
+	\item \Cle{PremLigne} : numéro initial des lignes ; \hfill{}défaut \Cle{1}
 	\item \Cle{TaillePolice} : taille des caractères ;\hfill{}défaut \Cle{\textbackslash footnotesize}
 	\item \Cle{EspacementVertical} : option (\textit{stretch}) pour l'espacement entre les lignes ;\hfill{}défaut \Cle{1}
 	\item \Cle{Lignes} : booléen pour afficher ou non les numéros de ligne.\hfill{}défaut \Cle{true}
@@ -3294,13 +3344,13 @@ Le package \ctex{minted} nécessite quand même une compilation avec l'option \c
 \end{warningblock}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythonMinted}(*)[largeur]{options}
+\begin{CodePythonMinted}(*)[clés]{options tcbox}
 ...
 \end{CodePythonMinted}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythonMintedAlt}(*)[largeur]{options}
+\begin{CodePythonMintedAlt}(*)[clés]{options tcbox}
 ...
 \end{CodePythonMintedAlt}
 \end{PresCodeTexPL}
@@ -3310,14 +3360,14 @@ Plusieurs \Cle{arguments} sont disponibles :
 
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
-	\item le 1\up{er} argument \textit{optionnel} concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
+	\item le 1\up{er} argument (\textit{optionnel}), comprend la clé \Cle{Largeur} de la \ctex{tcbox} (\Cle{\textbackslash linewidth} par défaut) et la clé \Cle{PremLigne} (\Cle{1} par défaut) ;
 	\item le 2\up{nd} argument \textit{obligatoire} concerne les \Cle{options} de la \ctex{tcbox} en \textit{langage tcbox}.\hfill{}défaut \Cle{vide}
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
 \end{cautionblock}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythonMinted}[13cm]{center}
+\begin{CodePythonMinted}[Largeur=13cm,PremLigne=10]{center}
 	#environnement Python(minted) centré avec numéros, de largeur 13cm
 	def f(x) :
 		return x**2
@@ -3325,7 +3375,7 @@ Plusieurs \Cle{arguments} sont disponibles :
 \end{PresCodeTexPL}
 
 \begin{PresCodeSortiePL}{text only}
-\begin{CodePythonMinted}[13cm]{center}
+\begin{CodePythonMinted}[Largeur=13cm,PremLigne=10]{center}
 	#environnement Python(minted) centré avec numéros
 	def f(x) :
 		return x**2
@@ -3333,7 +3383,7 @@ Plusieurs \Cle{arguments} sont disponibles :
 \end{PresCodeSortiePL}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{CodePythonMintedAlt}*[0.8\linewidth]{}
+\begin{CodePythonMintedAlt}*[Largeur=0.8\linewidth]{}
 	#environnement Python(minted), style alt, sans numéro, de largeur 0.8\linewidth
 	def f(x) :
 		return x**2
@@ -3341,7 +3391,7 @@ Plusieurs \Cle{arguments} sont disponibles :
 \end{PresCodeTexPL}
 
 \begin{PresCodeSortiePL}{text only}
-\begin{CodePythonMintedAlt}*[0.8\linewidth]{}
+\begin{CodePythonMintedAlt}*[Largeur=0.8\linewidth]{}
 	#environnement Python(minted), style alt, sans numéro, 0.8\linewidth
 	def f(x) :
 		return x**2
@@ -3357,7 +3407,7 @@ C'est l'environnement \ctex{ConsolePythontex} qui permet de le faire.
 \end{tipblock}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{ConsolePythontex}[options]{} %les {} vides sont nécessaires
+\begin{ConsolePythontex}[clés]{} %les {} vides sont nécessaires
 ...
 \end{ConsolePythontex}
 \end{PresCodeTexPL}
@@ -3446,14 +3496,14 @@ De plus, le package \ctex{listings} avec \ctex{tcolorbox} ne permet pas de gére
 \end{warningblock}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{PseudoCode}(*)[largeur]{options tcbox}
+\begin{PseudoCode}(*)[clés]{options tcbox}
 %attention à l'indentation, gobble ne fonctionne pas...
 ...
 \end{PseudoCode}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{PseudoCodeAlt}(*)[largeur]{options tcbox}
+\begin{PseudoCodeAlt}(*)[clés]{options tcbox}
 %attention à l'indentation, gobble ne fonctionne pas...
 ...
 \end{PseudoCodeAlt}
@@ -3464,7 +3514,8 @@ Plusieurs \Cle{arguments} (optionnels) sont disponibles :
 
 \begin{itemize}
 	\item la version \textit{étoilée} qui permet de ne pas afficher les numéros de lignes ;
-	\item le premier argument optionnel concerne la \Cle{largeur} de la \ctex{tcbox} ;\hfill{}défaut \Cle{12cm}
+	\item le 1\up{er} argument (\textit{optionnel}), comprend la clé \Cle{Largeur} de la \ctex{tcbox} (\Cle{\textbackslash linewidth} par défaut) et la clé \Cle{PremLigne} (\Cle{1} par défaut) ;
+	\item \cmaj{2.7.5} une clé booléenne \Cle{Couleur} est également disponible pour mettre en évidence trois niveaux (elles peuvent être redéfinies) de mots clés en pseudo-code (\Cle{false} par défaut) ;
 	\item \cmaj{2.5.8} l'argument obligatoire entre \ctex{\{...\}} concerne les \Cle{options} de la \ctex{tcbox}.
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
@@ -3492,7 +3543,7 @@ FinPour
 \end{PresCodeSortiePL}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{PseudoCodeAlt}[15cm]{center} %centré, de largeur 15cm
+\begin{PseudoCodeAlt}[Largeur=15cm,PremLigne=7,Couleur]{center} %centré, de largeur 15cm
 List = [...]          # à déclarer au préalable
 n = longueur(List)
 Pour i allant de 0 à n-1 Faire
@@ -3502,7 +3553,7 @@ FinPour
 \end{PresCodeTexPL}
 
 \begin{PresCodeSortiePL}{text only}
-\begin{PseudoCodeAlt}[15cm]{center}
+\begin{PseudoCodeAlt}[Largeur=15cm,PremLigne=7,Couleur]{center}
 List = [...]          # à déclarer au préalable
 n = longueur(List)
 Pour i allant de 0 à n-1 Faire
@@ -3516,8 +3567,15 @@ FinPour
 \begin{warningblock}
 À l'instar de packages existants, la \textit{philosophie} ici est de laisser l'utilisateur gérer \textit{son} langage pseudo-code.
 
-J'ai fait le choix de ne pas définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique ou de mise en évidence de mots clés, uniquement un formatage basique !
+J'ai fait le choix de ne pas forcément définir des \textsf{mots clés} à mettre en valeur car cela reviendrait à \textit{imposer} des choix ! Donc ici, pas de coloration syntaxique (uniquement via la clé \Cle{Couleur}) ou de mise en évidence de mots clés, uniquement un formatage basique !
 \end{warningblock}
+
+\begin{PresCodeTexPL}{listing only}
+%couleurs par défaut des mots clés, modifiables si besoin
+\colorlet{MotsClesPseudoCodeA}{blue!75}
+\colorlet{MotsClesPseudoCodeB}{green!50!black}
+\colorlet{MotsClesPseudoCodeChaine}{red!75}
+\end{PresCodeTexPL}
 
 \begin{noteblock}
 Le style \ctex{listings} utilisé par la commande a l'option \Cle{mathescape} activée, et accessible grâce aux délimiteurs \Cle{(*...*)}.
@@ -3526,7 +3584,7 @@ Cela permet d'insérer du code \LaTeX{} dans l'environnement \ctex{PseudoCode} (
 \end{noteblock}
 
 \begin{PresCodeTexPL}{listing only}
-\begin{PseudoCode}*[12cm]{}
+\begin{PseudoCode}*[Largeur=12cm]{} % pour éviter un bug avec #
 #Utilisation du mode mathescape
 Afficher (*\og*) .........(*\fg*)
 m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
@@ -3534,7 +3592,7 @@ m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
 \end{PresCodeTexPL}
 
 \begin{PresCodeSortiePL}{text only}
-\begin{PseudoCode}*[12cm]{}
+\begin{PseudoCode}*[Largeur=12cm]{}
 #Utilisation du mode mathescape
 Afficher (*\og*) .........(*\fg*)
 m = (*$\tfrac{\texttt{1}}{\texttt{2}}$*)
@@ -7679,7 +7737,9 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \part{Historique}
 
-{\small \bverb|v 2.7.4|~:~~~~Ajout de macros pour des écritures mathématiques classiques (\pageref{ecrituresmath})}
+{\small \bverb|v 2.7.5|~:~~~~Possibilités de numéroter les lignes des codes à une autre valeur que 1 (page \pageref{codenumlignes})
+
+{\small \bverb|v 2.7.4|~:~~~~Ajout de macros pour des écritures mathématiques classiques (page \pageref{ecrituresmath})}
 
 {\small \bverb|v 2.7.3|~:~~~~Correction de la couleur de bordures vertes pour les codes python}
 
@@ -7687,7 +7747,7 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 {\small \bverb|v 2.7.1|~:~~~~Chargement de \textsf{tcolorbox} par librairies (au lieu de \textsf{[most]})
 
-{\small \bverb|v 2.7.0|~:~~~~Ajout de la clé \Cle{Frac} pour les axes verticaux (\pageref{reperagetikz})
+{\small \bverb|v 2.7.0|~:~~~~Ajout de la clé \Cle{Frac} pour les axes verticaux (page \pageref{reperagetikz})
 
 {\small \bverb|       |~:~~~~Fonction de répartition discrète (\pageref{fctrepart})
 
