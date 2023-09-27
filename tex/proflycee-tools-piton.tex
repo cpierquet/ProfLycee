@@ -8,6 +8,7 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+%2.7.6	Correction du comportement de la console, avec une meilleure gestion de la largeur ^^ (merci à ablasz ;-))
 %2.7.5	Ajout d'un argument optionnel pour commencer les codes python à un numéro de ligne différent de 1
 %2.7.3	Correction de la couleur des bordures
 %2.6.9	Amalioration de la gestion des style := intégration directe dans la tcbox !
@@ -171,7 +172,7 @@
 }
 
 \defKV[consolepyluatex]{%
-	Largeur=\def\ConsPyluaLarg{#1},%
+	Largeur=\def\ConsPyluaLarg{#1},
 	Alignement=\def\ConsPyluaAlign{#1}
 }
 \setKVdefault[consolepyluatex]{%
@@ -187,7 +188,7 @@
 {
 	\restoreKV[consolepyluatex]% revenir au valeurs par défaut
 	\setKV[consolepyluatex]{#2}% lit les arguments optionnels
-	\PitonOptions{#1}
+	\PitonOptions{width={\ConsPyluaLarg-4mm},break-lines,end-of-broken-line={},continuation-symbol={},#1}
 	\PyLTVerbatimEnv
 	\ifboolKV[consolepyluatex]{Logo}
 		{%

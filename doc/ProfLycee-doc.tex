@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.7.5}
-\def\PLdate{19 septembre 2023}
+\def\PLversion{2.7.6}
+\def\PLdate{27 septembre 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex,ecritures}
@@ -7736,6 +7736,8 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.7.6|~:~~~~Amélioration dans la console d'exécution avec \textsf{piton}}
 
 {\small \bverb|v 2.7.5|~:~~~~Possibilités de numéroter les lignes des codes à une autre valeur que 1 (page \pageref{codenumlignes})
 

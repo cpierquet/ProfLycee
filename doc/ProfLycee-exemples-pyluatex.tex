@@ -2,7 +2,7 @@
 % !TeX TXS-program:compile = txs:///lualatex/[--shell-escape]
 
 \documentclass[french,a4paper,10pt]{article}
-\def\PLver{2.7.3}
+\def\PLver{2.7.6}
 \usepackage[margin=1.5cm]{geometry}
 \usepackage{ProfLycee}
 \useproflyclib{piton}
@@ -259,6 +259,16 @@ print(f"La valeur absolue de -4 est {valeur_absolue(-4)}")
 liste = [randint(1,20) for i in range(10)]
 print(liste)
 print(max(liste), min(liste), sum(liste))
+\end{ConsolePiton}
+
+{\small \begin{codehigh}
+\begin{ConsolePiton}<Largeur=10cm,Alignement=center>{}
+[i**2 for i in range(50)]
+\end{ConsolePiton}
+\end{codehigh}}
+
+\begin{ConsolePiton}<Largeur=10cm,Alignement=center>{}
+[i**2 for i in range(50)]
 \end{ConsolePiton}
 
 \end{document}
