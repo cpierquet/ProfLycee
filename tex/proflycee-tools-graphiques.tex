@@ -24,6 +24,74 @@
 	\fi
 }
 
+%points de discontinuité
+\defKV[ptdiscont]{%
+	Epaisseur=\def\discontepaisseur{#1},%
+	Couleur=\def\discontcouleur{#1},%
+	Pos=\def\discontpos{#1},%
+	Echelle=\def\discontechelle{#1},%
+	Type=\def\disconttype{#1}
+}
+
+\setKVdefault[ptdiscont]{%
+	Epaisseur=1.25pt,%
+	Couleur=red,%
+	Pos=D,%
+	Echelle=1,%
+	Type=par
+}
+
+\NewDocumentCommand\PtsDiscontinuite{ O{} m }{%
+	\useKVdefault[ptdiscont]
+	\setKV[ptdiscont]{#1}%
+	\setsepchar[.]{§./}%
+	\readlist*\SPLlisteDiscont{#2}%
+	\def\SPLlisteDiscontNb{\SPLlisteDiscontlen}%
+	\foreach \i in {1,...,\SPLlisteDiscontNb}{%
+		\begin{scope}[shift={(\SPLlisteDiscont[\i,1],\SPLlisteDiscont[\i,2])},rotate={atan \SPLlisteDiscont[\i,3]},scale=\discontechelle]
+			\IfStrEq{\disconttype}{rond}%
+				{%
+					\draw[fill=white,line width=\discontepaisseur,draw=\discontcouleur] (0,0) circle[radius=3pt] ;
+				}{}%
+			\IfStrEq{\discontpos}{D}%
+				{%
+					\IfStrEq{\disconttype}{par}%
+						{%
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) to[out=90,in=170] (4pt,5pt) ;
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) to[out=-90,in=-170] (4pt,-5pt) ;
+						}{}%
+					\IfStrEq{\disconttype}{demirond}%
+						{%
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) to[out=90,in=180] (3pt,3pt) ;
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) to[out=-90,in=180] (3pt,-3pt) ;
+						}{}%
+					\IfStrEq{\disconttype}{cro}%
+						{%
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) |- (4pt,5pt) ;
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) |- (4pt,-5pt) ;
+						}{}%
+				}%
+				{%
+					\IfStrEq{\disconttype}{par}%
+						{%
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) to[out=90,in=-10] (-4pt,5pt) ;
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) to[out=-90,in=10] (-4pt,-5pt) ;
+						}{}%
+					\IfStrEq{\disconttype}{demirond}%
+						{%
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) to[out=90,in=0] (-3pt,3pt) ;
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) to[out=-90,in=0] (-3pt,-3pt) ;
+						}{}%
+					\IfStrEq{\disconttype}{cro}%
+						{%
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) |- (-4pt,5pt) ;
+							\draw[line width=\discontepaisseur,\discontcouleur] (0,0) |- (-4pt,-5pt) ;
+						}{}%
+				}%
+		\end{scope}
+	}%
+}
+
 %splines en tikz avec ..controls
 \defKV[spline]{%
 	Epaisseur=\def\SPLepaisseur{#1},%
@@ -44,7 +112,8 @@
 	Style={}
 }
 
-\newcommand\SplineTikz[2][]{%
+\NewDocumentCommand\SplineTikz{ O{} m }{%
+%\newcommand\SplineTikz[2][]{%
 	\useKVdefault[spline]
 	\setKV[spline]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%on lit la liste des points/nbderivés et on stocke dans \listepoints
@@ -539,6 +608,157 @@
 
 \NewDocumentCommand\DeclareFonctionTikz{ O{f} m }{%nom_fonction+langage tikz
 	\tikzset{declare function={#1(\x)=#2;}}
+}
+
+%====INTERVALLES TIKZ
+\usetikzlibrary{decorations.pathmorphing,decorations.pathreplacing}
+
+\defKV[repinterv]{%
+	Unite=\def\RepIntervUnit{#1},%
+	Largeur=\def\RepIntervLarg{#1},%
+	Graduations=\def\RepIntervGrad{#1},%,
+	GraduationsAlt=\def\RepIntervGradPrim{#1},%
+	HautGrad=\def\RepIntervHautGrad{#1},%
+	Valeurs=\def\RepIntervVal{#1}
+}
+\setKVdefault[repinterv]{%
+	xmin=-8,xmax=8,%
+	Elargir=0.05,Unite=auto,Largeur=12,EpTrait=0.8pt,%
+	Graduations={},%
+	GraduationsAlt={},%
+	HautGrad=7pt,Hauteur=16pt,Coeff=1.1,Valeurs={},%
+	Police={\normalsize\normalfont}
+}
+
+\NewDocumentEnvironment{RepIntervalles}{ O{} D<>{} }%
+{%
+	\restoreKV[repinterv]%
+	\setKV[repinterv]{#1}%
+	\IfStrEq{\RepIntervUnit}{auto}%
+	{\def\RepIntervUnitX{\fpeval{round((\useKV[repinterv]{Largeur})/(\useKV[repinterv]{xmax}-\useKV[repinterv]{xmin}),3)}}}%
+	{\def\RepIntervUnitX{\RepIntervUnit}}%
+	\xdef\AxeXminInterv{\fpeval{\useKV[repinterv]{xmin}-(\useKV[repinterv]{Elargir})*(\useKV[repinterv]{xmax}-\useKV[repinterv]{xmin})}}%
+	\xdef\AxeXmaxInterv{\fpeval{\useKV[repinterv]{xmax}+(\useKV[repinterv]{Elargir})*(\useKV[repinterv]{xmax}-\useKV[repinterv]{xmin})}}%
+	\begin{tikzpicture}[x=\RepIntervUnitX cm,#2]
+		\draw[line width={\useKV[repinterv]{EpTrait}},->,>=latex] ({\AxeXminInterv},0) -- ({\AxeXmaxInterv},0) ;
+		\IfStrEq{\RepIntervGrad}{}%
+			{}%
+			{
+				\foreach \i in \RepIntervGrad {\draw[line width={\useKV[repinterv]{EpTrait}}] (\i,{0.5*\RepIntervHautGrad})--++(0,{-\RepIntervHautGrad}) ;}
+			}%
+		\IfStrEq{\RepIntervGradPrim}{}%
+			{}%
+			{
+				\foreach \i in \RepIntervGradPrim {\draw[line width={\useKV[repinterv]{EpTrait}}] (\i,{0.75*\RepIntervHautGrad})--++(0,{-1.5*\RepIntervHautGrad}) ;}
+			}%
+		\IfStrEq{\RepIntervVal}{}%
+			{}%
+			{
+				\foreach \i in \RepIntervVal {\draw (\i,{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={1.5*\useKV[repinterv]{EpTrait}},below,font={\useKV[repinterv]{Police}}] {\num{\i}} ;}
+			}%
+	}%
+	{%
+	\end{tikzpicture}%
+}
+
+\defKV[tkzinterv]{%
+	Type=\def\IntervType{#1},%
+	Decor=\def\IntervStyle{#1},%
+	PosValeurs=\def\IntervPosValeurs{#1},%
+	Offset=\def\IntervOffset{#1}
+}
+\setKVdefault[tkzinterv]{%
+	Couleur=red,%
+	Type=FF,%
+	NiveauV=0,%
+	Decor={},%
+	AffValeurs=false,%
+	PosValeurs=above,%
+	NumInf=true,%
+	NumSup=true,%
+	Offset=0pt
+}
+
+\NewDocumentCommand\tkzIntervalle{ O{} m m }{%1=options,2=min,3=max
+	\restoreKV[tkzinterv]%
+	\setKV[tkzinterv]{#1}%
+	%transformations min/max
+	\IfStrEq{#2}{*}{\def\ValMinInterv{\AxeXminInterv}}{\def\ValMinInterv{#2}}%
+	\IfStrEq{#3}{*}{\def\ValMaxInterv{\AxeXmaxInterv}}{\def\ValMaxInterv{#3}}%
+	\begin{scope}[yshift={\useKV[repinterv]{Coeff}*\useKV[tkzinterv]{NiveauV}*\useKV[repinterv]{Hauteur}+\IntervOffset}]
+		%segment
+		\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMinInterv},0)--({\ValMaxInterv},0) ;
+		%style fond
+		\IfStrEq{\IntervStyle}{fond}%
+		{%
+			
+			\filldraw[draw=none,fill={\useKV[tkzinterv]{Couleur}},fill opacity=0.25] ({\ValMinInterv},{-0.425*\useKV[repinterv]{Hauteur}}) rectangle ({\ValMaxInterv},{0.425*\useKV[repinterv]{Hauteur}}) ;
+		}{}%
+		\IfStrEq{\IntervStyle}{zigzag}%
+		{%
+			\draw[line width={1.25*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}},decorate,decoration={zigzag,segment length=5mm,amplitude={0.425*\useKV[repinterv]{Hauteur}}}] ({\ValMinInterv},0)--({\ValMaxInterv},0) ;
+		}{}%
+		\IfSubStr{\IntervStyle}{hach}%
+		{%
+			\IfSubStr{\IntervStyle}{/}%
+			{\StrBehind{\IntervStyle}{/}[\IntervHachAngle]}
+			{\def\IntervHachAngle{60}}%
+			\begin{scope}
+				\clip ({\ValMinInterv},{-0.5*\useKV[repinterv]{Hauteur}}) rectangle ({\ValMaxInterv},{0.5*\useKV[repinterv]{Hauteur}}) ;
+				\draw[line width={1.25*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}},decorate,decoration={border,segment length=2.5mm,angle=\IntervHachAngle,amplitude={0.425*\useKV[repinterv]{Hauteur}}}] ({\AxeXminInterv},0)--({\AxeXmaxInterv},0) ;
+				\draw[line width={1.25*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}},decorate,decoration={border,segment length=2.5mm,angle=\IntervHachAngle,amplitude={-0.425*\useKV[repinterv]{Hauteur}}}] ({\AxeXminInterv},0)--({\AxeXmaxInterv},0) ;
+			\end{scope}
+		}{}%
+		%bord gauche
+		\IfStrEq{#2}{*}%
+		{}%
+		{%
+			\ifboolKV[tkzinterv]{AffValeurs}%
+				{%
+					\IfSubStr{\IntervPosValeurs}{above}
+						{%
+							\draw ({\ValMinInterv},{0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumInf}{\num{#2}}{#2}} ;
+						}{}%
+					\IfSubStr{\IntervPosValeurs}{below}
+						{%
+							\draw ({\ValMinInterv},{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumInf}{\num{#2}}{#2}} ;
+						}{}%
+				}{}%
+			\IfBeginWith{\IntervType}{O}%
+			{%
+				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMinInterv},0)|-++ ({-0.2*\useKV[repinterv]{Hauteur}},{0.5*\useKV[repinterv]{Hauteur}}) ;
+				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMinInterv},0)|-++ ({-0.2*\useKV[repinterv]{Hauteur}},{-0.5*\useKV[repinterv]{Hauteur}}) ;
+			}%
+			{%
+				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMinInterv},0)|-++ ({0.2*\useKV[repinterv]{Hauteur}},{0.5*\useKV[repinterv]{Hauteur}}) ;
+				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMinInterv},0)|-++ ({0.2*\useKV[repinterv]{Hauteur}},{-0.5*\useKV[repinterv]{Hauteur}}) ;
+			}%
+		}%
+		\IfStrEq{#3}{*}%
+		{}%
+		{%
+			\ifboolKV[tkzinterv]{AffValeurs}%
+				{%
+					\IfSubStr{\IntervPosValeurs}{above}
+						{%
+							\draw ({\ValMaxInterv},{0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumSup}{\num{#3}}{#3}} ;
+						}{}%
+					\IfSubStr{\IntervPosValeurs}{below}
+						{%
+							\draw ({\ValMaxInterv},{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumSup}{\num{#3}}{#3}} ;
+						}{}%
+				}{}%
+			\IfEndWith{\IntervType}{O}%
+			{%
+				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMaxInterv},0)|-++ ({0.2*\useKV[repinterv]{Hauteur}},{0.5*\useKV[repinterv]{Hauteur}}) ;
+				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMaxInterv},0)|-++ ({0.2*\useKV[repinterv]{Hauteur}},{-0.5*\useKV[repinterv]{Hauteur}}) ;
+			}%
+			{%
+				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMaxInterv},0)|-++ ({-0.2*\useKV[repinterv]{Hauteur}},{0.5*\useKV[repinterv]{Hauteur}}) ;
+				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMaxInterv},0)|-++ ({-0.2*\useKV[repinterv]{Hauteur}},{-0.5*\useKV[repinterv]{Hauteur}}) ;
+			}%
+		}%
+	\end{scope}%
 }
 
 \endinput

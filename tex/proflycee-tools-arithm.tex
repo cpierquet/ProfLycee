@@ -8,6 +8,9 @@
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
 
+\RequirePackage{ifthen}
+\RequirePackage{modulus}
+
 %%------ConversionsBases
 %dec->bin avec blocs de 4 chiffres
 \setKVdefault[CONVDECBIN]{%
@@ -25,7 +28,7 @@
 }
 
 \setKVdefault[CONVBINHEX]{%
-	%trait=0.5pt,%
+	%Epaisseur=0.75pt,%
 	AffBase=true,%
 	Details=true
 }
@@ -46,7 +49,7 @@
 	\useKVdefault[CONVBINHEX]%
 	\setKV[CONVBINHEX]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\def\chbrut{#2}%
-	\StrLen{\chbrut}[\nbchiffres] %nb de chiffres du binaire
+	\StrLen{\chbrut}[\nbchiffres]%nb de chiffres du binaire
 	\xdef\nbgrp{\fpeval{4*ceil(\nbchiffres/4,0)}} %nb de chiffres avec blocs de 4
 	\xdef\nbblocs{\fpeval{\nbgrp/4}} %nb de blocs
 	%on rajoute des zeros si besoin := OK
@@ -73,6 +76,43 @@
 	{}%
 	\xintBinToHex{\chbrut}\ifboolKV[CONVBINHEX]{AffBase}{_{16}}{}%
 }
+
+%hexa-bin par bloc de 4
+\setKVdefault[CONVHEXBIN]{%
+	%Epaisseur=0.75pt,
+	AffBase=true,%
+	Details=true
+}
+
+\newcommand\ConvHexBinBloc[1]{%
+	\def\binbrut{\xintHexToBin{#1}}%
+	\StrLen{\binbrut}[\nbchiffresbinbrut]%nb
+	\PLstrzeros{\xinteval{4-\nbchiffresbinbrut}}{\binbrut}%
+}
+
+\newcommand\ConversionHexBin[2][]{%
+	\useKVdefault[CONVHEXBIN]%
+	\setKV[CONVHEXBIN]{#1}% on paramètres les nouvelles clés et on les simplifie
+	%\def\thicktraitshexbin{\useKV[CONVHEXBIN]{Epaisseur}}%
+	\ifboolKV[CONVHEXBIN]{AffBase}{#2_{16}=}{#2=}%
+	\StrLen{#2}[\nbchiffreshex]%nb
+	\ifboolKV[CONVHEXBIN]{Details}%
+	{%
+		\foreach \i in {1,...,\nbchiffreshex}{%
+			\StrChar{#2}{\i}[\tmpcharhex]%
+			{\underbracket{\ConvHexBinBloc{\tmpcharhex}}_{\tmpcharhex}\,}
+		}%
+		\ifboolKV[CONVHEXBIN]{AffBase}{{}_{2}}{}%
+	}%
+	{%
+		\foreach \i in {1,...,\nbchiffreshex}{%
+			\StrChar{#2}{\i}[\tmpcharhex]%
+			\ConvHexBinBloc{\tmpcharhex}\,%
+		}%
+		\!\ifboolKV[CONVHEXBIN]{AffBase}{{}_{2}}{}%
+	}%
+}
+
 
 %hexa/bin->dec avec écriture polynomiale
 \defKV[CONVTODEC]{%
@@ -455,5 +495,181 @@
 			Le PGCD de \num{\AA} et \num{\BB} ne divise pas \num{\CC}, donc l'équation $(\LettreSolEDioph)$ n'admet aucune solution.
 		}%
 }
+
+%liste diviseurs
+\setKVdefault[listdiv]{%
+	AffNom=true
+}
+\NewDocumentCommand\ListeDiviseurs{ s O{} m }{%
+	\useKVdefault[listdiv]%
+	\setKV[listdiv]{#2}%
+	\xdef\tmplistdiv{1}%
+	\xdef\argcal{\xinteval{#3}}%
+	\xintFor* ##1 in {\xintSeq{2}{\argcal}}\do{%
+		\xintifboolexpr{ \xintiiRem{\argcal}{##1} == 0 }%
+		{%
+			\xdef\tmplistdiv{\tmplistdiv /\num{##1}}
+		}%
+		{}%
+	}%
+	\ensuremath{\ifboolKV[listdiv]{AffNom}{\IfBooleanTF{#1}{\mathscr{D}}{\mathcal{D}}_{\num{\argcal}}=}{}\EcritureEnsemble[\strut]{\tmplistdiv}}
+}
+
+%arbre diviseurs
+\defKV[arbrediviseurs]{%
+	EspaceNiveau=\def\TmpEspNiv{#1},%
+	EspaceFeuille=\def\TMpEspFeuille{#1},%
+	CouleurDetails=\def\TmpCoulDetails{#1},%
+	Echelle=\def\TmpEchelle{#1}
+}
+
+\setKVdefault[arbrediviseurs]{%
+	EspaceNiveau=2.25,%
+	EspaceFeuille=0.66,%
+	Details=true,%
+	CouleurDetails=red,%
+	Echelle=1,%
+	Fleches=true
+}
+
+\NewDocumentCommand\ArbreDiviseurs{ O{} m }{%
+	\useKVdefault[arbrediviseurs]%
+	\setKV[arbrediviseurs]{#1}%
+	% test avec CPoulain ^^
+	\xdef\tmpcalc{\xinteval{#2}}%
+	\xdef\tmparg{}%
+	\newcount\anp\newcount\bnp\newcount\cnp%
+	\newcount\pileb\newcount\exposant%
+	\exposant=0\relax%
+	\anp=\tmpcalc\relax%
+	\bnp=2\relax%
+	\pileb=2\relax%
+	\whiledo{\the\anp > 1}{%
+		\modulo{\the\anp}{\the\bnp}%
+		\ifnum\remainder=0\relax%
+		\cnp=\numexpr\anp/\bnp\relax%
+		\exposant=\numexpr\exposant+1\relax%
+		\anp=\cnp\relax%
+		\else%
+		\ifnum\exposant>0\relax%
+		\xdef\tmparg{\tmparg\the\pileb,\the\exposant*}%
+		%\expandafter\UpdatetoksCPier\Foo\nil%
+		\fi%
+		\bnp=\numexpr\bnp+1\relax%
+		\pileb=\bnp\relax%
+		\exposant=0\relax%
+		\fi%
+	}%
+	\xdef\tmparg{\tmparg\the\bnp,{\the\exposant}}%
+	%\expandafter\UpdatetoksCPier\the\bnp,{\the\exposant}\nil%
+	% \xdef\argnum{\xinteval{#2}}%
+	% \def\decompotmp{\DecompoPremierExposant{#2}}%
+	\setsepchar{*/,}%
+	\xdef\Foo{\tmparg}%
+	\readlist*\readcaractdiv{\Foo}%
+	% fin test CPoulain ^^
+	\xdef\arbredivnbdivprem{\readcaractdivlen}%nombre diviseurs permiers
+	\xdef\arbredivnbdiv{1}%
+	\xintFor* ##1 in {\xintSeq{1}{\arbredivnbdivprem}}\do{\xdef\arbredivnbdiv{\xinteval{\arbredivnbdiv*(\readcaractdiv[##1,2]+1)}}}%nombre diviseurs
+	\def\HauteurTotale{\xinteval{\arbredivnbdiv-1}}%
+	\ifboolKV[arbrediviseurs]{Fleches}%
+	{\tikzstyle{flechearbrediv} = [line width=\fpeval{\TmpEchelle*0.6}pt,->,>=latex]}%
+	{\tikzstyle{flechearbrediv} = [line width=\fpeval{\TmpEchelle*0.6}pt]}%
+	\begin{tikzpicture}[scale=\TmpEchelle,every node/.style={scale=\TmpEchelle}]
+		% grille d'aide
+		% \draw[xstep=\TmpEspNiv,ystep=\TMpEspFeuille,thin,lightgray] (0,{(-\arbredivnbdiv+1)*\TMpEspFeuille}) grid ({\arbredivnbdivprem*\TmpEspNiv},0) ;
+		% dernier niveau OK
+		\xdef\nbsommets{\arbredivnbdiv}%
+		\xintFor* ##1 in {\xintSeq{1}{\nbsommets}}\do%
+		{%
+			\itemtomacro\readcaractdiv[\arbredivnbdivprem,2]\tmppuiss%
+			\xdef\tmpdiv{\xinteval{\tmppuiss+1}}%
+			\node[outer sep=0pt] (N-\arbredivnbdivprem-##1) at ({\arbredivnbdivprem*\TmpEspNiv},{-(##1-1)*\TMpEspFeuille}) {$\num{\readcaractdiv[\arbredivnbdivprem,1]}^{\xinteval{\xintiiRem{\xinteval{##1-1}}{\tmpdiv}}}$} ;%
+		}
+		% niveaux suivants, en descendant
+		\xintFor* ##2 in {\xintSeq{\arbredivnbdivprem-1}{1}}\do%
+		{%
+			\xdef\nbsommets{\xintieval{\nbsommets/(\readcaractdiv[##2+1,2]+1)}}%
+			\xdef\espacementsommets{\xinteval{\arbredivnbdiv/(\nbsommets)}}%
+			\xdef\OffsetNiveau{\xintieval{(\HauteurTotale-(\nbsommets-1)*\espacementsommets)}}%
+			\xintFor* ##3 in {\xintSeq{1}{\nbsommets}}\do%
+			{%
+				\itemtomacro\readcaractdiv[##2,2]\tmppuiss%
+				\xdef\tmpdiv{\xinteval{\tmppuiss+1}}%
+				\node[outer sep=0pt] (N-##2-##3) at ({##2*\TmpEspNiv},{(-(##3-1)*\espacementsommets-0.5*\OffsetNiveau)*\TMpEspFeuille}) {$\num{\readcaractdiv[##2,1]}^{\xinteval{\xintiiRem{\xinteval{##3-1}}{\tmpdiv}}}$} ;
+			}%
+		}%
+		% racine
+		\coordinate (Racine) at ({0},{-0.5*(\arbredivnbdiv-1)*(\TMpEspFeuille)}) ;
+		% \draw (Racine) node {$\Omega$} ;
+		% les flèches, qui partent de la racine
+		\xintFor* ##4 in {\xintSeq{1}{\xinteval{\readcaractdiv[1,2]+1}}}\do%
+		{%
+			\draw[flechearbrediv] (Racine) -- (N-1-##4) ;
+		}%
+		% les flèches successives
+		\foreach \nivdep in {1,...,\xinteval{\arbredivnbdivprem-1}}%
+		{%
+			\xdef\nbsommetsniv{1}%
+			\foreach \i in {1,...,\nivdep}{\xdef\nbsommetsniv{\xinteval{\nbsommetsniv*(\readcaractdiv[\i,2]+1)}}}%calcul du nombre de sommets de départ
+			% boucle sur sommets de départ
+			\foreach \numsom in {1,...,\nbsommetsniv}%
+			{%
+				\xdef\nivplusun{\xinteval{\nivdep+1}}%
+				\foreach \nbsousbranches in {1,...,\xinteval{\readcaractdiv[\nivplusun,2]+1}}%
+				{%
+					\xdef\sumsomarriv{\xinteval{ (\readcaractdiv[\nivplusun,2]+1)*(\numsom-1) + \nbsousbranches }}%
+					\draw[flechearbrediv] (N-\nivdep-\numsom) -- (N-\nivplusun-\sumsomarriv) ;
+				}
+			}%
+		}%
+		\ifboolKV[arbrediviseurs]{Details}%
+		{%
+			% essai de génération des calculs := ouaiissssss
+			\foreach \i in {1,...,\arbredivnbdiv}{%
+				\xdef\resdiv{1}%
+				% on extrait la premiere puissance := on obtient la répartition ?
+				\itemtomacro\readcaractdiv[-1,2]\tmppuiss\xdef\tmpdiv{\xinteval{(\tmppuiss+1)}}%
+				% création de la liste des puissances !!
+				\xdef\calculdiviseur{\num{\readcaractdiv[-1,1]}^{\xinteval{\xintiiRem{\xinteval{\i-1}}{\tmpdiv}}}}%
+				\xdef\resdiv{\xinteval{\resdiv*(\readcaractdiv[-1,1])^(\xinteval{\xintiiRem{\xinteval{\i-1}}{\tmpdiv}})}}%
+				% on complète avec les autres parties ??
+				\foreach \nbprem in {2,...,\arbredivnbdivprem}{%
+					% il reste à stocker les produits des puissances, en descendant... erf.....
+					\xdef\tmppuisscumul{1}%
+					\foreach \k in {1,...,\xinteval{\nbprem-1}}{%
+						\itemtomacro\readcaractdiv[-\k,2]\tmppuissrepet%
+						\xdef\tmppuisscumul{\xinteval{\tmppuisscumul*(\tmppuissrepet+1)}}%
+					}%
+					\itemtomacro\readcaractdiv[-\nbprem,2]\tmppuiss%
+					\xdef\tmpdivniv{\xinteval{(\tmppuiss+1)}}%
+					% \xdef\tmpdiv{\xinteval{(\tmppuissrepet+1)}}%
+					\xdef\calculdiviseur{\num{\readcaractdiv[-\nbprem,1]}^{\xinteval{\xintiiRem{\xintieval{trunc((\i-1)/(\tmppuisscumul),0)}}{\tmpdivniv}}}\times\calculdiviseur}%
+					\xdef\resdiv{\xinteval{\resdiv*(\readcaractdiv[-\nbprem,1])^(\xinteval{\xintiiRem{\xintieval{trunc((\i-1)/(\tmppuisscumul),0)}}{\tmpdivniv}})}}%
+				}%
+				\draw ([xshift=1cm]N-\arbredivnbdivprem-\i) node[right,\TmpCoulDetails] {$\calculdiviseur=\num{\resdiv}$} ;
+			}%
+		}{}%
+	\end{tikzpicture}%
+}
+
+%somme des chiffres
+\ifthenelse{\isundefined{\SommeChiffres}}%
+	{%
+		\NewDocumentCommand\SommeChiffres{ m }{%
+			\StrLen{#1}[\nbchiffres]%
+			\xdef\tmpres{0}%
+			\foreach \i in {1,...,\nbchiffres}{\StrChar{#1}{\i}[\tmpchf]\xdef\tmpres{\xinteval{\tmpres+\tmpchf}}}%
+			\ensuremath{\num{\tmpres}}%
+		}
+	}%
+	{%
+		\RenewDocumentCommand\SommeChiffres{ m }{%
+			\StrLen{#1}[\nbchiffres]%
+			\xdef\tmpres{0}%
+			\foreach \i in {1,...,\nbchiffres}{\StrChar{#1}{\i}[\tmpchf]\xdef\tmpres{\xinteval{\tmpres+\tmpchf}}}%
+			\ensuremath{\num{\tmpres}}%
+		}
+	}%
 
 \endinput

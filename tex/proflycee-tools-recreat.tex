@@ -243,4 +243,103 @@
 	\end{tikzpicture}
 }
 
+%=====FRACTALES
+\usetikzlibrary{lindenmayersystems}
+
+\pgfdeclarelindenmayersystem{FloconKoch}{
+	\rule{F -> F-F++F-F}}
+\pgfdeclarelindenmayersystem{TriangleSierpinski}{
+	\rule{F -> G-F-G}
+	\rule{G -> F+G+F}}
+	
+\pgfdeclarelindenmayersystem{SierpinskiTriangle}{
+    \symbol{X}{\pgflsystemdrawforward}
+    \symbol{Y}{\pgflsystemdrawforward}
+    \rule{X -> X-Y+X+Y-X}
+    \rule{Y -> YY}
+}%
+
+\defKV[tikzfract]{%
+	Epaisseur=\def\fracttikzthick{#1},%
+	Type=\def\fracttikztype{#1},%
+	Couleur=\def\fracttikzcolor{#1},%
+	LongueurCote=\def\fracttikzlg{#1},%
+	Etape=\def\fracttikzstep{#1},%
+	Remplissage=\def\fracttikzfill{#1},%
+	Depart=\def\fracttikzdepart{#1},%
+	Offset=\def\fracttikzoffset{#1}
+}
+
+\setKVdefault[tikzfract]{%
+	Epaisseur=0.6pt,%
+	Type=Koch,%
+	Couleur=black,%
+	LongueurCote=3,%
+	Etape=1,%
+	Remplir=false,%
+	Remplissage=lightgray,%
+	Depart={(0,0)},%
+	AlignV=false,%
+	Offset=2pt
+}
+
+\NewDocumentCommand\FractaleTikz{ s O{} D<>{} }{%
+	\restoreKV[tikzfract]%
+	\setKV[tikzfract]{#2}%
+	\def\fracttikzlgstep{\fpeval{(\fracttikzlg)/(3^\fracttikzstep)}}%
+	\IfStrEq{\fracttikztype}{Sierp}%
+		{%
+			\def\fracttikzlgstep{\fpeval{(\fracttikzlg)/(2^\fracttikzstep)}}%
+		}{}%
+	\IfBooleanF{#1}{\begin{tikzpicture}[#3]}
+	\ifboolKV[tikzfract]{Remplir}%
+		{%
+			\IfStrEq{\fracttikztype}{Koch}%
+				{%
+					\ifboolKV[tikzfract]{AlignV}%
+						{%
+							\node at ($(1/3*\fracttikzlg,0)+(-60:1/3*\fracttikzlg)$) {} ;
+						}{}%
+					\draw[line width =\fracttikzthick,shift=\fracttikzdepart,draw=\fracttikzcolor,fill=\fracttikzfill,l-system={FloconKoch,step=\fracttikzlgstep cm,angle=60,axiom=F++F++F,order=\fracttikzstep}] lindenmayer system -- cycle;
+				}{}%
+			\IfStrEq{\fracttikztype}{Sierp}%
+				{%
+					\fill[\fracttikzcolor] (0,0) -- ++(0:\fracttikzlg cm) -- ++(120:\fracttikzlg cm) -- cycle;
+					\draw[draw=none,shift=\fracttikzdepart,fill=white,l-system={SierpinskiTriangle,step=\fracttikzlgstep cm,angle=-120,axiom=X,order=\fracttikzstep}] lindenmayer system -- cycle;
+				}{}%
+		}%
+		{%
+			\IfStrEq{\fracttikztype}{Koch}%
+				{%
+					\ifboolKV[tikzfract]{AlignV}%
+						{%
+							\node at ($(1/3*\fracttikzlg,0)+(-60:1/3*\fracttikzlg)$) {} ;
+						}{}%
+					\draw [line width=\fracttikzthick,shift=\fracttikzdepart,\fracttikzcolor,l-system={FloconKoch,step=\fracttikzlgstep cm,angle=60,axiom=F++F++F,order=\fracttikzstep}] lindenmayer system -- cycle;
+				}{}%
+			\IfStrEq{\fracttikztype}{Sierp}%
+				{%
+					\fill[\fracttikzcolor] (0,0) -- ++(0:\fracttikzlg cm) -- ++(120:\fracttikzlg cm) -- cycle;
+					\draw[draw=none,shift=\fracttikzdepart,fill=white,l-system={SierpinskiTriangle,step=\fracttikzlgstep cm,angle=-120,axiom=X,order=\fracttikzstep}] lindenmayer system -- cycle;
+				}{}%
+		}%
+	\IfBooleanF{#1}{\end{tikzpicture}}%
+}
+
+\NewDocumentCommand\EtapesFloconKoch{ O{} D<>{} m }{%
+	\restoreKV[tikzfract]%
+	\setKV[tikzfract]{#1}%
+	\foreach \i in {#3} {%
+		\FractaleTikz[AlignV,#1,Etape=\i]<#2>\hspace{\fracttikzoffset}%
+	}
+}
+
+\NewDocumentCommand\EtapesTapisSierpinski{ O{} D<>{} m }{%
+	\restoreKV[tikzfract]%
+	\setKV[tikzfract]{#1}%
+	\foreach \i in {#3} {%
+		\FractaleTikz[Type=Sierp,#1,Etape=\i]<#2>\hspace{\fracttikzoffset}%
+	}
+}
+
 \endinput

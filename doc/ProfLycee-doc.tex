@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{2.7.6}
-\def\PLdate{27 septembre 2023}
+\def\PLversion{2.8.1}
+\def\PLdate{23 octobre 2023}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex,ecritures}
@@ -140,16 +140,16 @@
 		keywordstyle={\color{blue}},%
 		classoffset=1,%
 		alsoletter={-},%
-		morekeywords={ProfLycee,CodePythonLst,CodePythonLstAlt,CodePiton,PitonConsole,CodePythontex,CodePythontexAlt,ConsolePythontex,CodePythonMinted,CodePythonMintedAlt,PseudoCode,PseudoCodeAlt,TerminalWin,TerminalUnix,TerminalOSX,EnvArbreProbasTikz,EnvSudoMaths},%
+		morekeywords={ProfLycee,CodePythonLst,CodePythonLstAlt,CodePiton,PitonConsole,CodePythontex,CodePythontexAlt,ConsolePythontex,CodePythonMinted,CodePythonMintedAlt,PseudoCode,PseudoCodeAlt,TerminalWin,TerminalUnix,TerminalOSX,EnvArbreProbasTikz,EnvSudoMaths,RepIntervalles},%
 		keywordstyle={\color{violet}},%
 		classoffset=2,%
 		alsoletter={-},%
-		morekeywords={\ResolutionApprochee,\SolutionTVI,\CalculTermeRecurrence,\ToileRecurrence,\SolutionSeuil,\IntegraleApprochee,\GrilleTikz,\AxesTikz,\AxexTikz,\AxeyTikz,\FenetreTikz,\FenetreSimpleTikz,\DeclareFonctionTikz,\CourbeTikz,\OrigineTikz,\SplineTikz,\TangenteTikz,\MiniSchemaSignes,\MiniSchemaSignesTkzTab,\IntegraleApprocheeTikz,\CartoucheCapytale,\PaveTikz,\TetraedreTikz,\CercleTrigo,\AffPoint,\AffVecteur,\TrouveEqCartPlan,\TrouveEqParamDroite,\TrouveEqCartDroite,\TrouveNorme,\TrouveDistancePtPlan,\EquationReduite,\CalculsRegLin,\PointsRegLin,\NuagePointsTikz,\PointMoyenTikz,\BoiteMoustaches,\BoiteMoustachesAxe,\Histogramme,\CalcBinomP,\CalcBinomC,\BinomP,\BinomC,\CalcPoissP,\CalcPoissC,\PoissonP,\PoissonC,\CalcGeomP,\CalcGeomC,\GeomP,\GeomC,\CalcHypergeomP,\CalcHypergeomP,\HypergeomP,\HypergeomC,\CalcNormC,\NormaleC,\CalcExpoC,\ExpoC,\ArbreProbasTikz,\LoiNormaleGraphe,\LoiExpoGraphe,\NbAlea,\VarNbAlea,\TirageAleatoireEntiers,\Arrangement,\Combinaison,\ConversionDecBin,\ConversionBinHex,\ConversionVersDec,\ConversionBaseDix,\ConversionDepuisBaseDix,\PresentationPGCD,\EquationDiophantienne,\ConversionFraction,\SimplificationRacine,\EcritureEnsemble,\EcritureTrinome,\MesurePrincipale,\LigneTrigo,\SudoMaths,\FonctionRepartTikz,\IntervalleFF,\IntervalleFO,\IntervalleOF,\IntervalleOO,\RepereOij,\RepereOuv,\RepereOijk,\ReperePlan,\RepereEspace,\jfalg,\jfexp,\LoiNormale,\LoiBinomiale,\LoiPoisson,\LoiExpo,\LoiUnif,\Courbe,\Suite,\CoordPtPl,\CoordPtEsp,\CoordVecPl,\CoordVecEsp,\MatDeux,\Vecteur,\Esper,\Varianc,\EcType,\dx,\Integrale,\Modulo,\Arrondi,\CodePythonLstFichier,\CodePythonLstFichierAlt,\colorlet
+		morekeywords={\ResolutionApprochee,\SolutionTVI,\CalculTermeRecurrence,\ToileRecurrence,\SolutionSeuil,\IntegraleApprochee,\GrilleTikz,\AxesTikz,\AxexTikz,\AxeyTikz,\FenetreTikz,\FenetreSimpleTikz,\DeclareFonctionTikz,\CourbeTikz,\OrigineTikz,\SplineTikz,\TangenteTikz,\MiniSchemaSignes,\MiniSchemaSignesTkzTab,\IntegraleApprocheeTikz,\CartoucheCapytale,\PaveTikz,\TetraedreTikz,\CercleTrigo,\AffPoint,\AffVecteur,\TrouveEqCartPlan,\TrouveEqParamDroite,\TrouveEqCartDroite,\TrouveNorme,\TrouveDistancePtPlan,\EquationReduite,\CalculsRegLin,\PointsRegLin,\NuagePointsTikz,\PointMoyenTikz,\BoiteMoustaches,\BoiteMoustachesAxe,\Histogramme,\CalcBinomP,\CalcBinomC,\BinomP,\BinomC,\CalcPoissP,\CalcPoissC,\PoissonP,\PoissonC,\CalcGeomP,\CalcGeomC,\GeomP,\GeomC,\CalcHypergeomP,\CalcHypergeomP,\HypergeomP,\HypergeomC,\CalcNormC,\NormaleC,\CalcExpoC,\ExpoC,\ArbreProbasTikz,\LoiNormaleGraphe,\LoiExpoGraphe,\NbAlea,\VarNbAlea,\TirageAleatoireEntiers,\Arrangement,\Combinaison,\ConversionDecBin,\ConversionBinHex,\ConversionVersDec,\ConversionHexBin,\ConversionBaseDix,\ConversionDepuisBaseDix,\PresentationPGCD,\EquationDiophantienne,\ConversionFraction,\SimplificationRacine,\EcritureEnsemble,\EcritureTrinome,\MesurePrincipale,\LigneTrigo,\SudoMaths,\FonctionRepartTikz,\IntervalleFF,\IntervalleFO,\IntervalleOF,\IntervalleOO,\RepereOij,\RepereOuv,\RepereOijk,\ReperePlan,\RepereEspace,\jfalg,\jfexp,\LoiNormale,\LoiBinomiale,\LoiPoisson,\LoiExpo,\LoiUnif,\Courbe,\Suite,\CoordPtPl,\CoordPtEsp,\CoordVecPl,\CoordVecEsp,\MatDeux,\Vecteur,\Esper,\Varianc,\EcType,\dx,\Integrale,\Modulo,\Arrondi,\CodePythonLstFichier,\CodePythonLstFichierAlt,\colorlet,\PtsDiscontinuite,\ListeDiviseurs,\ArbreDiviseurs,\FractaleTikz,\EtapesFloconKoch,\EtapesTapisSierpinski,\tkzIntervalle,\AffAngleRadian
 		},%
 		keywordstyle={\color{CouleurVertForet}},%
 		classoffset=3,%
 		alsoletter={-},%
-		morekeywords={minimum-decimal-digits,scale,nonamssymb,build,Precision,Intervalle,Variable,NomFct,NomSol,va,vb,Stretch,Balayage,Calculatrice,Majuscule,No,UNo,NomSuite,Simple,Exact,Conclusion,Sens,ResultatBrut,Methode,NbSubDiv,AffFormule,Expr,Signe,Variables,Affp,Affs,Epaisseur,Police,ElargirOx,ElargirOy,Labelx,Labely,AffLabel,PosLabelx,PosLabely,EchelleFleche,TypeFleche,PosGrad,HautGrad,AffGrad,AffOrigine,Annee,Trigo,Dfrac,Style,Coeffs,AffPoints,TaillePoints,xl,xr,Code,Racines,Largeur,Hauteur,Cadre,Fct,Nom,PosLabel,DecalLabel,TailleLabel,AffTermes,RemplirbOpacite,CouleurRemplissage,Lignes,Gobble,Alignement,Filigrane,BarreTitre,CouleurNombres,Centre,EspacementVertical,Label,Titre,Profondeur,Angle,Fuite,Sommets,Math,Aff,Plein,Cube,Alpha,Beta,Rayon,Marge,TailleValeurs,TailleAngles,CouleurFond,Decal,MoinsPi,AffAngles,AffTraits,AffValeurs,Equationcos,Equationsin,sin,cos,AffTraitsEq,CouleurSol,OptionCoeffs,SimplifCoeffs,Facteur,OptionCoeffs,Reel,Oppose,Rgras,SimplifCoeffs,VectDirecteur,NomCoeffa,NomCoeffb,NomCoeffr,NomCoeffrd,NomXmin,NomXmax,Ox,Oy,xg,yg,AffNom,Elevation,Moyenne,AffMoyenne,Pointilles,Valeurs,Elargir,Min,Max,DebutOx,FinOx,ListeCouleurs,ElargirX,ElargirY,LabelX,LabelY,GradX,GradY,AffEffectifs,PosEffectifs,Opacite,AffBornes,GrilleV,PoliceAxes,PoliceEffectifs,EpaisseurTraits,Unite,EspaceNiveau,EspaceFeuille,Type,PoliceProbas,InclineProbas,Fleche,StyleTrait,EpaisseurTrait,CouleurAire,CouleurCourbe,AfficheM,AfficheCadre,ValMin,ValMax,NbVal,Sep,Tri,Repetition,Notation,NotationAncien,Formule,AffBase,Details,BaseDep,Zeros,DecalH,DecalV,Noeud,Rect,CouleurRes,DecalRect,Rectangle,CouleurResultat,AfficheConclusion,AfficheDelimiteurs,Lettre,Inconnues,Entier,Cadres,PresPGCD,Mathpunct,Option,Alea,Anegatif,Crochets,Brut,Etapes,Epaisseurg,CouleurCase,CouleurTexte,NbSubCol,NbLig,NbCol,Legendes,PoliceLeg,ListeLegV,ListeLegH,DecalLegende,Couleur,Uno,Grille,ExtraGrilleY,PosLegende,Pointilles,Extremite,Frac,PremLigne},%
+		morekeywords={minimum-decimal-digits,scale,nonamssymb,build,Precision,Intervalle,Variable,NomFct,NomSol,va,vb,Stretch,Balayage,Calculatrice,Majuscule,No,UNo,NomSuite,Simple,Exact,Conclusion,Sens,ResultatBrut,Methode,NbSubDiv,AffFormule,Expr,Signe,Variables,Affp,Affs,Epaisseur,Police,ElargirOx,ElargirOy,Labelx,Labely,AffLabel,PosLabelx,PosLabely,EchelleFleche,TypeFleche,PosGrad,HautGrad,AffGrad,AffOrigine,Annee,Trigo,Dfrac,Style,Coeffs,AffPoints,TaillePoints,xl,xr,Code,Racines,Largeur,Hauteur,Cadre,Fct,Nom,PosLabel,DecalLabel,TailleLabel,AffTermes,RemplirbOpacite,CouleurRemplissage,Lignes,Gobble,Alignement,Filigrane,BarreTitre,CouleurNombres,Centre,EspacementVertical,Label,Titre,Profondeur,Angle,Fuite,Sommets,Math,Aff,Plein,Cube,Alpha,Beta,Rayon,Marge,TailleValeurs,TailleAngles,CouleurFond,Decal,MoinsPi,AffAngles,AffTraits,AffValeurs,Equationcos,Equationsin,sin,cos,AffTraitsEq,CouleurSol,OptionCoeffs,SimplifCoeffs,Facteur,OptionCoeffs,Reel,Oppose,Rgras,SimplifCoeffs,VectDirecteur,NomCoeffa,NomCoeffb,NomCoeffr,NomCoeffrd,NomXmin,NomXmax,Ox,Oy,xg,yg,AffNom,Elevation,Moyenne,AffMoyenne,Pointilles,Valeurs,Elargir,Min,Max,DebutOx,FinOx,ListeCouleurs,ElargirX,ElargirY,LabelX,LabelY,GradX,GradY,AffEffectifs,PosEffectifs,Opacite,AffBornes,GrilleV,PoliceAxes,PoliceEffectifs,EpaisseurTraits,Unite,EspaceNiveau,EspaceFeuille,Type,PoliceProbas,InclineProbas,Fleche,StyleTrait,EpaisseurTrait,CouleurAire,CouleurCourbe,AfficheM,AfficheCadre,ValMin,ValMax,NbVal,Sep,Tri,Repetition,Notation,NotationAncien,Formule,AffBase,Details,BaseDep,Zeros,DecalH,DecalV,Noeud,Rect,CouleurRes,DecalRect,Rectangle,CouleurResultat,AfficheConclusion,AfficheDelimiteurs,Lettre,Inconnues,Entier,Cadres,PresPGCD,Mathpunct,Option,Alea,Anegatif,Crochets,Brut,Etapes,Epaisseurg,CouleurCase,CouleurTexte,NbSubCol,NbLig,NbCol,Legendes,PoliceLeg,ListeLegV,ListeLegH,DecalLegende,Couleur,Uno,Grille,ExtraGrilleY,PosLegende,Pointilles,Extremite,Frac,PremLigne,Type,Pos,Echelle,AffNom,EspaceNiveau,CouleurDetails,Fleches,EspaceFeuille,Details,LongueurCote,AlignV,Offset,Remplir,Etape,Depart,Contour,Remplissage,Graduations,GraduationsAlt,HautGrad,Valeurs,EpTrait,Decor,NumInf,NumSup,NiveauV,PosValeurs},%
 		keywordstyle={\color{orange!75!black}}
 		}
 	}
@@ -655,6 +655,12 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \end{noteblock}
 
 \begin{PresCodeTexPL}{listing only}
+%intervalles
+\begin{RepIntervalles}[clés]<options tikz>...\end{RepIntervalles}
+\tkzIntervalle[clés]{xmin}{xmax}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{listing only}
 %Résolution approchée d'une équation f(x)=k
 \ResolutionApprochee[clés]{équation}[macro]
 
@@ -683,6 +689,7 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %courbe d'interpolation, tangente, dans un environnement tikz
 \SplineTikz[options]{liste}
 \TangenteTikz[options]{liste}
+\PtsDiscontinuite[options]{liste}
 
 %schémas pour le signe affine/trinôme, dans un environnement tikz
 \MiniSchemaSignes(*)[clés]<options tikz>
@@ -853,6 +860,10 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 \VarNbAlea{macro}{calcul}
 %liste d'entiers aléatoires
 \TirageAleatoireEntiers[options]{macro}
+%liste des diviseurs
+\ListeDiviseurs(*)[option]{nombre}
+%arbre des diviseurs
+\ArbreDiviseurs[options]{nombre}
 \end{PresCodeTexPL}
 
 \begin{PresCodeTexPL}{listing only}
@@ -867,6 +878,7 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %conversions
 \ConversionDecBin(*)[clés]{nombre}
 \ConversionBinHex[clés]{nombre}
+\ConversionHexBin[clés]{nombre}
 \ConversionVersDec[clés]{nombre}
 \ConversionBaseDix[clés]{nombre}{base de départ}
 \ConversionDepuisBaseDix[options]{nombre en base 10}{base d'arrivée}
@@ -898,6 +910,11 @@ Elles sont présentées de manière \textit{succincte}, mais elles sont présent
 %sudomaths
 \SudoMaths[options]{liste}
 \begin{EnvSudoMaths}[options]{grille}...\end{EnvSudoMaths}
+
+%fractales
+\FractaleTikz(*)[clés]<options tikz>
+\EtapesFloconKoch[clés]{étapes}
+\EtapesTapisSierpinski[clés]{étapes}
 \end{PresCodeTexPL}
 
 \newpage
@@ -1600,6 +1617,129 @@ $\displaystyle\IntegraleApprochee[NbSubDiv=100,AffFormule,Expr={80x\,\text{e}^{-
 
 \part{Outils graphiques}
 
+\section{Intervalles}\label{intervalles}
+
+\subsection{Idée}
+
+\begin{tipblock}
+\cmaj{2.8.1} L'idée est de proposer un environnement pour travailler sur des intervalles :
+
+\begin{itemize}
+	\item création de l'environnement (basé sur \TikZ) avec paramètres globaux (l'unité est le cm);
+	\item commande pour créer un intervalle.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+\begin{RepIntervalles}[clés]<options tikz>
+	\tkzIntervalle[clés]{xmin}{xmax}
+\end{RepIntervalles}
+\end{PresCodeTexPL}
+
+\begin{PresCodePL}{}
+\begin{RepIntervalles}
+	\tkzIntervalle{-4}{5}
+\end{RepIntervalles}
+\end{PresCodePL}
+
+\subsection{Création de l'environnement}
+
+\begin{PresCodeTexPL}{listing only}
+\begin{RepIntervalles}[clés]<options tikz>
+	%corps
+\end{RepIntervalles}
+\end{PresCodeTexPL}
+
+\begin{cautionblock}
+Les \Cle{clés} (globales pour l'ensemble de l'environnement, y compris pour la création des intervalles) disponibles pour l'environnement \ctex{RepIntervalles} sont :
+
+\begin{itemize}
+	\item \Cle{xmin} : valeur minimale pour l'axe ; \hfill{}défaut \Cle{-8}
+	\item \Cle{xmax} : valeur maximale pour l'axe ; \hfill{}défaut \Cle{8}
+	\item \Cle{Elargir} : coefficient d'alargisement de l'axe, en pourcentage de largeur; \hfill{}défaut \Cle{0.05}
+	\item \Cle{Largeur} : largeur (en cm) de l'axe (hors élargissement) ; \hfill{}défaut \Cle{12}
+	\item \Cle{Unite} : permet au code de calculer lui-même l'unité, sinon à donner en cm ; \hfill{}défaut \Cle{auto}
+	\item \Cle{EpTrait} : épaisseur de base des tracés ; \hfill{}défaut \Cle{0.8pt}
+	\item \Cle{Graduations} : liste des graduations (traits) à afficher ;
+	\item \Cle{GraduationsAlt} : liste des graduations (traits un peu plus grands) à afficher ;
+	\item \Cle{HautGrad} : hauteur de base des graduations ; \hfill{}défaut \Cle{7pt}
+	\item \Cle{Hauteur} : hauteur des crochets des intervalles ; \hfill{}défaut \Cle{16pt}
+	%\item \Cle{Coeff=1.1
+	\item \Cle{Valeurs} : valeurs à afficher sous l'axe ;
+	\item \Cle{Police} : police globale des labels.\hfill{}défaut \Cle{\textbackslash normalsize\textbackslash normalfont}
+	%\item \Cle{xgrilles}, stockée dans \ctex{\textbackslash{}xgrilles}, graduation secondaire.\hfill{}défaut \Cle{0.5}
+\end{itemize}
+
+L'argument optionnel, et entre \ctex{<...>}, permet de passer des options spécifiques à l'environnement \TikZ.
+\end{cautionblock}
+
+\begin{PresCodePL}{}
+\begin{RepIntervalles}[Unite=1,xmin=-2,xmax=8,Graduations={-2,-1,...,8},GraduationsAlt={0,5}]
+	%corps
+\end{RepIntervalles}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\begin{RepIntervalles}[Elargir=0.025,xmin=-100,xmax=200,Unite=auto,Largeur=10, Graduations={-100,-90,...,200},GraduationsAlt={-100,-50,...,200}, Valeurs={-100,-50,...,200},Police=\scriptsize]
+	%corps
+\end{RepIntervalles}
+\end{PresCodePL}
+
+\subsection{Représentation d'intervalles}
+
+\begin{tipblock}
+L'idée est de pouvoir représenter des intervalles dans l'environnement créé précédemment :
+
+\begin{itemize}
+	\item en prenant en compte le type d'intervalles et les bornes infinies ;
+	\item en personnalisation la décoration éventuelle.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+\begin{RepIntervalles}[clés]<options tikz>
+	\tkzIntervalle[clés]{xmin}{xmax}
+\end{RepIntervalles}
+\end{PresCodeTexPL}
+
+\begin{cautionblock}
+Les \Cle{clés} (certains paramètres sont hérités des clés de l'environnement) disponibles pour la commande \ctex{\textbackslash tkzIntervalle} sont :
+
+\begin{itemize}
+	\item \Cle{Couleur} : couleur de base des tracés ; \hfill{}défaut \Cle{red}
+	\item \Cle{Type} (parmi \ctex{FF / FO / OO / OF}) : choix du type d'intervalle ; \hfill{}défaut \Cle{FF}
+	\item \Cle{NiveauV} : pour positionner l'intervalle décalé verticalement (en pourcentage de la hauteur) ; \hfill{}défaut \Cle{0}
+	\item \Cle{Offset} : pour décaler légèrement la décoration (si superposition par exemple) ; \hfill{}défaut \Cle{0pt}
+	\item \Cle{Decor} parmi \ctex{fond / zizgag / hach} : pour décorer l'intervalle (\ctex{hach/angle} pour choisir un angle des hachures) ; \hfill{}défaut \Cle{\{\}}
+	\item \Cle{AffValeurs} : booléen pour afficher les valeurs de bornes ; \hfill{}défaut \Cle{false}
+	\item \Cle{NumInf} : booléen pour afficher la borne inf grâce à \ctex{siunitx} ; \hfill{}défaut \Cle{true}
+	\item \Cle{NumSup} : booléen pour afficher la borne sup grâce à \ctex{siunitx} ; \hfill{}défaut \Cle{true}
+	\item \Cle{PosValeurs} : choix de la position des valeurs des bornes.\hfill{}défaut \Cle{above}
+\end{itemize}
+
+Les deux arguments obligatoires, et entre \ctex{\{...\}}, permettent de préciser les bornes de l'intervalle (avec \ctex{*} pour l'infini.)
+\end{cautionblock}
+
+\begin{PresCodePL}{}
+\begin{RepIntervalles}[Elargir=0.025,xmin=-100,xmax=200,Unite=auto,Largeur=10, Graduations={-100,-90,...,200},GraduationsAlt={-100,-50,...,200}, Valeurs={-100,-50,...,200},Police=\scriptsize,EpTrait=0.6pt]
+	\tkzIntervalle[AffValeurs]{-15}{175}
+	\tkzIntervalle[Decor=fond,Couleur=teal,AffValeurs]{-56}{25}
+	\tkzIntervalle[Decor=zigzag,NiveauV=1.5,Couleur=purple,AffValeurs,Type=OO]{0}{79}
+\end{RepIntervalles}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\begin{RepIntervalles}[Graduations={-8,-7,...,8}]
+	\tkzIntervalle[Decor=fond,Offset=-1pt,AffValeurs,PosValeurs=below]{-2}{5}
+	\tkzIntervalle[Type=OO,Couleur=blue,Decor=zigzag,Offset=1pt,AffValeurs,PosValeurs=below]{-7}{-1}
+	\tkzIntervalle[Type=FO,Couleur=orange,NiveauV=1.25,Decor=hach,AffValeurs]{*}{6}
+\end{RepIntervalles}
+\end{PresCodePL}
+
+\pagebreak
+
 \section{Repérage et tracé de courbes}\label{reperagetikz}
 
 \subsection{Idée}
@@ -2281,6 +2421,71 @@ On obtient le résultat suivant (avec les éléments rajoutés utiles à la comp
 
 \newpage
 
+\section{Points de discontinuité}\label{discont}
+
+\subsection{Idée}
+
+\begin{tipblock}
+\cmaj{2.7.7} L'idée est de présenter, en marge de la création de \textit{splines cubiques}, des points de discontinuité.
+
+Pour des raisons \textit{internes} au code, cette possibilité n'est pas offerte (encore ?) directement dans la commande de création des splines.
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+%dans un environnement tikz
+\PtsDiscontinuite
+\end{PresCodeTexPL}
+
+\subsection{Commandes}
+
+\begin{PresCodeTexPL}{listing only}
+\begin{tikzpicture}[<options>]
+	\PtsDiscontinuite{liste}[clés]
+\end{tikzpicture}
+\end{PresCodeTexPL}
+
+\begin{cautionblock}
+Le premier argument, \textit{optionnel} et entre \textsf{[...]}, contient les \Cle{Clés} suivantes :
+
+\begin{itemize}
+	\item la clé \Cle{Couleur} qui permet de définir la couleur du symbole ;\hfill{}défaut \Cle{red}
+	\item la clé \Cle{Epaisseur} qui est relative à l'épaisseur du symbole ;\hfill{}défaut \Cle{1.25pt}
+	\item la clé \Cle{Pos} pour choisir la position de la discontinuité (parmi \Cle{G/D}) ;\hfill{}défaut \Cle{D}
+	\item la clé \Cle{Echelle} pour modifier l'échelle du symbole ;\hfill{}défaut \Cle{1}
+	\item la clé \Cle{Type} pour choisir le type de symbole, parmi \Cle{par/cro/rond/demirond}.\hfill{}défaut \Cle{par}
+\end{itemize}
+
+Le second argument, obligatoire et entre \textsf{\{...\}} permet de préciser (comme pour les commandes des paragraphes précédents) la liste des points en lesquels le symbole de discontinuité sera positionné, sous la forme \verb|x1/y1/d1 § x2/y2/d2 § ...| avec les points \pverb|(xi;yi)| et \vverb|f'(xi)=di|.
+\end{cautionblock}
+
+\subsection{Exemples}
+
+\begin{PresCodeTexPL}{listing only}
+\begin{tikzpicture}
+	\draw[lightgray] (0,0) grid (10,5) ;
+	\SplineTikz{0/1/-1 § 4/4/0}
+	\PtsDiscontinuite{4/4/0}
+	\PtsDiscontinuite[Pos=G,Type=cro]{0/1/-1}
+	\SplineTikz[Couleur=blue]{5/1/1.5 § 8/4/0.5}
+	\PtsDiscontinuite[Couleur=blue,Type=rond]{8/4/0.5}
+	\PtsDiscontinuite[Couleur=blue,Pos=G,Type=demirond,Echelle=2]{5/1/1.5}
+\end{tikzpicture}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{text only}
+\begin{tikzpicture}
+	\draw[lightgray] (0,0) grid (10,5) ;
+	\SplineTikz{0/1/-1 § 4/4/0}
+	\PtsDiscontinuite{4/4/0}
+	\PtsDiscontinuite[Pos=G,Type=cro]{0/1/-1}
+	\SplineTikz[Couleur=blue]{5/1/1.5 § 8/4/0.5}
+	\PtsDiscontinuite[Couleur=blue,Type=rond]{8/4/0.5}
+	\PtsDiscontinuite[Couleur=blue,Pos=G,Type=demirond,Echelle=2]{5/1/1.5}
+\end{tikzpicture}
+\end{PresCodeTexPL}
+
+\newpage
+
 \section{Petits schémas pour le signe d'une fonction affine ou d'un trinôme}\label{aidesigne}
 
 \subsection{Idée}
@@ -2322,7 +2527,7 @@ Comme pour les autres commandes \TikZ, l'idée est de laisser la possibilité à
 
 \smallskip
 
-Le premier argument, \textit{optionnel} et entre \textsf{[...]}, contient les \Cle{Clés} sont disponibles pour cette commande :
+Le premier argument, \textit{optionnel} et entre \textsf{[...]}, contient les \Cle{Clés} suivantes :
 
 \begin{itemize}
 	\item la clé \Cle{Code} qui permet de définir le type d'expression (voir en-dessous) ;\hfill{}défaut \Cle{da+}
@@ -6672,6 +6877,7 @@ L'idée est de \textit{compléter} les possibilités offertes par le package \ct
 
 \begin{itemize}
 	\item décimal en binaire avec blocs de 4 chiffres en sortie ;
+	\item hexadécimal en binaire avec blocs de 4 chiffres en sortie ;
 	\item conversion binaire ou hexadécimal en décimal avec écriture polynomiale.
 \end{itemize}
 \vspace*{-\baselineskip}\leavevmode
@@ -6808,6 +7014,51 @@ $\ConversionBinHex[AffBase=false,Details=false]{110011111}$
 \end{PresCodeSortiePL}
 
 \pagebreak
+
+\subsection{Conversion hexadécimal vers binaire}\label{convhexbin}
+
+\begin{noteblock}
+\cmaj{2.7.8} L'idée est ici de présenter la conversion, grâce à la conversion \og directe \fg{} par blocs de 4 chiffres :
+
+\begin{itemize}
+	\item la macro découpe chaque caractère hexa en bloc de 4 chiffres binaires ;
+	\item elle affiche la conversion en binaire.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{noteblock}
+
+\begin{PresCodeTexPL}{listing only}
+\ConversionHexBin[clés]{nombre}
+\end{PresCodeTexPL}
+
+\begin{cautionblock}
+Quelques \Cle{clés} sont disponibles pour cette commande :
+
+\begin{itemize}
+	\item le booléen \Cle{AffBase} qui permet d'afficher ou non la base des nombres ; \hfill{}défaut \Cle{true}
+	\item le booléen \Cle{Details} qui permet d'afficher ou le détail par bloc de 4. \hfill{}défaut \Cle{true}
+	%\item la clé \Cle{trait} qui permet de modifier l'épaisseur du crochet. \hfill{}défaut \Cle{0.5pt}
+\end{itemize}
+
+La commande est à insérer dans un environnement mathématique.
+\end{cautionblock}
+
+\begin{PresCodeTexPL}{listing only}
+%conversion avec détails et affichage de la base
+$\ConversionHexBin{ACDC}$
+%conversion sans détails et affichage de la base
+$\ConversionHexBin[Details=false]{ACDC}$
+%conversion sans détails et sans affichage de la base
+$\ConversionHexBin[AffBase=false,Details=false]{ACDC}$
+\end{PresCodeTexPL}
+
+\begin{PresCodeSortiePL}{text only}
+$\ConversionHexBin{ACDC}$
+
+$\ConversionHexBin[Details=false]{ACDC}$
+
+$\ConversionHexBin[AffBase=false,Details=false]{ACDC}$
+\end{PresCodeSortiePL}
 
 \subsection{Conversion binaire ou hexadécimal en décimal}
 
@@ -7120,6 +7371,90 @@ L'argument obligatoire, et entre \ctex{\{...\}} est quant à lui l'équation, en
 
 \begin{PresCodePL}{}
 \EquationDiophantienne{47x-18y=1}
+\end{PresCodePL}
+
+\newpage
+
+\section{Diviseurs}\label{listediv}
+
+\subsection{Idées}
+
+\begin{tipblock}
+L'idée est de proposer des commandes pour travailler sur les diviseurs d'un entier :
+
+\begin{itemize}
+	\item afficher la liste des diviseurs sous forme d'un ensemble ordonné ;
+	\item créer un arbre pour retrouver les diviseurs par la décomposition en facteurs premiers.
+\end{itemize}
+
+Le code se charge de déterminer les diviseurs et de mettre en forme l'arbre.
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+\ListeDiviseurs(*)[Clé]{nombre}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{listing only}
+\ArbreDiviseurs[Clés]{nombre}
+\end{PresCodeTexPL}
+
+\subsection{Options et clés}
+
+\begin{cautionblock}
+En ce qui concerne la commande pour la liste des diviseurs :
+
+\begin{itemize}
+	\item la version \textit{étoilée} permet d'afficher le nom de l'ensemble via \ctex{\textbackslash mathscr}, \ctex{\textbackslash mathcal} sinon;
+	\item le booléen \Cle{AffNom} permet d'afficher le nom de l'ensemble ; \hfill{}défaut \Cle{true}
+	\item l'argument obligatoire, et entre \ctex{\{...\}}, est quant lui le nombre, y compris en langage \ctex{xint}.
+\end{itemize}
+
+À noter que la commande est incluse dans un bloc \ctex{\textbackslash ensuremath}, donc les \ctex{$...$} ne sont pas nécessaires.
+\end{cautionblock}
+
+\begin{PresCodePL}{}
+%sortie par défaut
+\ListeDiviseurs{150}
+
+%sortie avec \mathscr (si chargé)
+\ListeDiviseurs*{300}
+
+%sortie sans libellé
+\ListeDiviseurs[AffNom=false]{60}
+\end{PresCodePL}
+
+\begin{cautionblock}
+En ce qui concerne la commande pour l'arbre (créé en \TikZ) permettant d'obtenir la liste des diviseurs (je remercie Christophe Poulain pour un \textit{bout de code} que j'ai adapté et pour son aide précieuse) :
+
+\begin{itemize}
+	\item les clés disponible sont :
+	\begin{itemize}
+		\item la clé \Cle{EspaceNiveau} qui est l'espace horizontal (en cm) entre les étages ; \hfill{}défaut \Cle{2.25}
+		\item la clé \Cle{EspaceFeuille} qui est l'espace vertical entre les feuilles ; \hfill{}défaut \Cle{0.66}
+		\item le booléen \Cle{Details} pour afficher les calculs des diviseurs ; \hfill{}défaut \Cle{true}
+		\item la clé \Cle{CouleurDetails} pour la couleur des détails ; \hfill{}défaut \Cle{red}
+		\item la clé \Cle{Echelle} pour spécifier une échelle globale (y compris le texte) de la figure ;
+		
+		\hfill{}défaut \Cle{1}
+		\item le booléen \Cle{Fleches} pour afficher une flèche sur les branches.\hfill{}défaut \Cle{true}
+	\end{itemize}
+	\item l'argument obligatoire, et entre \ctex{\{...\}}, est quant lui le nombre, y compris en langage \ctex{xint}.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{cautionblock}
+
+\begin{PresCodePL}{}
+%sortie par défaut
+\ArbreDiviseurs{60}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+%sortie personnalisée
+\ArbreDiviseurs[EspaceNiveau=4,EspaceFeuille=1,Details=false]{60}
+\end{PresCodePL}
+
+\begin{PresCodePL}{}
+\ArbreDiviseurs[EspaceNiveau=2,Echelle=0.75,CouleurDetails=teal,Fleches=false]{2^2*3*5*7*11}
 \end{PresCodePL}
 
 \newpage
@@ -7725,6 +8060,182 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 
 \newpage
 
+\section{Quelques fractales, en \TikZ}\label{fractales}
+
+\subsection{Introduction}
+
+\begin{tipblock}
+\cmaj{2.7.9} L'idée est de proposer de quoi représenter quelques fractales, créées avec la librairie \ctex{lindenmayersystems}.
+
+\smallskip
+
+Pour le moment, il est possible de :
+
+\begin{itemize}
+	\item tracer un flocon de Koch à une étape donnée ;
+	\item tracer un triangle de Sierpinski à une étape donnée ;
+	\item présenter différentes étapes successives des flocons de Koch ou des triangles de Sierpinski.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{importantblock}
+Les figures sont créées en \TikZ, et peuvent être autonomes (sans environnement \ctex{tikzpicture}).
+
+Pour le triangle de Sierpinski, la forme \textit{générale} est \textit{bloquée} pour avoir un rendu \textit{classique}.
+\end{importantblock}
+
+\subsection{Flocon de Koch et triangle de Sierpinski}
+
+\begin{tipblock}
+La commande pour créer un flocon de Koch ou un triangle de Sierpinski est \ctex{\textbackslash FractaleTikz}.
+
+Les éléments de personnalisation sont présentés un peu plus bas.
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+%Flocon de Koch, autonome
+\FractaleTikz[Type=Koch,clés]<options tikz>
+
+%Flocon de Koch, dans un environnement tikz
+\begin{tikzpicture}
+	\FractaleTikz*[Type=Koch,clés]
+\end{tikzpicture}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{listing only}
+%Triangle de Sierpinski, autonome
+\FractaleTikz[Type=Sierp,clés]<options tikz>
+
+%Flocon de Koch, dans un environnement tikz
+\begin{tikzpicture}
+	\FractaleTikz[Type=Sierp,clés]
+\end{tikzpicture}
+\end{PresCodeTexPL}
+
+\begin{cautionblock}
+Les \Cle{clés} disponibles pour cette commande sont :
+
+\begin{itemize}
+	\item la clé \Cle{Epaisseur} pour fixer l'épaisseur des tracés ; \hfill~défaut \Cle{0.6pt}
+	\item la clé \Cle{Type}, parmi \Cle{Koch / Sierp} pour choisir le type de fractale ; \hfill~défaut \Cle{Koch}
+	\item la clé \Cle{Couleur} pour fixer la couleur des tracés ; \hfill~défaut \Cle{black}
+	\item la clé \Cle{LongueurCote} (en cm) pour fixer la longueur des côtés ; \hfill~défaut \Cle{3}
+	\item la clé \Cle{Etape} (pour \Cle{Type=Koch} elle est limitée à 7) pour fixer l'étape ; \hfill~défaut \Cle{1}
+	\item le booléen \Cle{remplir} pour remplir la fractale ; \hfill~défaut \Cle{false}
+	\item la clé \Cle{Remplissage} pour fixer la couleur de remplissage ; \hfill~défaut \Cle{lightgray}
+	\item la clé \Cle{Depart} pour fixer le point de départ ; \hfill~défaut \Cle{(0,0)}
+	\item le booléen \Cle{AlignV} (pour \Cle{Type=Koch}) pour forcer l'alignement de la \textit{base}.\hfill~défaut \Cle{false}
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{cautionblock}
+
+\begin{PresCodeTexPL}{}
+%Koch par défaut
+\FractaleTikz
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%Koch par défaut
+\FractaleTikz[Etape=4,LongueurCote=4,Remplir,Remplissage=teal!5,Couleur=red,Epaisseur=1pt]
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%dans un environnement tikz
+\begin{tikzpicture}
+	\FractaleTikz*[Etape=0]
+	\FractaleTikz*[Depart={(4,0)},Etape=1,Remplir,Remplissage=yellow!25]
+	\FractaleTikz*[Depart={(8,0)},Etape=2,Remplir,Remplissage=orange!25]
+	\FractaleTikz*[Depart={(12,0)},Etape=3,Remplir,Remplissage=red!25]
+\end{tikzpicture}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%Sierpinski par défaut
+\FractaleTikz[Type=Sierp]
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+%Sierpinski par défaut
+\FractaleTikz[Type=Sierp,LongueurCote=4,Couleur=blue]
+\end{PresCodeTexPL}
+
+\subsection{Affichage de plusieurs étapes pour les flocons de Koch}
+
+\begin{tipblock}
+L'idée est de présenter des étapes successives pour le flocon de Koch.
+
+À noter que les \textit{bases} des flocons sont, dans ce cas, correctement alignées !
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+%commande autonome, l'environnement tikz est créé
+\EtapesFloconKoch[clés]{étapes}
+\end{PresCodeTexPL}
+
+\begin{cautionblock}
+Les \Cle{clés} disponibles sont reprises (pour celles dépendant de \Cle{Type=Koch} !) de la commande \ctex{\textbackslash FractaleTikz}, avec en plus :
+
+\begin{itemize}
+	\item la clé \Cle{Offset} pour fixer une espacement horizontal entre les figures. \hfill~défaut \Cle{2pt}
+\end{itemize}
+
+L'argument obligatoire, et entre \ctex{\{...\}}, permet de spécifier les étapes à afficher, sous la forme \TikZ{} :
+
+\begin{itemize}
+	\item \ctex{n1,n2,n3} pour spécifier une liste d'étapes ;
+	\item \ctex{n1,...,n2} pour spécifier une plage d'étapes.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{cautionblock}
+
+\begin{PresCodeTexPL}{}
+\EtapesFloconKoch{0,...,4}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+\EtapesFloconKoch[Offset=5mm,Couleur=red,Remplir,Remplissage=violet!25]{0,2,4,6}
+\end{PresCodeTexPL}
+
+\subsection{Affichage de plusieurs étapes pour les tapis de Sierpinski}
+
+\begin{tipblock}
+L'idée est de présenter des étapes successives pour les tapis de Sierpinski.
+
+À noter que les \textit{bases} des flocons sont correctement alignées !
+\end{tipblock}
+
+\begin{PresCodeTexPL}{listing only}
+%commande autonome, l'environnement tikz est créé
+\EtapesTapisSierpinski[clés]{étapes}
+\end{PresCodeTexPL}
+
+\begin{cautionblock}
+Les \Cle{clés} disponibles sont reprises (pour celles dépendant de \Cle{Type=Sierp} !) de la commande \ctex{\textbackslash FractaleTikz}, avec en plus :
+
+\begin{itemize}
+	\item la clé \Cle{Offset} pour fixer une espacement horizontal entre les figures. \hfill~défaut \Cle{2pt}
+\end{itemize}
+
+L'argument obligatoire, et entre \ctex{\{...\}}, permet de spécifier les étapes à afficher, sous la forme \TikZ{} :
+
+\begin{itemize}
+	\item \ctex{n1,n2,n3} pour spécifier une liste d'étapes ;
+	\item \ctex{n1,...,n2} pour spécifier une plage d'étapes.
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{cautionblock}
+
+\begin{PresCodeTexPL}{}
+\EtapesTapisSierpinski{0,...,4}
+\end{PresCodeTexPL}
+
+\begin{PresCodeTexPL}{}
+\EtapesTapisSierpinski[LongueurCote=2.5,Offset=5mm,Couleur=red]{0,2,4,6,8}
+\end{PresCodeTexPL}
+
+\newpage
+
 \phantom{t}\par\vfill\par
 \begin{PART}
 	\begin{center}
@@ -7736,6 +8247,16 @@ La grille, créée en \TikZ, est portée par le rectangle de \og coins \fg{} $(0
 \newpage
 
 \part{Historique}
+
+{\small \bverb|v 2.8.1|~:~~~~Environnement et commande pour travailler sur avec des intervalles (page \pageref{intervalles})}
+
+{\small \bverb|v 2.8.0|~:~~~~Amélioration du tapis de Sierpinski (page \pageref{fractales})}
+
+{\small \bverb|v 2.7.9|~:~~~~Ajout de quelques fractales (Koch + Sierpinski) (page \pageref{fractales})}
+
+{\small \bverb|v 2.7.8|~:~~~~Conversion présentée hexa/bin (page \pageref{convhexbin}) + Liste et arbres de diviseurs (page \pageref{listediv})}
+
+{\small \bverb|v 2.7.7|~:~~~~Points de discontinuité pour des splines (page \pageref{discont})}
 
 {\small \bverb|v 2.7.6|~:~~~~Amélioration dans la console d'exécution avec \textsf{piton}}
 
