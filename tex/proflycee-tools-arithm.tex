@@ -672,4 +672,251 @@
 		}
 	}%
 
+%====CHIFFREMENTS !!
+\xdef\aLPHaBeTMajusc{ABCDEFGHIJKLMNOPQRSTUVWXYZ}
+\xdef\aLPHaBeTminusc{abcdefghijklmnopqrstuvwxyz}
+
+\NewDocumentCommand\InverseModulo{ s m m }{%
+	\xdef\PGCDD{\xinteval{gcd(#2,#3)}}%
+	\xdef\resinvmod{#2{} n'est pas inversible modulo #3.}
+		\xintFor* ##1 in {\xintSeq{1}{#3}}\do{\xintifboolexpr{\xintiiRem{\xinteval{#2*##1}}{#3} == 1}{\xdef\resinvmod{##1}}{}}%
+	\IfBooleanTF{#1}%
+		{%
+			On a $\text{PGCD}(#2;#3)=\num{\PGCDD}$.~%
+			\xintifboolexpr{\PGCDD != 1}%
+				{Le PGCD étant différent de 1, on en déduit que #2 n'est pas inversible modulo #3.\relax}%
+				{Le PGCD étant égal à 1, on en déduit que #2 admet un inverse modulo #3.\\De plus on a $#2 \times \resinvmod = \xinteval{#2*\resinvmod} \equiv \xintiirem{\xinteval{#2*\resinvmod}}{#3}\:[#3]$, donc \resinvmod\ est l'inverse de #2 modulo #3.\relax}%
+		}%
+		{}%
+}
+
+\defKV[chiffaffine]{a=\xdef\tmpcoeffa{#1},b=\xdef\tmpcoeffb{#1},modulo=\xdef\tmpmodulo{#1}}
+\setKVdefault[chiffaffine]{a=3,b=12,Dechiffr=false,modulo=26}
+
+\NewDocumentCommand\ChiffrementAffine{ O{} m }{%
+	\restoreKV[chiffaffine]%
+	\setKV[chiffaffine]{#1}%
+	%pgcd stocké
+	\xdef\PGCDD{\xinteval{gcd(\tmpcoeffa,\tmpmodulo)}}%
+	\StrLen{#2}[\tmpnbcaract]%
+	\ifboolKV[chiffaffine]{Dechiffr}%
+	{%
+		\xdef\resinvmod{0}%
+		\xintFor* ##1 in {\xintSeq{1}{\tmpmodulo}}\do{
+			\xintifboolexpr{\xintiiRem{\xinteval{(\tmpcoeffa)*(##1)}}{\tmpmodulo} == 1}%
+			{\xdef\resinvmod{##1}}{}%
+		}%
+	}{}%
+	\foreach \i in {1,...,\tmpnbcaract}{%
+		\StrChar{#2}{\i}[\tmpchar]%
+		\IfStrEq{\tmpchar}{ }%
+			{~}%
+			{%
+				%majuscule minuscule
+				\IfSubStr{\aLPHaBeTMajusc}{\tmpchar}%
+					{%
+						\StrPosition{\aLPHaBeTMajusc}{\tmpchar}[\tmpcoeffx]%
+					}%
+					{%
+						\StrPosition{\aLPHaBeTminusc}{\tmpchar}[\tmpcoeffx]%
+					}%
+				\xdef\tmpcoeffx{\xinteval{\tmpcoeffx-1}}%
+				\ifboolKV[chiffaffine]{Dechiffr}%
+					{%
+						\xintifboolexpr{\PGCDD == 1}%
+							{%
+								\xdef\tmpres{\xintiiRem{\xinteval{(\resinvmod)*(\tmpcoeffx)-(\resinvmod)*(\tmpcoeffb)}}{\tmpmodulo}}%
+								\xdef\tmpres{\xinteval{\tmpres+1}}%
+								\IfSubStr{\aLPHaBeTMajusc}{\tmpchar}%
+									{%
+										\StrChar{\aLPHaBeTMajusc}{\tmpres}%
+									}%
+									{%
+										\StrChar{\aLPHaBeTminusc}{\tmpres}%
+									}%
+							}%
+							{}%
+					}%
+					{%
+						\xdef\tmpres{\xintiiRem{\xinteval{\tmpcoeffa*\tmpcoeffx+\tmpcoeffb}}{\tmpmodulo}}%
+						\xdef\tmpres{\xinteval{\tmpres+1}}%
+						\IfSubStr{\aLPHaBeTMajusc}{\tmpchar}%
+							{%
+								\StrChar{\aLPHaBeTMajusc}{\tmpres}%
+							}%
+							{%
+								\StrChar{\aLPHaBeTminusc}{\tmpres}%
+							}%
+					}%
+			}%
+	}%
+	\ifboolKV[chiffaffine]{Dechiffr}%
+	{\xintifboolexpr{\PGCDD != 1}{Le message ne peut pas être déchiffré car $\text{PGCD}(\tmpcoeffa;\tmpmodulo)\neq1$ !\relax}{}}%
+	{}%
+}
+
+\defKV[chiffhill]{Matrice=\xdef\tmpcoeffmat{#1},Modulo=\xdef\tmpmodulo{#1}}
+\setKVdefault[chiffhill]{Matrice={1,2,3,5},Dechiffr=false,modulo=26}
+
+\NewDocumentCommand\ChiffrementHill{ O{} m }{%
+	\restoreKV[chiffhill]%
+	\setKV[chiffhill]{#1}%
+	%passage de la châine en nb pair
+	\StrLen{#2}[\tmpnbcar]%
+	\xintifboolexpr{\xintiirem{\tmpnbcar}{2} == 1}{\xdef\tmpchaine{#2A}}{\xdef\tmpchaine{#2}}%
+	\StrLen{\tmpchaine}[\tmpnbblocs]%
+	\xdef\tmpnbblocs{\xintieval{\tmpnbblocs/2}}%
+	%extraction des coeffs de la matrice + déterminant
+	\readlist*\coeffmathill{\tmpcoeffmat}%
+	\itemtomacro\coeffmathill[1]{\tmpcoeffa}%
+	\itemtomacro\coeffmathill[2]{\tmpcoeffb}%
+	\itemtomacro\coeffmathill[3]{\tmpcoeffc}%
+	\itemtomacro\coeffmathill[4]{\tmpcoeffd}%
+	\xdef\detmathill{\xintieval{(\tmpcoeffa)*(\tmpcoeffd)-(\tmpcoeffb)*(\tmpcoeffc)}}%
+	%chiffrement / déchiffrement
+	\ifboolKV[chiffhill]{Dechiffr}%
+	{%
+		%le cas où la matrice n'est pas inversible
+		\xintifboolexpr{\detmathill == 0}%
+		{%
+			La matrice $\begin{pmatrix} \tmpcoeffa & \tmpcoeffb \\ \tmpcoeffc & \tmpcoeffd \end{pmatrix}$ n'est pas inversible, donc pas de déchiffrement possible !\relax
+		}%
+		{%
+			%inversibilité du déterminant
+			\xdef\resinvmod{0}%
+			\xintFor* ##1 in {\xintSeq{1}{\tmpmodulo}}\do{%
+				\xintifboolexpr{\xintiiRem{\xinteval{(\detmathill)*(##1)}}{\tmpmodulo} == 1}%
+				{\xdef\resinvmod{##1}}{}%
+			}%
+			\xintifboolexpr{\resinvmod == 0}%si det non inversible modulo
+			{%
+				Le déterminant de la matrice $\begin{pmatrix} \tmpcoeffa & \tmpcoeffb \\ \tmpcoeffc & \tmpcoeffd \end{pmatrix}$ (qui vaut $\detmathill$) n'est pas inversible modulo \tmpmodulo, donc pas de déchiffrement !\relax
+			}%
+			{%
+				%on peut déchiffrer !!
+				\foreach \i in {1,...,\tmpnbblocs}{%
+					\xdef\tmpindicea{\xintieval{2*(\i-1)+1}}\xdef\tmpindiceb{\xintieval{2*(\i)}}%
+					\StrChar{\tmpchaine}{\tmpindicea}[\tmpchara]%
+					\IfSubStr{\aLPHaBeTMajusc}{\tmpchara}%
+					{%
+						\StrPosition{\aLPHaBeTMajusc}{\tmpchara}[\tmpcoeffx]%
+					}%
+					{%
+						\StrPosition{\aLPHaBeTminusc}{\tmpchara}[\tmpcoeffx]%
+					}%
+					\xdef\tmpcoeffx{\xintieval{\tmpcoeffx-1}}%
+					\StrChar{\tmpchaine}{\tmpindiceb}[\tmpcharb]%
+					\IfSubStr{\aLPHaBeTMajusc}{\tmpcharb}%
+					{%
+						\StrPosition{\aLPHaBeTMajusc}{\tmpcharb}[\tmpcoeffy]%
+					}%
+					{%
+						\StrPosition{\aLPHaBeTminusc}{\tmpcharb}[\tmpcoeffy]%
+					}%
+					\xdef\tmpcoeffy{\xintieval{\tmpcoeffy-1}}%
+					%1ère lettre
+					\xdef\tmpresa{\xintiiRem{\xintieval{(\resinvmod)*(\tmpcoeffd)*(\tmpcoeffx)-(\resinvmod)*(\tmpcoeffb)*(\tmpcoeffy)}}{\tmpmodulo}}%
+					\xdef\tmpresa{\xinteval{\tmpresa+1}}%
+					%2ème lettre
+					\xdef\tmpresb{\xintiiRem{\xintieval{-(\resinvmod)*(\tmpcoeffc)*(\tmpcoeffx)+(\resinvmod)*(\tmpcoeffa)*(\tmpcoeffy)}}{\tmpmodulo}}%
+					\xdef\tmpresb{\xinteval{\tmpresb+1}}%
+					%affichage des deux caractères
+					\IfSubStr{\aLPHaBeTMajusc}{\tmpchara}%
+					{%
+						\StrChar{\aLPHaBeTMajusc}{\tmpresa}%
+					}%
+					{%
+						\StrChar{\aLPHaBeTminusc}{\tmpresa}%
+					}%
+					\IfSubStr{\aLPHaBeTMajusc}{\tmpcharb}%
+					{%
+						\StrChar{\aLPHaBeTMajusc}{\tmpresb}%
+					}%
+					{%
+						\StrChar{\aLPHaBeTminusc}{\tmpresb}%
+					}%
+				}%
+			}%
+		}%
+	}%
+	{%
+		\foreach \i in {1,...,\tmpnbblocs}{%
+			\xdef\tmpindicea{\xintieval{2*(\i-1)+1}}\xdef\tmpindiceb{\xintieval{2*(\i)}}%
+			\StrChar{\tmpchaine}{\tmpindicea}[\tmpchara]%
+			\IfSubStr{\aLPHaBeTMajusc}{\tmpchara}%
+			{%
+				\StrPosition{\aLPHaBeTMajusc}{\tmpchara}[\tmpcoeffx]%
+			}%
+			{%
+				\StrPosition{\aLPHaBeTminusc}{\tmpchara}[\tmpcoeffx]%
+			}%
+			\xdef\tmpcoeffx{\xintieval{\tmpcoeffx-1}}%
+			\StrChar{\tmpchaine}{\tmpindiceb}[\tmpcharb]%
+			\IfSubStr{\aLPHaBeTMajusc}{\tmpcharb}%
+			{%
+				\StrPosition{\aLPHaBeTMajusc}{\tmpcharb}[\tmpcoeffy]%
+			}%
+			{%
+				\StrPosition{\aLPHaBeTminusc}{\tmpcharb}[\tmpcoeffy]%
+			}%
+			\xdef\tmpcoeffy{\xintieval{\tmpcoeffy-1}}%
+			%1ère lettre
+			\xdef\tmpresa{\xintiiRem{\xintieval{(\tmpcoeffa)*(\tmpcoeffx)+(\tmpcoeffb)*(\tmpcoeffy)}}{\tmpmodulo}}%
+			\xdef\tmpresa{\xinteval{\tmpresa+1}}%
+			%2ème lettre
+			\xdef\tmpresb{\xintiiRem{\xintieval{(\tmpcoeffc)*(\tmpcoeffx)+(\tmpcoeffd)*(\tmpcoeffy)}}{\tmpmodulo}}%
+			\xdef\tmpresb{\xinteval{\tmpresb+1}}%
+			%affichage des deux caractères
+			\IfSubStr{\aLPHaBeTMajusc}{\tmpchara}%
+			{%
+				\StrChar{\aLPHaBeTMajusc}{\tmpresa}%
+			}%
+			{%
+				\StrChar{\aLPHaBeTminusc}{\tmpresa}%
+			}%
+			\IfSubStr{\aLPHaBeTMajusc}{\tmpcharb}%
+			{%
+				\StrChar{\aLPHaBeTMajusc}{\tmpresb}%
+			}%
+			{%
+				\StrChar{\aLPHaBeTminusc}{\tmpresb}%
+			}%
+		}%
+	}%
+}
+
+\defKV[chiffcesar]{Decal=\xdef\tmpdecalcesar{#1}}
+\setKVdefault[chiffcesar]{Decal=5,Dechiffr=false}
+
+\NewDocumentCommand\ChiffrementCesar{ O{} m }{%
+	\restoreKV[chiffcesar]%
+	\setKV[chiffcesar]{#1}%
+	\StrLen{#2}[\tmpnbcaract]%
+	\foreach \i in {1,...,\tmpnbcaract}{%
+		\StrChar{#2}{\i}[\tmpchar]%
+		%majuscule minuscule
+		\IfStrEq{\tmpchar}{ }%
+			{~}%
+			{%
+				\IfSubStr{\aLPHaBeTMajusc}{\tmpchar}%
+					{%
+						\StrPosition{\aLPHaBeTMajusc}{\tmpchar}[\tmpcoeffx]%
+					}%
+					{%
+						\StrPosition{\aLPHaBeTminusc}{\tmpchar}[\tmpcoeffx]%
+					}%
+				\ifboolKV[chiffcesar]{Dechiffr}%
+					{\xdef\tmpcoeffx{\xintiirem{\xinteval{\tmpcoeffx-\tmpdecalcesar}}{26}}}%
+					{\xdef\tmpcoeffx{\xintiirem{\xinteval{\tmpcoeffx+\tmpdecalcesar}}{26}}}%
+				\IfSubStr{\aLPHaBeTMajusc}{\tmpchar}%
+					{%
+						\StrChar{\aLPHaBeTMajusc}{\tmpcoeffx}%
+					}%
+					{%
+						\StrChar{\aLPHaBeTminusc}{\tmpcoeffx}%
+					}%
+			}%
+	}%
+}
+
 \endinput

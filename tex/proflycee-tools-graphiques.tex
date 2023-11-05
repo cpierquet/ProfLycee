@@ -644,21 +644,27 @@
 		\IfStrEq{\RepIntervGrad}{}%
 			{}%
 			{
-				\foreach \i in \RepIntervGrad {\draw[line width={\useKV[repinterv]{EpTrait}}] (\i,{0.5*\RepIntervHautGrad})--++(0,{-\RepIntervHautGrad}) ;}
+				\foreach \i in \RepIntervGrad {\draw[line width={\useKV[repinterv]{EpTrait}}] ({\i},{0.5*\RepIntervHautGrad})--++(0,{-\RepIntervHautGrad}) ;}
 			}%
 		\IfStrEq{\RepIntervGradPrim}{}%
 			{}%
 			{
-				\foreach \i in \RepIntervGradPrim {\draw[line width={\useKV[repinterv]{EpTrait}}] (\i,{0.75*\RepIntervHautGrad})--++(0,{-1.5*\RepIntervHautGrad}) ;}
+				\foreach \i in \RepIntervGradPrim {\draw[line width={\useKV[repinterv]{EpTrait}}] ({\i},{0.75*\RepIntervHautGrad})--++(0,{-1.5*\RepIntervHautGrad}) ;}
 			}%
 		\IfStrEq{\RepIntervVal}{}%
 			{}%
 			{
-				\foreach \i in \RepIntervVal {\draw (\i,{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={1.5*\useKV[repinterv]{EpTrait}},below,font={\useKV[repinterv]{Police}}] {\num{\i}} ;}
+				\foreach \i in \RepIntervVal {\draw ({\i},{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={1.5*\useKV[repinterv]{EpTrait}},below,font={\useKV[repinterv]{Police}}] {\num{\i}} ;}
 			}%
 	}%
 	{%
 	\end{tikzpicture}%
+}
+
+\NewDocumentCommand\PlaceValeursAxe{ m }{%
+	\setsepchar{,/§}%
+	\readlist*\ValsAxeIV{#1}%
+	\foreach \i in {1,...,\ValsAxeIVlen} {\draw ({\ValsAxeIV[\i,1]},{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={1.5*\useKV[repinterv]{EpTrait}},below,font={\useKV[repinterv]{Police}}] {\ValsAxeIV[\i,2]} ;}
 }
 
 \defKV[tkzinterv]{%
@@ -679,12 +685,12 @@
 	Offset=0pt
 }
 
-\NewDocumentCommand\tkzIntervalle{ O{} m m }{%1=options,2=min,3=max
+\NewDocumentCommand\tkzIntervalle{ O{} m O{#2} m O{#4} }{%1=options,2=min,3=labelmin,4=max,5=labelmax
 	\restoreKV[tkzinterv]%
 	\setKV[tkzinterv]{#1}%
 	%transformations min/max
 	\IfStrEq{#2}{*}{\def\ValMinInterv{\AxeXminInterv}}{\def\ValMinInterv{#2}}%
-	\IfStrEq{#3}{*}{\def\ValMaxInterv{\AxeXmaxInterv}}{\def\ValMaxInterv{#3}}%
+	\IfStrEq{#4}{*}{\def\ValMaxInterv{\AxeXmaxInterv}}{\def\ValMaxInterv{#4}}%
 	\begin{scope}[yshift={\useKV[repinterv]{Coeff}*\useKV[tkzinterv]{NiveauV}*\useKV[repinterv]{Hauteur}+\IntervOffset}]
 		%segment
 		\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMinInterv},0)--({\ValMaxInterv},0) ;
@@ -717,11 +723,11 @@
 				{%
 					\IfSubStr{\IntervPosValeurs}{above}
 						{%
-							\draw ({\ValMinInterv},{0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumInf}{\num{#2}}{#2}} ;
+							\draw ({\ValMinInterv},{0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumInf}{\num{#2}}{#3}} ;
 						}{}%
 					\IfSubStr{\IntervPosValeurs}{below}
 						{%
-							\draw ({\ValMinInterv},{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumInf}{\num{#2}}{#2}} ;
+							\draw ({\ValMinInterv},{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumInf}{\num{#2}}{#3}} ;
 						}{}%
 				}{}%
 			\IfBeginWith{\IntervType}{O}%
@@ -734,18 +740,18 @@
 				\draw[line width={2*\useKV[repinterv]{EpTrait}},{\useKV[tkzinterv]{Couleur}}] ({\ValMinInterv},0)|-++ ({0.2*\useKV[repinterv]{Hauteur}},{-0.5*\useKV[repinterv]{Hauteur}}) ;
 			}%
 		}%
-		\IfStrEq{#3}{*}%
+		\IfStrEq{#4}{*}%
 		{}%
 		{%
 			\ifboolKV[tkzinterv]{AffValeurs}%
 				{%
 					\IfSubStr{\IntervPosValeurs}{above}
 						{%
-							\draw ({\ValMaxInterv},{0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumSup}{\num{#3}}{#3}} ;
+							\draw ({\ValMaxInterv},{0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumSup}{\num{#4}}{#5}} ;
 						}{}%
 					\IfSubStr{\IntervPosValeurs}{below}
 						{%
-							\draw ({\ValMaxInterv},{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumSup}{\num{#3}}{#3}} ;
+							\draw ({\ValMaxInterv},{-0.5*\useKV[repinterv]{Hauteur}}) node[inner sep={3*\useKV[repinterv]{EpTrait}},\IntervPosValeurs,text={\useKV[tkzinterv]{Couleur}},font={\useKV[repinterv]{Police}}] {\ifboolKV[tkzinterv]{NumSup}{\num{#4}}{#5}} ;
 						}{}%
 				}{}%
 			\IfEndWith{\IntervType}{O}%

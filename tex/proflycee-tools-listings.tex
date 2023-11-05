@@ -551,6 +551,22 @@
 % }
 
 %%------PRESENTATIONDECODES CLASSIQUES
+\tcbset{stylecodetex/.style={%
+	enhanced,boxrule=0.75pt,colframe=teal!50!black,%
+	sharp corners,top=1mm,bottom=1mm,left=1mm,right=1mm,middle=1mm,%
+	before skip=0.5\baselineskip,after skip=0.5\baselineskip,%
+	skin=bicolor,colback=teal!10,colbacklower=white,
+	fontupper=\footnotesize,fontlower=\footnotesize,%
+	listing engine=listings,%
+	%watermark text={\faCode},watermark opacity=0.25,watermark zoom=0.50,%
+	title={{\scriptsize\faCode} Code \LaTeX},
+	lefttitle=1mm,
+	fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=teal!75!black
+	}
+}
+
+\NewTCBListing{PresCodeLaTeX}{ m }{stylecodetex,listing options={style=tcblatex,basicstyle=\footnotesize\ttfamily,keywordstyle=\bfseries\color{blue},tabsize=2},#1}
+
 \NewTCBListing{PresentationCode}{ O{CouleurVertForet} m }{%
 	sharp corners=downhill,enhanced,arc=12pt,skin=bicolor,%
 	colback=#1!5!white,colframe=#1!75!black,colbacklower=white,%

@@ -342,4 +342,142 @@
 	}
 }
 
+%====CHATEAUCARTES
+\usetikzlibrary{patterns.meta}
+%hauteurs utiles
+\xdef\HoCardsHgt{1}
+\xdef\HoCardsWdt{0.45}
+
+%styles
+\tikzstyle{CarteDroite}=[line width=\fpeval{\HoCardsScale*0.01}cm,rounded corners=\fpeval{\HoCardsScale*\HoCardsRound}cm,DecoDroite]
+\tikzstyle{CarteGauche}=[line width=\fpeval{\HoCardsScale*0.01}cm,rounded corners=\fpeval{\HoCardsScale*\HoCardsRound}cm,DecoGauche]
+\tikzstyle{CarteHoriz}=[line width=\fpeval{\HoCardsScale*0.01}cm,rounded corners=\fpeval{\HoCardsScale*\HoCardsRound}cm,DecoHoriz]
+
+%clés
+\defKV[houseofcards]{Echelle=\def\HoCardsScale{#1},CouleurDeco=\def\HoCardsColor{#1},AngleY=\def\HoCardsAglY{#1},AngleX=\def\HoCardsAglX{#1},PoliceLegende=\def\HoCardsFonteLeg{#1},Deco=\def\HoCardsDeco{#1}}
+\setKVdefault[houseofcards]{Echelle=1,CouleurDeco=black,Arrondi=true,,AngleY=20,AngleX=8,Bas=false,Legende=false,PoliceLegende=\normalsize\normalfont,Deco=remplir}
+
+\newcommand\HoCardsLeft[1]{%
+	\draw[CarteGauche] (#1) --++ ({0.5*\HoCardsHgt},0,{-sqrt(3)*\HoCardsHgt*0.5}) --++ ({0},{\HoCardsWdt},{0}) --++ ({-0.5*\HoCardsHgt},0,{sqrt(3)*\HoCardsHgt*0.5}) --cycle ;
+}
+
+\newcommand\HoCardsRight[1]{%
+	\draw[CarteDroite] (#1) --++ ({-0.5*\HoCardsHgt},0,{-sqrt(3)*\HoCardsHgt*0.5}) --++ ({0},{\HoCardsWdt},{0}) --++ ({0.5*\HoCardsHgt},0,{sqrt(3)*\HoCardsHgt*0.5}) --cycle ;
+}
+
+\newcommand\HoCardsHoriz[1]{%
+	\draw[CarteHoriz] (#1) --++ ({\HoCardsHgt},0,0) --++ ({0},{\HoCardsWdt},{0}) --++ ({-\HoCardsHgt},0,0) --cycle ;
+}
+
+\NewDocumentCommand\ChateauCartes{ O{} m D<>{} }{%
+	\useKVdefault[houseofcards]%
+	\setKV[houseofcards]{#1}%
+	\def\HoCardsNbLevel{#2}%
+	\def\HoCardsRound{0.025}%
+	\ifboolKV[houseofcards]{Arrondi}{\def\HoCardsRound{0}}{}%
+	%style remplir, si clé non reconnue
+	\tikzstyle{DecoDroite}=[fill=\HoCardsColor!20]
+	\tikzstyle{DecoGauche}=[fill=\HoCardsColor!10]
+	\tikzstyle{DecoHoriz}=[fill=\HoCardsColor!15]
+	\IfStrEq{\HoCardsDeco}{vide}
+		{%
+			\tikzstyle{DecoDroite}=[fill=white]
+			\tikzstyle{DecoGauche}=[fill=white]
+			\tikzstyle{DecoHoriz}=[fill=white]
+		}%
+		{}%
+	\IfStrEq{\HoCardsDeco}{hachures}
+		{%
+			\tikzstyle{DecoDroite}=[preaction={fill=white},pattern={Lines[angle={45-2.5*\HoCardsAglY},distance=\fpeval{\HoCardsScale*2}pt]},pattern color=\HoCardsColor]
+			\tikzstyle{DecoGauche}=[preaction={fill=white},pattern={Lines[angle={45-\HoCardsAglY},distance=\fpeval{\HoCardsScale*1.25}pt]},pattern color=\HoCardsColor]
+			\tikzstyle{DecoHoriz}=[preaction={fill=white},pattern={Lines[angle={45+\HoCardsAglY},distance=\fpeval{\HoCardsScale*2}pt]},pattern color=\HoCardsColor]
+		}%
+		{}%
+	\begin{tikzpicture}[x={({-180+\HoCardsAglX}:0.75cm)},y={({180-\HoCardsAglY}:1cm)},z={(90:1cm)},line join=bevel,scale=\HoCardsScale,#3]
+		%nœuds
+		\coordinate (A0-0) at (0,0,0) ;
+		\xintifboolexpr{\HoCardsNbLevel > 1}%
+			{
+				\foreach \i in {1,...,\HoCardsNbLevel}{%
+					\def\j{\inteval{\i-1}}%
+					\coordinate (A\i-0) at ($(A\j-0)+({-0.5*\HoCardsHgt},0,{-sqrt(3)*\HoCardsHgt*0.5})$) ;
+				}
+				\foreach \i in {1,...,\HoCardsNbLevel}{%
+					\foreach \j in {1,...,\i}{%
+						\def\k{\inteval{\j-1}}%
+						\coordinate (A\i-\j) at ($(A\i-\k)+({\HoCardsHgt},0,0)$) ;
+					}
+				}
+				%construction des étages, du bas vers le haut
+				\ifboolKV[houseofcards]{Bas}%
+					{%
+						\foreach \i in {0,...,\inteval{\HoCardsNbLevel-1}}{\HoCardsHoriz{A\HoCardsNbLevel-\i}}%
+					}{}%
+				\foreach \etage in {\inteval{\HoCardsNbLevel-1},...,1}{%
+					\foreach \i in {0,...,\etage}{\HoCardsRight{A\etage-\i}\HoCardsLeft{A\etage-\i}}
+					\foreach \i in {0,...,\inteval{\etage-1}}{\HoCardsHoriz{A\etage-\i}}
+				}
+			}%
+			{%
+				\coordinate (A1-0) at ($(A0-0)+({-0.5*\HoCardsHgt},0,{-sqrt(3)*\HoCardsHgt*0.5})$) ;
+				\coordinate (A1-1) at ($(A1-0)+({\HoCardsHgt},0,0)$) ;
+				\ifboolKV[houseofcards]{Bas}%
+					{%
+						\HoCardsHoriz{A1-0}%
+					}{}%
+			}%
+		%étage du dessus
+		\HoCardsRight{A0-0}\HoCardsLeft{A0-0}
+		%légende éventuelle
+		\ifboolKV[houseofcards]{Legende}%
+			{%
+				\draw ($(A\HoCardsNbLevel-0)!0.5!(A\HoCardsNbLevel-\HoCardsNbLevel)$) node[below,font=\HoCardsFonteLeg] {$n = \HoCardsNbLevel$} ;
+			}{}%
+	\end{tikzpicture}
+}
+
+%====ALLUMETTES
+\definecolor{BoisAllumette}{HTML}{E9D0B8}
+\definecolor{GratteAllumette}{HTML}{D32A0F}
+\xdef\LongueurGratte{0.28cm}
+\xdef\HauteurGratte{0.20cm}
+
+\newcommand{\CalcLg}[2]{%
+	\pgfpointdiff{\pgfpointanchor{#1}{center}}{\pgfpointanchor{#2}{center}}%
+	\pgf@xa=\pgf@x%
+	\pgf@ya=\pgf@y%
+	\pgfmathparse{veclen(\pgf@xa,\pgf@ya)}%
+}
+
+\defKV[allumettes]{CouleurBois=\def\MatchWoodColor{#1},CouleurBout=\def\MatchEndColor{#1},Decal=\def\MatchOffset{#1}}
+\setKVdefault[allumettes]{CouleurBois=BoisAllumette,CouleurBout=GratteAllumette,Decal={0.8*\LongueurGratte},NoirBlanc=false}
+
+\NewDocumentCommand\Allumette{ O{} m }{%1 offset,%2 = ptA>ptB
+	\useKVdefault[allumettes]%
+	\setKV[allumettes]{#1}%
+	\ifboolKV[allumettes]{NoirBlanc}%
+		{%
+			\def\MatchWoodColor{lightgray}\def\MatchEndColor{darkgray}%
+		}%
+		{}%
+	\StrCut{#2}{>}{\AlumPtDep}{\AlumPtArriv}%
+	\pgfmathanglebetweenpoints{\pgfpointanchor{\AlumPtDep}{center}}{\pgfpointanchor{\AlumPtArriv}{center}}\edef\AlumAngle{\pgfmathresult}%
+	\CalcLg{\AlumPtDep}{\AlumPtArriv}\edef\AlumLg{\pgfmathresult}%
+	\begin{scope}[shift={($(\AlumPtDep)+(\AlumAngle:{\MatchOffset})$)},rotate=\AlumAngle]
+		\fill[\MatchWoodColor] (0,-0.0975cm) rectangle++ ({\AlumLg-2*\LongueurGratte-2*\MatchOffset},0.2cm);
+		\fill[\MatchWoodColor!50!black] (0,-0.0975cm) --++ ({\AlumLg-2*\LongueurGratte-2*\MatchOffset},0) --++ (0.05cm,-0.05cm) --++ ({-\AlumLg+2*\LongueurGratte+2*\MatchOffset},0) --++ (-0.05cm,0.05cm);
+		\draw[line join=bevel,line cap=rect] (0,-0.0975cm) -- ++(0,0.2cm) -- ++({\AlumLg-2*\LongueurGratte-2*\MatchOffset},0) -- ++(0,-0.2cm) -- ++(0.05cm,-0.05cm) -- ++({-\AlumLg+2*\LongueurGratte+2*\MatchOffset},0) -- ++(-0.05cm,0.05cm) --cycle ;
+		\shade[draw,ball color=\MatchEndColor,rounded corners=0.1pt] ({\AlumLg-2*\LongueurGratte-2*\MatchOffset},0)--++(0,{0.1cm}) to[out=12.5,in=90]++({2*\LongueurGratte},{-0.1cm}) to[out=-90,in=-17.5]++({-2*\LongueurGratte+0.05cm},{-0.15cm}) --++ (-0.05cm,0.05cm) --cycle ;
+	\end{scope}
+}
+
+\NewDocumentCommand\Allumettes{ O{} m }{%
+	\setsepchar{ }%
+	\readlist*\listeptsalum{#2}%
+	\xintFor* ##1 in {\xintSeq{1}{\listeptsalumlen}}\do{%
+		\itemtomacro\listeptsalum[##1]{\diralum}
+		\Allumette[#1]{\diralum}
+	}%
+}
+
 \endinput
