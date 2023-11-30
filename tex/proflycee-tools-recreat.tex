@@ -1,12 +1,6 @@
 % proflycee-tools-recreat.tex
 % Copyright 2023  Cédric Pierquet
-% This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License, either version 1.3
-% of this license or (at your option) any later version.
-% The latest version of this license is in
-%   http://www.latex-project.org/lppl.txt
-% and version 1.3 or later is part of all distributions of LaTeX
-% version 2005/12/01 or later.
+% Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 %%------FENÊTRE CALCUL FORMEL
 \newcommand\CFchap{\textasciicircum}
@@ -452,7 +446,7 @@
 \defKV[allumettes]{CouleurBois=\def\MatchWoodColor{#1},CouleurBout=\def\MatchEndColor{#1},Decal=\def\MatchOffset{#1}}
 \setKVdefault[allumettes]{CouleurBois=BoisAllumette,CouleurBout=GratteAllumette,Decal={0.8*\LongueurGratte},NoirBlanc=false}
 
-\NewDocumentCommand\Allumette{ O{} m }{%1 offset,%2 = ptA>ptB
+\NewDocumentCommand\PfLAllumette{ O{} m }{%1 offset,%2 = ptA>ptB
 	\useKVdefault[allumettes]%
 	\setKV[allumettes]{#1}%
 	\ifboolKV[allumettes]{NoirBlanc}%
@@ -471,13 +465,147 @@
 	\end{scope}
 }
 
-\NewDocumentCommand\Allumettes{ O{} m }{%
+\NewDocumentCommand\PfLAllumettes{ O{} m }{%
 	\setsepchar{ }%
 	\readlist*\listeptsalum{#2}%
 	\xintFor* ##1 in {\xintSeq{1}{\listeptsalumlen}}\do{%
 		\itemtomacro\listeptsalum[##1]{\diralum}
-		\Allumette[#1]{\diralum}
+		\PfLAllumette[#1]{\diralum}
 	}%
+}
+
+%====MACHINE À TRANSFORMER
+\defKV[machtransf]{%
+	Couleur=\def\MachTransfCol{#1},%
+	CouleurFct=\def\MachTransfColF{#1},%
+	Hauteur=\def\MachTransfHt{#1},%
+	Largeur=\def\MachTransfWd{#1},%
+	Offset=\def\MachTransfOffset{#1},%
+	CouleurBloc=\def\MachTransfColBl{#1},%
+	PoliceTbl=\def\MachTransfFontTbl{#1},%
+	Fct=\def\MachTransfFct{#1},%
+	Formule=\def\MachTransfFormule{#1},%
+	Echelle=\def\MatchTransfScale{#1}
+}
+
+\setKVdefault[machtransf]{%
+	Couleur=lightgray,%
+	CouleurFct=white,%
+	Bordure=false,%
+	AffFleche=true,%
+	Hauteur=3,%
+	Largeur=2,%
+	Offset=4pt,%
+	CouleurBloc=red,%
+	Tableau=false,%
+	PoliceTbl=\footnotesize,%
+	Logo=true,%
+	Fct={},%
+	Auto=false,%
+	Formule={},%
+	ES=false,%
+	Echelle=1
+}
+
+\NewDocumentCommand\MachineTransformer{ O{} m D<>{} }{%
+	\useKVdefault[machtransf]%
+	\setKV[machtransf]{#1}%
+	\tikzset{MachTransfBlocVal/.style={draw=none,fill=\MachTransfColBl,rounded corners=3pt}}%
+	\tikzset{MachTransfVal/.style={text=white}}%
+	\begin{tikzpicture}[line join=bevel,scale=\MatchTransfScale,every node/.style={scale=\MatchTransfScale},#3]
+		\ifboolKV[machtransf]{Bordure}%
+			{%
+				\fill[draw=black,semithick,fill=\MachTransfCol] (0,0) rectangle (\MachTransfWd,\MachTransfHt) ;
+				\fill[draw=black,fill=\MachTransfCol] ({0.25*\MachTransfWd},{0.3*\MachTransfHt}) --++ (150:{0.4*\MachTransfHt}) --++ (0,{-0.4*\MachTransfHt}) --cycle ;
+				\fill[draw=black,fill=\MachTransfCol] ({0.75*\MachTransfWd},{0.7*\MachTransfHt}) --++ (30:{0.4*\MachTransfHt}) --++ (0,{-0.4*\MachTransfHt}) --cycle ;
+				\fill[fill=\MachTransfCol] (0,0) rectangle (\MachTransfWd,\MachTransfHt) ;
+			}%
+			{%
+				\fill[draw=none,semithick,fill=\MachTransfCol] (0,0) rectangle (\MachTransfWd,\MachTransfHt) ;
+				\fill[draw=none,semithick,fill=\MachTransfCol] ({0.25*\MachTransfWd},{0.3*\MachTransfHt}) --++ (150:{0.4*\MachTransfHt}) --++ (0,{-0.4*\MachTransfHt}) --cycle ;
+				\fill[draw=none,semithick,fill=\MachTransfCol] ({0.75*\MachTransfWd},{0.7*\MachTransfHt}) --++ (30:{0.4*\MachTransfHt}) --++ (0,{-0.4*\MachTransfHt}) --cycle ;
+			}%
+		\ifboolKV[machtransf]{Logo}%
+			{%
+				\node[scale={2*\MachTransfWd},text=\MachTransfCol!75!black] at ({0.5*\MachTransfWd},{0.5*\MachTransfHt}) {\faIcon{cog}};
+			}%
+			{}%
+		\ifboolKV[machtransf]{AffFleche}%
+			{%
+				\draw[line width=2.5pt,\MachTransfColF,->,>=latex] ({0},{0.3*\MachTransfHt}) to[out=0,in=180] ({\MachTransfWd},{0.7*\MachTransfHt}) ;
+			}%
+			{}%
+		\ifboolKV[machtransf]{ES}%
+			{%
+				\node[draw,MachTransfBlocVal,MachTransfVal,left=\MachTransfOffset] at ({0.25*\MachTransfWd-0.346*\MachTransfHt},{0.3*\MachTransfHt}) {\phantom{9}} ;
+				\node[draw,MachTransfBlocVal,MachTransfVal,right=\MachTransfOffset] at ({0.75*\MachTransfWd+0.346*\MachTransfHt},{0.7*\MachTransfHt}) {\phantom{9}} ;
+			}%
+			{}%
+		\ifboolKV[machtransf]{Auto}%
+			{%
+				\IfStrEq{#2}{}%
+					{}%
+					{%
+						\setsepchar{,}%
+						\readlist*\machtransflst{#2}%
+						%1ère valeur
+						\itemtomacro\machtransflst[1]\tmpvaldeb%
+						\IfEq{\tmpvaldeb}{}%
+							{\xdef\tmpvaldeb{\phantom{9}}\xdef\tmpvalfin{\phantom{9}}}%
+							{\StrSubstitute{\MachTransfFormule}{X}{(\tmpvaldeb)}[\tmpvalfin]}
+						\node[draw,MachTransfBlocVal,MachTransfVal,left=\MachTransfOffset] at ({0.25*\MachTransfWd-0.346*\MachTransfHt},{0.3*\MachTransfHt}) {$\tmpvaldeb$} ;
+						\node[draw,MachTransfBlocVal,MachTransfVal,right=\MachTransfOffset] at ({0.75*\MachTransfWd+0.346*\MachTransfHt},{0.7*\MachTransfHt}) {$\xinteval{\tmpvalfin}$} ;
+						\ifboolKV[machtransf]{Tableau}%
+							{%
+								\node[below=\MachTransfOffset] at ({0.5*\MachTransfWd},0) {\begin{NiceTabular}[hvlines]{|c|c|}
+										\CodeBefore
+										\rowcolor{lightgray!25}{1}
+										\Body
+										\texttt{\MachTransfFontTbl{}Entrée}&\texttt{\MachTransfFontTbl{}Sortie}\\
+										\xintFor* ##1 in {\xintSeq{1}{\machtransflstlen}}\do{%
+											\itemtomacro\machtransflst[##1]\tmpvaldeb$\tmpvaldeb$ & %
+											\itemtomacro\machtransflst[##1]\tmpvaldeb\IfEq{\tmpvaldeb}{}%
+											{\xdef\tmpvaldeb{\phantom{9}}\xdef\tmpvalfin{\phantom{9}}}%
+											{\StrSubstitute{\MachTransfFormule}{X}{(\tmpvaldeb)}[\tmpvalfin]\xdef\tmpvalfin{\xinteval{\tmpvalfin}}}$\tmpvalfin$ \\%
+										}
+								\end{NiceTabular}} ;%
+							}%
+							{}%
+					}%
+			}%
+			{%
+				\IfStrEq{#2}{}%
+					{}%
+					{%
+						\setsepchar[.]{,./}%
+						\readlist*\machtransflst{#2}%
+						%1ère valeur
+						\itemtomacro\machtransflst[1,1]\tmpvaldeb%
+						\itemtomacro\machtransflst[1,2]\tmpvalfin%
+						\node[draw,MachTransfBlocVal,MachTransfVal,left=\MachTransfOffset] at ({0.25*\MachTransfWd-0.346*\MachTransfHt},{0.3*\MachTransfHt}) {\IfEq{\tmpvaldeb}{}{\phantom{9}}{\tmpvaldeb}} ;
+						\node[draw,MachTransfBlocVal,MachTransfVal,right=\MachTransfOffset] at ({0.75*\MachTransfWd+0.346*\MachTransfHt},{0.7*\MachTransfHt}) {\IfEq{\tmpvalfin}{}{\phantom{9}}{\tmpvalfin}} ;
+						\ifboolKV[machtransf]{Tableau}%
+							{%
+								\node[below=\MachTransfOffset] at ({0.5*\MachTransfWd},0) {\begin{NiceTabular}[hvlines]{|c|c|}
+										\CodeBefore
+										\rowcolor{lightgray!25}{1}
+										\Body
+										\texttt{\MachTransfFontTbl{}Entrée}&\texttt{\MachTransfFontTbl{}Sortie}\\
+										\xintFor* ##1 in {\xintSeq{1}{\machtransflstlen}}\do{%
+											\itemtomacro\machtransflst[##1,1]{\tmpvaldeb}\tmpvaldeb & %
+											\itemtomacro\machtransflst[##1,2]{\tmpvalfin}\tmpvalfin\\%
+										}
+								\end{NiceTabular}} ;%
+							}%
+							{}%
+					}%
+			}%
+		\IfStrEq{\MachTransfFct}{}%
+			{}%
+			{%
+				\node[text=black,above=0pt] at ({0.5*\MachTransfWd},0) {\MachTransfFct} ;
+			}%
+	\end{tikzpicture}
 }
 
 \endinput

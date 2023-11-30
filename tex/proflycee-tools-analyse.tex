@@ -1,12 +1,6 @@
 % proflycee-tools-analyse.tex
 % Copyright 2023  Cédric Pierquet
-% This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License, either version 1.3
-% of this license or (at your option) any later version.
-% The latest version of this license is in
-%   http://www.latex-project.org/lppl.txt
-% and version 1.3 or later is part of all distributions of LaTeX
-% version 2005/12/01 or later.
+% Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 %%------SimplFrac nouvelle version
 \NewDocumentCommand\ConversionFraction{ s O{} m }{%
@@ -625,6 +619,91 @@
 			\AffCoeffFloat[#1]{\yA} = \ConversionFraction{\CoeffDirBrut} \times \AffCoeffFloatPa[#1]{\xA} + p \implies p = \AffCoeffFloat[#1]{\yA} - \left(\ConversionFraction{\CoeffDirBrut} \times \AffCoeffFloatPa{\xA}\right) \implies p = \OrdoOrigConv\]
 			%
 			Donc l'équation réduite de $(\NomA\NomB)$ est $y=\AffCoeffFAm[#1]{\CoeffDirBrut} \AffCoeffFAp[#1]{\OrdoOrigBrut}$.
+		}%
+		{}%
+}
+
+%====FRACTION PÉRIODIQUE
+\defKV[FracPeriod]{Inconnue=\def\FracPerVar{#1}}
+\setKVdefault[FracPeriod]{Enonce=true,d=true,Inconnue=x,Solution=false,Brut=true,Simple=false}
+
+\NewDocumentCommand\FractionPeriode{ O{} m m }{%on verra pour la mise en forme après...
+	%clés
+	\restoreKV[FracPeriod]% revenir au valeurs par défaut
+	\setKV[FracPeriod]{#1}% lit les arguments optionnels
+	%les variables utiles
+	\IfEndWith{#2}{.}%
+		{%
+			\StrBefore{#2}{.}[\tmp@avt]%
+			\xdef\tmp@apr{0}%
+			\xdef\tmp@len@apr{0}%
+		}%
+		{%
+			\StrCut{#2}{.}{\tmp@avt}{\tmp@apr}%
+			\StrLen{\tmp@apr}[\tmp@len@apr]%
+		}%
+	\StrLen{#3}[\tmp@len@per]%
+	%raccourcis
+	\IfEndWith{#2}{.}%
+		{%
+			\xdef\tmp@enonce{\num{\tmp@avt}{,}\overline{#3}}%
+		}%
+		{%
+			\xdef\tmp@enonce{\num{#2}\overline{#3}}%
+		}%
+	%calculs
+	\xdef\tmp@num@brut{\xintieval{10**(\tmp@len@per+\tmp@len@apr)*\tmp@avt+10**(\tmp@len@per)*\tmp@apr-10**(\tmp@len@apr)*\tmp@avt+(#3)-\tmp@apr}}%
+	\xdef\tmp@denom@brut{\xintieval{10**(\tmp@len@per+\tmp@len@apr)-10**(\tmp@len@apr)}}%
+	\xdef\tmp@pgcd{\xinteval{gcd(\tmp@num@brut,\tmp@denom@brut)}}%
+	%résolution OK
+	\ifboolKV[FracPeriod]{Solution}%
+		{%
+			%phrase d'accroche
+			\xintifboolexpr{\tmp@len@apr == 0}%
+				{%
+					\noindent On note $\FracPerVar=\tmp@enonce$.\par
+					\noindent La première égalité est donc \[\boxed{\FracPerVar=\tmp@enonce} \quad (1)\]
+				}%
+				{%
+					\noindent On note $\FracPerVar=\tmp@enonce$.\par
+				}%
+			\xintifboolexpr{\tmp@len@apr == 0}%
+				{}%
+				{%
+					\noindent On \textit{ramène} la période près de la virgule en multipliant par $10^{\tmp@len@apr}$ : \[\boxed{10^{\tmp@len@apr}\times\FracPerVar=\num{\xinteval{\tmp@avt*10**(\tmp@len@apr)+\tmp@apr}}{,}\overline{#3}} \quad (1)\]
+				}%
+			\noindent On \textit{décale} la période avant la virgule, en multipliant l'égalité (1) par $10^{\tmp@len@per}$ : \[10^{\tmp@len@per}\xintifboolexpr{\tmp@len@apr == 0}{}{\times10^{\tmp@len@apr}}\times\FracPerVar=10^{\tmp@len@per}\times\num{\xinteval{\tmp@avt*10**(\tmp@len@apr)+\tmp@apr}}{,}\overline{#3} \Rightarrow \boxed{10^{\xinteval{\tmp@len@per+\tmp@len@apr}}\times\FracPerVar = \num{\xintieval{10**(\tmp@len@per)*(\tmp@avt*10**(\tmp@len@apr)+\tmp@apr)+#3}}{,}\overline{#3}} \quad (2)\]
+			%soustraction
+			On soustrait les deux égalités, $(2)-(1)$, ce qui permet d'\textit{enlever} la partie décimale :
+			\begin{align*}
+				10^{\xinteval{\tmp@len@per+\tmp@len@apr}}\times\FracPerVar-\xintifboolexpr{\tmp@len@apr == 0}{}{10^{\tmp@len@apr}\times}\FracPerVar = \num{\xintieval{10**(\tmp@len@per)*(\tmp@avt*10**(\tmp@len@apr)+\tmp@apr)+#3}}{,}\overline{#3} -\num{\xinteval{\tmp@avt*10**(\tmp@len@apr)+\tmp@apr}}{,}\overline{#3} &\Rightarrow \big(10^{\xinteval{\tmp@len@per+\tmp@len@apr}}-\xintifboolexpr{\tmp@len@apr == 0}{1}{10^{\tmp@len@apr}}\big)\times\FracPerVar = \num{\xintieval{10**(\tmp@len@per)*(\tmp@avt*10**(\tmp@len@apr)+\tmp@apr)+#3}} - \num{\xintieval{\tmp@avt*10**(\tmp@len@apr)+\tmp@apr}} \\
+				\phantom{10^{\xinteval{\tmp@len@per+\tmp@len@apr}}\times\FracPerVar-10^{\tmp@len@apr}\times\FracPerVar = \num{\xintieval{10**(\tmp@len@per)*(\tmp@avt*10**(\tmp@len@apr)+\tmp@apr)+#3}}{,}\overline{#3} -\num{\xinteval{\tmp@avt*10**(\tmp@len@apr)+\tmp@apr}}{,}\overline{#3}} &\Rightarrow \num{\xinteval{10**(\tmp@len@per+\tmp@len@apr)-10**(\tmp@len@apr)}}\times\FracPerVar=\num{\xintieval{10**(\tmp@len@per)*(\tmp@avt*10**(\tmp@len@apr)+\tmp@apr)+#3- (\tmp@avt*10**(\tmp@len@apr)+\tmp@apr)}} \\
+				&\Rightarrow\FracPerVar = \ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\tmp@num@brut}}{\num{\tmp@denom@brut}}
+			\end{align*}
+			%affichage(s) OK
+			\noindent Ainsi on a \ensuremath{\tmp@enonce = \ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\tmp@num@brut}}{\num{\tmp@denom@brut}} \xintifboolexpr{\tmp@pgcd == 1}{}{=\ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\xintieval{\tmp@num@brut/\tmp@pgcd}}}{\num{\xintieval{\tmp@denom@brut/\tmp@pgcd}}}}%
+			}.\par%
+		}%
+		{}%
+	\ifboolKV[FracPeriod]{Brut}%
+		{%
+			\xdef\FracPerNum{\tmp@num@brut}%
+			\xdef\FracPerDenom{\tmp@denom@brut}%
+			\xdef\FracPerNumSimpl{\xintieval{(\tmp@num@brut)/gcd(\tmp@num@brut,\tmp@denom@brut)}}%
+			\xdef\FracPerDenomSimpl{\xintieval{(\tmp@denom@brut)/gcd(\tmp@num@brut,\tmp@denom@brut)}}%
+		}%
+		{}%
+	\ifboolKV[FracPeriod]{Simple}%
+		{%
+			%affichage(s) OK
+			\noindent\ensuremath{%
+				\ifboolKV[FracPeriod]{Enonce}%
+					{%
+						\tmp@enonce = 
+					}%
+					{}%
+				\ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\tmp@num@brut}}{\num{\tmp@denom@brut}} \xintifboolexpr{\tmp@pgcd == 1}{}{=\ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\xintieval{\tmp@num@brut/\tmp@pgcd}}}{\num{\xintieval{\tmp@denom@brut/\tmp@pgcd}}}}%
+			}\par%
 		}%
 		{}%
 }

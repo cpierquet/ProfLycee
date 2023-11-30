@@ -1,13 +1,8 @@
 % proflycee-tools-listings.tex
 % Copyright 2023  Cédric Pierquet
-% This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License, either version 1.3
-% of this license or (at your option) any later version.
-% The latest version of this license is in
-%   http://www.latex-project.org/lppl.txt
-% and version 1.3 or later is part of all distributions of LaTeX
-% version 2005/12/01 or later.
+% Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
+%3.00g	Amélioration marge gauche PseudoCode
 %2.7.5	Ajout de clés pour PythonLst + Couleurs optionnelles pour PseudoCode
 %2.7.3	Correction de la couleur des bordures
 %2.5.8	Styles alternatifs + Modification marges
@@ -97,19 +92,24 @@
 
 \tcbset{stylepythonlstlineos/.style={%
 	stylepythonlst,
-	listing options={style=PLpython,xleftmargin=16pt,numbers=left}
+	listing options={style=PLpython,xleftmargin=\PythonCodeXLeft,numbers=left}
 	}
 }
+
+\newlength{\PythonCodeXLeft}
+\setlength{\PythonCodeXLeft}{14pt}
 
 %test v3 avec simplekv
 \defKV[CodePythonLst]{%
 	Largeur=\def\CodePythonLstLarg{#1},%
-	PremLigne=\def\CodePythonLstFirstLine{#1}
+	PremLigne=\def\CodePythonLstFirstLine{#1},
+	EspaceNum=\setlength{\PythonCodeXLeft}{#1}
 }
 
 \setKVdefault[CodePythonLst]{%
 	Largeur=\linewidth,%
-	PremLigne=1
+	PremLigne=1,%
+	EspaceNum=14pt
 }
 
 \NewDocumentEnvironment{CodePythonLst}{ s O{} m }%nouvelle version avec clés listings
@@ -121,7 +121,7 @@
 			\tcblisting{stylepythonlst,listing options={style=PLpython,xleftmargin=0pt,numbers=none},width=\CodePythonLstLarg,#3}
 		}%
 		{%
-			\tcblisting{stylepythonlst,listing options={style=PLpython,xleftmargin=16pt,numbers=left,firstnumber=\CodePythonLstFirstLine},width=\CodePythonLstLarg,#3}
+			\tcblisting{stylepythonlst,listing options={style=PLpython,xleftmargin=\PythonCodeXLeft,numbers=left,firstnumber=\CodePythonLstFirstLine},width=\CodePythonLstLarg,#3}
 		}%
 }%
 {%
@@ -200,7 +200,7 @@
 	}%
 	{%
 		\tcblisting{StylPythonB,
-			listing options={style=PLpython,xleftmargin=16pt,numbers=left,firstnumber=\CodePythonLstFirstLine},%
+			listing options={style=PLpython,xleftmargin=\PythonCodeXLeft,numbers=left,firstnumber=\CodePythonLstFirstLine},%
 			underlay={%
 				\begin{tcbclipinterior}
 					\draw[draw=none,fill=lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
@@ -251,7 +251,7 @@
 	keepspaces       = true,
 	tabsize          = 4,
 	numbersep        = 10pt,
-	xleftmargin      = 14pt,
+	xleftmargin      = \PseudoCodeXLeft,
 	numbers          = left,
 	morestring       = [b]",
 	showstringspaces = false,
@@ -273,15 +273,20 @@
 	escapeinside     = {(*}{*)}
 }
 
+\newlength{\PseudoCodeXLeft}
+\setlength{\PseudoCodeXLeft}{14pt}
+
 \defKV[CodePseudoCodeLst]{%
 	Largeur=\def\CodePseudoCodeLstLarg{#1},%
-	PremLigne=\def\CodePseudoCodeLstFirstLine{#1}
+	PremLigne=\def\CodePseudoCodeLstFirstLine{#1},%
+	EspaceNum=\setlength{\PseudoCodeXLeft}{#1}
 }
 
 \setKVdefault[CodePseudoCodeLst]{%
 	Largeur=\linewidth,%
 	PremLigne=1,%
-	Couleur=false
+	Couleur=false,%
+	EspaceNum=14pt
 }
 
 %style tcbox pseudocode avec bannière hautdroite
@@ -328,7 +333,7 @@
 					columns=fullflexible,firstnumber=\CodePseudoCodeLstFirstLine,%
 					stringstyle=\color{MotsClesPseudoCodeChaine},
 					classoffset=0,%
-					keywords={Pour,Fonction,Début,Debut,allant,Fin,Si,alors,Sinon,SinonSi,FinSi,FinPour,FinTantQue,TantQue,Variable,Variables},%
+					keywords={Algorithme,Pour,Fonction,Début,Paramètre,Parametre,Debut,allant,Fin,Si,alors,Sinon,SinonSi,FinSi,FinPour,FinTantQue,TantQue,Variable,Variables},%
 					keywordstyle=\color{MotsClesPseudoCodeA},%
 					classoffset=1,%
 					morekeywords={Afficher,Retourner,Saisir},%
@@ -412,7 +417,7 @@
 	%stringstyle      = \color{red!75},
 	keepspaces       = true,
 	tabsize          = 4,
-	xleftmargin      = 1.5em,
+	xleftmargin      = \PseudoCodeXLeft,
 	numbers          = left,
 	morestring       = [b]",
 	showstringspaces = false,
@@ -473,7 +478,7 @@
 				columns=fullflexible,firstnumber=\CodePseudoCodeLstFirstLine,
 				stringstyle=\color{MotsClesPseudoCodeChaine},
 				classoffset=0,%
-				keywords={Pour,Fonction,Debut,Début,allant,Fin,Si,alors,Sinon,SinonSi,FinSi,FinPour,FinTantQue,TantQue,Variable,Variables},%
+				keywords={Algorithme,Pour,Fonction,Debut,Début,Paramètre,Parametre,allant,Fin,Si,alors,Sinon,SinonSi,FinSi,FinPour,FinTantQue,TantQue,Variable,Variables},%
 				keywordstyle=\color{MotsClesPseudoCodeA},%
 				classoffset=1,%
 				morekeywords={Afficher,Retourner,Saisir},%
