@@ -2,6 +2,8 @@
 % Copyright 2023  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
+%Correction d'un bug sur la raacine carrée... le cas où ça fait 1 !
+
 %%------SimplFrac nouvelle version
 \NewDocumentCommand\ConversionFraction{ s O{} m }{%
 	%*=moins sur le numérateur
@@ -295,43 +297,49 @@
 %%------SIMPLIFRACINES
 \DeclareDocumentCommand\SimplificationRacine{ m }{% argument mandataire {calcul ou fraction}
 	\xdef\calculargument{\xintIrr{\xinteval{#1}}}%
-	\IfEndWith{\calculargument}{/1}%
-	{%si c'est un entier !
-		\xdef\calculargument{\xintiieval{#1}}%
-		\xdef\ExtractRacStop{\xintiFloor{\xintfloateval{sqrt(\calculargument)}}}%
-		\xintFor* ##1 in {\xintSeq{1}{\ExtractRacStop}}\do{%
-			\xintifboolexpr{ \xintiiRem{\calculargument}{\xintiieval{##1*##1}} == 0}%si le carré divise
-			{\xdef\ExtractRacID{##1}}%
-			{}%
-			}%
-		\xdef\ExtracReste{\xintiieval{\calculargument/(\ExtractRacID*\ExtractRacID)}}%
-		\ensuremath{\xintifboolexpr{\ExtractRacID == 1 && \ExtracReste == 1}%
-			{1}%
-			{ \xintifboolexpr{\ExtractRacID == 1}{}{\num{\xintiieval{\ExtractRacID}}}%
-			\xintifboolexpr{\ExtracReste == 1}{}{\sqrt{\num{\ExtracReste}}} }}%
-%			}%
-	}%
-	{%on va mettre sous forme a\sqrt(d)/b := buggue avec des millièmes...
-		\StrBefore{\calculargument}{/}[\numerateur]%on extrait le numérateur
-		\StrBehind{\calculargument}{/}[\denominateur]%on extrait le dénominateur
-		\xdef\ExtractRacNNum{\xintiieval{\numerateur*\denominateur}}%
-		\xdef\ExtractRacStop{\xintiFloor{\xintfloateval{sqrt(\ExtractRacNNum)}}}%
-		\xintFor* ##1 in {\xintSeq{1}{\ExtractRacStop}}\do{%
-			\xintifboolexpr{ \xintiiRem{\ExtractRacNNum}{\xintiieval{##1*##1}} == 0}%si le carré divise
-			{\xdef\ExtractRacID{##1}}%
-			{}
+	\xintifboolexpr{\calculargument == 1}%
+		{%
+			\ensuremath{1}%
 		}%
-		\xdef\ExtractRacGCD{\xintiiGCD{\ExtractRacID}{\denominateur}}%
-		\xdef\RacNumSimpl{\xintiieval{\ExtractRacID/\ExtractRacGCD}}%simpl num
-		\xdef\RacDenomSimpl{\xintiieval{\denominateur/\ExtractRacGCD}}%
-		\xdef\RacRacSimpl{\xintiieval{\ExtractRacNNum/(\ExtractRacID*\ExtractRacID)}}%
-		\ensuremath{\frac{%
-			\xintifboolexpr{\RacNumSimpl == 1 && \RacRacSimpl == 1}%
-			{1}%
-			{ \xintifboolexpr{\RacNumSimpl == 1}{}{\RacNumSimpl} \xintifboolexpr{\RacRacSimpl == 1}{}{\sqrt{\num{\RacRacSimpl}}} }%
+		{%
+			\IfEndWith{\calculargument}{/1}%
+			{%si c'est un entier !
+				\xdef\calculargument{\xintiieval{#1}}%
+				\xdef\ExtractRacStop{\xintiFloor{\xintfloateval{sqrt(\calculargument)}}}%
+				\xintFor* ##1 in {\xintSeq{1}{\ExtractRacStop}}\do{%
+					\xintifboolexpr{ \xintiiRem{\calculargument}{\xintiieval{##1*##1}} == 0}%si le carré divise
+					{\xdef\ExtractRacID{##1}}%
+					{}%
+				}%
+				\xdef\ExtracReste{\xintiieval{\calculargument/(\ExtractRacID*\ExtractRacID)}}%
+				\ensuremath{\xintifboolexpr{\ExtractRacID == 1 && \ExtracReste == 1}%
+					{1}%
+					{ \xintifboolexpr{\ExtractRacID == 1}{}{\num{\xintiieval{\ExtractRacID}}}%
+						\xintifboolexpr{\ExtracReste == 1}{}{\sqrt{\num{\ExtracReste}}} }}%
+				%			}%
+				}%
+				{%on va mettre sous forme a\sqrt(d)/b := buggue avec des millièmes...
+			\StrBefore{\calculargument}{/}[\numerateur]%on extrait le numérateur
+			\StrBehind{\calculargument}{/}[\denominateur]%on extrait le dénominateur
+			\xdef\ExtractRacNNum{\xintiieval{\numerateur*\denominateur}}%
+			\xdef\ExtractRacStop{\xintiFloor{\xintfloateval{sqrt(\ExtractRacNNum)}}}%
+			\xintFor* ##1 in {\xintSeq{1}{\ExtractRacStop}}\do{%
+				\xintifboolexpr{ \xintiiRem{\ExtractRacNNum}{\xintiieval{##1*##1}} == 0}%si le carré divise
+				{\xdef\ExtractRacID{##1}}%
+				{}
 			}%
-			{ \RacDenomSimpl }}%
-	}%
+			\xdef\ExtractRacGCD{\xintiiGCD{\ExtractRacID}{\denominateur}}%
+			\xdef\RacNumSimpl{\xintiieval{\ExtractRacID/\ExtractRacGCD}}%simpl num
+			\xdef\RacDenomSimpl{\xintiieval{\denominateur/\ExtractRacGCD}}%
+			\xdef\RacRacSimpl{\xintiieval{\ExtractRacNNum/(\ExtractRacID*\ExtractRacID)}}%
+			\ensuremath{\frac{%
+					\xintifboolexpr{\RacNumSimpl == 1 && \RacRacSimpl == 1}%
+					{1}%
+					{ \xintifboolexpr{\RacNumSimpl == 1}{}{\RacNumSimpl} \xintifboolexpr{\RacRacSimpl == 1}{}{\sqrt{\num{\RacRacSimpl}}} }%
+				}%
+				{ \RacDenomSimpl }}%
+				}%
+		}%
 }
 
 %%------DICHOTOMIE
@@ -631,6 +639,8 @@
 	%clés
 	\restoreKV[FracPeriod]% revenir au valeurs par défaut
 	\setKV[FracPeriod]{#1}% lit les arguments optionnels
+	%vmode ?
+	\ifvmode\leavevmode\fi%
 	%les variables utiles
 	\IfEndWith{#2}{.}%
 		{%

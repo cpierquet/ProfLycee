@@ -502,11 +502,11 @@
 	\xintFor* ##1 in {\xintSeq{2}{\argcal}}\do{%
 		\xintifboolexpr{ \xintiiRem{\argcal}{##1} == 0 }%
 		{%
-			\xdef\tmplistdiv{\tmplistdiv /\num{##1}}
+			\xdef\tmplistdiv{\tmplistdiv /\num{##1}}%
 		}%
 		{}%
 	}%
-	\ensuremath{\ifboolKV[listdiv]{AffNom}{\IfBooleanTF{#1}{\mathscr{D}}{\mathcal{D}}_{\num{\argcal}}=}{}\EcritureEnsemble[\strut]{\tmplistdiv}}
+	\ensuremath{\ifboolKV[listdiv]{AffNom}{\IfBooleanTF{#1}{\mathscr{D}}{\mathcal{D}}_{\num{\argcal}}=}{}\EcritureEnsemble[\strut]{\tmplistdiv}}%
 }
 
 %arbre diviseurs
@@ -911,6 +911,26 @@
 					}%
 			}%
 	}%
+}
+
+%====DIV EUCL (OK)
+\setKVdefault[diveucl]{%
+	Quotient=true,%
+	Reste=true,%
+	Vide=false,%
+	Pointilles=\ldots
+}
+\NewDocumentCommand\DivEucl{ s O{} m m }{%
+	\restoreKV[diveucl]%
+	\setKV[diveucl]{#2}%
+	\ifboolKV[diveucl]{Vide}%
+		{%
+			\setKV[diveucl]{Quotient=false,Reste=false}%
+		}%
+		{}%
+	\xdef\tmp@quotient{\xintiiQuo{#3}{#4}}\xdef\tmp@reste{\xintiiRem{#3}{#4}}%
+	\ensuremath{\num{#3}=\num{#4}\times\ifboolKV[diveucl]{Quotient}{\xintifboolexpr{\tmp@quotient < 0}{(\num{\tmp@quotient})}{\num{\tmp@quotient}}}{\useKV[diveucl]{Pointilles}}+\ifboolKV[diveucl]{Reste}{\num{\tmp@reste}}{\useKV[diveucl]{Pointilles}}}%
+	\IfBooleanT{#1}{~avec $0 \leqslant \num{\xintiiRem{#3}{#4}} < \xintifboolexpr{#4 < 0}{\lvert\num{#4}\rvert}{\num{#4}}$}%
 }
 
 \endinput

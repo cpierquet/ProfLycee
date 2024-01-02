@@ -2,6 +2,7 @@
 % Copyright 2023  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
+%3.01a	Courbe ECC
 %2.6.8	Grille histogrammes non réguliers
 %2.6.7	Histogrammes
 
@@ -480,6 +481,298 @@
 				{}%
 		}%
 		{}%
+}
+
+%%----Courbe ECC
+%\usetikzlibrary{intersections}
+
+% \newcommand\recuptikzxy[3]{%
+	% \tikz@scan@one@point\pgfutil@firstofone#1\relax
+	% \edef#2{\the\pgf@x}%
+	% \edef#3{\the\pgf@y}%
+% }
+
+\defKV[courbeECC]{%
+	Largeur=\def\ecc@larg@graph{#1},%
+	Hauteur=\def\ecc@haut@graph{#1},%
+	PasX=\def\ecc@grille@x{#1},%
+	PasY=\def\ecc@grille@y{#1},%
+	Couleur=\def\ecc@coul@graph{#1},%
+	CouleursParams=\def\ecc@coul@params{#1},%
+	GraduationsX=\def\ecc@gradx@graph{#1},%
+	GraduationsY=\def\ecc@grady@graph{#1},%
+	PoliceAxes=\def\ecc@font@axes{#1},%
+	ElargirAxes=\def\ecc@elarg@axes{#1}
+}
+
+\setKVdefault[courbeECC]{%
+	Largeur=15,%
+	Hauteur=10,%
+	PasX=50,%
+	PasY=50,%
+	Couleur=blue,%
+	AffParams=true,%
+	CouleursParams={CouleurVertForet/red},%
+	GraduationsX={\DonneesXmin},%
+	GraduationsY={0},%
+	PoliceAxes=\normalsize\normalfont,%
+	ElargirOx=true,%
+	ElargirOy=true,%
+	ElargirAxes=3mm
+}
+
+\tikzset{traitsparamecc/.style={line width=1pt,densely dashed}}
+\tikzset{courbeecc/.style={line width=1pt}}
+\tikzset{gradsecc/.style={thick}}
+\tikzset{axesecc/.style={gradsecc,->,>=latex}}
+
+\NewDocumentCommand\CourbeECCStylesDefaut{ }{%
+	\tikzset{traitsparamecc/.style={line width=1pt,densely dashed}}
+	\tikzset{courbeecc/.style={line width=1pt}}
+	\tikzset{gradsecc/.style={thick}}
+	\tikzset{axesecc/.style={gradsecc,->,>=latex}}
+}
+
+\NewDocumentCommand\CourbeECC{ O{} m m }{%
+	\restoreKV[courbeECC]%
+	\setKV[courbeECC]{#1}%
+	\IfSubStr{\ecc@coul@params}{/}%
+		{%
+			\StrCut{\ecc@coul@params}{/}{\ecc@coul@quart}{\ecc@coul@med}%
+		}%
+		{%
+			\def\ecc@coul@quart{\ecc@coul@params}\def\ecc@coul@med{\ecc@coul@params}%
+		}%
+	\readlist*\DataClass{#2}%
+	\readlist*\DataEff{#3}%
+	\xdef\DonneesECC{0}%
+	\xintFor* ##1 in {\xintSeq{1}{\DataEfflen}}\do{%
+		\xdef\DonneesTmp{0}
+		\xintFor* ##2 in {\xintSeq{1}{##1}}\do{%
+			\xdef\DonneesTmp{\xintfloateval{\DonneesTmp+\DataEff[##2]}}%
+		}%
+		\xdef\DonneesECC{\DonneesECC,\DonneesTmp}%
+	}%
+	\readlist*\DataECC\DonneesECC%
+	\itemtomacro\DataClass[1]\DonneesXmin%
+	\itemtomacro\DataClass[-1]\DonneesXmax%
+	\itemtomacro\DataECC[-1]\DonneesEffMax%
+	\xdef\UniteGraphiqueX{\xintfloateval{(\ecc@larg@graph)/(\DonneesXmax-\DonneesXmin)}}%
+	\xdef\UniteGraphiqueY{\xintfloateval{(\ecc@haut@graph)/(\DonneesEffMax)}}%
+	\xdef\DonneesListeECC{(\DataClass[1],\DataECC[1])}%
+	\xintFor* ##1 in {\xintSeq{2}{\DataECClen}}\do{%
+		\xdef\DonneesListeECC{\DonneesListeECC--(\DataClass[##1],\DataECC[##1])}%
+	}%
+		%paramètres par interpolation
+	\xintFor* ##1 in {\xintSeq{1}{\DataEfflen}}\do{%
+		\xdef\isuiv{\xinteval{##1+1}}%
+		\xintifboolexpr{\DataECC[##1] < (0.25*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.25*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValPremQuartile{\xintfloateval{(0.25*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+		\xintifboolexpr{\DataECC[##1] < (0.50*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.50*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValMed{\xintfloateval{(0.50*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+		\xintifboolexpr{\DataECC[##1] < (0.75*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.75*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValTroisQuartile{\xintfloateval{(0.75*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+	}%
+	%graphique
+	\begin{tikzpicture}[x=\UniteGraphiqueX cm,y=\UniteGraphiqueY cm]
+		\draw[xstep=\ecc@grille@x,ystep=\ecc@grille@y,thin,lightgray] (\DonneesXmin,0) grid (\DonneesXmax,\DonneesEffMax) ;
+		%modif axes avec pgffor :-(
+		\foreach \valx in \ecc@gradx@graph {%
+			\draw[gradsecc] (\valx,3pt)--++(0,-6pt) node[below,font=\ecc@font@axes] {\num{\valx}} ;
+		}
+		\foreach \valy in \ecc@grady@graph {%
+			\draw[gradsecc] ($({\DonneesXmin},\valy)+(3pt,0)$)--++(-6pt,0) node[left,font=\ecc@font@axes] {\num{\valy}} ;
+		}
+		\ifboolKV[courbeECC]{ElargirOx}%
+			{%
+				\draw[axesecc] (\DonneesXmin,0)--($(\DonneesXmax,0)+(\ecc@elarg@axes,0)$) ;
+			}%
+			{%
+				\draw[axesecc] (\DonneesXmin,0)--(\DonneesXmax,0) ;
+			}%
+		\ifboolKV[courbeECC]{ElargirOy}%
+			{%
+				\draw[axesecc] (\DonneesXmin,0)--($(\DonneesXmin,\DonneesEffMax)+(0,\ecc@elarg@axes)$) ;
+			}%
+			{%
+				\draw[axesecc] (\DonneesXmin,0)--(\DonneesXmin,\DonneesEffMax) ;
+			}%
+		\draw[courbeecc,\ecc@coul@graph] \DonneesListeECC ;
+		\xintFor* ##1 in {\xintSeq{1}{\DataECClen}}\do{%
+			\filldraw[\ecc@coul@graph] (\DataClass[##1],\DataECC[##1]) circle[radius=2pt] ;
+		}%
+		\ifboolKV[courbeECC]{AffParams}%
+			{%
+				\draw[traitsparamecc,\ecc@coul@quart] (\DonneesXmin,{0.25*\DonneesEffMax})--++({\DonneesXmax-\DonneesXmin},0);
+				\draw[traitsparamecc,\ecc@coul@med] (\DonneesXmin,{0.50*\DonneesEffMax})--++({\DonneesXmax-\DonneesXmin},0);
+				\draw[traitsparamecc,\ecc@coul@quart] (\DonneesXmin,{0.75*\DonneesEffMax})--++({\DonneesXmax-\DonneesXmin},0);
+				\draw[traitsparamecc,\ecc@coul@quart] (\ValPremQuartile,{0.25*\DonneesEffMax})--(\ValPremQuartile,0) ; \draw[\ecc@coul@quart,thick,fill=white] (\ValPremQuartile,{0.25*\DonneesEffMax}) circle[radius=2pt] ;
+				\draw[traitsparamecc,\ecc@coul@quart] (\ValTroisQuartile,{0.75*\DonneesEffMax})--(\ValTroisQuartile,0) ; \draw[\ecc@coul@quart,thick,fill=white] (\ValTroisQuartile,{0.75*\DonneesEffMax}) circle[radius=2pt] ;
+				\draw[traitsparamecc,\ecc@coul@med] (\ValMed,{0.5*\DonneesEffMax})--(\ValMed,0) ; \draw[\ecc@coul@med,thick,fill=white] (\ValMed,{0.5*\DonneesEffMax}) circle[radius=2pt] ;
+			}%
+			{}%
+	\end{tikzpicture}%
+	\CourbeECCStylesDefaut%
+}
+
+\NewDocumentEnvironment{EnvCourbeECC}{ O{} m m }%
+{%
+	\restoreKV[courbeECC]%
+	\setKV[courbeECC]{#1}%
+	\IfSubStr{\ecc@coul@params}{/}%
+		{%
+			\StrCut{\ecc@coul@params}{/}{\ecc@coul@quart}{\ecc@coul@med}%
+		}%
+		{%
+			\def\ecc@coul@quart{\ecc@coul@params}%
+			\def\ecc@coul@med{\ecc@coul@params}%
+		}%
+	\readlist*\DataClass{#2}%
+	\readlist*\DataEff{#3}%
+	\xdef\DonneesECC{0}%
+	\xintFor* ##1 in {\xintSeq{1}{\DataEfflen}}\do{%
+		\xdef\DonneesTmp{0}
+		\xintFor* ##2 in {\xintSeq{1}{##1}}\do{%
+			\xdef\DonneesTmp{\xintfloateval{\DonneesTmp+\DataEff[##2]}}%
+		}%
+		\xdef\DonneesECC{\DonneesECC,\DonneesTmp}%
+	}%
+	\readlist*\DataECC\DonneesECC%
+	\itemtomacro\DataClass[1]\DonneesXmin%
+	\itemtomacro\DataClass[-1]\DonneesXmax%
+	\itemtomacro\DataECC[-1]\DonneesEffMax%
+	\xdef\UniteGraphiqueX{\xintfloateval{(\ecc@larg@graph)/(\DonneesXmax-\DonneesXmin)}}%
+	\xdef\UniteGraphiqueY{\xintfloateval{(\ecc@haut@graph)/(\DonneesEffMax)}}%
+	\xdef\DonneesListeECC{(\DataClass[1],\DataECC[1])}%
+	\xintFor* ##1 in {\xintSeq{2}{\DataECClen}}\do{%
+		\xdef\DonneesListeECC{\DonneesListeECC--(\DataClass[##1],\DataECC[##1])}%
+	}%
+	%paramètres par interpolation
+	\xintFor* ##1 in {\xintSeq{1}{\DataEfflen}}\do{%
+		\xdef\isuiv{\xinteval{##1+1}}%
+		\xintifboolexpr{\DataECC[##1] < (0.25*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.25*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValPremQuartile{\xintfloateval{(0.25*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+		\xintifboolexpr{\DataECC[##1] < (0.50*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.50*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValMed{\xintfloateval{(0.50*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+		\xintifboolexpr{\DataECC[##1] < (0.75*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.75*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValTroisQuartile{\xintfloateval{(0.75*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+	}%
+	%graphique
+	\begin{tikzpicture}[x=\UniteGraphiqueX cm,y=\UniteGraphiqueY cm]
+		\draw[xstep=\ecc@grille@x,ystep=\ecc@grille@y,thin,lightgray] (\DonneesXmin,0) grid (\DonneesXmax,\DonneesEffMax) ;
+		%modif axes avec pgffor :-(
+		\foreach \valx in \ecc@gradx@graph {%
+			\draw[gradsecc] (\valx,3pt)--++(0,-6pt) node[below,font=\ecc@font@axes] {\num{\valx}} ;
+		}
+		\foreach \valy in \ecc@grady@graph {%
+			\draw[gradsecc] ($({\DonneesXmin},\valy)+(3pt,0)$)--++(-6pt,0) node[left,font=\ecc@font@axes] {\num{\valy}} ;
+		}
+		\ifboolKV[courbeECC]{ElargirOx}%
+			{%
+				\draw[axesecc] (\DonneesXmin,0)--($(\DonneesXmax,0)+(\ecc@elarg@axes,0)$) ;
+			}%
+			{%
+				\draw[axesecc] (\DonneesXmin,0)--(\DonneesXmax,0) ;
+			}%
+		\ifboolKV[courbeECC]{ElargirOy}%
+			{%
+				\draw[axesecc] (\DonneesXmin,0)--($(\DonneesXmin,\DonneesEffMax)+(0,\ecc@elarg@axes)$) ;
+			}%
+			{%
+				\draw[axesecc] (\DonneesXmin,0)--(\DonneesXmin,\DonneesEffMax) ;
+			}%
+		\draw[courbeecc,\ecc@coul@graph] \DonneesListeECC ;
+		\xintFor* ##1 in {\xintSeq{1}{\DataECClen}}\do{%
+			\filldraw[\ecc@coul@graph] (\DataClass[##1],\DataECC[##1]) circle[radius=2pt] ;
+		}%
+		\ifboolKV[courbeECC]{AffParams}%
+			{%
+				\draw[traitsparamecc,\ecc@coul@quart] (\DonneesXmin,{0.25*\DonneesEffMax})--++({\DonneesXmax-\DonneesXmin},0);
+				\draw[traitsparamecc,\ecc@coul@med] (\DonneesXmin,{0.50*\DonneesEffMax})--++({\DonneesXmax-\DonneesXmin},0);
+				\draw[traitsparamecc,\ecc@coul@quart] (\DonneesXmin,{0.75*\DonneesEffMax})--++({\DonneesXmax-\DonneesXmin},0);
+				\draw[traitsparamecc,\ecc@coul@quart] (\ValPremQuartile,{0.25*\DonneesEffMax})--(\ValPremQuartile,0) ; \draw[\ecc@coul@quart,thick,fill=white] (\ValPremQuartile,{0.25*\DonneesEffMax}) circle[radius=2pt] ;
+				\draw[traitsparamecc,\ecc@coul@quart] (\ValTroisQuartile,{0.75*\DonneesEffMax})--(\ValTroisQuartile,0) ; \draw[\ecc@coul@quart,thick,fill=white] (\ValTroisQuartile,{0.75*\DonneesEffMax}) circle[radius=2pt] ;
+				\draw[traitsparamecc,\ecc@coul@med] (\ValMed,{0.5*\DonneesEffMax})--(\ValMed,0) ; \draw[\ecc@coul@med,thick,fill=white] (\ValMed,{0.5*\DonneesEffMax}) circle[radius=2pt] ;
+			}%
+			{}%
+		% \path[name intersections={of=CourbeECC and Quartile1,by=Q1}];
+		% \path[name intersections={of=CourbeECC and Mediane,by=Q2}];
+		% \path[name intersections={of=CourbeECC and Quartile3,by=Q3}];
+		% \recuptikzxy{(Q1)}{\xqun}{\yqun}%
+		% \xdef\ValPremQuartile{\xintfloateval{(0.03515*\fpeval{\xqun})/\UniteGraphiqueX}}%
+		% \recuptikzxy{(Q2)}{\xmediane}{\ymediane}
+		% \xdef\ValMed{\xintfloateval{(0.03515*\fpeval{\xmediane})/\UniteGraphiqueX}}%
+		% \recuptikzxy{(Q3)}{\xqtrois}{\yqtrois}%
+		% \xdef\ValTroisQuartile{\xintfloateval{(0.03515*\fpeval{\xqtrois})/\UniteGraphiqueX}}%
+}%
+{%
+	\end{tikzpicture}%
+	\CourbeECCStylesDefaut%
+}
+
+%détermination 'simple' des paramètres
+\NewDocumentCommand\MedianeQuartilesECC{ m m }{%
+	%lecture des listes
+	\readlist*\DataClass{#1}%
+	\readlist*\DataEff{#2}%
+	%création etlecture de la liste des ECC
+	\xdef\DonneesECC{0}%
+	\xintFor* ##1 in {\xintSeq{1}{\DataEfflen}}\do{%
+		\xdef\DonneesTmp{0}%
+		\xintFor* ##2 in {\xintSeq{1}{##1}}\do{%
+			\xdef\DonneesTmp{\xintfloateval{\DonneesTmp+\DataEff[##2]}}%
+		}%
+		\xdef\DonneesECC{\DonneesECC,\DonneesTmp}%
+	}%
+	\readlist*\DataECC\DonneesECC%
+	%effectif total + nb
+	\itemtomacro\DataECC[-1]\DonneesEffMax%
+	%détermination de Q1, par balayage + par interpolation
+	\xintFor* ##1 in {\xintSeq{1}{\DataEfflen}}\do{%
+		\xdef\isuiv{\xinteval{##1+1}}%
+		\xintifboolexpr{\DataECC[##1] < (0.25*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.25*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValPremQuartile{\xintfloateval{(0.25*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+		\xintifboolexpr{\DataECC[##1] < (0.50*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.50*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValMed{\xintfloateval{(0.50*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+		\xintifboolexpr{\DataECC[##1] < (0.75*\DonneesEffMax) 'and' \DataECC[\isuiv] >= (0.75*\DonneesEffMax)}%
+			{%
+				\xdef\pentetmpECC{(\DataECC[\isuiv]-\DataECC[##1])/(\DataClass[\isuiv]-\DataClass[##1])}%OK
+				\xdef\ValTroisQuartile{\xintfloateval{(0.75*\DonneesEffMax+\pentetmpECC*\DataClass[##1]-\DataECC[##1])/(\pentetmpECC)}}%
+			}
+			{}%
+	}%
 }
 
 \endinput
