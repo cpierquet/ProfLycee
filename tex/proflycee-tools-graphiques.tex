@@ -86,6 +86,54 @@
 	}%
 }
 
+%générer les splines
+\defKV[genspline]{%
+	NumDebut=\def\tmpsplinenumdeb{#1},%
+	NumFin=\def\tmpsplinenumfin{#1}
+}
+
+\setKVdefault[genspline]{%
+	NumDebut=1,%
+	NumFin=dernier
+}
+
+\NewDocumentCommand\GenereSplineTikz{ D<>{} m O{\CourbeSplineTikz} }{%
+	%1=liste
+	%2=num point début
+	%3=num point fin
+	\useKVdefault[genspline]%
+	\setKV[genspline]{#1}%
+	\setsepchar[.]{§./}%
+	\readlist*\SPLlistepoints{#2}%
+	%les données
+	\xintifboolexpr{\tmpsplinenumdeb < 1}{\def\tmpsplinenumdeb{1}}{}%
+	\IfStrEq{\tmpsplinenumfin}{dernier}{\def\tmpsplinenumfin{\SPLlistepointslen}}{}%
+	\xintifboolexpr{\tmpsplinenumfin > \SPLlistepointslen}{\def\tmpsplinenumfin{\SPLlistepointslen}}{}%
+	\extractcoeff{\SPLcoeffs}{\tmpsplinenumdeb}%
+	%nb de calculs
+	\def\SPLnbsplines{\inteval{\tmpsplinenumfin-1}}%
+	%extraction des coordonnées
+	\itemtomacro\SPLlistepoints[\tmpsplinenumdeb,1]\xa%
+	\itemtomacro\SPLlistepoints[\tmpsplinenumdeb,2]\ya%
+	\itemtomacro\SPLlistepoints[\tmpsplinenumdeb,3]\fprimea%
+	\itemtomacro\SPLlistepoints[\tmpsplinenumdeb,1]\xb%
+	\itemtomacro\SPLlistepoints[\tmpsplinenumdeb,2]\yb%
+	\itemtomacro\SPLlistepoints[\tmpsplinenumdeb,3]\fprimeb%
+	\xdef#3{(\xa,\ya) ..controls +({atan \fprimea}:{(\xb-\xa)/\COEFFA}) and +({-180 + atan \fprimeb}:{(\xb-\xa)/\COEFFA}).. (\xb,\yb)}%
+	\foreach \i in {\tmpsplinenumdeb,...,\SPLnbsplines}{%
+		%extraction des coeffs de compensation
+		\extractcoeff{\SPLcoeffs}{\i}%
+		\def\j{\inteval{\i+1}}%
+		\itemtomacro\SPLlistepoints[\i,1]\xa%
+		\itemtomacro\SPLlistepoints[\i,2]\ya%
+		\itemtomacro\SPLlistepoints[\i,3]\fprimea%
+		\itemtomacro\SPLlistepoints[\j,1]\xb%
+		\itemtomacro\SPLlistepoints[\j,2]\yb%
+		\itemtomacro\SPLlistepoints[\j,3]\fprimeb%
+		\xdef#3{#3 ..controls +({atan \fprimea}:{(\xb-\xa)/\COEFFA}) and +({-180 + atan \fprimeb}:{(\xb-\xa)/\COEFFB}).. (\xb,\yb)}%
+	}%
+}
+
 %splines en tikz avec ..controls
 \defKV[spline]{%
 	Epaisseur=\def\SPLepaisseur{#1},%

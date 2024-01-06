@@ -1,5 +1,5 @@
 % proflycee-tools-complexes.tex
-% Copyright 2023  Cédric Pierquet
+% Copyright 2023  Cédric Pierquet (expérimental)
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 \NewDocumentCommand\PartieReelle{ D<>{} m O{\PartReRes} }{%
@@ -59,10 +59,23 @@
 	\PartieReelle{#3}[\tmpreB]%
 	\PartieImaginaire{#2}[\tmpimA]%
 	\PartieImaginaire{#3}[\tmpimB]%
-	\xdef\tmpreCalc{(\tmpreA)+(\tmpreB)}%
+	%\xdef\tmpreCalc{(\tmpreA)+(\tmpreB)}%
 	\xdef\xinttmpreCalc{\xinteval{(\tmpreA)+(\tmpreB)}}%
-	\xdef\tmpimCalc{(\tmpimA)+(\tmpimB)}%
+	%\xdef\tmpimCalc{(\tmpimA)+(\tmpimB)}%
 	\xdef\xinttmpimCalc{\xinteval{(\tmpimA)+(\tmpimB)}}%
+	%\xinttmpreCalc\text{ et }\xinttmpimCalc.
+	\AffComplexe[#1]%
+}
+
+\NewDocumentCommand\DifferenceComplexes{ O{} m m }{%
+	\PartieReelle{#2}[\tmpreA]%
+	\PartieReelle{#3}[\tmpreB]%
+	\PartieImaginaire{#2}[\tmpimA]%
+	\PartieImaginaire{#3}[\tmpimB]%
+	%\xdef\tmpreCalc{(\tmpreA)-(\tmpreB)}%
+	\xdef\xinttmpreCalc{\xinteval{(\tmpreA)-(\tmpreB)}}%
+	%\xdef\tmpimCalc{(\tmpimA)-(\tmpimB)}%
+	\xdef\xinttmpimCalc{\xinteval{(\tmpimA)-(\tmpimB)}}%
 	%\xinttmpreCalc\text{ et }\xinttmpimCalc.
 	\AffComplexe[#1]%
 }
