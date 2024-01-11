@@ -2,6 +2,7 @@
 % Copyright 2023  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
+%3.01e	Correction du comportement de la console repl piton/pyluatex
 %2.7.6	Correction du comportement de la console, avec une meilleure gestion de la largeur ^^ (merci à ablasz ;-))
 %2.7.5	Ajout d'un argument optionnel pour commencer les codes python à un numéro de ligne différent de 1
 %2.7.3	Correction de la couleur des bordures
@@ -193,17 +194,15 @@
 		}%
 %		{\tcbset{consolepyluatexlogo,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
 %		{\tcbset{consolepyluatex,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
-	%\begin{tcolorbox}
-		\begin{pythonrepl}
+		\begin{pythonrepl}%
 }
 {
+	\end{pythonrepl}%
 	\directlua{
 	tex.print("\\begin{Piton}")
 	tex.print(pyluatex.get_last_output())
 	tex.print("\\end{Piton}")
-	tex.print("")
-}
-		\end{pythonrepl}
+	}%
 	\end{tcolorbox}
 }
 

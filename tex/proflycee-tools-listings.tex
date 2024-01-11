@@ -2,6 +2,7 @@
 % Copyright 2023  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
+%3.01d	Ajout des commentaires en PseudoCode (via #)
 %3.00g	Amélioration marge gauche PseudoCode
 %2.7.5	Ajout de clés pour PythonLst + Couleurs optionnelles pour PseudoCode
 %2.7.3	Correction de la couleur des bordures
@@ -255,7 +256,9 @@
 	numbers          = left,
 	morestring       = [b]",
 	showstringspaces = false,
-	escapeinside     = {(*}{*)}
+	escapeinside     = {(*}{*)},
+	commentstyle     = \itshape\color{gray},
+	morecomment      = [l][commentstyle]{\#}
 }
 
 \lstdefinestyle{pseudocodenoPL}{%
@@ -270,7 +273,9 @@
 	numbers          = none,
 	showstringspaces = false,
 	morestring       = [b]",
-	escapeinside     = {(*}{*)}
+	escapeinside     = {(*}{*)},
+	commentstyle     = \itshape\color{gray},
+	morecomment      = [l][commentstyle]{\#}
 }
 
 \newlength{\PseudoCodeXLeft}
@@ -421,7 +426,9 @@
 	numbers          = left,
 	morestring       = [b]",
 	showstringspaces = false,
-	escapeinside     = {(*}{*)}
+	escapeinside     = {(*}{*)},
+	commentstyle     = \itshape\color{gray},
+	morecomment      = [l][commentstyle]{\#}
 }
 
 \lstdefinestyle{pseudocodenoPLalt}{%
@@ -435,7 +442,9 @@
 	numbers          = none,
 	showstringspaces = false,
 	morestring       = [b]",
-	escapeinside     = {(*}{*)}
+	escapeinside     = {(*}{*)},
+	commentstyle     = \itshape\color{gray},
+	morecomment      = [l][commentstyle]{\#}
 }
 
 \tcbset{stylepseudocodePLalt/.style={%
