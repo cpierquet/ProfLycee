@@ -618,6 +618,18 @@
 	
 }
 
+%courbe via xint
+\NewDocumentCommand\CourbeTikzXint{ O{} m m }{%
+	%1 = options tikz du \draw
+	%2 = formule xint
+	%3 = début...[pas]...fin
+	\draw[#1] plot[smooth] coordinates {%
+		\xintthecoords\xintfloatexpr
+		seq((x,#2),x=#3)
+		\relax
+	};
+}
+
 %courbe ?
 \newcommand\CourbeTikz[3][]{%
 	\setsepchar{:}%

@@ -114,6 +114,22 @@
 	\filldraw[#2] (0,0) circle[radius=2pt] ;
 }
 
+\NewDocumentCommand\schematdsexpo{ s m m m }{%pour les expos (interne)
+	% * = étoilée -> a négatif
+	% #2 = couleur
+	% #3 = largeur
+	% #4 = hauteur
+	\IfBooleanTF{#1}%si étoile := expo 'décroissante'
+		{%
+			\draw[thick,#2] ({-0.45*#3},{0.5*#4}) to[out=-75,in=179] ({0.5*#3},{-0.325*#4});
+		}
+		{%sinon := expo 'croissante'
+			\draw[thick,#2] ({-0.5*#3},{-0.325*#4}) to[out=1,in=-105] ({0.5*#3},{0.5*#4});
+		}
+	\draw[#2] ({0},{0}) node[inner sep=0pt,above=0pt,font=\scriptsize] {\textcircled{$+$}};
+	
+}
+
 \NewDocumentCommand\schematdsparab{ m m m m m o }{%pour les paraboles (interne)
 	% #1 = signe de a (1 ou -1) ?
 	% #2 = couleur
@@ -179,17 +195,19 @@
 	\useKVdefault[aidetds]
 	\setKV[aidetds]{#2}
 	%simplification des codes
-	\IfEq{\tdsparam}{da+}{\def\xcode{1}}{}
-	\IfEq{\tdsparam}{da-}{\def\xcode{-1}}{}
-	\IfEq{\tdsparam}{pa+d+}{\def\xcode{12}}{}
-	\IfEq{\tdsparam}{pa-d+}{\def\xcode{-12}}{}
-	\IfEq{\tdsparam}{pa+d0}{\def\xcode{11}}{}
-	\IfEq{\tdsparam}{pa-d0}{\def\xcode{-11}}{}
-	\IfEq{\tdsparam}{pa+d-}{\def\xcode{10}}{}
-	\IfEq{\tdsparam}{pa-d-}{\def\xcode{-10}}{}
+	\IfEq{\tdsparam}{da+}{\def\xcode{1}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{da-}{\def\xcode{-1}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{pa+d+}{\def\xcode{12}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{pa-d+}{\def\xcode{-12}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{pa+d0}{\def\xcode{11}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{pa-d0}{\def\xcode{-11}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{pa+d-}{\def\xcode{10}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{pa-d-}{\def\xcode{-10}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{expo+}{\def\xcode{20}\def\xcodehautaxe{-0.35}}{}
+	\IfEq{\tdsparam}{expo-}{\def\xcode{-20}\def\xcodehautaxe{-0.35}}{}
 	%si commande étoilée := commande autonome
 	\IfBooleanTF{#1}%
-		{\begin{tikzpicture}[#3]}{}%
+		{\begin{tikzpicture}[#3,>=latex]}{}%
 	%cadre si booléen true
 	\ifboolKV[aidetds]{Cadre}
 		{\draw[lightgray] ({-0.5*\tdslarg},{-0.5*\tdshaut}) rectangle ({0.55*\tdslarg},{0.5*\tdshaut}) ;}
@@ -197,7 +215,7 @@
 	%restriction de la petite fenêtre
 	\clip ({-0.5*\tdslarg},{-0.5*\tdshaut}) rectangle ({0.55*\tdslarg},{0.5*\tdshaut}) ;
 	%axe (Ox)
-	\draw[thick,->] ({-0.5*\tdslarg},0)--({0.55*\tdslarg},0);
+	\draw[semithick,->,>=latex] ({-0.5*\tdslarg},{\xcodehautaxe*(\tdshaut)})--({0.55*\tdslarg},{\xcodehautaxe*(\tdshaut)});
 	%1er degré a+ code = 1
 	\ifnum\xcode=1
 		\schematdsaff{\tdscouleur}{\tdslarg}{\tdshaut}{\tdsracine}
@@ -229,6 +247,14 @@
 	%2d degré a-delta- code = -10
 	\ifnum\xcode=-10
 		\schematdsparab{-1}{\tdscouleur}{\tdslarg}{\tdshaut}{0}
+	\fi
+	%expo croissante code = 20
+	\ifnum\xcode=20
+		\schematdsexpo{\tdscouleur}{\tdslarg}{\tdshaut}
+	\fi
+	%expo décroissante code = -20
+	\ifnum\xcode=-20
+		\schematdsexpo*{\tdscouleur}{\tdslarg}{\tdshaut}
 	\fi
 	\IfBooleanTF{#1}%
 		{\end{tikzpicture}}{}%
@@ -691,7 +717,7 @@
 				&\Rightarrow\FracPerVar = \ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\tmp@num@brut}}{\num{\tmp@denom@brut}}
 			\end{align*}
 			%affichage(s) OK
-			\noindent Ainsi on a \ensuremath{\tmp@enonce = \ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\tmp@num@brut}}{\num{\tmp@denom@brut}} \xintifboolexpr{\tmp@pgcd == 1}{}{=\ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\xintieval{\tmp@num@brut/\tmp@pgcd}}}{\num{\xintieval{\tmp@denom@brut/\tmp@pgcd}}}}%
+			\noindent Ainsi on a \ensuremath{\tmp@enonce = \ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\tmp@num@brut}}{\num{\tmp@denom@brut}} \xintifboolexpr{\tmp@pgcd == 1}{}{=\ifboolKV[FracPeriod]{d}{\displaystyle}{}\frac{\num{\xintieval{\tmp@num@brut/\tmp@pgcd}}}{\num{\xintieval{\tmp@denom@brut/\tmp@pgcd}}}} \xintifboolexpr{\tmp@denom@brut/\tmp@pgcd == 1}{=\num{\xintieval{\tmp@num@brut/\tmp@pgcd}}}{}%
 			}.\par%
 		}%
 		{}%

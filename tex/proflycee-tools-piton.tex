@@ -2,6 +2,7 @@
 % Copyright 2023  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
+%3.01f	PseudoCode via piton (?)
 %3.01e	Correction du comportement de la console repl piton/pyluatex
 %2.7.6	Correction du comportement de la console, avec une meilleure gestion de la largeur ^^ (merci à ablasz ;-))
 %2.7.5	Ajout d'un argument optionnel pour commencer les codes python à un numéro de ligne différent de 1
@@ -33,10 +34,10 @@
 	Gobble=true,%
 	TaillePolice=\footnotesize,%
 	Filigrane=false,%
-	Style=Moderne,%
+	Style=Classique,%
 	Cadre=true,%
 	BarreTitre=true,%
-	Titre={{\scriptsize\faCode} Code Python},%
+	Titre={{\scriptsize\faCode}~~Code Python},%
 	EspacementV=0.5\baselineskip,%
 	CouleurNombres=orange
 }
@@ -79,23 +80,90 @@
 	}
 }
 
+%--
+\defKV[envpcpiton]{%
+	Largeur=\def\CODPITPClargeur{#1},%
+	Alignement=\def\CODPITPCalign{#1},%
+	TaillePolice=\def\CODPITPCfonte{#1},%
+	Style=\def\CODPITPCstyle{#1},%
+	Titre=\def\CODPITPCtitre{#1},%
+	EspacementV=\def\CODPITPCespV{#1}
+}
+
+\setKVdefault[envpcpiton]{%
+	Largeur=\linewidth,%
+	Alignement=center,%
+	Lignes=true,%
+	Gobble=true,%
+	TaillePolice=\footnotesize,%
+	Filigrane=false,%
+	Style=Classique,%
+	Cadre=true,%
+	BarreTitre=true,%
+	Titre={{\scriptsize\faFileCode}~~PseudoCode},%
+	EspacementV=0.5\baselineskip,%
+	Couleurs=true
+}
+
+%==Style Moderne
+\tcbset{stylepcpiton/.style={%
+	enhanced,boxrule=1.25pt,%
+	sharp corners=downhill,arc=12pt,
+	before skip=\CODPITPCespV,after skip=\CODPITPCespV,%
+	top=\baselineskip,bottom=0mm,left=0.6em,right=5mm,%
+	attach boxed title to top right={yshift=-\tcboxedtitleheight},
+	boxed title style={
+		size=small,colback=CouleurVertForet!25,boxrule=1.25pt,
+		colframe=CouleurVertForet,boxsep=1.25pt,
+		sharp corners=downhill,
+		arc=12pt,
+		top=2pt,bottom=1pt,left=6pt,right=6pt
+		},
+	fonttitle=\color{CouleurVertForet}~~PseudoCode
+	}
+}
+
+%==Style Classique
+\tcbset{thonnypcstyle/.style={%
+	enhanced,boxrule=0.75pt,colframe=darkgray!50!black,%
+	sharp corners,top=0mm,bottom=0mm,left=0.4em,right=5mm,%
+	before skip=\CODPITPCespV,after skip=\CODPITPCespV,%
+	colback=white
+	}
+}
+
+\tcbset{thonnypcstylelineos/.style={%
+	thonnypcstyle,%
+	underlay={%
+		\begin{tcbclipinterior}
+			\draw[draw=none,fill=lightgray!25] (interior.south west) rectangle ([xshift=1.3em]interior.north west) ;
+		\end{tcbclipinterior}%
+		}
+	}
+}
+
 %==Création de la boîte (essai v2 ?)
 \ifluatex
 \RequirePackage{piton}
+
+\NewDocumentCommand\PrVal{}{\textleftarrow}
+
+\PitonOptions{begin-escape={(*},end-escape={*)}}
+
 \NewPitonEnvironment{CodePiton}{ O{} m D<>{} }%
 {%
 	\tcbset{reset}
 	\useKVdefault[envpiton]%
 	\setKV[envpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%------les styles piton
-	\SetPitonStyle{ Number = \color{\CODPITcolnb} }%
+	\SetPitonStyle{ Number = \color{\CODPITcolnb} }
 	\ifboolKV[envpiton]{Lignes}%si lignes=true
 		{\PitonOptions{left-margin=0.75em,all-line-numbers,line-numbers={#3}}}%left-margin=auto,
 		{}%
 	\ifboolKV[envpiton]{Gobble}%si gobble=true
 		{\PitonOptions{tabs-auto-gobble}}%
 		{}%
-	\PitonOptions{break-lines,indent-broken-lines}%,numbers-sep=0.65em}
+	\PitonOptions{break-lines,indent-broken-lines}%,numbers-sep=0.65em}%language=Python}
 	%------les styles tcbox
 	\IfEq{\CODPITstyle}{Moderne}%style Moderne (défaut)
 		{%
@@ -137,8 +205,92 @@
 {%
 	\endtcolorbox%
 }
-\fi
 
+%piton >= 2.4
+\NewPitonEnvironment{PseudoCodePiton}{ O{} m D<>{} }%
+{%
+	\tcbset{reset}
+	\useKVdefault[envpcpiton]%
+	\setKV[envpcpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
+	%------les styles piton
+	\PitonOptions{break-lines,indent-broken-lines,language=minimal}%,numbers-sep=0.65em}%
+	\SetPitonStyle{ Number = }
+	\ifboolKV[envpcpiton]{Couleurs}%
+		{%
+			\SetPitonIdentifier[minimal]{Algorithme,Fonction,Début,Paramètre,Paramètres,Faire,Fin,Si,Pour,Tant,Que,que,alors,Alors,Sinon,SinonSi,FinSi,FinPour,FinTantQue,TantQue,Variable,Variables,Procédure}{\color{MotsClesPseudoCodeA}}
+			\SetPitonIdentifier[minimal]{Afficher,Renvoyer,Saisir}{\color{MotsClesPseudoCodeB}}
+			% \PitonOptions{
+				% identifiers =
+					% {
+						% names = {Algorithme,Fonction,Début,Paramètre,Paramètres,allant,Faire,Fin,Si,Pour,Tant,Que,que,alors,Alors,Sinon,SinonSi,FinSi,FinPour,FinTantQue,TantQue,Variable,Variables,Procédure},
+						% style = \color{MotsClesPseudoCodeA}
+					% } ,
+				% identifiers =
+					% {
+						% names = {Afficher,Retourner,Saisir},
+						% style = \color{MotsClesPseudoCodeB}
+					% }
+				% }%
+			\SetPitonStyle
+				{
+					String = \color{MotsClesPseudoCodeChaine},
+					Comment = \itshape\color{gray},
+				}
+		}%
+		{%
+			\SetPitonStyle
+				{
+					String = ,
+					Comment = \itshape
+				}
+		}%
+	\ifboolKV[envpcpiton]{Lignes}%si lignes=true
+		{\PitonOptions{left-margin=0.75em,all-line-numbers,line-numbers={#3}}}%left-margin=auto,
+		{}%
+	\ifboolKV[envpcpiton]{Gobble}%si gobble=true
+		{\PitonOptions{tabs-auto-gobble}}%
+		{}%
+	%------les styles tcbox
+	\IfEq{\CODPITPCstyle}{Moderne}%style Moderne (défaut)
+		{%
+			\tcbset{cadre/.style={}}
+			\tcbset{titre/.style={}}
+			\tcbset{stylebase/.style={stylepcpiton,colframe=CouleurVertForet,colback=CouleurVertForet!5,width=\CODPITPClargeur,fontupper=\CODPITPCfonte,fontlower=\CODPITPCfonte,\CODPITPCalign,leftupper=0.75em}}
+			\ifboolKV[envpcpiton]{Filigrane}%si filigrane
+				{\tcbset{filigrane/.style={watermark text={\faCode},watermark opacity=0.175,watermark zoom=0.50}}}%
+				{\tcbset{filigrane/.style={}}}%
+		}
+		{}%
+	\IfEq{\CODPITPCstyle}{Classique}%style Classique
+		{%
+			\ifboolKV[envpcpiton]{Lignes}%si lignes=true
+				{\tcbset{stylebase/.style={thonnypcstylelineos,leftupper=0.75em,width=\CODPITPClargeur,colframe=darkgray!50!black,fontupper=\CODPITPCfonte,fontlower=\CODPITPCfonte,\CODPITPCalign}}}%
+				{\tcbset{stylebase/.style={thonnypcstyle,leftupper=0.4em,width=\CODPITPClargeur,colframe=darkgray!50!black,fontupper=\CODPITPCfonte,fontlower=\CODPITPCfonte,\CODPITPCalign}}}%
+			%\tcbset{width=\CODPITlargeur,colframe=darkgray!50!black,fontupper=\CODPITfonte,fontlower=\CODPITfonte,\CODPITalign}
+			\ifboolKV[envpcpiton]{Filigrane}%si filigrane
+				{\tcbset{filigrane/.style={watermark text={\faCode},watermark opacity=0.25,watermark zoom=0.50}}}%
+				{\tcbset{filigrane/.style={}}}%
+			\ifboolKV[envpcpiton]{BarreTitre}%
+				{%
+					\ifboolKV[envpcpiton]{Cadre}
+						{\tcbset{cadre/.style={}}}%
+						{\tcbset{cadre/.style={boxrule=0pt,frame hidden}}}%
+					\tcbset{titre/.style={lefttitle=0.4em,title={\CODPITPCtitre},fonttitle=\bfseries\footnotesize\sffamily,colbacktitle=darkgray!50!black}}
+				}%
+				{%
+					\tcbset{titre/.style={notitle}}
+					\ifboolKV[envpcpiton]{Cadre}
+						{\tcbset{cadre/.style={}}}
+						{\tcbset{cadre/.style={boxrule=0pt,frame hidden}}}
+				}
+		}
+		{}%
+	%on crée la boîte
+	\tcolorbox[stylebase,filigrane,cadre,titre,#2]
+}%
+{%
+	\endtcolorbox%
+}
 
 %======CONSOLE PYLUATEX (package à charger manuellement !!)
 \tcbset{consolepylua/.style={%base de la boîte
@@ -205,5 +357,7 @@
 	}%
 	\end{tcolorbox}
 }
+
+\fi
 
 \endinput

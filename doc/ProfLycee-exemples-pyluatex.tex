@@ -2,7 +2,7 @@
 % !TeX TXS-program:compile = txs:///lualatex/[--shell-escape]
 
 \documentclass[french,a4paper,10pt]{article}
-\def\PLver{3.01e}
+\def\PLver{3.01f}
 \usepackage[margin=1.5cm]{geometry}
 \usepackage{ProfLycee}
 \useproflyclib{piton}
@@ -53,8 +53,8 @@ def valeur_absolue(x):
 \end{CodePiton}
 
 {\small \begin{codehigh}
-%Sortie avec Style=Classique, Largeur=10cm
-\begin{CodePiton}[Style=Classique,Largeur=10cm]{}
+%Sortie avec style Classique, Largeur=10cm
+\begin{CodePiton}[Largeur=10cm]{}
 def valeur_absolue(x):
     "Renvoie la valeur absolue de x"
     #le petit test qui va bien
@@ -65,7 +65,7 @@ def valeur_absolue(x):
 \end{CodePiton}
 \end{codehigh}}
 
-\begin{CodePiton}[Style=Classique,Largeur=10cm]{}
+\begin{CodePiton}[Largeur=10cm]{}
 def valeur_absolue(x):
 	"Renvoie la valeur absolue de x"
 	#le petit test qui va bien
@@ -78,8 +78,8 @@ def valeur_absolue(x):
 \pagebreak
 
 {\small \begin{codehigh}
-%Sortie avec Style=Classique, Sans Titre, Largeur=10cm, centré
-\begin{CodePiton}[Style=Classique,Largeur=10cm,BarreTitre=false,Alignement=center]{}
+%Sortie avec Style=Moderne, Sans Titre, Largeur=10cm, centré
+\begin{CodePiton}[Style=Moderne,Largeur=10cm,BarreTitre=false,Alignement=center]{}
 def valeur_absolue(x):
     "Renvoie la valeur absolue de x"
     #le petit test qui va bien
@@ -90,7 +90,7 @@ def valeur_absolue(x):
 \end{CodePiton}
 \end{codehigh}}
 
-\begin{CodePiton}[Style=Classique,Largeur=10cm,BarreTitre=false,Alignement=center]{}
+\begin{CodePiton}[Style=Moderne,Largeur=10cm,BarreTitre=false,Alignement=center]{}
 def valeur_absolue(x):
 	"Renvoie la valeur absolue de x"
 	#le petit test qui va bien
@@ -103,7 +103,7 @@ def valeur_absolue(x):
 {\small \begin{codehigh}
 %Sortie avec Style=Classique, Largeur=0.5\linewidth, aligné à droite, sans Cadre, avec Filigrane
 \begin{CodePiton}%
-    [Style=Classique,Largeur=0.5\linewidth,Cadre=false,Alignement=flush right,Filigrane,Titre={Script}]{}
+    [Largeur=0.5\linewidth,Cadre=false,Alignement=flush right,Filigrane,Titre={Script}]{}
 #environnement piton avec numéros de ligne, pleine largeur, style moderne
 def valeur_absolue(x):
     "Renvoie la valeur absolue de x"
@@ -115,7 +115,7 @@ def valeur_absolue(x):
 \end{CodePiton}
 \end{codehigh}}
 
-\begin{CodePiton}[Style=Classique,Largeur=0.5\linewidth,Cadre=false,Alignement=flush right,Filigrane,Titre={Script}]{}
+\begin{CodePiton}[Largeur=0.5\linewidth,Cadre=false,Alignement=flush right,Filigrane,Titre={Script}]{}
 def valeur_absolue(x):
 	"Renvoie la valeur absolue de x"
 	#le petit test qui va bien
@@ -127,7 +127,7 @@ def valeur_absolue(x):
 
 {\small \begin{codehigh}
 %Sortie Moderne, Largeur=11cm, avec Filigrane, aligné à gauche, sans ligne
-\begin{CodePiton}[Largeur=11cm,Filigrane,Alignement=flush left,Lignes=false]{}
+\begin{CodePiton}[Style=Moderne,Largeur=11cm,Filigrane,Alignement=flush left,Lignes=false]{}
 def valeur_absolue(x):
     "Renvoie la valeur absolue de x"
     #le petit test qui va bien
@@ -138,7 +138,7 @@ def valeur_absolue(x):
 \end{CodePiton}
 \end{codehigh}}
 
-\begin{CodePiton}[Largeur=11cm,Filigrane,Alignement=flush left,Lignes=false]{}
+\begin{CodePiton}[Style=Moderne,Largeur=11cm,Filigrane,Alignement=flush left,Lignes=false]{}
 def valeur_absolue(x):
 	"Renvoie la valeur absolue de x"
 	#le petit test qui va bien
