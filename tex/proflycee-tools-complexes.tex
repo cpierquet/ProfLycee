@@ -27,12 +27,12 @@
 		\xintifboolexpr{\xinttmpreCalc == 0 'and' \xinttmpimCalc == 0}{0}{}%
 		\xintifboolexpr{\xinttmpreCalc == 0 'and' \xinttmpimCalc == 1}{\i}{}%
 		\xintifboolexpr{\xinttmpreCalc == 0 'and' \xinttmpimCalc == -1}{-\i}{}%
-		\xintifboolexpr{\xinttmpreCalc == 0 'and' abs(\xinttmpimCalc) != 1 'and' \xinttmpimCalc != 0}{\ConversionFraction[#1]{\tmpimCalc}\i}{}%
-		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc < 0 'and' \xinttmpimCalc != -1}{\ConversionFraction[#1]{\tmpreCalc}-\ConversionFraction[#1]{-(\tmpimCalc)}\i}{}%
-		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc == -1}{\ConversionFraction[#1]{\tmpreCalc}-\i}{}%
-		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc == 1}{\ConversionFraction[#1]{\tmpreCalc}+\i}{}%
-		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc > 0 'and' \xinttmpimCalc != 1}{\ConversionFraction[#1]{\tmpreCalc}+\ConversionFraction[#1]{\tmpimCalc}\i}{}%
-		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc == 0}{\ConversionFraction[#1]{\tmpreCalc}}{}%
+		\xintifboolexpr{\xinttmpreCalc == 0 'and' abs(\xinttmpimCalc) != 1 'and' \xinttmpimCalc != 0}{\ConversionFraction[#1]{\xinttmpimCalc}\i}{}%
+		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc < 0 'and' \xinttmpimCalc != -1}{\ConversionFraction[#1]{\xinttmpreCalc}-\ConversionFraction[#1]{-(\xinttmpimCalc)}\i}{}%
+		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc == -1}{\ConversionFraction[#1]{\xinttmpreCalc}-\i}{}%
+		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc == 1}{\ConversionFraction[#1]{\xinttmpreCalc}+\i}{}%
+		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc > 0 'and' \xinttmpimCalc != 1}{\ConversionFraction[#1]{\xinttmpreCalc}+\ConversionFraction[#1]{\xinttmpimCalc}\i}{}%
+		\xintifboolexpr{\xinttmpreCalc != 0 'and' \xinttmpimCalc == 0}{\ConversionFraction[#1]{\xinttmpreCalc}}{}%
 	}%
 }
 
@@ -617,6 +617,145 @@
 				\TestArgumentComplexe[#2]{-162}{-162.0}{\e^{\frac{-9\i\pi}{10}}}%
 			}%
 	}%
+}
+
+\NewDocumentCommand\ExtractParamExprRac{ m O{\tmpCoeffA} O{\tmpCoeffB} O{\tmpCoeffC} O{\tmpCoeffD} }{%
+	\StrCount{#1}{sqrt}[\tmpnbrac]%
+	\xintifboolexpr{\tmpnbrac == 2}%
+		{%
+				\StrBetween{#1}{sqrt(}{)}[#3]%
+				\StrBetween[2,2]{#1}{sqrt(}{)}[#5]%
+				\StrBefore{#1}{sqrt}[#2]%
+				\StrBetween[1,2]{#1}{)}{sqrt}[#4]%
+				\StrDel{#2}{*}[#2]%
+				\IfEq{#2}{}{\xdef#2{1}}{}%
+				\IfEq{#2}{-}{\xdef#2{-1}}{}%
+				\StrDel{#4}{*}[#4]%
+				\StrDel{#4}{+}[#4]%
+				\IfEq{#4}{}{\xdef#4{1}}{}%
+				\IfEq{#4}{-}{\xdef#4{-1}}{}%
+			}%
+		{}%
+	\xintifboolexpr{\tmpnbrac == 0}%
+		{%
+				\xdef#2{#1}%
+				\xdef#3{1}%
+				\xdef#4{0}%
+				\xdef#5{1}%
+			}%
+		{}%
+	\xintifboolexpr{\tmpnbrac == 1}%
+		{%
+				\xdef#5{1}%
+				\StrBetween{#1}{sqrt(}{)}[#3]%
+				\StrBefore{#1}{sqrt}[#2]%
+				\StrDel{#2}{*}[#2]%
+				\IfEq{#2}{}{\xdef#2{1}}{}%
+				\IfEq{#2}{-}{\xdef#2{-1}}{}%
+				\StrBehind{#1}{)}[#4]%
+				\StrDel{#4}{+}[#4]%
+				\IfEq{#4}{}{\xdef#4{0}}{}%
+			}%
+		{}%
+}
+
+\NewDocumentCommand\SimplCarreExprRacine{ O{} m }{%
+	\ExtractParamExprRac{#2}%
+	%si le produit des racines est un entier ?
+	\xintifboolexpr{isint(sqrt(\tmpCoeffB*\tmpCoeffD)) == 1}%
+		{%
+				\ensuremath{%
+						\ConversionFraction[#1]{(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffB)+(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffD)+2*(\tmpCoeffA)*(\tmpCoeffC)*sqrt(\tmpCoeffB*\tmpCoeffD)}%
+					}%
+			}%
+		{%
+				\xintifboolexpr{\tmpCoeffA > 0 'and' \tmpCoeffC > 0}%
+				{%
+						\ensuremath{%
+								\ConversionFraction[#1]{(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffB)+(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffD)}+%
+								\IfEq{#1}{d}{\displaystyle}{}\SimplificationRacine{4*(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffB)*(\tmpCoeffD)}%
+							}%
+					}%
+				{}%
+				\xintifboolexpr{\tmpCoeffA > 0 'and' \tmpCoeffC < 0}%
+				{%
+						\ensuremath{%
+								\ConversionFraction[#1]{(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffB)+(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffD)}-%
+								\IfEq{#1}{d}{\displaystyle}{}\SimplificationRacine{4*(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffB)*(\tmpCoeffD)}%
+							}%
+					}%
+				{}%
+				\xintifboolexpr{\tmpCoeffA < 0 'and' \tmpCoeffC > 0}%
+				{%
+						\ensuremath{%
+								\ConversionFraction[#1]{(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffB)+(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffD)}-%
+								\IfEq{#1}{d}{\displaystyle}{}\SimplificationRacine{4*(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffB)*(\tmpCoeffD)}%
+							}%
+					}%
+				{}%
+				\xintifboolexpr{\tmpCoeffA < 0 'and' \tmpCoeffC < 0}%
+				{%
+						\ensuremath{%
+								\ConversionFraction[#1]{(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffB)+(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffD)}+%
+								\IfEq{#1}{d}{\displaystyle}{}\SimplificationRacine{4*(\tmpCoeffA)*(\tmpCoeffA)*(\tmpCoeffC)*(\tmpCoeffC)*(\tmpCoeffB)*(\tmpCoeffD)}%
+							}%
+					}%
+				{}%
+				\xintifboolexpr{\tmpCoeffC == 0 'and' abs(\tmpCoeffA) != 1}%
+				{%
+						\ensuremath{%
+								\ConversionFraction[#1]{(\tmpCoeffA)*(\tmpCoeffA)}%
+								\IfEq{#1}{d}{\displaystyle}{}\xintifboolexpr{\tmpCoeffB != 1}{\SimplificationRacine{(\tmpCoeffB)*(\tmpCoeffB)}}{}%
+							}%
+					}%
+				{}%
+				\xintifboolexpr{\tmpCoeffC == 0 'and' abs(\tmpCoeffA) == 1}%
+				{%
+						\ensuremath{%
+								\IfEq{#1}{d}{\displaystyle}{}\SimplificationRacine{(\tmpCoeffB)*(\tmpCoeffB)}%
+							}%
+					}%
+				{}%
+			}%
+}
+
+\NewDocumentCommand\CalcModuleCplx{ O{} m m }{%
+	\ExtractParamExprRac{#2}[\Crea][\Creb][\Crec][\Cred]%
+	\ExtractParamExprRac{#3}[\Cima][\Cimb][\Cimc][\Cimd]%
+	\xdef\TmpCoeffsDebut{(\Crea)*(\Crea)*(\Creb)+(\Crec)*(\Crec)*(\Cred)+(\Cima)*(\Cima)*(\Cimb)+(\Cimc)*(\Cimc)*(\Cimd)}%
+	\xdef\TmpCoeffsRacineA{4*(\Crea)*(\Crea)*(\Crec)*(\Crec)*(\Creb)*(\Cred)}%
+	\xdef\TmpCoeffsRacineB{4*(\Cima)*(\Cima)*(\Cimc)*(\Cimc)*(\Cimb)*(\Cimd)}%
+	%\xinteval{\TmpCoeffsDebut}/\xinteval{\TmpCoeffsRacineA}/\xinteval{\TmpCoeffsRacineB}/\xinteval{(\Crea)*(\Crec)}/\xinteval{(\Cima)*(\Cimc)}=
+	\xintifboolexpr{\TmpCoeffsRacineA == 0 'and' \TmpCoeffsRacineB == 0}%
+	{%
+			\ensuremath{\IfEq{#1}{d}{\displaystyle}{}\SimplificationRacine{\TmpCoeffsDebut}}%
+		}%
+	{}%
+	\xintifboolexpr{\TmpCoeffsRacineA == 0 'and' \TmpCoeffsRacineB != 0}%
+	{%
+			\ensuremath{\IfEq{#1}{d}{\displaystyle}{}\sqrt{\SimplificationRacine{(\TmpCoeffsDebut)*(\TmpCoeffsDebut)}\xintifboolexpr{(\Cima)*(\Cimc) < 0}{-}{+}\SimplificationRacine{\TmpCoeffsRacineB}}}%
+		}%
+	{}%
+	\xintifboolexpr{\TmpCoeffsRacineA != 0 'and' \TmpCoeffsRacineB == 0}%
+	{%
+			\ensuremath{\IfEq{#1}{d}{\displaystyle}{}\sqrt{\SimplificationRacine{(\TmpCoeffsDebut)*(\TmpCoeffsDebut)}\xintifboolexpr{(\Crea)*(\Crec) < 0}{-}{+}\SimplificationRacine{\TmpCoeffsRacineA}}}%
+		}%
+	{}%
+	\xintifboolexpr{\TmpCoeffsRacineA != 0 'and' \TmpCoeffsRacineB != 0 'and' (\Crea)*(\Crec) < 0 'and' (\Cima)*(\Cimc) > 0 'and' \TmpCoeffsRacineA == \TmpCoeffsRacineB}%
+	{%
+			\ensuremath{\IfEq{#1}{d}{\displaystyle}{}\SimplificationRacine{\TmpCoeffsDebut}}%
+		}%
+	{}%
+	\xintifboolexpr{\TmpCoeffsRacineA != 0 'and' \TmpCoeffsRacineB != 0 'and' (\Crea)*(\Crec) > 0 'and' (\Cima)*(\Cimc) < 0 'and' \TmpCoeffsRacineA == \TmpCoeffsRacineB}%
+	{%
+			\ensuremath{\IfEq{#1}{d}{\displaystyle}{}\SimplificationRacine{\TmpCoeffsDebut}}%
+		}%
+	{}%
+	\xintifboolexpr{\TmpCoeffsRacineA != \TmpCoeffsRacineB}%
+	{%
+			\ensuremath{\IfEq{#1}{d}{\displaystyle}{}\sqrt{\SimplificationRacine{(\TmpCoeffsDebut)*(\TmpCoeffsDebut)}\xintifboolexpr{(\Crea)*(\Crec) < 0}{-}{+}\SimplificationRacine{\TmpCoeffsRacineA}\xintifboolexpr{(\Cima)*(\Cimc) < 0}{-}{+}\SimplificationRacine{\TmpCoeffsRacineB}}}%
+		}%
+	{}%
 }
 
 \endinput

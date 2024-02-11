@@ -933,4 +933,310 @@
 	\IfBooleanT{#1}{~avec $0 \leqslant \num{\xintiiRem{#3}{#4}} < \xintifboolexpr{#4 < 0}{\lvert\num{#4}\rvert}{\num{#4}}$}%
 }
 
+%====ADDITIONS POSÉES ?
+\newlength{\colspecbinadd}
+\setlength{\colspecbinadd}{2pt}
+
+\NewDocumentCommand\PosRetenue{ O{red} m }{%
+	%\tmptextcircled[#1]{#2}%
+	\textcolor{#1}{\scalebox{\addbinposescret}[\addbinposescret]{#2}}%
+}
+
+\defKV[AddBinaire]{%
+	CouleurRetenue=\def\addbinposecol{#1},%
+	Espacement=\setlength{\colspecbinadd}{#1},%
+	Police=\def\addbinposefont{#1},%
+	EchelleRetenue=\def\addbinposescret{#1},%
+	Base=\def\addbinposebase{#1}
+}
+
+\setKVdefault[AddBinaire]{%
+	CouleurRetenue=red,%
+	Espacement=2pt,%
+	Police=\normalsize\normalfont,%
+	EchelleRetenue=0.4,%
+	Base=dec,%
+	Egal=true
+}
+
+\NewDocumentCommand\PoseAddition{ O{} m m }{%
+	\restoreKV[AddBinaire]%
+	\setKV[AddBinaire]{#1}%
+	%le résultat
+	\IfStrEq{\addbinposebase}{dec}%
+		{\xdef\tmpresultat{\xinteval{#2+#3}}}%
+		{}%
+	\IfStrEq{\addbinposebase}{bin}%
+		{\xdef\tmpresultat{\xintDecToBin{\xinteval{\xintBinToDec{#2}+\xintBinToDec{#3}}}}}%
+		{}%
+	\IfStrEq{\addbinposebase}{hex}%
+		{\xdef\tmpresultat{\xintDecToHex{\xinteval{\xintHexToDec{#2}+\xintHexToDec{#3}}}}}%
+		{}%
+	%\xdef\tmpresultat{\xintDecToBin{\xinteval{\xintBinToDec{#2}+\xintBinToDec{#3}}}}%
+	%les calculs
+	\StrLen{#2}[\longueurA]\StrLen{#3}[\longueurB]\StrLen{\tmpresultat}[\longueurC]%
+	\xdef\longueurMax{\xinteval{max(\longueurA,\longueurB,\longueurC)}}%\longueurMax
+	%le tableau
+	\xintifboolexpr{\longueurB > \longueurA}%
+		{%
+			\xdef\ArgLigneHaut{#3}\xdef\ArgLigneBas{#2}%
+			\xdef\addposeehaut{#3}\xdef\addposeebas{#2}%
+		}%
+		{%
+			\xdef\ArgLigneHaut{#2}\xdef\ArgLigneBas{#3}%
+			\xdef\addposeehaut{#2}\xdef\addposeebas{#3}%
+		}%
+	%création de la ligne du haut
+	\StrLen{\ArgLigneHaut}[\LgHaut]%
+	\StrChar{\ArgLigneHaut}{\LgHaut}[\LigneBinAdd]%
+	\foreach \i in {1,...,\inteval{\LgHaut-1}}%
+		{%
+			\xdef\tmpcoeff{\xinteval{\LgHaut-\i}}%
+			\StrChar{\ArgLigneHaut}{\tmpcoeff}[\TmpHaut]%
+			\xdef\LigneBinAdd{\TmpHaut & \LigneBinAdd}%
+		}%
+	\xintifboolexpr{\longueurMax > \LgHaut}%
+		{%
+			\foreach \i in {1,...,\inteval{\longueurMax-\LgHaut}}%
+				{\xdef\LigneBinAdd{& \LigneBinAdd}}%
+		}%
+		{}%
+	%création de la ligne du bas
+	\StrLen{\ArgLigneBas}[\LgBas]%
+	\StrChar{\ArgLigneBas}{\LgBas}[\LigneBinAddB]%
+	\foreach \i in {1,...,\inteval{\LgBas-1}}%
+		{%
+			\xdef\tmpcoeff{\xinteval{\LgBas-\i}}%
+			\StrChar{\ArgLigneBas}{\tmpcoeff}[\TmpBas]%
+			\xdef\LigneBinAddB{\TmpBas & \LigneBinAddB}%
+		}%
+	\xintifboolexpr{\longueurMax > \LgBas}%
+		{%
+			\foreach \i in {1,...,\inteval{\longueurMax-\LgBas}}%
+			{\xdef\LigneBinAddB{& \LigneBinAddB}}%
+		}%
+		{}%
+	%création de la ligne du résultat
+	\StrLen{\tmpresultat}[\LgRes]%
+	\StrChar{\tmpresultat}{\LgRes}[\LigneBinRes]%
+	\foreach \i in {1,...,\inteval{\LgRes-1}}%
+		{%
+			\xdef\tmpcoeff{\xinteval{\LgRes-\i}}%
+			\StrChar{\tmpresultat}{\tmpcoeff}[\TmpRes]%
+			\xdef\LigneBinRes{\TmpRes & \LigneBinRes}%
+		}%
+	%création des retenues...
+	\xdef\ArgBasZeros{\ArgLigneBas}%
+	\xintifboolexpr{\LgHaut > \LgBas}%
+		{%
+			\foreach \i in {1,...,\inteval{\LgHaut-\LgBas}}%
+			{\xdef\ArgBasZeros{0\ArgBasZeros}}%
+		}%
+		{}%
+	%\ArgBasZeros\par
+	\xdef\listeretenues{0}%
+	\xdef\longueurmax{\xinteval{max(\longueurA,\longueurB)}}%\longueurMax
+	\foreach \i in {1,...,\longueurmax}%
+		{%
+			\readlist*\lstretenues{\listeretenues}%
+			\xdef\tmpcoeff{\xinteval{\longueurmax-\i+1}}%
+			\itemtomacro\lstretenues[-\i]{\TmPNbR}%
+			\StrChar{\ArgLigneHaut}{\tmpcoeff}[\TmPNbH]%
+			\StrChar{\ArgBasZeros}{\tmpcoeff}[\TmPNbB]%
+			%cas de la base
+			\IfStrEq{\addbinposebase}{dec}%
+				{\xdef\tmpresultat{\xinteval{\TmPNbR+\TmPNbH+\TmPNbB}}}%
+				{}%
+			\IfStrEq{\addbinposebase}{bin}%
+				{\xdef\tmpresultat{\xintDecToBin{\xinteval{\xintBinToDec{\TmPNbR}+\xintBinToDec{\TmPNbH}+\xintBinToDec{\TmPNbB}}}}}%
+				{}%
+			\IfStrEq{\addbinposebase}{hex}%
+				{\xdef\tmpresultat{\xintDecToHex{\xinteval{\xintHexToDec{\TmPNbR}+\xintHexToDec{\TmPNbH}+\xintHexToDec{\TmPNbB}}}}}%
+				{}%
+			%suite
+			%\xdef\tmpresultat{\xintDecToBin{\xinteval{\xintBinToDec{\TmPNbR}+\xintBinToDec{\TmPNbH}+\xintBinToDec{\TmPNbB}}}}%
+			\StrLen{\tmpresultat}[\LgRetenue]%
+			\xintifboolexpr{\LgRetenue == 1}%si on met une retenue...
+				{%
+					\xdef\listeretenues{0,\listeretenues}%
+				}%
+				{%
+					\StrGobbleRight{\tmpresultat}{1}[\tmpretenue]%
+					\xdef\listeretenues{\tmpretenue,\listeretenues}%
+				}%
+		}%
+	%On compte le nombre de zéros dans la ligne des retenues
+	\StrCount{\listeretenues}{0}[\nbretenues]%\listeretenues\par\nbretenues\par%
+	\readlist*\lstretenues{\listeretenues}%
+	%\showitems*{\lstretenues}\par
+	\xdef\LigneBinAddRet{\xintifboolexpr{\lstretenues[-1] == 0}{}{\PosRetenue[\addbinposecol]{\lstretenues[-1]}}}%
+	\foreach \i in {2,...,\longueurMax}%
+		{%
+			\xdef\LigneBinAddRet{\xintifboolexpr{\lstretenues[-\i] == 0}{}{\PosRetenue[\addbinposecol]{\lstretenues[-\i]}} & \LigneBinAddRet}%
+		}%
+	%et on passe au tableau
+	\xdef\longueurcasesope{\xinteval{\longueurMax-1}}%
+	\xdef\longueurtotale{\xinteval{\longueurMax+1}}%
+	\setlength{\tabcolsep}{\colspecbinadd}%
+	%\begin{tabular}{@{\hskip0.5\colspecbinadd}c@{\hskip0.5\colspecbinadd}*{\longueurcasesope}{c@{\hskip\colspecbinadd}}c@{\hskip0.5\colspecbinadd}}
+	\begin{NiceTabular}{c*{\longueurMax}{c}}
+		\xintifboolexpr{\nbretenues > \longueurmax}{}{\RowStyle[cell-space-limits=1pt]{\addbinposefont} & \LigneBinAddRet \\}
+		\RowStyle[nb-rows=*,cell-space-limits=2pt]{\addbinposefont}
+		&\LigneBinAdd \\
+		+&\LigneBinAddB \\
+		\hline 
+		\ifboolKV[AddBinaire]{Egal}{=}{}&\LigneBinRes \\
+	\end{NiceTabular}
+	%\end{tabular}%
+}
+
+\ifluatex
+
+\RequirePackage{lualinalg}
+
+\defKV[addbinlua]{%
+	CouleurRetenue=\def\addbinluacol{#1},%
+	Espacement=\def\addbinluaspace{#1},%
+	Police=\def\addbinluafonte{#1},%
+	Base=\def\addbinluabase{#1},%
+	EchelleRetenue=\def\addbinluascret{#1}
+}
+
+\setKVdefault[addbinlua]{%
+	CouleurRetenue=red,%
+	Espacement=2pt,%
+	Police=\normalsize\normalfont,%
+	Egal=true,%
+	Base=dec,%
+	EchelleRetenue=0.4
+}
+
+\NewDocumentCommand\SommeElementsMatriceBin{ m m m m O{\poseretenue} }{%
+	%1=matrice
+	%2=colonne
+	%3=ligne début
+	%4=ligne arrivée
+	\xdef\tmpsomme{0}%
+	\foreach \lig in {#3,...,#4}{%
+		\xdef\tmpsomme{\xinteval{\tmpsomme+\xintBinToDec{\matrixGetElement{#1}{\lig}{#2}}}}%calcul intermédiaire en binaire
+	}%
+	\xdef#5{\xintDecToBin{\tmpsomme}}%
+}
+
+\NewDocumentCommand\SommeElementsMatriceDec{ m m m m O{\poseretenue} }{%
+	%1=matrice
+	%2=colonne
+	%3=ligne début
+	%4=ligne arrivée
+	\xdef\tmpsomme{0}%
+	\foreach \lig in {#3,...,#4}{%
+		\xdef\tmpsomme{\xinteval{\tmpsomme+\matrixGetElement{#1}{\lig}{#2}}}%calcul intermédiaire en binaire
+	}%
+	\xdef#5{\tmpsomme}%
+}
+
+\NewDocumentCommand\PoseAdditionLua{ O{} m }{%
+	\restoreKV[addbinlua]%
+	\setKV[addbinlua]{#1}%
+	\setsepchar{+}%
+	\readlist*\addbinlstoper{#2}%
+	\xdef\nboperandes{\addbinlstoperlen}%
+	\xdef\nboperandesmat{\xinteval{\addbinlstoperlen+1}}%
+	%le résultat du calcul en binaire
+	\xdef\tmpres{0}%
+	\foreach \i in {1,...,\addbinlstoperlen}{%
+		\itemtomacro\addbinlstoper[\i]{\tmpinteroper}%
+		\IfStrEq{\addbinluabase}{dec}%
+			{\xdef\tmpres{\xinteval{\tmpres+\tmpinteroper}}}%
+			{}%
+		\IfStrEq{\addbinluabase}{bin}%
+			{\xdef\tmpres{\xinteval{\tmpres+\xintBinToDec{\tmpinteroper}}}}%
+			{}%
+		%\xdef\tmpres{\xinteval{\tmpres+\xintBinToDec{\tmpinteroper}}}%
+	}%
+	\IfStrEq{\addbinluabase}{dec}%
+		{\xdef\tmpresultat{\tmpres}}%
+		{}%
+	\IfStrEq{\addbinluabase}{bin}%
+		{\xdef\tmpresultat{\xintDecToBin{\tmpres}}}%
+		{}%
+	%\xdef\tmpresultat{\xintDecToBin{\tmpres}}%\tmpresultat%
+	\StrLen{\tmpresultat}[\nbtotalchiffresres]%\nbtotalchiffresres%
+	\xdef\nblignesmatriceintertmp{\xinteval{1+\nboperandes}}%
+	\xdef\nblignesmatricetmp{\xinteval{2+\nboperandes}}%
+	\matrixNew{MATINTER}{\nblignesmatricetmp,\nbtotalchiffresres,'zero'}%
+	%création des lignes intermédiaires
+	\foreach \nblig [count=\xi] in {2,...,\nblignesmatriceintertmp}{%
+		\itemtomacro\addbinlstoper[\xi]{\tmpinteroper}%on extrait l'opérande
+		\StrLen{\tmpinteroper}[\nbchiiffres]%on extrait son nb de chiffres
+		\xdef\tmpoffset{\xinteval{\nbtotalchiffresres-\nbchiiffres+1}}%on calcule la position du 1er chiffre
+		\foreach \poschar [count=\xii] in {\tmpoffset,...,\nbtotalchiffresres}{%
+			\StrChar{\tmpinteroper}{\xii}[\tmpcoeffaddbin]%
+			\matrixSetElement{MATINTER}{\nblig}{\poschar}{\tmpcoeffaddbin}%
+		}%
+	}%
+	%création de la ligne résultat
+	\foreach \j in {1,...,\nbtotalchiffresres}{%
+		\StrChar{\tmpresultat}{\j}[\tmpcoeffaddbin]%
+		\matrixSetElement{MATINTER}{\nblignesmatricetmp}{\j}{\tmpcoeffaddbin}%
+	}%
+	%gestion des retenues, de la droite vers la gauche
+	\foreach \nbcol in {\nbtotalchiffresres,...,2}{%
+		\IfStrEq{\addbinluabase}{dec}%
+			{\SommeElementsMatriceDec{MATINTER}{\nbcol}{1}{\nboperandesmat}[\poseretenue]}%
+			{}%
+		\IfStrEq{\addbinluabase}{bin}%
+			{\SommeElementsMatriceBin{MATINTER}{\nbcol}{1}{\nboperandesmat}[\poseretenue]}%
+			{}%
+		%\SommeElementsMatriceBin{MATINTER}{\nbcol}{1}{\nboperandesmat}[\poseretenue]%
+		\xdef\nbcolmun{\xinteval{\nbcol-1}}%
+		\StrLen{\poseretenue}[\nbchiffresretenue]%
+		\xintifboolexpr{\nbchiffresretenue > 1}%
+			{\StrGobbleRight{\poseretenue}{1}[\RETENUE]}%
+			{\xdef\RETENUE{\poseretenue}}%
+		\matrixSetElement{MATINTER}{1}{\nbcolmun}{\RETENUE}%
+	}%
+	%ligne des retenues pour savoir si il y en a !
+	\matrixSubmatrix{MATINTERRETENUE}{MATINTER}{1}{1}{1}{\nbtotalchiffresres}%
+	%création de la ligne des retenues
+	\xdef\LigneBinAddRet{}%
+	\foreach \i in {1,...,\nbtotalchiffresres}{%
+		\xintifboolexpr{\matrixGetElement{MATINTER}{1}{\i} == 0}%
+			{\xdef\LigneBinAddRet{\LigneBinAddRet &}}%
+			{\xdef\LigneBinAddRet{\LigneBinAddRet & \textcolor{\addbinluacol}{\scalebox{\addbinluascret}[\addbinluascret]{\matrixGetElement{MATINTER}{1}{\i}}}}}%
+	}%
+	%création des lignes intermédiaires
+	\xdef\LignesOperande{}%
+	\foreach \i in {1,...,\nboperandes}{%
+		\xdef\xxi{\xinteval{\i+1}}%
+		\itemtomacro\addbinlstoper[\i]{\tmpinteroper}%on extrait l'opérande
+		\StrLen{\tmpinteroper}[\nbchiiffres]%on extrait son nb de chiffres
+		\xdef\tmpoffset{\xinteval{\nbtotalchiffresres-\nbchiiffres}}%on calcule le nombre de cases vides
+		\xintifboolexpr{\i == 1}{}{\xdef\LignesOperande{\LignesOperande + }}%
+		\xintifboolexpr{\tmpoffset == 0}%
+			{}%
+			{
+				\foreach \k in {1,...,\tmpoffset}{%
+					\xdef\LignesOperande{\LignesOperande &}%
+				}%
+			}%
+		\foreach \j in {\inteval{\tmpoffset+1},...,\nbtotalchiffresres}{%
+			\xdef\LignesOperande{\LignesOperande & \matrixGetElement{MATINTER}{\xxi}{\j}}%
+		}%
+		\xdef\LignesOperande{\LignesOperande \\}%
+	}%
+	%et le tableau !!
+	\setlength{\tabcolsep}{\addbinluaspace}%
+	\begin{NiceTabular}{c*{\nbtotalchiffresres}{c}}
+		\xintifboolexpr{\matrixNormOne{MATINTERRETENUE} == 0}{}{\RowStyle[cell-space-limits=1pt]{\addbinluafonte} \LigneBinAddRet \\}
+		\RowStyle[nb-rows=*,cell-space-limits=2pt]{\addbinluafonte}
+		\LignesOperande
+		\hline
+		\ifboolKV[addbinlua]{Egal}{=}{} \xintFor* ##1 in {\xintSeq{1}{\nbtotalchiffresres}}\do{& \matrixGetElement{MATINTER}{\nblignesmatricetmp}{##1}} \\
+	\end{NiceTabular}%
+	%\(\matrixPrint{MATINTER}\)
+}
+
+\fi
+
 \endinput

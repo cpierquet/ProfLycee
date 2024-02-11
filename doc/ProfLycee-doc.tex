@@ -5,8 +5,8 @@
 % arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[a4paper,french,11pt]{article}
-\def\PLversion{3.01f}
-\def\PLdate{21 janvier 2024}
+\def\PLversion{3.02b}
+\def\PLdate{9 février 2024}
 \usepackage{amsfonts}
 \usepackage{ProfLycee}
 \useproflyclib{piton,minted,pythontex,ecritures}
@@ -254,6 +254,20 @@
 \newpage
 
 \input{ProfLycee-doc-jeuxrecreat.tex}
+
+\newpage
+
+\phantom{t}\par\vfill\par
+\begin{PART}
+	\begin{center}
+		\Huge\MakeUppercase{Projets, en test}
+	\end{center}
+\end{PART}
+\par\vfill\par\phantom{t}
+
+\newpage
+
+\input{ProfLycee-doc-projets.tex}
 
 \newpage
 

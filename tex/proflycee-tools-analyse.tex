@@ -126,8 +126,56 @@
 		{%sinon := expo 'croissante'
 			\draw[thick,#2] ({-0.5*#3},{-0.325*#4}) to[out=1,in=-105] ({0.5*#3},{0.5*#4});
 		}
-	\draw[#2] ({0},{0}) node[inner sep=0pt,above=0pt,font=\scriptsize] {\textcircled{$+$}};
-	
+	\draw[#2] ({0},{0}) node[inner sep=0pt,above=0pt,font=\scriptsize] {\textcircled{$+$}};.
+}
+
+\NewDocumentCommand\schematdsexposol{ s m m m o }{%pour les expos avec solution (interne)
+	% * = étoilée -> a négatif
+	% #2 = couleur
+	% #3 = largeur
+	% #4 = hauteur
+	% #5 = racine
+	\IfBooleanTF{#1}%si étoile := expo 'décroissante'
+		{%
+			\draw[thick,#2] ({-0.35*#3},{0.5*#4}) to[out=-75,in=179] ($({0.5*#3},{-0.325*#4})+(2mm,0)$) ;
+			\filldraw[#2] ({-0.1925*#3},0) circle[radius=2pt] ;
+			\draw[#2] ({0.5*#3},{-0.1625*#4}) node[inner sep=0pt,left=2pt,font=\scriptsize] {\textcircled{$-$}} ;
+			\draw[#2] ({-0.5*#3},{0.25*#4}) node[inner sep=0pt,right=1pt,font=\scriptsize] {\textcircled{$+$}} ;
+			\draw[#2] ({-0.1925*#3},0) node[inner sep=0pt,below left=1pt,font=\scriptsize] {$\strut#5$} ;
+		}
+		{%sinon := expo 'croissante'
+			\draw[thick,#2] ({-0.5*#3},{-0.325*#4}) to[out=1,in=-105] ({0.35*#3},{0.5*#4});
+			\filldraw[#2] ({0.1925*#3},0) circle[radius=2pt] ;
+			\draw[#2] ({0.5*#3},{0.25*#4}) node[inner sep=0pt,left=1pt,font=\scriptsize] {\textcircled{$+$}} ;
+			\draw[#2] ({-0.5*#3},{-0.1625*#4}) node[inner sep=0pt,right=2pt,font=\scriptsize] {\textcircled{$-$}} ;
+			\draw[#2] ({0.1925*#3},0) node[inner sep=0pt,above left=1pt,font=\scriptsize] {$\strut#5$} ;
+		}
+}
+
+\NewDocumentCommand\schematdslnsol{ s m m m o }{%pour les ln avec solution (interne)
+	% * = étoilée -> a négatif
+	% #2 = couleur
+	% #3 = largeur
+	% #4 = hauteur
+	% #5 = racine
+	\IfBooleanTF{#1}%si étoile := ln 'décroissante'
+		{%
+			%\draw[thick,#2] ({-0.35*#3},{0.5*#4}) to[out=75,in=179] ($({0.5*#3},{0.325*#4})+(2mm,0)$) ;
+			%\filldraw[#2] ({-0.1925*#3},0) circle[radius=2pt] ;
+			%\draw[#2] ({-0.5*#3},{-0.25*#4}) node[inner sep=0pt,right=1pt,font=\scriptsize] {\textcircled{$-$}} ;
+			%\draw[#2] ({0.5*#3},{0.5*0.325*#4}) node[inner sep=0pt,left=1pt,font=\scriptsize] {\textcircled{$+$}} ;
+			%\draw[thick,#2] ({-0.35*#3},{0.5*#4}) to[out=-75,in=179] ($({0.5*#3},{-0.325*#4})+(2mm,0)$) ;
+			%\filldraw[#2] ({-0.1925*#3},0) circle[radius=2pt] ;
+			%\draw[#2] ({0.5*#3},{-0.1625*#4}) node[inner sep=0pt,left=2pt,font=\scriptsize] {\textcircled{$-$}} ;
+			%\draw[#2] ({-0.5*#3},{0.25*#4}) node[inner sep=0pt,right=1pt,font=\scriptsize] {\textcircled{$+$}} ;
+		}
+		{%sinon := ln 'croissante'
+			\draw[thick,#2] ({-0.35*#3},{-0.5*#4}) to[out=75,in=-175] ($({0.5*#3},{0.45*#4})+(2mm,0)$) ;
+			\filldraw[#2] ({-0.1975*#3},0) circle[radius=2pt] ;
+			\draw[#2] ({-0.5*#3},{-0.25*#4}) node[inner sep=0pt,right=1pt,font=\scriptsize] {\textcircled{$-$}} ;
+			\draw[#2] ({0.5*#3},{0.5*0.425*#4}) node[inner sep=0pt,left=1pt,font=\scriptsize] {\textcircled{$+$}} ;
+			\draw[#2] ({-0.1925*#3},0) node[inner sep=0pt,above left=1pt,font=\scriptsize] {$\strut#5$} ;
+		}
 }
 
 \NewDocumentCommand\schematdsparab{ m m m m m o }{%pour les paraboles (interne)
@@ -205,6 +253,10 @@
 	\IfEq{\tdsparam}{pa-d-}{\def\xcode{-10}\def\xcodehautaxe{0}}{}
 	\IfEq{\tdsparam}{expo+}{\def\xcode{20}\def\xcodehautaxe{-0.35}}{}
 	\IfEq{\tdsparam}{expo-}{\def\xcode{-20}\def\xcodehautaxe{-0.35}}{}
+	\IfEq{\tdsparam}{exposol+}{\def\xcode{30}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{exposol-}{\def\xcode{-30}\def\xcodehautaxe{0}}{}
+	\IfEq{\tdsparam}{lnsol+}{\def\xcode{40}\def\xcodehautaxe{0}}{}
+	%\IfEq{\tdsparam}{lnsol-}{\def\xcode{-40}\def\xcodehautaxe{0}}{}
 	%si commande étoilée := commande autonome
 	\IfBooleanTF{#1}%
 		{\begin{tikzpicture}[#3,>=latex]}{}%
@@ -256,6 +308,22 @@
 	\ifnum\xcode=-20
 		\schematdsexpo*{\tdscouleur}{\tdslarg}{\tdshaut}
 	\fi
+	%expo avec solution (croissante) code = 30
+	\ifnum\xcode=30
+		\schematdsexposol{\tdscouleur}{\tdslarg}{\tdshaut}[\tdsracine]
+	\fi
+	%expo avec solution (décroissante) code = -30
+	\ifnum\xcode=-30
+		\schematdsexposol*{\tdscouleur}{\tdslarg}{\tdshaut}[\tdsracine]
+	\fi
+	%ln avec solution (croissante) code = 40
+	\ifnum\xcode=40
+		\schematdslnsol{\tdscouleur}{\tdslarg}{\tdshaut}[\tdsracine]
+	\fi
+	%ln avec solution (décroissante) code = -40
+	%\ifnum\xcode=-40
+	%	\schematdslnsol*{\tdscouleur}{\tdslarg}{\tdshaut}[\tdsracine]
+	%\fi
 	\IfBooleanTF{#1}%
 		{\end{tikzpicture}}{}%
 }

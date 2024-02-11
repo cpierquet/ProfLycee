@@ -7,6 +7,7 @@
 \RequirePackage{esvect}
 \RequirePackage{ifthen}
 \RequirePackage{xspace}
+\RequirePackage{mleftright} %pour une meilleure gestion des espacements avec \left \right :-)
 %\RequirePackage{mathrsfs}%pour \mathscr (à voir...)
 
 %===ENSEMBLES CLASSIQUES
@@ -137,6 +138,28 @@
 	{\newcommand\Integrale{\displaystyle\int}}%
 	{\renewcommand\Integrale{\displaystyle\int}}%
 
+\ifthenelse{\isundefined{\Limite}}%
+	{%
+		\NewDocumentCommand\Limite{ s m m o }{%
+			\IfBooleanTF{#1}{\ensuremath{\lim_{\IfNoValueTF{#4}{#3}{\substack{#3 \\ #4}}} #2}}{\ensuremath{\lim\limits_{\IfNoValueTF{#4}{#3}{\substack{#3 \\ #4}}} #2}}}\xspace%
+	}%
+	{%
+		\RenewDocumentCommand\Limite{ s m m o }{%
+			\IfBooleanTF{#1}{\ensuremath{\lim_{\IfNoValueTF{#4}{#3}{\substack{#3 \\ #4}}} #2}}{\ensuremath{\lim\limits_{\IfNoValueTF{#4}{#3}{\substack{#3 \\ #4}}} #2}}}\xspace%
+	}%
+
+%====VALEUR ABSOLUE, NORME
+\DeclarePairedDelimiter\ValAbs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\ModuleCplx{\lvert}{\rvert}%
+\DeclarePairedDelimiter\Norme{\lVert}{\rVert}%
+\makeatletter
+\let\TmpValAbs\ValAbs
+\let\TmpModule\ModuleCplx
+\let\TmpNorme\Norme
+\def\ValAbs{\@ifstar{\TmpValAbs}{\TmpValAbs*}}
+\def\ModuleCplx{\@ifstar{\TmpModule}{\TmpModule*}}
+\def\Norme{\@ifstar{\TmpNorme}{\TmpNorme*}}
+\makeatother
 
 %====PROBAS
 \NewDocumentCommand\LoiNormale{ s m m }{%
@@ -254,5 +277,186 @@
 		}%
 }
 
+%====PROBAS
+\setKVdefault[probascondit]{%
+	min=false,%
+	Maj=false,%
+	BB=false,%
+	Formule=false
+}
+
+\newcommand\notationproba{P}%
+
+\NewDocumentCommand\ProbaCondit{ O{} m m }{%
+	\useKVdefault[probascondit]%
+	\setKV[probascondit]{#1}%
+	%gestion des booléens
+	\ifboolKV[probascondit]{Maj}{\def\notationproba{P}}{}%
+	\ifboolKV[probascondit]{min}{\def\notationproba{p}}{}%
+	\ifboolKV[probascondit]{BB}{\def\notationproba{\mathbb{P}}}{}%
+	\notationproba_{#3}{\left(#2\right)} \ifboolKV[probascondit]{Formule}{= \dfrac{\notationproba{\left(#2 \cap #3\right)}}{\notationproba{\left(#3\right)}}}{}%
+}
+
+%====IF, IC
+\defKV[IntFluc]{%
+	Seuil=\def\intflucconfProba{#1},%
+	Classe=\def\intflucconfNiv{#1},%
+	p=\def\intflucconfP{#1},%
+	n=\def\intflucconfN{#1},%
+	Arrondi=\def\intflucconfPrec{#1}
+}
+\setKVdefault[IntFluc]{%
+	Seuil=95,%
+	Classe=Term,%
+	Arrondi=2,%
+	Calcul=false,%
+	Details=false,%
+	Formule=true,%
+	p={},%
+	n={},%
+	Symbole=\approx
+}
+
+\NewDocumentCommand\IntFluctu{ O{} }{%
+	\useKVdefault[IntFluc]%
+	\setKV[IntFluc]{#1}%
+	\IfStrEqCase{\intflucconfProba}{%
+		{90}{\def\ualpha{1.64}}%
+		{95}{\def\ualpha{1.96}}%
+		{99}{\def\ualpha{2.58}}%
+		%{99.9}{\def\ualpha{3.29}}%
+	}%
+	\ifboolKV[IntFluc]{Formule}%
+	{%
+		\IfStrEqCase{\intflucconfNiv}{%
+			{2de}{\IntervalleFF{ p - \dfrac{1}{\sqrt{n}} }{ p + \dfrac{1}{\sqrt{n}}}}%
+			{Term}{\IntervalleFF{ p-\num{\ualpha}\dfrac{\sqrt{p(1-p)}}{\sqrt{n}} }{ p+\num{\ualpha}\dfrac{\sqrt{p(1-p)}}{\sqrt{n}} }}%
+		}%
+	}%
+	{}%
+	\ifboolKV[IntFluc]{Details}%
+	{%
+		\IfSubStr{\intflucconfP}{/}%
+		{%
+			\def\ValIFp{\ConversionFraction[t]{\intflucconfP}}\def\ValIFpD{\ConversionFraction[d]{\intflucconfP}}%
+		}%
+		{%
+			\def\ValIFp{\num{\intflucconfP}}\def\ValIFpD{\num{\intflucconfP}}%
+		}%
+		=
+		\IfStrEqCase{\intflucconfNiv}{%
+			{2de}{\IntervalleFF{ \ValIFpD - \dfrac{1}{\sqrt{\num{\intflucconfN}}} }{ \ValIFpD + \dfrac{1}{\sqrt{\num{\intflucconfN}}}}}%
+			{Term}{\IntervalleFF{ \ValIFpD-\num{\ualpha}\dfrac{\sqrt{\ValIFp\mleft(1-\ValIFp\mright)}}{\sqrt{\num{\intflucconfN}}} }{ \ValIFpD+\num{\ualpha}\dfrac{\sqrt{\ValIFp\mleft(1-\ValIFp\mright)}}{\sqrt{\num{\intflucconfN}}} }}%
+		}%
+	}%
+	{}%
+	\ifboolKV[IntFluc]{Calcul}%
+	{%
+		\IfStrEqCase{\intflucconfNiv}{%calculs avec xfp ??
+			{2de}%
+			{%
+				\def\calcborneinfIF{ \fpeval{ max(floor(\intflucconfP - 1/sqrt(\intflucconfN),\intflucconfPrec),0) } }%
+				\def\calcbornesupIF{ \fpeval{ min(ceil(\intflucconfP + 1/sqrt(\intflucconfN),\intflucconfPrec),1) } }%
+			}%
+			{Term}%
+			{%
+				\def\calcborneinfIF{ \fpeval{ max(floor(\intflucconfP - \ualpha*sqrt(\intflucconfP*(1-\intflucconfP))/sqrt(\intflucconfN),\intflucconfPrec),0) } }%
+				\def\calcbornesupIF{ \fpeval{ min(ceil(\intflucconfP + \ualpha*sqrt(\intflucconfP*(1-\intflucconfP))/sqrt(\intflucconfN),\intflucconfPrec),1) } }%
+			}%
+		}%
+		\useKV[IntFluc]{Symbole} \IntervalleFF{ \num{\calcborneinfIF} }{ \num{\calcbornesupIF} }%
+	}%
+	{}%
+}
+
+\NewDocumentCommand\RedactionIntFluct{ O{} m }{%
+	%\setKV[IntFluc]{#1}%
+	\begin{flalign*}
+		#2 &= \IntFluctu[Formule,Details=false,Calcul=false] && \\
+		   &  \IntFluctu[Formule=false,Details=true,Calcul=false,#1] && \\
+		   &  \IntFluctu[Formule=false,Details=false,Calcul=true,#1] && \\
+	\end{flalign*}%
+}
+
+\defKV[IntConf]{%
+	Seuil=\def\intflucconfProba{#1},%
+	Classe=\def\intflucconfNiv{#1},%
+	f=\def\intflucconfF{#1},%
+	n=\def\intflucconfN{#1},%
+	Arrondi=\def\intflucconfPrec{#1}
+}
+\setKVdefault[IntConf]{%
+	Seuil=95,%
+	Classe=Term,%
+	Arrondi=2,%
+	Calcul=false,%
+	Details=false,%
+	Formule=true,%
+	f={},%
+	n={},%
+	Symbole=\approx
+}
+
+\NewDocumentCommand\IntConf{ O{} }{%
+	\useKVdefault[IntConf]%
+	\setKV[IntConf]{#1}%
+	\IfStrEqCase{\intflucconfProba}{%
+		{90}{\def\ualpha{1.64}}%
+		{95}{\def\ualpha{1.96}}%
+		{99}{\def\ualpha{2.58}}%
+		%{99.9}{\def\ualpha{3.29}}%
+	}%
+	\ifboolKV[IntConf]{Formule}%
+	{%
+		\IfStrEqCase{\intflucconfNiv}{%
+			{2de}{\IntervalleFF{ f - \dfrac{1}{\sqrt{n}} }{ f + \dfrac{1}{\sqrt{n}}}}%
+			{Term}{\IntervalleFF{ f-\num{\ualpha}\dfrac{\sqrt{f(1-f)}}{\sqrt{n}} }{ f+\num{\ualpha}\dfrac{\sqrt{f(1-f)}}{\sqrt{n}} }}%
+		}%
+	}%
+	{}%
+	\ifboolKV[IntConf]{Details}%
+	{%
+		\IfSubStr{\intflucconfF}{/}%
+		{%
+			\def\ValIFp{\ConversionFraction[t]{\intflucconfF}}\def\ValIFpD{\ConversionFraction[d]{\intflucconfF}}%
+		}%
+		{%
+			\def\ValIFp{\num{\intflucconfF}}\def\ValIFpD{\num{\intflucconfF}}%
+		}%
+		=
+		\IfStrEqCase{\intflucconfNiv}{%
+			{2de}{\IntervalleFF{ \ValIFpD - \dfrac{1}{\sqrt{\num{\intflucconfN}}} }{ \ValIFpD + \dfrac{1}{\sqrt{\num{\intflucconfN}}}}}%
+			{Term}{\IntervalleFF{ \ValIFpD-\num{\ualpha}\dfrac{\sqrt{\ValIFp\mleft(1-\ValIFp\mright)}}{\sqrt{\num{\intflucconfN}}} }{ \ValIFpD+\num{\ualpha}\dfrac{\sqrt{\ValIFp\mleft(1-\ValIFp\mright)}}{\sqrt{\num{\intflucconfN}}} }}%
+		}%
+	}%
+	{}%
+	\ifboolKV[IntConf]{Calcul}%
+	{%
+		\IfStrEqCase{\intflucconfNiv}{%calculs avec xfp ??
+			{2de}%
+			{%
+				\def\calcborneinfIF{ \fpeval{ max(floor(\intflucconfF - 1/sqrt(\intflucconfN),\intflucconfPrec),0) } }%
+				\def\calcbornesupIF{ \fpeval{ min(ceil(\intflucconfF + 1/sqrt(\intflucconfN),\intflucconfPrec),1) } }%
+			}%
+			{Term}%
+			{%
+				\def\calcborneinfIF{ \fpeval{ max(floor(\intflucconfF - \ualpha*sqrt(\intflucconfF*(1-\intflucconfF))/sqrt(\intflucconfN),\intflucconfPrec),0) } }%
+				\def\calcbornesupIF{ \fpeval{ min(ceil(\intflucconfF + \ualpha*sqrt(\intflucconfF*(1-\intflucconfF))/sqrt(\intflucconfN),\intflucconfPrec),1) } }%
+			}%
+		}%
+		\useKV[IntConf]{Symbole}
+		\IntervalleFF{ \num{\calcborneinfIF} }{ \num{\calcbornesupIF} }%
+	}%
+	{}%
+}
+
+\NewDocumentCommand\RedactionIntConf{ O{} m }{%
+	%\setKV[IntConf]{#1}%
+	\begin{flalign*}
+		#2 &= \IntConf[Formule,Details=false,Calcul=false] && \\
+		   &  \IntConf[Formule=false,Details=true,Calcul=false,#1] && \\
+		   &  \IntConf[Formule=false,Details=false,Calcul=true,#1] && \\
+	\end{flalign*}%
+}
 
 \endinput
