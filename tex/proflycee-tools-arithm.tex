@@ -1,5 +1,5 @@
 % proflycee-tools-arithm.tex
-% Copyright 2023  Cédric Pierquet
+% Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 \RequirePackage{ifthen}
@@ -1238,5 +1238,203 @@
 }
 
 \fi
+
+%====RESTE MODULO
+\NewDocumentCommand\ResteMod{ s m m }{%
+	%étoilé := version négative;#2=nb;#3=base
+	\IfBooleanTF{#1}%
+		{\num{\xintiieval{irem(#2,#3)-#3}}}%
+		{\num{\xintiieval{irem(#2,#3)}}}%
+}
+
+%====OPÉRATIONS POSÉES 2/10/16 MULTICOMPILATEUR ?
+\RequirePackage{calc}
+
+\newlength{\widestcharwd}
+\newlength{\charwd}
+\newlength{\heightercharht}
+
+\defKV[poseoperation]{%
+	Base=\def\PoseOpeBase{#1},%
+	LimiteCapac=\def\PoseOpeLimit{#1},%
+	SymbDecal=\def\PoseOpeSymb{#1},%
+	Offset=\def\PoseOpeOffset{#1},%
+	CouleurRetenue=\def\PoseOpeColReten{#1}
+}
+
+\setKVdefault[poseoperation]{%
+	Base=dec,%
+	SymbDecal=.,%
+	Interm=true,%
+	Offset=6pt,%
+	AffEgal=true,%
+	LimiteCapac=0,%
+	CouleurRetenue=red
+}
+
+\NewDocumentCommand\IntCalcMaxWidth{ m }{%
+	\StrLen{#1}[\tmplen]%
+	\setlength{\widestcharwd}{0pt}
+	\xintFor* ##1 in {\xintSeq{1}{\tmplen}}\do{%
+		\StrChar{#1}{##1}[\tmpchar]%
+		\settowidth{\charwd}{\tmpchar}%
+		\setlength{\widestcharwd}{\maxof{\widestcharwd}{\charwd}}%
+	}%
+}
+
+\NewDocumentCommand\IntCreateBoxNumbers{ m }{%
+	\IfStrEqCase{\PoseOpeBase}{%
+		{dec}{\IntCalcMaxWidth{0123456789}}%
+		{bin}{\IntCalcMaxWidth{01}}%
+		{hex}{\IntCalcMaxWidth{0123456789ABCDEF}}%
+	}%
+	\addtolength{\widestcharwd}{\PoseOpeOffset/2}%
+	\StrLen{#1}[\tmplennumber]%
+	\xintFor* ##1 in {\xintSeq{1}{\tmplennumber}}\do{%
+		\StrChar{#1}{##1}[\tmpchiff]%
+		\makebox[\the\widestcharwd][c]{\tmpchiff}%
+	}%
+}
+
+\newcommand\AffRetenue[1]{%
+	\textcolor{\PoseOpeColReten}{\scalebox{0.5}[0.5]{#1}}%
+}
+
+\NewDocumentCommand\IntCreateBoxNumbersRetenue{ m }{%
+	\IfStrEqCase{\PoseOpeBase}{%
+		{dec}{\IntCalcMaxWidth{0123456789}}%
+		{bin}{\IntCalcMaxWidth{01}}%
+		{hex}{\IntCalcMaxWidth{0123456789ABCDEF}}%
+	}%
+	\addtolength{\widestcharwd}{\PoseOpeOffset/2}%
+	\StrLen{#1}[\tmplennumber]%
+	\xintFor* ##1 in {\xintSeq{1}{\tmplennumber}}\do{%
+		\StrChar{#1}{##1}[\tmpchiff]%
+		\IfEq{\tmpchiff}{X}%
+			{\makebox[\the\widestcharwd][c]{\textcolor{\PoseOpeColReten}{\scalebox{0.5}[0.5]{}}}}%
+			{\makebox[\the\widestcharwd][c]{\textcolor{\PoseOpeColReten}{\scalebox{0.5}[0.5]{\tmpchiff}}}}%
+	}%
+}
+
+\NewDocumentCommand\IntPoseAddition{ m m D<>{} }{%
+	\StrLen{#1}[\nbchiffA]%
+	%essai des retenues ??
+	\xdef\ListeRetenues{X}%
+	\xintFor* ##1 in {\xintSeq{1}{\nbchiffA}}\do{%
+		\StrRight{#1}{##1}[\tmpinterA]%
+		\StrRight{#2}{##1}[\tmpinterB]%
+		\IfStrEqCase{\PoseOpeBase}{%
+			{dec}{\xdef\rescalcrete{\xinteval{\tmpinterA+\tmpinterB}}}%
+			{bin}{\xdef\rescalcrete{\xintDecToBin{\xinteval{\xintBinToDec{\tmpinterA}+\xintBinToDec{\tmpinterB}}}}}%
+			{hex}{\xdef\rescalcrete{\xintDecToHex{\xinteval{\xintHexToDec{\tmpinterA}+\xintHexToDec{\tmpinterB}}}}}%
+		}%
+		\StrLen{\rescalcrete}[\tmpnbchiffresinter]%
+		\xintifboolexpr{\tmpnbchiffresinter > ##1}%
+			{%
+				\StrGobbleRight{\rescalcrete}{##1}[\tmpretenue]%
+				\xdef\ListeRetenues{\tmpretenue\ListeRetenues}%
+			}%
+			{%
+				\xintifboolexpr{##1 == \nbchiffA}{}{\xdef\ListeRetenues{X\ListeRetenues}}%
+			}%
+	}%
+	%suite
+	\IfStrEqCase{\PoseOpeBase}{%
+		{dec}{\xdef\rescalcbin{\xinteval{#1+#2}}}%
+		{bin}{\xdef\rescalcbin{\xintDecToBin{\xinteval{\xintBinToDec{#1}+\xintBinToDec{#2}}}}}%
+		{hex}{\xdef\rescalcbin{\xintDecToHex{\xinteval{\xintHexToDec{#1}+\xintHexToDec{#2}}}}}%
+	}%
+	\xintifboolexpr{\PoseOpeLimit > 0 }{\StrRight{\rescalcbin}{\PoseOpeLimit}[\rescalcbin]}{}%
+	%\ensuremath{\begin{array}{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
+	\ensuremath{\begin{NiceArray}[#3]{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
+		\RowStyle[cell-space-limits=0pt]{} & \IntCreateBoxNumbersRetenue{\ListeRetenues} \\[-0.5\heightercharht]
+		\RowStyle[nb-rows=*,cell-space-limits=1pt]{}  & \IntCreateBoxNumbers{#1} \\
+		+ & \IntCreateBoxNumbers{#2} \\
+		\hline
+		\ifboolKV[poseoperation]{AffEgal}{=}{} & \IntCreateBoxNumbers{\rescalcbin} \\
+	\end{NiceArray}}%
+	%\end{array}}%
+}
+
+\NewDocumentCommand\IntPoseSoustraction{ m m D<>{} }{%
+	\IfStrEqCase{\PoseOpeBase}{%
+		{dec}{\xdef\rescalcbin{\xinteval{#1-#2}}}%
+		{bin}{\xdef\rescalcbin{\xintDecToBin{\xinteval{\xintBinToDec{#1}-\xintBinToDec{#2}}}}}%
+		{hex}{\xdef\rescalcbin{\xintDecToHex{\xinteval{\xintHexToDec{#1}-\xintHexToDec{#2}}}}}%
+	}%
+	\xintifboolexpr{\PoseOpeLimit > 0 }{\StrRight{\rescalcbin}{\PoseOpeLimit}[\rescalcbin]}{}%
+	%\ensuremath{\begin{array}{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
+	\ensuremath{\begin{NiceArray}[#3]{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
+		\RowStyle[nb-rows=*,cell-space-limits=1pt]{}
+		& \IntCreateBoxNumbers{#1} \\
+		- & \IntCreateBoxNumbers{#2} \\
+		\hline
+		\ifboolKV[poseoperation]{AffEgal}{=}{} & \IntCreateBoxNumbers{\rescalcbin} \\
+	\end{NiceArray}}%
+	%\end{array}}%
+}
+
+\NewDocumentCommand\IntPoseMultiplication{ m m D<>{} }{%
+	\StrLen{#1}[\nbligninit]%
+	\StrLen{#2}[\nbligninter]%
+	\IfStrEqCase{\PoseOpeBase}{%
+		{dec}{\xdef\rescalcbin{\xinteval{#1*#2}}}%
+		{bin}{\xdef\rescalcbin{\xintDecToBin{\xinteval{\xintBinToDec{#1}*\xintBinToDec{#2}}}}}%
+		{hex}{\xdef\rescalcbin{\xintDecToHex{\xinteval{\xintHexToDec{#1}*\xintHexToDec{#2}}}}}%
+	}%
+	\xintifboolexpr{\PoseOpeLimit > 0 }{\StrRight{\rescalcbin}{\PoseOpeLimit}[\rescalcbin]}{}%
+	%\ensuremath{\begin{array}{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
+	\ensuremath{\begin{NiceArray}[#3]{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
+		\RowStyle[nb-rows=*,cell-space-limits=1pt]{}
+		& \IntCreateBoxNumbers{#1} \\
+		\times & \IntCreateBoxNumbers{#2} \\
+		\ifboolKV[poseoperation]{Interm}%
+			{%
+				\hline
+				\xintFor* ##1 in {\xintSeq{1}{\nbligninter}}\do{%
+					\xintifboolexpr{##1 == 1}{}{+}&
+					\xdef\tmpindice{\inteval{\nbligninter-##1+1}}\StrChar{#2}{\tmpindice}[\tmpchiff]\IfStrEqCase{\PoseOpeBase}{{dec}{\xdef\rescalcbininter{\xinteval{#1*\tmpchiff}}}{bin}{\xdef\rescalcbininter{\xintDecToBin{\xinteval{\xintBinToDec{#1}*\xintBinToDec{\tmpchiff}}}}}{hex}{\xdef\rescalcbininter{\xintDecToHex{\xinteval{\xintHexToDec{#1}*\xintHexToDec{\tmpchiff}}}}}}%
+					\IfEq{\tmpchiff}{0}%
+						{\xdef\rescalcbininter{}\xintFor* ##2 in {\xintSeq{1}{\nbligninit}}\do{\xdef\rescalcbininter{0\rescalcbininter}}%
+						}{}%
+					\xintifboolexpr{\PoseOpeLimit > 0 }{\StrRight{\rescalcbininter}{\PoseOpeLimit}[\rescalcbininter]}{}%
+					\IntCreateBoxNumbers{\rescalcbininter}
+					\xintifboolexpr{##1 == 1}{}{\xintFor* ##2 in {\xintSeq{1}{##1-1}}\do{\makebox[\the\widestcharwd][c]{\PoseOpeSymb}}}\\
+				}%
+			}%
+			{}%
+		\hline
+		\ifboolKV[poseoperation]{AffEgal}{=}{} & \IntCreateBoxNumbers{\rescalcbin} \\
+	\end{NiceArray}}%
+	%\end{array}}%
+}
+
+\NewDocumentCommand\OperationPosee{ O{} m D<>{} }{%
+	\restoreKV[poseoperation]%
+	\setKV[poseoperation]{#1}%
+	\IfStrEqCase{\PoseOpeBase}{%
+		{dec}{\settoheight{\heightercharht}{\hbox{0123456789}}}%
+		{bin}{\settoheight{\heightercharht}{\hbox{01}}}%
+		{hex}{\settoheight{\heightercharht}{\hbox{0123456789ABCDEF}}}%
+	}%
+	\IfSubStr{#2}{+}%
+		{%
+			\StrCut{#2}{+}{\tmpcalcA}{\tmpcalcB}%
+			\IntPoseAddition{\tmpcalcA}{\tmpcalcB}<#3>
+		}%
+		{}%
+	\IfSubStr{#2}{-}%
+		{%
+			\StrCut{#2}{-}{\tmpcalcA}{\tmpcalcB}%
+			\IntPoseSoustraction{\tmpcalcA}{\tmpcalcB}<#3>
+		}%
+		{}%
+	\IfSubStr{#2}{*}%
+		{%
+			\StrCut{#2}{*}{\tmpcalcA}{\tmpcalcB}%
+			\IntPoseMultiplication{\tmpcalcA}{\tmpcalcB}<#3>
+		}%
+		{}%
+}
 
 \endinput

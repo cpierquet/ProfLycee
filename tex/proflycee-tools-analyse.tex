@@ -1,5 +1,5 @@
 % proflycee-tools-analyse.tex
-% Copyright 2023  Cédric Pierquet
+% Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 %Correction d'un bug sur la raacine carrée... le cas où ça fait 1 !
@@ -811,5 +811,75 @@
 		}%
 		{}%
 }
+
+%====tkz ligne convexité
+\makeatletter
+\NewDocumentCommand\tkzTabLineConvex{ s m m }{%
+	%étoilé := mode texte
+	%1 := ligne
+	%2 := liste des cases ( ccv / cvx / t / d / i / i* )
+	%calculs intermédiaires
+	\xdef\j{#2}%
+	\xdef\k{\inteval{#2+1}}%
+	%récup hauteur ligne
+	\pgfpointdiff{\pgfpointanchor{T0\j}{center}}{\pgfpointanchor{T0\k}{center}}%
+	\pgf@xa=\pgf@x
+	\pgf@ya=\pgf@y
+	\pgfmathparse{veclen(\pgf@xa,\pgf@ya)/28.45274}%
+	\global\let\tmphautligne\pgfmathresult%
+	%suite
+	\readlist*\lsttabconvex{#3}%
+	\foreach \i in {1,...,\lsttabconvexlen}{%
+		\itemtomacro\lsttabconvex[\i]{\paramcvxitem}%
+		\IfStrEqCase{\paramcvxitem}{%
+			{d}%double barre
+			{%
+				\xdef\nodedouble{\inteval{(\i+1)/2}}%
+				\draw[double style] (N\nodedouble\j)--(N\nodedouble\k) ;%
+			}%
+			{i*}%inflexion
+			{%
+				\xdef\nodedouble{\inteval{(\i+1)/2}}%
+				\draw[line width=\cmdTAB@tbs@lw] (N\nodedouble\j)--([xshift=-12pt]N\nodedouble\k) ;%
+				\draw[line width=\cmdTAB@tbs@lw] (N\nodedouble\j)--([xshift=12pt]N\nodedouble\k) ;%
+				\draw (N\nodedouble\k) node[font=\tiny,text width=1.5cm,align=center] {point\\d'inflexion} ;
+			}%
+			{i}%inflexion sans texte
+			{%
+				\xdef\nodedouble{\inteval{(\i+1)/2}}%
+				\draw[line width=\cmdTAB@tbs@lw] (N\nodedouble\j)--([xshift=-12pt]N\nodedouble\k) ;%
+				\draw[line width=\cmdTAB@tbs@lw] (N\nodedouble\j)--([xshift=12pt]N\nodedouble\k) ;%
+			}%
+			{t}%trait
+			{%
+				\xdef\nodedouble{\inteval{(\i+1)/2}}%
+				\draw[line width=\cmdTAB@tbs@lw,t style] (N\nodedouble\j)--(N\nodedouble\k) ;
+			}
+			{ccv}%concave
+			{%
+				\xdef\nodedouble{\inteval{(\i)/2}}%
+				\IfBooleanTF{#1}%
+				{%
+					\draw ($(M\nodedouble\j)!0.5!(M\nodedouble\k)$) node {concave} ;%
+				}%
+				{%
+					\draw[line width={1.5*\cmdTAB@tbs@lw}] ($(M\nodedouble\j)!0.5!(M\nodedouble\k)+({-0.275*\cmdTAB@tbs@espcl},{-0.25*\tmphautligne})$) parabola bend ++({0.275*\cmdTAB@tbs@espcl},{0.5*\tmphautligne})  ($(M\nodedouble\j)!0.5!(M\nodedouble\k)+({0.275*\cmdTAB@tbs@espcl},{-0.25*\tmphautligne})$) ;
+				}%
+			}%
+			{cvx}%concave
+			{%
+				\xdef\nodedouble{\inteval{(\i)/2}}%
+				\IfBooleanTF{#1}%
+				{%
+					\draw ($(M\nodedouble\j)!0.5!(M\nodedouble\k)$) node {convexe} ;%
+				}%
+				{%
+					\draw[line width={1.5*\cmdTAB@tbs@lw}] ($(M\nodedouble\j)!0.5!(M\nodedouble\k)+({-0.275*\cmdTAB@tbs@espcl},{0.25*\tmphautligne})$) parabola bend ++({0.275*\cmdTAB@tbs@espcl},{-0.5*\tmphautligne})  ($(M\nodedouble\j)!0.5!(M\nodedouble\k)+({0.275*\cmdTAB@tbs@espcl},{0.25*\tmphautligne})$) ;
+				}%
+			}%
+		}%
+	}%
+}
+\makeatother
 
 \endinput

@@ -1,5 +1,5 @@
 % proflycee-tools-recreat.tex
-% Copyright 2023  Cédric Pierquet
+% Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 %%------FENÊTRE CALCUL FORMEL
@@ -436,12 +436,14 @@
 \xdef\LongueurGratte{0.28cm}
 \xdef\HauteurGratte{0.20cm}
 
+\makeatletter
 \newcommand{\CalcLg}[2]{%
 	\pgfpointdiff{\pgfpointanchor{#1}{center}}{\pgfpointanchor{#2}{center}}%
 	\pgf@xa=\pgf@x%
 	\pgf@ya=\pgf@y%
 	\pgfmathparse{veclen(\pgf@xa,\pgf@ya)}%
 }
+\makeatother
 
 \defKV[allumettes]{CouleurBois=\def\MatchWoodColor{#1},CouleurBout=\def\MatchEndColor{#1},Decal=\def\MatchOffset{#1}}
 \setKVdefault[allumettes]{CouleurBois=BoisAllumette,CouleurBout=GratteAllumette,Decal={0.8*\LongueurGratte},NoirBlanc=false}
