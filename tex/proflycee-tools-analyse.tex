@@ -882,4 +882,88 @@
 }
 \makeatother
 
+%===F.CANONIQUE & F.HOMOGRAPHIQUE
+\NewDocumentCommand\FormeCanonique{ s O{d} m m m }{%
+	\def\tmpcoeffalpha{-(#4)/(2*(#3))}%
+	\def\tmpcoeffbeta{(#3)*(-(#4)/(2*(#3)))^2+(#4)*(-(#4)/(2*(#3)))+(#5)}%
+	\def\coeffaconv{\ConversionFraction[#2]{#3}}%
+	\def\coeffalpha{\ConversionFraction[#2]{-(#4)/(2*(#3))}}%
+	\def\coeffalphamoins{\ConversionFraction[#2]{(#4)/(2*(#3))}}%
+	\def\coeffbeta{\ConversionFraction[#2]{(#3)*(-(#4)/(2*(#3)))^2+(#4)*(-(#4)/(2*(#3)))+(#5)}}%
+	\ensuremath{%
+		%on affiche a, sauf s'il vaut 1 ou -1
+		\xintifboolexpr{#3 == 1}{}{}%
+		\xintifboolexpr{#3 == -1}{-}{}%
+		\xintifboolexpr{#3 != -1 'and' #3 != 1}{\coeffaconv}{}%
+		\xintifboolexpr{\tmpcoeffalpha == 0}%
+		{%
+			x^2%
+		}%
+		{%
+			\IfBooleanTF{#1}%
+			{%
+				\xintifboolexpr{\tmpcoeffalpha < 0}%
+					{%
+						{\left(x\xintifboolexpr{\tmpcoeffalpha < 0}{-}{+}{\left(\coeffalpha\right)}\right)}^2%
+					}%
+					{%
+						{\left(x\xintifboolexpr{\tmpcoeffalpha > 0}{}{+}\coeffalphamoins\right)}^2%
+					}%
+			}%
+			{%
+				{\left(x\xintifboolexpr{\tmpcoeffalpha > 0}{}{+}\coeffalphamoins\right)}^2%
+			}%
+		}%
+		\xintifboolexpr{\tmpcoeffbeta == 0}%
+		{}%
+		{%
+			\xintifboolexpr{\tmpcoeffbeta > 0}{+}{}\coeffbeta%
+		}%
+	}%
+}
+
+\NewDocumentCommand\FonctionHomographique{ s O{t} m m m m }{%
+	\xintifboolexpr{#3 != 0}%
+	{%
+		\def\tmpcoeffSeul{(#3)/(#5)}%
+		\def\tmpcoeffNum{((#4)*(#5)-(#3)*(#6))/((#5)*(#5))}%
+		\def\tmpcoeffDenom{(#6)/(#5)}%
+		\ensuremath{%
+			\ConversionFraction[d]{\tmpcoeffSeul}%
+			+\dfrac%
+			{\ConversionFraction[#2]{\tmpcoeffNum}}%
+			{x%
+				\xintifboolexpr{#6 == 0}{}{%
+					\IfBooleanTF{#1}%
+					{%
+						\xintifboolexpr{\tmpcoeffDenom > 0}{-\left(\ConversionFraction[#2]{-(\tmpcoeffDenom)}\right)}{\ConversionFraction[#2]{\tmpcoeffDenom}}%
+					}%
+					{%
+						\xintifboolexpr{\tmpcoeffDenom > 0}{+}{}\ConversionFraction[#2]{\tmpcoeffDenom}%
+					}%
+				}%
+			}%
+		}%
+	}%
+	{%
+		\def\tmpcoeffNum{(#4)/(#5)}%
+		\def\tmpcoeffDenom{(#6)/(#5)}%
+		\ensuremath{%
+			\dfrac%
+			{\ConversionFraction[#2]{\tmpcoeffNum}}%
+			{x%
+				\xintifboolexpr{#6 == 0}{}{%
+					\IfBooleanTF{#1}%
+					{%
+						\xintifboolexpr{\tmpcoeffDenom > 0}{-}{}\left(\ConversionFraction[#2]{-(\tmpcoeffDenom)}\right)%
+					}%
+					{%
+						\xintifboolexpr{\tmpcoeffDenom > 0}{+}{}\ConversionFraction[#2]{\tmpcoeffDenom}%
+					}%
+				}%
+			}%
+		}%
+	}%
+}
+
 \endinput

@@ -1269,7 +1269,8 @@
 	Offset=6pt,%
 	AffEgal=true,%
 	LimiteCapac=0,%
-	CouleurRetenue=red
+	CouleurRetenue=red,%
+	AffRetenues=true
 }
 
 \NewDocumentCommand\IntCalcMaxWidth{ m }{%
@@ -1279,20 +1280,22 @@
 		\StrChar{#1}{##1}[\tmpchar]%
 		\settowidth{\charwd}{\tmpchar}%
 		\setlength{\widestcharwd}{\maxof{\widestcharwd}{\charwd}}%
+		
+		
 	}%
 }
 
-\NewDocumentCommand\IntCreateBoxNumbers{ m }{%
+\NewDocumentCommand\IntCreateBoxNumbers{ O{c} m }{%
 	\IfStrEqCase{\PoseOpeBase}{%
 		{dec}{\IntCalcMaxWidth{0123456789}}%
 		{bin}{\IntCalcMaxWidth{01}}%
 		{hex}{\IntCalcMaxWidth{0123456789ABCDEF}}%
 	}%
 	\addtolength{\widestcharwd}{\PoseOpeOffset/2}%
-	\StrLen{#1}[\tmplennumber]%
+	\StrLen{#2}[\tmplennumber]%
 	\xintFor* ##1 in {\xintSeq{1}{\tmplennumber}}\do{%
-		\StrChar{#1}{##1}[\tmpchiff]%
-		\makebox[\the\widestcharwd][c]{\tmpchiff}%
+		\StrChar{#2}{##1}[\tmpchiff]%
+		\makebox[\the\widestcharwd][#1]{\tmpchiff}%
 	}%
 }
 
@@ -1347,7 +1350,7 @@
 	\xintifboolexpr{\PoseOpeLimit > 0 }{\StrRight{\rescalcbin}{\PoseOpeLimit}[\rescalcbin]}{}%
 	%\ensuremath{\begin{array}{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
 	\ensuremath{\begin{NiceArray}[#3]{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
-		\RowStyle[cell-space-limits=0pt]{} & \IntCreateBoxNumbersRetenue{\ListeRetenues} \\[-0.5\heightercharht]
+		\ifboolKV[poseoperation]{AffRetenues}{\RowStyle[cell-space-limits=0pt]{} & \IntCreateBoxNumbersRetenue{\ListeRetenues} \\[-0.5\heightercharht]}{}
 		\RowStyle[nb-rows=*,cell-space-limits=1pt]{}  & \IntCreateBoxNumbers{#1} \\
 		+ & \IntCreateBoxNumbers{#2} \\
 		\hline
@@ -1362,8 +1365,72 @@
 		{bin}{\xdef\rescalcbin{\xintDecToBin{\xinteval{\xintBinToDec{#1}-\xintBinToDec{#2}}}}}%
 		{hex}{\xdef\rescalcbin{\xintDecToHex{\xinteval{\xintHexToDec{#1}-\xintHexToDec{#2}}}}}%
 	}%
+	%bourrage de zéros pour les retenues
+	\StrLen{#1}[\lenA]\StrLen{#2}[\lenB]%
+	\xdef\BwithZeros{#2}%
+	\xintifboolexpr{ \lenA > \lenB }%
+		{%
+			\xintFor* ##1 in {\xintSeq{1}{\xinteval{\lenA-\lenB}}}\do{\xdef\BwithZeros{0\BwithZeros}}%
+		}%
+		{}%
+	%suite
 	\xintifboolexpr{\PoseOpeLimit > 0 }{\StrRight{\rescalcbin}{\PoseOpeLimit}[\rescalcbin]}{}%
 	%\ensuremath{\begin{array}{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
+	\ifboolKV[poseoperation]{AffRetenues}{%
+	\ensuremath{\begin{NiceArray}[#3]{@{\,}r@{\hspace{\PoseOpeOffset/2}}r@{\,}}
+		\RowStyle[nb-rows=*,cell-space-limits=1pt]{}
+		& \IfStrEqCase{\PoseOpeBase}{%
+			{dec}{\IntCalcMaxWidth{0123456789}}%
+			{bin}{\IntCalcMaxWidth{01}}%
+			{hex}{\IntCalcMaxWidth{0123456789ABCDEF}}%
+		}%
+		\addtolength{\widestcharwd}{\PoseOpeOffset/2}%
+		\StrLen{#1}[\tmplennumber]%
+		\xintFor* ##1 in {\xintSeq{1}{\tmplennumber}}\do{%
+			\xdef\tmplenctr{\inteval{\tmplennumber-##1+1}}%
+			\StrChar{#1}{##1}[\tmpchiff]%
+			\StrRight{#1}{\tmplenctr}[\tmpA]%
+			\StrRight{\BwithZeros}{\tmplenctr}[\tmpB]%
+			\IfStrEqCase{\PoseOpeBase}{%
+				{dec}{\xdef\rescalctmp{\xinteval{\tmpA-\tmpB}}}%
+				{bin}{\xdef\rescalctmp{\xinteval{\xintBinToDec{\tmpA}-\xintBinToDec{\tmpB}}}}%
+				{hex}{\xdef\rescalctmp{\xinteval{\xintHexToDec{\tmpA}-\xintHexToDec{\tmpB}}}}%
+			}%
+			\xintifboolexpr{ \rescalctmp >= 0 }%
+				{\makebox[\the\widestcharwd][r]{\tmpchiff}}%
+				%{\makebox[\the\widestcharwd][r]{${}_{\textcolor{\PoseOpeColReten}{\scalebox{0.5}[0.5]{\text{1}}}}$\kern-0.1em\tmpchiff}}%
+				{\makebox[\the\widestcharwd][r]{\raisebox{-0.5\height}{\textcolor{\PoseOpeColReten}{\scalebox{0.5}[0.5]{\text{1}}}}\kern-0.1em\tmpchiff}}%
+		} \\
+		- & \IfStrEqCase{\PoseOpeBase}{%
+			{dec}{\IntCalcMaxWidth{0123456789}}%
+			{bin}{\IntCalcMaxWidth{01}}%
+			{hex}{\IntCalcMaxWidth{0123456789ABCDEF}}%
+		}%
+		\addtolength{\widestcharwd}{\PoseOpeOffset/2}%
+		\StrLen{#1}[\tmplennumber]%
+		\StrChar{#2}{\lenB}[\tmplastB]%
+		\xintFor* ##1 in {\xintSeq{1}{\xinteval{\tmplennumber-1}}}\do{%
+			\xdef\tmplenctr{\inteval{\tmplennumber-##1}}%
+			\StrChar{\BwithZeros}{##1}[\tmpchiff]%
+			\StrRight{#1}{\tmplenctr}[\tmpA]%
+			\StrRight{\BwithZeros}{\tmplenctr}[\tmpB]%
+			\IfStrEqCase{\PoseOpeBase}{%
+				{dec}{\xdef\rescalctmp{\xinteval{\tmpA-\tmpB}}}%
+				{bin}{\xdef\rescalctmp{\xinteval{\xintBinToDec{\tmpA}-\xintBinToDec{\tmpB}}}}%
+				{hex}{\xdef\rescalctmp{\xinteval{\xintHexToDec{\tmpA}-\xintHexToDec{\tmpB}}}}%
+			}%
+			\xintifboolexpr{ \rescalctmp >= 0 }%
+				{\makebox[\the\widestcharwd][r]{\xintifboolexpr{ ##1 <= \lenA-\lenB }{}{\tmpchiff}}}%
+				%{\makebox[\the\widestcharwd][r]{${}_{\textcolor{\PoseOpeColReten}{\scalebox{0.5}[0.5]{\text{1}}}}$\xintifboolexpr{ ##1 <= \lenA-\lenB }{}{\kern-0.1em\tmpchiff}}}%
+				{\makebox[\the\widestcharwd][r]{\raisebox{-0.5\height}{\textcolor{\PoseOpeColReten}{\scalebox{0.5}[0.5]{\text{1}}}}\xintifboolexpr{ ##1 <= \lenA-\lenB }{\kern0.25em}{\kern-0.1em\tmpchiff}}}%
+		}\makebox[\the\widestcharwd][r]{\tmplastB} \\
+		
+		%\IntCreateBoxNumbers{#2} \\
+		\hline
+		\ifboolKV[poseoperation]{AffEgal}{=}{} &\IntCreateBoxNumbers[r]{\rescalcbin} \\
+	\end{NiceArray}}%
+	}%
+	{%
 	\ensuremath{\begin{NiceArray}[#3]{@{\,}r@{\hspace{\PoseOpeOffset}}r@{\,}}
 		\RowStyle[nb-rows=*,cell-space-limits=1pt]{}
 		& \IntCreateBoxNumbers{#1} \\
@@ -1371,6 +1438,7 @@
 		\hline
 		\ifboolKV[poseoperation]{AffEgal}{=}{} & \IntCreateBoxNumbers{\rescalcbin} \\
 	\end{NiceArray}}%
+	}%
 	%\end{array}}%
 }
 

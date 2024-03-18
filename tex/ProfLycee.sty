@@ -3,7 +3,12 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2024/02/23 3.02c Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2024/03/17 3.03a Aide pour l'utilisation de LaTeX en lycee]
+% 3.03a	Forme canonique + fonction homographique
+% 3.02g	Correction de bugs avec les arbres de probas
+% 3.02f	Ajout de petits schémas type pour la géométrie dans l'espace + conformité avec piton
+% 3.02e	Présentation python dans la style 'thonny' + amélioration dans la gestion du gobble avec piton
+% 3.02d	Retenues pour les soustractions dans les opérations posées
 % 3.02c	Ajout d'une commande pour le calcul d'une congruence (+petite pos / +petite nég) + ligne tkz-convex + Opérations posées
 % 3.02b	Amélioration du code pour les arbres de probas (tks M. Degrange pour les suggestions)
 % 3.02a	Ajout des [ecritures] proba conditionnelle, norme, valeur absolue et IF/IC
@@ -150,6 +155,11 @@
 	\IfSubStr{#1}{piton}%
 		{%
 			\input{proflycee-tools-piton.tex}
+		}%
+		{}%
+	\IfSubStr{#1}{espace}%
+		{%
+			\input{proflycee-tools-espace.tex}
 		}%
 		{}%
 	\IfSubStr{#1}{minted}%

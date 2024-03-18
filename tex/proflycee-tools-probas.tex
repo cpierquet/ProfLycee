@@ -318,7 +318,7 @@
 			\ifstrempty{\PLARBREDONNES[3,2]}
 				{\draw[PLfleche] (A11)--(A22) ;}
 				{%
-					\IntPlaceProbasArbre{A11}{A22}{\PLARBREDONNES[2,3]}{\PLARBREDONNES[3,2]}{below=1pt}
+					\IntPlaceProbasArbre{A11}{A22}{\PLARBREDONNES[3,3]}{\PLARBREDONNES[3,2]}{below=1pt}
 					%\draw[PLfleche] (A11)--(A22) node[probas,PLetiquette,{\PLARBREDONNES[3,3]}] {{\PLARBREDONNES[3,2]}} ;
 				}%
 			\ifstrempty{\PLARBREDONNES[4,2]}
@@ -445,7 +445,7 @@
 			\ifstrempty{\PLARBREDONNES[3,2]}
 				{\draw[PLfleche] (A11)--(A22) ;}
 				{
-					\IntPlaceProbasArbre{A11}{A22}{\PLARBREDONNES[2,3]}{\PLARBREDONNES[2,2]}{above=-1pt}
+					\IntPlaceProbasArbre{A11}{A22}{\PLARBREDONNES[3,3]}{\PLARBREDONNES[3,2]}{above=-1pt}
 					%\draw[PLfleche] (A11)--(A22) node[probas,PLetiquette,{\PLARBREDONNES[3,3]}] {{\PLARBREDONNES[3,2]}} ;
 				}
 			\ifstrempty{\PLARBREDONNES[4,2]}
@@ -609,7 +609,7 @@
 			\ifstrempty{\PLARBREDONNES[3,2]}
 				{\draw[PLfleche] (A11)--(A22) ;}
 				{%
-					\IntPlaceProbasArbre{A11}{A22}{\PLARBREDONNES[2,3]}{\PLARBREDONNES[3,2]}{below=1pt}
+					\IntPlaceProbasArbre{A11}{A22}{\PLARBREDONNES[3,3]}{\PLARBREDONNES[3,2]}{below=1pt}
 					%\draw[PLfleche] (A11)--(A22) node[probas,PLetiquette,{\PLARBREDONNES[3,3]}] {{\PLARBREDONNES[3,2]}} ;
 				}%
 			\ifstrempty{\PLARBREDONNES[4,2]}
@@ -736,7 +736,7 @@
 			\ifstrempty{\PLARBREDONNES[3,2]}
 				{\draw[PLfleche] (A11)--(A22) ;}
 				{
-					\IntPlaceProbasArbre{A11}{A22}{\PLARBREDONNES[2,3]}{\PLARBREDONNES[2,2]}{above=-1pt}
+					\IntPlaceProbasArbre{A11}{A22}{\PLARBREDONNES[3,3]}{\PLARBREDONNES[3,2]}{above=-1pt}
 					%\draw[PLfleche] (A11)--(A22) node[probas,PLetiquette,{\PLARBREDONNES[3,3]}] {{\PLARBREDONNES[3,2]}} ;
 				}
 			\ifstrempty{\PLARBREDONNES[4,2]}
@@ -905,7 +905,7 @@
 		\draw[thick,->,>=latex] (-4,0)--(4,0) ;
 		\draw[thick,densely dotted] (0,0)--(0,0.39894) ;
 		\draw[thick,domain=-4:4,samples=100,\GRPHPROBcoulcbe] plot (\x,{\densnorm{\x}}) ;
-	\end{tikzpicture}
+	\end{tikzpicture}%
 }
 
 \NewDocumentCommand\LoiExpoGraphe{ O{} D<>{} m m m }{%1=options,2=optionstikz,3=l,4=a,5=b
@@ -933,7 +933,7 @@
 		\draw[thick,->,>=latex] (-0.2,0)--(3.8,0) ;
 		\draw[thick,->,>=latex] (0,-0.15)--(0,0.85) ;
 		\draw[thick,domain=0:3.8,samples=100,\GRPHPROBcoulcbe] plot (\x,{0.7*\densexpo{\x}}) ;
-	\end{tikzpicture}
+	\end{tikzpicture}%
 }
 
 %%------aNp/Cnp

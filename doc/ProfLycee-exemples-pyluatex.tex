@@ -1,8 +1,9 @@
-% !TeX document-id = {fc3853a9-0c9c-4d02-b763-6dc6c85d34db}
-% !TeX TXS-program:compile = txs:///lualatex/[--shell-escape]
+% !TeX TXS-program:compile = txs:///arara
+% arara: lualatex: {shell: yes, synctex: no, interaction: batchmode}
+% arara: lualatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
 
 \documentclass[french,a4paper,10pt]{article}
-\def\PLver{3.01f}
+\def\PLver{3.02e}
 \usepackage[margin=1.5cm]{geometry}
 \usepackage{ProfLycee}
 \useproflyclib{piton}
@@ -10,8 +11,6 @@
 \usepackage{babel}
 \sisetup{locale=FR,output-decimal-marker={,},group-minimum-digits=4}
 \usepackage{codehigh}
-%\usepackage[most]{tcolorbox}
-%\newtcblisting{ShowCodeTeX}[1][]{colback=white,colframe=red!75!black,listing options={style=tcblatex},#1}
 
 \begin{document}
 
@@ -270,5 +269,159 @@ print(max(liste), min(liste), sum(liste))
 \begin{ConsolePiton}<Largeur=10cm,Alignement=center>{}
 [i**2 for i in range(50)]
 \end{ConsolePiton}
+
+\pagebreak
+
+\section{Présentation, et exécution, comme avec Thonny}
+
+\subsection{Préambule, avec le package pyluatex}
+
+{\small \begin{codehigh}
+\documentclass[french,a4paper,10pt]{article}
+\usepackage{ProfLycee}
+\useproflyclib{piton}
+\usepackage[executable=python]{pyluatex}    % lua + shell-escape
+\end{codehigh}}
+
+\subsection{Commandes}
+
+{\small \begin{codehigh}
+\begin{PitonThonnyEditor}<clé>[options tcbox]{largeur}
+...
+\end{PitonThonnyEditor}
+\end{codehigh}}
+
+\medskip
+
+La clé, à placer entre \texttt{<...>}, est :
+
+\begin{itemize}
+	\item la clé \textbf{\textsf{$\langle$Gobble$\rangle$}} pour spécifier des options liées au \textsf{gobble}, parmi \textbf{\textsf{$\langle$nb/auto$\rangle$}} ;
+	
+	\hfill{}à adapter en fonction des situations (!)
+	\item la clé \textbf{\textsf{$\langle$NomFichier$\rangle$}} pour afficher le nom du fichier dans le cartouche \textit{éditeur}.
+	
+	\hfill{}défaut : \textbf{\textsf{$\langle$script.py$\rangle$}}
+\end{itemize}
+
+{\small \begin{codehigh}
+\begin{PitonThonnyConsole}<clés>[options tcbox]{largeur}
+...
+\end{PitonThonnyConsole}
+\end{codehigh}}
+
+\medskip
+
+Les clés, à placer entre \texttt{<...>}, sont :
+
+\begin{itemize}
+	\item la clé \textbf{\textsf{$\langle$NomConsole$\rangle$}} pour afficher le nom de la \textit{console} ; \hfill{}défaut \textbf{\textsf{$\langle$console$\rangle$}}
+	\item la clé \textbf{\textsf{$\langle$IntroConsole$\rangle$}} pour afficher le message d'accueil de la console.
+\end{itemize}
+
+\subsection{Exemples}
+
+{\small\begin{codehigh}
+\begin{python}
+from math import gcd
+
+def est_duffy(n) :
+    nb_div, somme_div = 0, 0
+    for i in range(1, n+1) :
+        if n % i == 0 :
+            nb_div += 1
+            somme_div += i
+    if gcd(somme_div, n) == 1 :
+        return True
+    else :
+        return False
+
+\end{python}
+\end{codehigh}}
+
+{\small\begin{codehigh}
+\begin{PitonThonnyEditor}<NomFichier=tpcapytale.py>{12cm}
+#PROJET CAPYTALE
+from math import gcd
+
+def est_duffy(n) :
+    nb_div = 0
+    somme_div = 0
+    for i in range(1, n+1) :
+        if n % i == 0 :
+            nb_div += 1
+            somme_div += i
+    if gcd(somme_div, n) == 1 :
+        return True
+    else :
+        return False
+\end{PitonThonnyEditor}
+\end{codehigh}}
+
+\begin{PitonThonnyEditor}<NomFichier=tpcapytale.py>{12cm}
+#PROJET CAPYTALE
+from math import gcd
+
+def est_duffy(n) :
+	nb_div = 0
+	somme_div = 0
+	for i in range(1, n+1) :
+		if n % i == 0 :
+			nb_div += 1
+			somme_div += i
+	if gcd(somme_div, n) == 1 :
+		return True
+	else :
+		return False
+\end{PitonThonnyEditor}
+
+{\small\begin{codehigh}
+\begin{PitonThonnyConsole}<IntroConsole={python 3.8.10}>{12cm}
+#Run tpcapytale.py
+est_duffy(6)
+est_duffy(13)
+est_duffy(265)
+
+from random import randint
+nb = randint(1,100000)
+nb, est_duffy(nb)
+\end{PitonThonnyConsole}
+\end{codehigh}}
+
+\begin{python}
+from math import gcd
+
+def est_duffy(n) :
+	nb_div, somme_div = 0, 0
+	for i in range(1, n+1) :
+		if n % i == 0 :
+			nb_div += 1
+			somme_div += i
+	if gcd(somme_div, n) == 1 :
+		return True
+	else :
+		return False
+	
+\end{python}
+\begin{PitonThonnyConsole}<IntroConsole={python 3.8.10}>{12cm}
+#Run tpcapytale.py
+est_duffy(6)
+est_duffy(13)
+est_duffy(265)
+
+from random import randint
+nb = randint(1,100000)
+nb, est_duffy(nb)
+\end{PitonThonnyConsole}
+
+{\small\begin{codehigh}
+\begin{PitonThonnyConsole}{8cm}
+[i**2 for i in range(50)]
+\end{PitonThonnyConsole}
+\end{codehigh}}
+
+\begin{PitonThonnyConsole}{8cm}
+[i**2 for i in range(50)]
+\end{PitonThonnyConsole}
 
 \end{document}

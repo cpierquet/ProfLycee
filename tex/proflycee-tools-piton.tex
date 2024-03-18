@@ -2,6 +2,7 @@
 % Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
+%3.02e	Thonny via piton + modification clé gobble ?
 %3.01f	PseudoCode via piton (?)
 %3.01e	Correction du comportement de la console repl piton/pyluatex
 %2.7.6	Correction du comportement de la console, avec une meilleure gestion de la largeur ^^ (merci à ablasz ;-))
@@ -24,14 +25,15 @@
 	Style=\def\CODPITstyle{#1},%
 	Titre=\def\CODPITtitre{#1},%
 	EspacementV=\def\CODPITespV{#1},%
-	CouleurNombres=\def\CODPITcolnb{#1}
+	CouleurNombres=\def\CODPITcolnb{#1},%
+	Gobble=\def\CODPITgobble{#1}
 }
 
 \setKVdefault[envpiton]{%
 	Largeur=\linewidth,%
 	Alignement=center,%
 	Lignes=true,%
-	Gobble=true,%
+	Gobble={tabs},%
 	TaillePolice=\footnotesize,%
 	Filigrane=false,%
 	Style=Classique,%
@@ -87,14 +89,15 @@
 	TaillePolice=\def\CODPITPCfonte{#1},%
 	Style=\def\CODPITPCstyle{#1},%
 	Titre=\def\CODPITPCtitre{#1},%
-	EspacementV=\def\CODPITPCespV{#1}
+	EspacementV=\def\CODPITPCespV{#1},%
+	Gobble=\def\CODPITPCgobble{#1}
 }
 
 \setKVdefault[envpcpiton]{%
 	Largeur=\linewidth,%
 	Alignement=center,%
 	Lignes=true,%
-	Gobble=true,%
+	Gobble={tabs},%
 	TaillePolice=\footnotesize,%
 	Filigrane=false,%
 	Style=Classique,%
@@ -158,12 +161,23 @@
 	%------les styles piton
 	\SetPitonStyle{ Number = \color{\CODPITcolnb} }
 	\ifboolKV[envpiton]{Lignes}%si lignes=true
-		{\PitonOptions{left-margin=0.75em,all-line-numbers,line-numbers={#3}}}%left-margin=auto,
+		{\PitonOptions{left-margin=0.75em,line-numbers={skip-empty-lines=false,label-empty-lines=true,#3}}}%left-margin=auto,
 		{}%
-	\ifboolKV[envpiton]{Gobble}%si gobble=true
-		{\PitonOptions{tabs-auto-gobble}}%
-		{}%
-	\PitonOptions{break-lines,indent-broken-lines}%,numbers-sep=0.65em}%language=Python}
+	%\ifboolKV[envpiton]{Gobble}%si gobble=true
+	%	{\PitonOptions{}}%
+	%	{}%
+	%--gestion du gobble
+	\IfStrEqCase{\CODPITgobble}{%
+		{auto}{\PitonOptions{auto-gobble}}%
+		{env}{\PitonOptions{env-gobble}}%
+		{tabs}{\PitonOptions{tabs-auto-gobble}}%
+		{tabs-auto}{\PitonOptions{tabs-auto-gobble,auto-gobble}}%
+		{auto-tabs}{\PitonOptions{auto-gobble,tabs-auto-gobble}}%
+		{all}{\PitonOptions{auto-gobble,tabs-auto-gobble,env-gobble}}%
+	}
+	\IfInteger{\CODPITgobble}{\PitonOptions{gobble=\CODPITgobble}}{}%
+	%--fin gestion du gobble
+	\PitonOptions{break-lines,indent-broken-lines,continuation-symbol={}}%,numbers-sep=0.65em}%language=Python}
 	%------les styles tcbox
 	\IfEq{\CODPITstyle}{Moderne}%style Moderne (défaut)
 		{%
@@ -213,7 +227,7 @@
 	\useKVdefault[envpcpiton]%
 	\setKV[envpcpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%------les styles piton
-	\PitonOptions{break-lines,indent-broken-lines,language=minimal}%,numbers-sep=0.65em}%
+	\PitonOptions{break-lines,indent-broken-lines,language=minimal,continuation-symbol={}}%,numbers-sep=0.65em}%
 	\SetPitonStyle{ Number = }
 	\ifboolKV[envpcpiton]{Couleurs}%
 		{%
@@ -247,9 +261,20 @@
 	\ifboolKV[envpcpiton]{Lignes}%si lignes=true
 		{\PitonOptions{left-margin=0.75em,all-line-numbers,line-numbers={#3}}}%left-margin=auto,
 		{}%
-	\ifboolKV[envpcpiton]{Gobble}%si gobble=true
-		{\PitonOptions{tabs-auto-gobble}}%
-		{}%
+	%\ifboolKV[envpcpiton]{Gobble}%si gobble=true
+	%	{\PitonOptions{auto-gobble}}%
+	%	{}%
+	%--gestion du gobble
+	\IfStrEqCase{\CODPITPCgobble}{%
+		{auto}{\PitonOptions{auto-gobble}}%
+		{env}{\PitonOptions{env-gobble}}%
+		{tabs}{\PitonOptions{tabs-auto-gobble}}%
+		{tabs-auto}{\PitonOptions{tabs-auto-gobble,auto-gobble}}%
+		{auto-tabs}{\PitonOptions{auto-gobble,tabs-auto-gobble}}%
+		{all}{\PitonOptions{auto-gobble,tabs-auto-gobble,env-gobble}}%
+	}
+	\IfInteger{\CODPITPCgobble}{\PitonOptions{gobble=\CODPITPCgobble}}{}%
+	%--fin gestion du gobble
 	%------les styles tcbox
 	\IfEq{\CODPITPCstyle}{Moderne}%style Moderne (défaut)
 		{%
@@ -295,7 +320,7 @@
 %======CONSOLE PYLUATEX (package à charger manuellement !!)
 \tcbset{consolepylua/.style={%base de la boîte
 	enhanced,colback=white,colframe=CouleurVertForet,sharp corners,boxrule=1pt,%
-	top=1.5mm,bottom=1.5mm,left=2mm,right=2mm,fontupper=\footnotesize,%
+	top=1.5mm,bottom=1.5mm,left=2mm,right=3mm,fontupper=\footnotesize,%
 	before skip=0.5\baselineskip,after skip=0.5\baselineskip,%
 	}
 }
@@ -335,7 +360,7 @@
 {
 	\restoreKV[consolepyluatex]% revenir au valeurs par défaut
 	\setKV[consolepyluatex]{#2}% lit les arguments optionnels
-	\PitonOptions{width={\ConsPyluaLarg-4mm},break-lines,end-of-broken-line={},continuation-symbol={},#1}
+	\PitonOptions{width={\ConsPyluaLarg-5mm},break-lines,end-of-broken-line={},continuation-symbol={},#1}
 	\PyLTVerbatimEnv
 	\ifboolKV[consolepyluatex]{Logo}
 		{%
@@ -346,16 +371,86 @@
 		}%
 %		{\tcbset{consolepyluatexlogo,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
 %		{\tcbset{consolepyluatex,width=\ConsPyluaLarg,\ConsPyluaAlign,#3}}
-		\begin{pythonrepl}%
+	\begin{pythonrepl}%
 }
 {
 	\end{pythonrepl}%
 	\directlua{
-	tex.print("\\begin{Piton}")
-	tex.print(pyluatex.get_last_output())
-	tex.print("\\end{Piton}")
+		tex.print("\\begin{Piton}")
+		tex.print(pyluatex.get_last_output())
+		tex.print("\\end{Piton}"
+	)
 	}%
-	\end{tcolorbox}
+	\end{tcolorbox}%
+}
+
+%====PITONTHONNY
+\newlength{\LargeurNumbersThonny}
+
+\defKV[pitonthonny]{%
+	NomFichier=\def\thonnypitonfilename{#1},%
+	NomConsole=\def\thonnypitonshellname{#1},%
+	IntroConsole=\def\thonnypitonintroconsole{#1},%
+	Gobble=\def\thonnypitongobble{#1}
+}
+
+\setKVdefault[pitonthonny]{%
+	NomFichier=script.py,%
+	NomConsole=console,%
+	IntroConsole={Python 3.11.6 /usr/bin/python},%
+	Gobble={tabs}
+}
+
+\NewPitonEnvironment{PitonThonnyEditor}{ D<>{} O{} m }%
+{%
+	\restoreKV[pitonthonny]%
+	\setKV[pitonthonny]{#1}%
+	\settowidth{\LargeurNumbersThonny}{\footnotesize\texttt{00}}%
+	\PitonOptions{left-margin=\LargeurNumbersThonny+1mm,line-numbers={skip-empty-lines=false,label-empty-lines=true},break-lines,indent-broken-lines,continuation-symbol={}}%
+	%--gestion du gobble
+	\IfStrEqCase{\thonnypitongobble}{%
+		{auto}{\PitonOptions{auto-gobble}}%
+		{env}{\PitonOptions{env-gobble}}%
+		{tabs}{\PitonOptions{tabs-auto-gobble}}%
+		{tabs-auto}{\PitonOptions{tabs-auto-gobble,auto-gobble}}%
+		{auto-tabs}{\PitonOptions{auto-gobble,tabs-auto-gobble}}%
+		{all}{\PitonOptions{auto-gobble,tabs-auto-gobble,env-gobble}}%
+	}
+	\IfInteger{\thonnypitongobble}{\PitonOptions{gobble=\thonnypitongobble}}{}%
+	%--fin gestion du gobble
+	\tcbset{tcbthonnypiton/.style={title=\vphantom{pf}\thonnypitonfilename\:\textcolor{gray}{×}},before skip=0.33\baselineskip,after skip=0.33\baselineskip}%
+	%\noindent%
+	\tcolorbox[sharp corners=all,enhanced,size=small,width=#3,colframe=gray,colback=lightgray!5,tcbthonnypiton,fonttitle=\scriptsize\sffamily,coltitle=black,
+	attach boxed title to top left={yshift*=-0.4pt},fontupper=\footnotesize,bottom=-0.25mm,#2,boxed title style={size=tight,colback=lightgray!15,sharp corners=all,boxrule=0.4pt,boxsep=2pt},boxrule=0.4pt,overlay={\begin{tcbclipinterior}\fill[draw=none,gray!25] ([shift={(0.4pt,0.4pt)}]frame.south west) rectangle ([shift={(\LargeurNumbersThonny+1mm+0.8pt,-0.4pt)}]frame.north west) ;\end{tcbclipinterior}}]%
+}%
+{%
+	\endtcolorbox%
+}%
+
+\NewDocumentEnvironment{PitonThonnyConsole}{ D<>{} O{} m }%
+{
+	\restoreKV[pitonthonny]%
+	\setKV[pitonthonny]{#1}%
+	\PyLTVerbatimEnv%
+	\tcbset{tcbthonnypitonconsole/.style={title=\vphantom{pf}\thonnypitonshellname\:\textcolor{gray}{×}},before skip=0.33\baselineskip,after skip=0.33\baselineskip}%
+	\noindent%
+	\PitonOptions{width={#3-5mm},break-lines,end-of-broken-line={},continuation-symbol={}}%
+	\tcolorbox[sharp corners=all,enhanced,size=small,width=#3,colframe=gray,colback=white,tcbthonnypitonconsole,fonttitle=\scriptsize\sffamily,coltitle=black,
+	attach boxed title to top left={yshift*=-0.4pt},fontupper=\footnotesize,bottom=-0.25mm,#2,boxed title style={size=tight,colback=lightgray!15,sharp corners=all,boxrule=0.4pt,boxsep=2pt},boxrule=0.4pt,top=1mm]%
+	\textcolor{gray}{\texttt{\thonnypitonintroconsole}}
+	\begin{pythonrepl}
+}
+{
+	\end{pythonrepl}
+	\directlua
+	{
+		tex.print("\\begin{Piton}")
+		tex.print(pyluatex.get_last_output())
+		tex.print("\\end{Piton}")
+		tex.print("")
+	}%
+	\ignorespacesafterend%
+	\endtcolorbox%
 }
 
 \fi

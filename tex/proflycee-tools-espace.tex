@@ -1,0 +1,284 @@
+% proflycee-tools-espace.tex
+% Copyright 2024  Cédric Pierquet
+% Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
+
+\RequirePackage{iftex}
+
+\ifluatex
+	\RequirePackage{luamplib}%
+	\mplibtextextlabel{enable}%
+	\everymplib{input PfLEspace; beginfig(1);}%
+	\everyendmplib{endfig;}%
+\else%
+	\RequirePackage[shellescape]{gmp}%inclusion de figures metapost "à la volée"%
+	\gmpoptions{everymp={prologues:=3; input PfLEspace;}}%
+\fi%
+
+\defKV[posrelatesp]{Echelle=\def\scaleminischemspace{#1}}
+\setKVdefault[posrelatesp]{Echelle=1}
+
+\NewDocumentCommand\SchemaEspace{ s O{} m }{%
+	\restoreKV[posrelatesp]%
+	\setKV[posrelatesp]{#2}%
+	\ifluatex
+	\IfBooleanTF{#1}%
+		{\def\tmplabelespace##1{\mathscr{##1}}}%
+		{\def\tmplabelespace##1{\mathcal{##1}}}%
+	\mplibforcehmode%
+	\IfStrEqCase{#3}{%
+		{plan}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplansimple ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mplibcode}
+		}%
+		{interplans}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repinterplan ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.rt(btex $\tmplabelespace{Q}$ etex scaled echelle, z9);
+			\end{mplibcode}
+		}%
+		{plan3points}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplantroispoints ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mplibcode}
+		}%
+		{plandroitessecantes}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplandeuxdroites ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mplibcode}
+		}%
+		{plandroitepoint}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplandroite ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mplibcode}
+		}%
+		{plandroitespara}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplandtespara ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mplibcode}
+		}%
+		{droitesnoncopla}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				droitesnoncoplan ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mplibcode}
+		}%
+		{incidence}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repincidence ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.urt(btex $\tmplabelespace{Q}$ etex scaled echelle, z4+(0.1u,0u));
+			\end{mplibcode}
+		}%
+		{droiteparaplans}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repdroiteparaplans ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0u,0.025u));
+				label.lft(btex $\tmplabelespace{Q}$ etex scaled echelle, z6+(0u,0.5u));
+			\end{mplibcode}
+		}%
+		{toit}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				reptoit ;
+			\end{mplibcode}
+		}%
+		{planspara}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplanspara ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.urt(btex $\tmplabelespace{Q}$ etex scaled echelle, z10+(0.1u,0u));
+			\end{mplibcode}
+		}%
+		{droiteplanpara}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repdteplanpara ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mplibcode}
+		}%
+		{droitesortho}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repdtesortho ;
+			\end{mplibcode}
+		}%
+		{droiteorthoplan}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repdroiteorthoplan ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mplibcode}
+		}%
+		{plansparadroiteortho}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplansparadroiteortho ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.urt(btex $\tmplabelespace{Q}$ etex scaled echelle, z10+(0.1u,0u));
+			\end{mplibcode}
+		}%
+		{plansparadroitesortho}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repdrtoitesorthoplanspara ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.urt(btex $\tmplabelespace{Q}$ etex scaled echelle, z10+(0.1u,0u));
+			\end{mplibcode}
+		}%
+		{plansperp}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplansperp ;
+				label.urt(btex $\tmplabelespace{P}$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.rt(btex $\tmplabelespace{Q}$ etex scaled echelle, z9);
+			\end{mplibcode}
+		}%
+		{plansperpplan}{%
+			\begin{mplibcode}
+				u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;
+				repplansperpplan ;
+				label.urt(btex $\tmplabelespace{Q}$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.bot(btex $\tmplabelespace{P}$ etex scaled echelle, z11+(0.2u,0.6u));
+				label.bot(btex $\tmplabelespace{P}'$ etex scaled echelle, z12+(-0.2u,0.8u));
+			\end{mplibcode}
+		}%
+	}%
+	\else
+	\IfStrEqCase{#3}{%
+		{plan}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplansimple ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mpost}
+		}%
+		{interplans}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repinterplan ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.rt(btex $Q$ etex scaled echelle, z9);
+			\end{mpost}
+		}%
+		{plan3points}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplantroispoints ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mpost}
+		}%
+		{plandroitessecantes}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplandeuxdroites ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mpost}
+		}%
+		{plandroitepoint}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplandroite ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mpost}
+		}%
+		{plandroitespara}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplandtespara ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mpost}
+		}%
+		{droitesnoncopla}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				droitesnoncoplan ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mpost}
+		}%
+		{incidence}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repincidence ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.urt(btex $Q$ etex scaled echelle, z4+(0.1u,0u));
+			\end{mpost}
+		}%
+		{droiteparaplans}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repdroiteparaplans ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0u,0.025u));
+				label.lft(btex $Q$ etex scaled echelle, z6+(0u,0.5u));
+			\end{mpost}
+		}%
+		{toit}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				reptoit ;
+			\end{mpost}
+		}%
+		{planspara}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplanspara ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.urt(btex $Q$ etex scaled echelle, z10+(0.1u,0u));
+			\end{mpost}
+		}%
+		{droiteplanpara}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repdteplanpara ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mpost}
+		}%
+		{droitesortho}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repdtesortho ;
+			\end{mpost}
+		}%
+		{droiteorthoplan}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repdroiteorthoplan ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+			\end{mpost}
+		}%
+		{plansparadroiteortho}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplansparadroiteortho ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.urt(btex $Q$ etex scaled echelle, z10+(0.1u,0u));
+			\end{mpost}
+		}%
+		{plansparadroitesortho}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repdrtoitesorthoplanspara ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.urt(btex $Q$ etex scaled echelle, z10+(0.1u,0u));
+			\end{mpost}
+		}%
+		{plansperp}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplansperp ;
+				label.urt(btex $P$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.rt(btex $Q$ etex scaled echelle, z9);
+			\end{mpost}
+		}%
+		{plansperpplan}{%
+			\begin{mpost}[mpsettings={u=\scaleminischemspace*1cm;echelle=\scaleminischemspace;}]
+				repplansperpplan ;
+				label.urt(btex $Q$ etex scaled echelle, z0+(0.1u,0.025u));
+				label.bot(btex $P$ etex scaled echelle, z11+(0.2u,0.6u));
+				label.bot(btex $P'$ etex scaled echelle, z12+(-0.2u,0.8u));
+			\end{mpost}
+		}%
+	}%
+	\fi
+}
+
+\endinput
