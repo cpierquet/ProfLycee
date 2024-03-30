@@ -913,7 +913,7 @@
 	}%
 }
 
-%====DIV EUCL (OK)
+%====DIV EUCL (OK), 2 versions, mises à jour ;-)
 \setKVdefault[diveucl]{%
 	Quotient=true,%
 	Reste=true,%
@@ -928,9 +928,16 @@
 			\setKV[diveucl]{Quotient=false,Reste=false}%
 		}%
 		{}%
-	\xdef\tmp@quotient{\xintiiQuo{#3}{#4}}\xdef\tmp@reste{\xintiiRem{#3}{#4}}%
-	\ensuremath{\num{#3}=\num{#4}\times\ifboolKV[diveucl]{Quotient}{\xintifboolexpr{\tmp@quotient < 0}{(\num{\tmp@quotient})}{\num{\tmp@quotient}}}{\useKV[diveucl]{Pointilles}}+\ifboolKV[diveucl]{Reste}{\num{\tmp@reste}}{\useKV[diveucl]{Pointilles}}}%
-	\IfBooleanT{#1}{~avec $0 \leqslant \num{\xintiiRem{#3}{#4}} < \xintifboolexpr{#4 < 0}{\lvert\num{#4}\rvert}{\num{#4}}$}%
+	\xdef\tmpAA{\xinteval{#3}}\xdef\tmpBB{\xinteval{#4}}%
+	\xdef\tmpQuotient{\xintiiQuo{\tmpAA}{\tmpBB}}\xdef\tmpReste{\xintiiRem{\tmpAA}{\tmpBB}}%
+	\ensuremath{\num{\xinteval{#3}}=\num{\xinteval{#4}}\times\ifboolKV[diveucl]{Quotient}{\xintifboolexpr{\tmpQuotient < 0}{(\num{\tmpQuotient})}{\num{\tmpQuotient}}}{\useKV[diveucl]{Pointilles}}+\ifboolKV[diveucl]{Reste}{\num{\tmpReste}}{\useKV[diveucl]{Pointilles}}}%
+	\IfBooleanT{#1}{~avec $0 \leqslant \num{\xintiiRem{\tmpAA}{\tmpBB}} < \xintifboolexpr{\tmpBB < 0}{\lvert\num{\xinteval{#4}}\rvert}{\num{\xinteval{#4}}}$}%
+}
+
+\NewDocumentCommand\DivisionEucl{ m m }{%
+	\xdef\tmpAA{\xinteval{#1}}\xdef\tmpBB{\xinteval{#2}}%
+	\xdef\tmpQuotient{\xintiiQuo{\tmpAA}{\tmpBB}}\xdef\tmpReste{\xintiiRem{\tmpAA}{\tmpBB}}%
+	\ensuremath{\num{\tmpBB}\times\xintifboolexpr{\tmpQuotient < 0}{(\num{\tmpQuotient})}{\num{\tmpQuotient}}+\num{\xintiiRem{\tmpAA}{\tmpBB}}}
 }
 
 %====ADDITIONS POSÉES ?

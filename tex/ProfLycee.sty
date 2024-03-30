@@ -3,7 +3,9 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2024/03/17 3.03a Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2024/03/30 3.03c Aide pour l'utilisation de LaTeX en lycee]
+% 3.03c	Correction du fonctionnement gobble avec piton + compatibilité luamplib PfC
+% 3.03b	Compétences Maths Lycées + \pflnum pour num+xint :-) + correction de bugs (div eucl)
 % 3.03a	Forme canonique + fonction homographique
 % 3.02g	Correction de bugs avec les arbres de probas
 % 3.02f	Ajout de petits schémas type pour la géométrie dans l'espace + conformité avec piton
@@ -188,6 +190,17 @@
 		{}%
 }
 
+%%------patch num et xint
+\NewDocumentCommand\pflnum{ s O{} m }{%
+	\IfBooleanTF{#1}%
+	{%
+		\IfEq{#2}{}{\num{\xintfloateval{#3}}}{\num{\xintfloateval{round(#3,#2)}}}%
+	}%
+	{%
+		\num{\xintiieval{#3}}%
+	}%
+}
+
 %%------Codes listings
 \input{proflycee-tools-listings.tex}
 %%------Trigo
@@ -212,5 +225,7 @@
 \input{proflycee-tools-geom.tex}
 %%------Récréations diverses
 \input{proflycee-tools-recreat.tex}
+%%------Compétences
+\input{proflycee-tools-competences.tex}
 
 \endinput

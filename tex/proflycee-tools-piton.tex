@@ -2,7 +2,7 @@
 % Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
-%3.02e	Thonny via piton + modification clé gobble ?
+%3.03c	Thonny via piton + modification clé gobble ?
 %3.01f	PseudoCode via piton (?)
 %3.01e	Correction du comportement de la console repl piton/pyluatex
 %2.7.6	Correction du comportement de la console, avec une meilleure gestion de la largeur ^^ (merci à ablasz ;-))
@@ -33,7 +33,7 @@
 	Largeur=\linewidth,%
 	Alignement=center,%
 	Lignes=true,%
-	Gobble={tabs},%
+	Gobble={},%
 	TaillePolice=\footnotesize,%
 	Filigrane=false,%
 	Style=Classique,%
@@ -97,7 +97,7 @@
 	Largeur=\linewidth,%
 	Alignement=center,%
 	Lignes=true,%
-	Gobble={tabs},%
+	Gobble={},%
 	TaillePolice=\footnotesize,%
 	Filigrane=false,%
 	Style=Classique,%
@@ -177,7 +177,7 @@
 	}
 	\IfInteger{\CODPITgobble}{\PitonOptions{gobble=\CODPITgobble}}{}%
 	%--fin gestion du gobble
-	\PitonOptions{break-lines,indent-broken-lines,continuation-symbol={}}%,numbers-sep=0.65em}%language=Python}
+	\PitonOptions{break-lines,indent-broken-lines,continuation-symbol={\;}}%,numbers-sep=0.65em}%language=Python}
 	%------les styles tcbox
 	\IfEq{\CODPITstyle}{Moderne}%style Moderne (défaut)
 		{%
@@ -227,7 +227,7 @@
 	\useKVdefault[envpcpiton]%
 	\setKV[envpcpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%------les styles piton
-	\PitonOptions{break-lines,indent-broken-lines,language=minimal,continuation-symbol={}}%,numbers-sep=0.65em}%
+	\PitonOptions{break-lines,indent-broken-lines,language=minimal,continuation-symbol={\;}}%,numbers-sep=0.65em}%
 	\SetPitonStyle{ Number = }
 	\ifboolKV[envpcpiton]{Couleurs}%
 		{%
@@ -360,7 +360,8 @@
 {
 	\restoreKV[consolepyluatex]% revenir au valeurs par défaut
 	\setKV[consolepyluatex]{#2}% lit les arguments optionnels
-	\PitonOptions{width={\ConsPyluaLarg-5mm},break-lines,end-of-broken-line={},continuation-symbol={},#1}
+	\PitonOptions{width={\ConsPyluaLarg-5mm},break-lines,end-of-broken-line={\,},continuation-symbol={\;},#1}
+	%\PitonOptions{width={\ConsPyluaLarg-5mm},#1}
 	\PyLTVerbatimEnv
 	\ifboolKV[consolepyluatex]{Logo}
 		{%
@@ -398,7 +399,7 @@
 	NomFichier=script.py,%
 	NomConsole=console,%
 	IntroConsole={Python 3.11.6 /usr/bin/python},%
-	Gobble={tabs}
+	Gobble={}
 }
 
 \NewPitonEnvironment{PitonThonnyEditor}{ D<>{} O{} m }%
@@ -434,7 +435,18 @@
 	\PyLTVerbatimEnv%
 	\tcbset{tcbthonnypitonconsole/.style={title=\vphantom{pf}\thonnypitonshellname\:\textcolor{gray}{×}},before skip=0.33\baselineskip,after skip=0.33\baselineskip}%
 	\noindent%
-	\PitonOptions{width={#3-5mm},break-lines,end-of-broken-line={},continuation-symbol={}}%
+	%--gestion du gobble
+	\IfStrEqCase{\thonnypitongobble}{%
+		{auto}{\PitonOptions{auto-gobble}}%
+		{env}{\PitonOptions{env-gobble}}%
+		{tabs}{\PitonOptions{tabs-auto-gobble}}%
+		{tabs-auto}{\PitonOptions{tabs-auto-gobble,auto-gobble}}%
+		{auto-tabs}{\PitonOptions{auto-gobble,tabs-auto-gobble}}%
+		{all}{\PitonOptions{auto-gobble,tabs-auto-gobble,env-gobble}}%
+	}
+	\IfInteger{\thonnypitongobble}{\PitonOptions{gobble=\thonnypitongobble}}{}%
+	%--fin gestion du gobble
+	\PitonOptions{width={#3-5mm},break-lines,end-of-broken-line={\,},continuation-symbol={\;}}%
 	\tcolorbox[sharp corners=all,enhanced,size=small,width=#3,colframe=gray,colback=white,tcbthonnypitonconsole,fonttitle=\scriptsize\sffamily,coltitle=black,
 	attach boxed title to top left={yshift*=-0.4pt},fontupper=\footnotesize,bottom=-0.25mm,#2,boxed title style={size=tight,colback=lightgray!15,sharp corners=all,boxrule=0.4pt,boxsep=2pt},boxrule=0.4pt,top=1mm]%
 	\textcolor{gray}{\texttt{\thonnypitonintroconsole}}
