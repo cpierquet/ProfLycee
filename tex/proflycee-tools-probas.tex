@@ -1041,4 +1041,187 @@
 		}%
 }
 
+%===BINOMIALE
+\defKV[HistoBinom]{%
+	Largeur=\def\GraphBinomLarg{#1},%
+	Hauteur=\def\GraphBinomHaut{#1},%
+	PasX=\def\GraphBinomPasX{#1},%
+	PasY=\def\GraphBinomPasY{#1},%
+	Plage=\def\GraphBinomPlage{#1},%
+	CouleurPlage=\def\GraphBimomColPlage{#1},%
+	Epaisseur=\def\GraphBinomThick{#1},%
+	ClipX=\def\GraphBinomXminmax{#1},%
+	Police=\def\GraphBinomFonte{#1},%
+	CouleurNormale=\def\GraphBinomColNorm{#1}
+}
+\setKVdefault[HistoBinom]{%
+	Largeur=10,%
+	Hauteur=5,%
+	PasX=5,%
+	PasY=0.01,%
+	Plage={},%
+	CouleurPlage=teal!50,%
+	Epaisseur=0.8pt,
+	ClipX={},%
+	Police=\normalfont\normalsize,%
+	AffNormale=false,%
+	CouleurNormale=red
+}
+
+\NewDocumentCommand\HistogrammeBinomiale{ O{} D<>{} m m }{%
+	\restoreKV[HistoBinom]%
+	\setKV[HistoBinom]{#1}
+	\def\GraphBinomN{#3}%
+	\def\GraphBinomP{#4}%
+	\IfStrEq{\GraphBinomXminmax}{}%
+	{%
+		\xdef\GraphBinomXmin{0}%
+		\xdef\GraphBinomXmax{\GraphBinomN}%
+	}%
+	{%
+		\StrCut{\GraphBinomXminmax}{-}{\GraphBinomXmin}{\GraphBinomXmax}%
+		\IfStrEq{\GraphBinomXmin}{*}{\xdef\GraphBinomXmin{0}}{}%
+		\IfStrEq{\GraphBinomXmax}{*}{\xdef\GraphBinomXmax{\GraphBinomN}}{}%
+	}%
+	\IfStrEq{\GraphBinomPlage}{}%
+	{}%
+	{%
+		\StrCut{\GraphBinomPlage}{-}{\GraphBinomColorMin}{\GraphBinomColorMax}%
+		\IfStrEq{\GraphBinomColorMin}{*}{\xdef\GraphBinomColorMin{\GraphBinomXmin}}{}%
+		\IfStrEq{\GraphBinomColorMax}{*}{\xdef\GraphBinomColorMax{\GraphBinomXmax}}{}%
+	}%
+	%test d'unités
+	\xdef\GraphBinomXunit{\xintfloateval{round((\GraphBinomLarg)/(\GraphBinomXmax-\GraphBinomXmin+1),3)}}%
+	\xdef\grphbinommedA{\xintfloateval{trunc(\GraphBinomN*\GraphBinomP,0)}}%
+	\xdef\grphbinommedB{\xintfloateval{\grphbinommedA+1}}%
+	\xdef\GraphBinomYmaxA{\xintfloateval{binomial(\GraphBinomN,\grphbinommedA)*(\GraphBinomP)^(\grphbinommedA)*(1-(\GraphBinomP))^((\GraphBinomN)-(\grphbinommedA))}}%
+	\xdef\GraphBinomYmaxB{\xintfloateval{binomial(\GraphBinomN,\grphbinommedB)*(\GraphBinomP)^(\grphbinommedB)*(1-(\GraphBinomP))^((\GraphBinomN)-(\grphbinommedB))}}%
+	\xdef\GraphBinomMaxY{\xintfloateval{1.1*max(\GraphBinomYmaxA,\GraphBinomYmaxB)}}%
+	\xdef\GraphBinomNbPrecision{\xinteval{abs(ilog10(\GraphBinomMaxY))+1}}%
+	\xdef\GraphBinomYunit{\xintfloateval{round((\GraphBinomHaut)/(max(\GraphBinomYmaxA,\GraphBinomYmaxB)),3)}}%
+	\begin{tikzpicture}[x=\GraphBinomXunit cm,y=\GraphBinomYunit cm,#2]
+		%coloriage éventuel
+		\IfStrEq{\GraphBinomPlage}{}%
+		{}%
+		{%
+			\xintFor* ##1 in {\xintSeq{\GraphBinomColorMin}{\GraphBinomColorMax}}\do{%
+				\xdef\tmpYYY{\xintfloateval{binomial(\GraphBinomN,##1)*(\GraphBinomP)^(##1)*(1-(\GraphBinomP))^((\GraphBinomN)-(##1))}}%
+				\draw[draw=none,fill=\GraphBimomColPlage,fill opacity=0.5] ({##1-0.5},0) rectangle++ (1,{\tmpYYY}) ;
+			}%
+		}%
+		%axes
+		\draw[line width=\GraphBinomThick,->,>=latex] ({\GraphBinomXmin-0.5},0)--({\GraphBinomXmax+1},0) ;
+		\draw[line width=\GraphBinomThick,->,>=latex] ({\GraphBinomXmin-0.5},0)--({\GraphBinomXmin-0.5},{1.1*(\GraphBinomHaut)/(\GraphBinomYunit)}) ;
+		\foreach \x in {\GraphBinomXmin,\inteval{\GraphBinomXmin+\GraphBinomPasX},...,\GraphBinomXmax}{%
+			\draw[line width=\GraphBinomThick] (\x,2pt)--++(0,-4pt) node[below,font=\GraphBinomFonte] {\num{\x}} ;
+		}%
+		\xdef\GraphBinomNbPrecisionAxeY{\xinteval{abs(ilog10(\GraphBinomPasY))+1}}%
+		\foreach \y in {0,\GraphBinomPasY,...,\GraphBinomMaxY}{%
+			\draw[line width=\GraphBinomThick] ($({\GraphBinomXmin-0.5},\y)+(2pt,0)$)--++(-4pt,0) node[left,font=\GraphBinomFonte] {\num{\xintfloateval{round(\y,\GraphBinomNbPrecisionAxeY)}}} ;
+		}%
+		%tracé
+		\xintFor* ##1 in {\xintSeq{\GraphBinomXmin}{\GraphBinomXmax}}\do{%
+			\xdef\tmpYYY{\xintfloateval{binomial(\GraphBinomN,##1)*(\GraphBinomP)^(##1)*(1-(\GraphBinomP))^((\GraphBinomN)-(##1))}}%
+			\draw[line width=\GraphBinomThick] ({##1-0.5},0) rectangle++ (1,{\tmpYYY}) ;
+		}
+		\ifboolKV[HistoBinom]{AffNormale}%
+			{%
+				\xdef\MinNormHistoBinom{\xintfloateval{{\GraphBinomXmin-0.5}}}%
+				\xdef\MaxNormHistoBinom{\xintfloateval{{\GraphBinomXmax+0.5}}}%
+				\TraceLoiNormale*[line width={1.25*\GraphBinomThick},\GraphBinomColNorm]<\MinNormHistoBinom..[0.1]..\MaxNormHistoBinom>{#3}{#4}
+			}%
+			{}%
+	\end{tikzpicture}
+}
+
+\NewDocumentEnvironment{HistoBinomiale}{ O{} D<>{} m m }%
+{%
+	\restoreKV[HistoBinom]%
+	\setKV[HistoBinom]{#1}
+	\def\GraphBinomN{#3}%
+	\def\GraphBinomP{#4}%
+	\IfStrEq{\GraphBinomXminmax}{}%
+	{%
+		\xdef\GraphBinomXmin{0}%
+		\xdef\GraphBinomXmax{\GraphBinomN}%
+	}%
+	{%
+		\StrCut{\GraphBinomXminmax}{-}{\GraphBinomXmin}{\GraphBinomXmax}%
+		\IfStrEq{\GraphBinomXmin}{*}{\xdef\GraphBinomXmin{0}}{}%
+		\IfStrEq{\GraphBinomXmax}{*}{\xdef\GraphBinomXmax{\GraphBinomN}}{}%
+	}%
+	\IfStrEq{\GraphBinomPlage}{}%
+	{}%
+	{%
+		\StrCut{\GraphBinomPlage}{-}{\GraphBinomColorMin}{\GraphBinomColorMax}%
+		\IfStrEq{\GraphBinomColorMin}{*}{\xdef\GraphBinomColorMin{\GraphBinomXmin}}{}%
+		\IfStrEq{\GraphBinomColorMax}{*}{\xdef\GraphBinomColorMax{\GraphBinomXmax}}{}%
+	}%
+	%test d'unités
+	\xdef\GraphBinomXunit{\xintfloateval{round((\GraphBinomLarg)/(\GraphBinomXmax-\GraphBinomXmin+1),3)}}%
+	\xdef\grphbinommedA{\xintfloateval{trunc(\GraphBinomN*\GraphBinomP,0)}}%
+	\xdef\grphbinommedB{\xintfloateval{\grphbinommedA+1}}%
+	\xdef\GraphBinomYmaxA{\xintfloateval{binomial(\GraphBinomN,\grphbinommedA)*(\GraphBinomP)^(\grphbinommedA)*(1-(\GraphBinomP))^((\GraphBinomN)-(\grphbinommedA))}}%
+	\xdef\GraphBinomYmaxB{\xintfloateval{binomial(\GraphBinomN,\grphbinommedB)*(\GraphBinomP)^(\grphbinommedB)*(1-(\GraphBinomP))^((\GraphBinomN)-(\grphbinommedB))}}%
+	\xdef\GraphBinomMaxY{\xintfloateval{1.1*max(\GraphBinomYmaxA,\GraphBinomYmaxB)}}%
+	\xdef\GraphBinomNbPrecision{\xinteval{abs(ilog10(\GraphBinomMaxY))+1}}%
+	\xdef\GraphBinomYunit{\xintfloateval{round((\GraphBinomHaut)/(max(\GraphBinomYmaxA,\GraphBinomYmaxB)),3)}}%
+	\begin{tikzpicture}[x=\GraphBinomXunit cm,y=\GraphBinomYunit cm,#2]
+		%coloriage éventuel
+		\IfStrEq{\GraphBinomPlage}{}%
+		{}%
+		{%
+			\xintFor* ##1 in {\xintSeq{\GraphBinomColorMin}{\GraphBinomColorMax}}\do{%
+				\xdef\tmpYYY{\xintfloateval{binomial(\GraphBinomN,##1)*(\GraphBinomP)^(##1)*(1-(\GraphBinomP))^((\GraphBinomN)-(##1))}}%
+				\draw[draw=none,fill=\GraphBimomColPlage,fill opacity=0.5] ({##1-0.5},0) rectangle++ (1,{\tmpYYY}) ;
+			}%
+		}%
+		%axes
+		\draw[line width=\GraphBinomThick,->,>=latex] ({\GraphBinomXmin-0.5},0)--({\GraphBinomXmax+1},0) ;
+		\draw[line width=\GraphBinomThick,->,>=latex] ({\GraphBinomXmin-0.5},0)--({\GraphBinomXmin-0.5},{1.1*(\GraphBinomHaut)/(\GraphBinomYunit)}) ;
+		\foreach \x in {\GraphBinomXmin,\inteval{\GraphBinomXmin+\GraphBinomPasX},...,\GraphBinomXmax}{%
+			\draw[line width=\GraphBinomThick] (\x,2pt)--++(0,-4pt) node[below,font=\GraphBinomFonte] {\num{\x}} ;
+		}%
+		\xdef\GraphBinomNbPrecisionAxeY{\xinteval{abs(ilog10(\GraphBinomPasY))+1}}%
+		\foreach \y in {0,\GraphBinomPasY,...,\GraphBinomMaxY}{%
+			\draw[line width=\GraphBinomThick] ($({\GraphBinomXmin-0.5},\y)+(2pt,0)$)--++(-4pt,0) node[left,font=\GraphBinomFonte] {\num{\xintfloateval{round(\y,\GraphBinomNbPrecisionAxeY)}}} ;
+		}%
+		%tracé
+		\xintFor* ##1 in {\xintSeq{\GraphBinomXmin}{\GraphBinomXmax}}\do{%
+			\xdef\tmpYYY{\xintfloateval{binomial(\GraphBinomN,##1)*(\GraphBinomP)^(##1)*(1-(\GraphBinomP))^((\GraphBinomN)-(##1))}}%
+			\draw[line width=\GraphBinomThick] ({##1-0.5},0) rectangle++ (1,{\tmpYYY}) ;
+		}
+		%loi normale ?
+		\ifboolKV[HistoBinom]{AffNormale}%
+			{%
+				\xdef\MinNormHistoBinom{\xintfloateval{{\GraphBinomXmin-0.5}}}%
+				\xdef\MaxNormHistoBinom{\xintfloateval{{\GraphBinomXmax+0.5}}}%
+				\TraceLoiNormale*[line width={1.25*\GraphBinomThick},\GraphBinomColNorm]<\MinNormHistoBinom..[0.1]..\MaxNormHistoBinom>{#3}{#4}
+			}%
+			{}%
+	}%
+	{%
+	\end{tikzpicture}
+}
+
+\xintdeffloatfunc fctreploinorm(x,mu,sigma):=1/(sigma*sqrt(2*Pi))*exp(-1/2*((x-mu)/sigma)^2);
+
+\NewDocumentCommand\TraceLoiNormale{ s O{} D<>{} m m }{%
+	\IfBooleanTF{#1}%
+	{%
+		\draw[#2] plot[smooth] coordinates {%
+			\xintthecoords\xintfloatexpr
+			seq((x,fctreploinorm(x,#4*#5,sqrt(#4*#5*(1-#5)))),x=#3)
+			\relax
+		};
+	}%
+	{%
+		\draw[#2] plot[smooth] coordinates {%
+			\xintthecoords\xintfloatexpr
+			seq((x,fctreploinorm(x,#4,#5)),x=#3)
+			\relax
+		};
+	}%
+}
+
 \endinput

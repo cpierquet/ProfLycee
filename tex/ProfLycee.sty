@@ -3,7 +3,10 @@
 % or later, see http://www.latex-project.org/lppl.txtf
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2024/03/30 3.03c Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2024/05/09 3.04b Aide pour l'utilisation de LaTeX en lycee]
+% 3.04b	Travail sur la loi binomiale + Ajout de clés pour les environnements graphiques
+% 3.04a	Améliorations de la partie graphiques tikz (intégrales, axes) + Factorielle
+% 3.03d	Page de garde type BAC
 % 3.03c	Correction du fonctionnement gobble avec piton + compatibilité luamplib PfC
 % 3.03b	Compétences Maths Lycées + \pflnum pour num+xint :-) + correction de bugs (div eucl)
 % 3.03a	Forme canonique + fonction homographique
@@ -227,5 +230,7 @@
 \input{proflycee-tools-recreat.tex}
 %%------Compétences
 \input{proflycee-tools-competences.tex}
+%%------Examens
+\input{proflycee-tools-exams.tex}
 
 \endinput

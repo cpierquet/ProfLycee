@@ -36,7 +36,7 @@
 }
 
 \NewDocumentCommand\PtsDiscontinuite{ O{} m }{%
-	\useKVdefault[ptdiscont]
+	\restoreKV[ptdiscont]
 	\setKV[ptdiscont]{#1}%
 	\setsepchar[.]{§./}%
 	\readlist*\SPLlisteDiscont{#2}%
@@ -101,7 +101,7 @@
 	%1=liste
 	%2=num point début
 	%3=num point fin
-	\useKVdefault[genspline]%
+	\restoreKV[genspline]%
 	\setKV[genspline]{#1}%
 	\setsepchar[.]{§./}%
 	\readlist*\SPLlistepoints{#2}%
@@ -156,7 +156,7 @@
 
 \NewDocumentCommand\SplineTikz{ O{} m }{%
 %\newcommand\SplineTikz[2][]{%
-	\useKVdefault[spline]
+	\restoreKV[spline]
 	\setKV[spline]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%on lit la liste des points/nbderivés et on stocke dans \listepoints
 	\setsepchar[.]{§./}%
@@ -219,7 +219,7 @@
 }
 
 \newcommand\TangenteTikz[2][]{%
-	\useKVdefault[tgte]%
+	\restoreKV[tgte]%
 	\setKV[tgte]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\setsepchar[.]{§./}%
 	\readlist*\TGTlistepoints{#2}%
@@ -308,26 +308,36 @@
 }
 
 \DeclareDocumentCommand\AxexTikz{ O{} m }{%
-	\useKVdefault[PLaxextkz]
+	\restoreKV[PLaxextkz]
 	\setKV[PLaxextkz]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%récupération des tickwidth H/B
 	\IfSubStr{\axextickwidth}{/}
 		{\StrCut{\axextickwidth}{/}{\axextickwidthA}{\axextickwidthB}}
 		{\def\axextickwidthA{\axextickwidth}\def\axextickwidthB{\axextickwidth}}
+	%====test====
+	\IfEq{#2}{auto}%
+		{%
+			\xdef\tmprangexvalues{\xintfloateval{seq(i,i=\xmin..[\xgrille]..\xmax)}}\StrDel{\tmprangexvalues}{ }[\tmprangexvalues]%
+			\setKV[PLaxextkz]{Trigo=false}%
+		}%
+		{%
+			\xdef\tmprangexvalues{#2}%
+		}%
+	%====fintest=
 	%en fonction de Trigo ou non
 	\ifboolKV[PLaxextkz]{Trigo}
-		{
-			\foreach \x in {#2}{%
+		{%
+			\foreach \x in \tmprangexvalues {%
 				\draw[line width=\axexwidth] ({\x-\axexOx},{\axextickwidthA}) -- ({\x-\axexOx},{-\axextickwidthB})%
 				\ifboolKV[PLaxextkz]{AffGrad}%on affiche les graduations
 				{%
 					node[\axexposlabel,font=\axexfont] {\ifboolKV[PLaxextkz]{Dfrac}{$\AffAngleRadian*{\x}$}{$\AffAngleRadian{\x}$}}
 				}%
 				{}%
-				;}
-		}
-		{
-			\foreach \x in {#2}{%
+				;}%
+		}%
+		{%
+			\foreach \x in \tmprangexvalues {%
 				\draw[line width=\axexwidth] ({\x-\axexOx},{\axextickwidthA}) -- ({\x-\axexOx},{-\axextickwidthB})%
 				\ifboolKV[PLaxextkz]{AffGrad}%on affiche les graduations
 				{%
@@ -336,16 +346,16 @@
 						{\ifboolKV[PLaxextkz]{Annee}%
 							{\num[group-digits=none]{\x}}%
 							{\num[text-family-to-math=true,text-series-to-math=true]{\x}}%
-						}
-					}
+						}%
+					}%
 					{\xintifboolexpr{\x==\axexOx}{}{node[\axexposlabel,font=\axexfont] {\ifboolKV[PLaxextkz]{Annee}%
 								{\num[group-digits=none]{\x}}%
 								{\num[text-family-to-math=true,text-series-to-math=true]{\x}}%
-							}
-						}
-					}
-				}
-				{}
+							}%
+						}%
+					}%
+				}%
+				{}%
 				;}
 		}
 	
@@ -371,26 +381,36 @@
 }
 
 \DeclareDocumentCommand\AxeyTikz{ O{} m }{%
-	\useKVdefault[PLaxeytkz]
+	\restoreKV[PLaxeytkz]
 	\setKV[PLaxeytkz]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\IfSubStr{\axeytickwidth}{/}
-	{\StrCut{\axeytickwidth}{/}{\axeytickwidthA}{\axeytickwidthB}}
-	{\def\axeytickwidthA{\axeytickwidth}\def\axeytickwidthB{\axeytickwidth}}
+		{\StrCut{\axeytickwidth}{/}{\axeytickwidthA}{\axeytickwidthB}}
+		{\def\axeytickwidthA{\axeytickwidth}\def\axeytickwidthB{\axeytickwidth}}
+	%====test====
+	\IfEq{#2}{auto}%
+		{%
+			\xdef\tmprangeyvalues{\xintfloateval{seq(i,i=\ymin..[\ygrille]..\ymax)}}\StrDel{\tmprangeyvalues}{ }[\tmprangeyvalues]%
+		}%
+		{%
+			\xdef\tmprangeyvalues{#2}%
+		}%
+	%====fintest=
+	
 	\ifboolKV[PLaxeytkz]{Frac}%
 		{%
 			\ifboolKV[PLaxeytkz]{AffGrad}%on affiche les graduations
 				{%
-					\foreach \y in {#2}
+					\foreach \y in \tmprangeyvalues
 						{\draw[line width=\axeywidth] ({\axeytickwidthA},{\y-\axeyOy}) -- ({-\axeytickwidthB},{\y-\axeyOy}) %
 						\xintifboolexpr{\y==\axeyOy}{}{node[\axeyposlabel,font=\axeyfont] {\ConversionFraction{\y}}} ;}
 				}%
 				{%
-					\foreach \y in {#2}
+					\foreach \y in \tmprangeyvalues
 						{\draw[line width=\axeywidth] ({\axeytickwidthA},{\y-\axeyOy}) -- ({-\axeytickwidthB},{\y-\axeyOy}) ;}
 				}%
 		}%
 		{%
-			\foreach \y in {#2}{%
+			\foreach \y in \tmprangeyvalues {%
 				\draw[line width=\axeywidth] ({\axeytickwidthA},{\y-\axeyOy}) -- ({-\axeytickwidthB},{\y-\axeyOy})%
 				\ifboolKV[PLaxeytkz]{AffGrad}%on affiche les graduations
 					{%
@@ -412,6 +432,12 @@
 					{}
 				;}
 		}%
+}
+
+%axesOxoy
+\DeclareDocumentCommand\AxexyTikz{ O{} O{} m m }{%
+	\AxexTikz[#1]{#3}
+	\AxeyTikz[#2]{#4}
 }
 
 %axes
@@ -444,7 +470,7 @@
 }
 
 \DeclareDocumentCommand\AxesTikz{ O{} }{%
-	\useKVdefault[PLaxestkz]
+	\restoreKV[PLaxestkz]
 	\setKV[PLaxestkz]{#1}%
 	%les petits élargissements
 	\IfSubStr{\axeselargx}{/}
@@ -490,7 +516,7 @@
 }
 
 \DeclareDocumentCommand\OrigineTikz{ O{} }{%
-	\useKVdefault[PLaxesorig]%
+	\restoreKV[PLaxesorig]%
 	\setKV[PLaxesorig]{#1}%
 	\draw (0,0) node[\axesorpos=\axesordecal,font=\axesorfont] {\axesorval} ;
 }
@@ -498,17 +524,24 @@
 %grilles
 \setKVdefault[PLgrillestkz]{%
 	Affp=true,%
-	Affs=true
+	Affs=true,%
+	Dernier=false
 }
 
 \DeclareDocumentCommand\GrilleTikz{ O{} O{thin,lightgray} O{ultra thin,lightgray} }{%
-	\useKVdefault[PLgrillestkz]
+	\restoreKV[PLgrillestkz]
 	\setKV[PLgrillestkz]{#1}%
 	\ifboolKV[PLgrillestkz]{Affs}
 		{\draw[xstep=\xgrilles,ystep=\ygrilles,#3] ({\xmin-\axexOx},{\ymin-\axeyOy}) grid ({\xmax-\axexOx},{\ymax-\axeyOy});}
 		{}
 	\ifboolKV[PLgrillestkz]{Affp}
 		{\draw[xstep=\xgrille,ystep=\ygrille,#2] ({\xmin-\axexOx},{\ymin-\axeyOy}) grid ({\xmax-\axexOx},{\ymax-\axeyOy});}
+		{}
+	\ifboolKV[PLgrillestkz]{Dernier}
+		{%
+			\draw[#2] ({\xmin-\axexOx},{\ymax-\axeyOy}) -- ({\xmax-\axexOx},{\ymax-\axeyOy});%
+			\draw[#2] ({\xmax-\axexOx},{\ymin-\axeyOy}) -- ({\xmax-\axexOx},{\ymax-\axeyOy});%
+			}
 		{}
 }
 
@@ -526,7 +559,7 @@
 }
 
 \newcommand\PLnuagepoints[2][]{%
-	\useKVdefault[PLpts]
+	\restoreKV[PLpts]
 	\setKV[PLpts]{#1}%
 	\setsepchar{§}%
 	\readlist\listepointsaffiches{#2}
@@ -546,7 +579,7 @@
 }
 
 \newcommand\NuagePointsTikz[3][]{%
-	\useKVdefault[PLpts]
+	\restoreKV[PLpts]
 	\setKV[PLpts]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\def\xliste{#2}
 	\def\yliste{#3}
@@ -597,7 +630,7 @@
 }
 
 \newcommand\PointMoyenTikz[1][]{%
-	\useKVdefault[PLptmoy]
+	\restoreKV[PLptmoy]
 	\setKV[PLptmoy]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\IfStrEq{\ptmoystyle}{o}%
 		{
@@ -648,7 +681,7 @@
 }
 
 \DeclareDocumentCommand\FenetreSimpleTikz{ O{} D(){} D<>{} m D<>{} m }{%
-	\useKVdefault[PLsimplewindow]%
+	\restoreKV[PLsimplewindow]%
 	\setKV[PLsimplewindow]{#1}% on paramètres les nouvelles clés et on les simplifie
 	\ifboolKV[PLsimplewindow]{Grille}%
 		{\GrilleTikz}%
@@ -662,6 +695,10 @@
 
 \NewDocumentCommand\DeclareFonctionTikz{ O{f} m }{%nom_fonction+langage tikz
 	\tikzset{declare function={#1(\x)=#2;}}
+}
+
+\NewDocumentCommand\DeclareFonctionTikzXint{ O{f} m }{%nom_fonction+langage xint
+	\xintdeffloatfunc #1(x) := #2 ;%
 }
 
 %====INTERVALLES TIKZ
@@ -819,6 +856,94 @@
 			}%
 		}%
 	\end{scope}%
+}
+
+%====Intégrale TikZ
+\defKV[IntegrDomainTikz]{%
+	Epaisseur=\def\intgdomtikzthick{#1},%
+	Couleurs=\def\intgdomtikzcolors{#1},%
+	Style=\def\intgdomtikzstyle{#1},%
+	Opacite=\def\intgdomtikzopac{#1},%
+	Samples=\def\intgdomtikzsamples{#1},%
+	Hachures=\def\intgdomtikzhatch{#1},%
+	Type=\def\intgdomtikztype{#1},%
+	Pas=\def\intgdomtikzstep{#1},%
+	Jonction=\def\intgdomtikzjoin{#1}
+}
+\setKVdefault[IntegrDomainTikz]{%
+	Epaisseur=1pt,%
+	Couleurs={gray/teal},%
+	Style=remplissage,%
+	Opacite=0.5,%
+	Samples=250,%
+	Hachures={north west lines},%
+	Type=dessous,%
+	Pas=0.1,%
+	Jonction=bevel
+}
+
+\NewDocumentCommand\IntegraleTikz{ O{} D<>{} m O{0} m m }{%
+	%1 = clés
+	%2 = options particulières tikz
+	%3 = fonction, en tikz
+	%4 = fonction n°2 éventuelle
+	%de #5 à #6
+	\restoreKV[IntegrDomainTikz]% revenir au valeurs par défaut
+	\setKV[IntegrDomainTikz]{#1}% lit les arguments optionnels
+	\StrCut{\intgdomtikzcolors}{/}{\intgcolbord}{\intcolhach}%
+	\IfStrEq{\intgcolbord}{}{\xdef\intgcolbord{none}}{}%
+	\IfStrEq{\intgdomtikzstyle}{hachures}%
+		{%
+			\tikzset{integraletikzstyle/.style={line width=\intgdomtikzthick,draw=\intgcolbord,pattern=\intgdomtikzhatch,pattern color=\intcolhach,line join=\intgdomtikzjoin}}
+		}%
+		{}%
+	\IfStrEq{\intgdomtikzstyle}{remplissage}%
+		{%
+			\tikzset{integraletikzstyle/.style={line width=\intgdomtikzthick,draw=\intgcolbord,fill=\intcolhach,fill opacity=\intgdomtikzopac,line join=\intgdomtikzjoin}}
+		}%
+		{}%
+	\IfStrEq{\intgdomtikztype}{dessous}%
+		{%
+			\draw[integraletikzstyle,#2] (#5,0) -- plot[samples=\intgdomtikzsamples,domain=#5:#6] (\x,{#3}) --(#6,0) -- cycle ;
+		}%
+		{}%
+	\IfStrEq{\intgdomtikztype}{entre}%
+		{%
+			\draw[integraletikzstyle,#2] plot[samples=\intgdomtikzsamples,domain=#5:#6] (\x,{#3}) -- plot[samples=\intgdomtikzsamples,domain=#6:#5] (\x,{#4}) -- cycle ;
+		}%
+		{}%
+}
+
+\NewDocumentCommand\IntegraleTikzXint{ O{} D<>{} m O{0} m m }{%
+	%1 = clés
+	%2 = options particulières tikz
+	%3 = fonction, en tikz
+	%4 = fonction n°2 éventuelle
+	%de #5 à #6
+	\restoreKV[IntegrDomainTikz]% revenir au valeurs par défaut
+	\setKV[IntegrDomainTikz]{#1}% lit les arguments optionnels
+	\StrCut{\intgdomtikzcolors}{/}{\intgcolbord}{\intcolhach}%
+	\IfStrEq{\intgcolbord}{}{\xdef\intgcolbord{none}}{}%
+	\IfStrEq{\intgdomtikzstyle}{hachures}%
+		{%
+			\tikzset{integraletikzstyle/.style={line width=\intgdomtikzthick,draw=\intgcolbord,pattern=\intgdomtikzhatch,pattern color=\intcolhach,line join=\intgdomtikzjoin}}
+		}%
+		{}%
+	\IfStrEq{\intgdomtikzstyle}{remplissage}%
+		{%
+			\tikzset{integraletikzstyle/.style={line width=\intgdomtikzthick,draw=\intgcolbord,fill=\intcolhach,fill opacity=\intgdomtikzopac,line join=\intgdomtikzjoin}}
+		}%
+		{}%
+	\IfStrEq{\intgdomtikztype}{dessous}%
+		{%
+			\draw[integraletikzstyle,#2] (#5,0) -- plot[smooth] coordinates {\xintthecoords\xintfloatexpr seq((x,#3),x=#5..[\intgdomtikzstep]..#6)\relax} -- (#6,0) -- cycle ;
+		}%
+		{}%
+	\IfStrEq{\intgdomtikztype}{entre}%
+		{%
+			\draw[integraletikzstyle,#2] plot[smooth] coordinates {\xintthecoords\xintfloatexpr seq((x,#3),x=#5..[\intgdomtikzstep]..#6)\relax} -- plot[smooth] coordinates {\xintthecoords\xintfloatexpr seq((x,#4),x=#6..[-\intgdomtikzstep]..#5)\relax} -- cycle ;
+		}%
+		{}%
 }
 
 \endinput

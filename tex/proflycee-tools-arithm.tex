@@ -672,8 +672,8 @@
 
 \NewDocumentCommand\InverseModulo{ s m m }{%
 	\xdef\PGCDD{\xinteval{gcd(#2,#3)}}%
-	\xdef\resinvmod{#2{} n'est pas inversible modulo #3.}
-		\xintFor* ##1 in {\xintSeq{1}{#3}}\do{\xintifboolexpr{\xintiiRem{\xinteval{#2*##1}}{#3} == 1}{\xdef\resinvmod{##1}}{}}%
+	\xdef\resinvmod{#2{} n'est pas inversible modulo #3.}%
+	\xintFor* ##1 in {\xintSeq{1}{#3}}\do{\xintifboolexpr{\xintiiRem{\xinteval{#2*##1}}{#3} == 1}{\xdef\resinvmod{##1}}{}}%
 	\IfBooleanTF{#1}%
 		{%
 			On a $\text{PGCD}(#2;#3)=\num{\PGCDD}$.~%
@@ -696,7 +696,7 @@
 	\ifboolKV[chiffaffine]{Dechiffr}%
 	{%
 		\xdef\resinvmod{0}%
-		\xintFor* ##1 in {\xintSeq{1}{\tmpmodulo}}\do{
+		\xintFor* ##1 in {\xintSeq{1}{\tmpmodulo}}\do{%
 			\xintifboolexpr{\xintiiRem{\xinteval{(\tmpcoeffa)*(##1)}}{\tmpmodulo} == 1}%
 			{\xdef\resinvmod{##1}}{}%
 		}%
@@ -1510,6 +1510,396 @@
 			\IntPoseMultiplication{\tmpcalcA}{\tmpcalcB}<#3>
 		}%
 		{}%
+}
+
+%====FACTORIELLE
+\defKV[calcfactorielle]{ChSignif=\def\factochfsign{#1},Sens=\def\factochfsens{#1}}
+\setKVdefault[calcfactorielle]{%
+	Complet=false,%
+	Enonce=false,%
+	Partiel=false,%
+	Grand=false,%
+	ChSignif=9,%
+	Espace=\mkern1.5mu\relax,%
+	Sens=m
+}
+
+\NewDocumentCommand\Factorielle{ s O{} m }{%
+	\restoreKV[calcfactorielle]%
+	\setKV[calcfactorielle]{#2}%
+	\ifboolKV[calcfactorielle]{Grand}%
+		{%
+			\xdef\tmpres{\xintfloateval[\factochfsign]{factorial(#3)}}%
+		}%
+		{%
+			\xdef\tmpres{\xinteval{factorial(#3)}}%
+		}%
+	\ensuremath{%
+		\ifboolKV[calcfactorielle]{Enonce}%
+			{%
+				\IfBooleanTF{#1}{#3\useKV[calcfactorielle]{Espace}!}{\num{#3}\useKV[calcfactorielle]{Espace}!}=
+			}%
+			{}%
+		\ifboolKV[calcfactorielle]{Partiel}%
+			{%
+				\IfBooleanTF{#1}%
+					{%
+						\IfStrEqCase{\factochfsens}{%
+							{m}{1 \times 2 \times \ldots \times \xinteval{#3-1} \times #3 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+							{d}{#3 \times \xinteval{#3-1} \times \ldots \times 2 \times 1 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+						}%
+					}%
+					{%
+						\IfStrEqCase{\factochfsens}{%
+							{m}{1 \times 2 \times \ldots \times \num{\xinteval{#3-1}} \times \num{#3} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+							{d}{\num{#3} \times \num{\xinteval{#3-1}} \times \ldots \times 2 \times 1 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+						}%
+					}%
+			}%
+			{}%
+		\ifboolKV[calcfactorielle]{Complet}%
+			{%
+				\IfBooleanTF{#1}%
+					{%
+						\IfStrEq{\factochfsens}{m}%
+							{%
+								1 \xintFor* ##1 in {\xintSeq{2}{#3}}\do{\times ##1} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+							{%
+								\xintFor* ##1 in {\xintSeq{#3}{2}}\do{##1 \times} 1 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+					}%
+					{%
+						\IfStrEq{\factochfsens}{m}%
+							{%
+								1 \xintFor* ##1 in {\xintSeq{2}{#3}}\do{\times \num{##1}} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+							{%
+								\xintFor* ##1 in {\xintSeq{#3}{2}}\do{\num{##1} \times} 1 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+					}%
+			}%
+			{}%
+		\IfBooleanTF{#1}%
+			{%
+				\tmpres%
+			}%
+			{%
+				\ifboolKV[calcfactorielle]{Grand}%
+					{%
+						\num[scientific-notation=true]{\tmpres}%
+					}%
+					{%
+						\num{\tmpres}%
+					}%
+			}%
+	}%
+}
+
+\NewDocumentCommand\Primorielle{ s O{} m }{%
+	\restoreKV[calcfactorielle]%
+	\setKV[calcfactorielle]{#2}%
+	\def\tmpres{1}%
+	\xintFor* ##1 in {\xintSeq{1}{#3}}\do{%
+		\pgfmathisprime{##1}\ifnum\pgfmathresult=1\xdef\tmpres{\xinteval{\tmpres*##1}}\fi%
+	}%
+	\ifboolKV[calcfactorielle]{Grand}%
+		{%
+			\xdef\tmpres{\xintfloateval[\factochfsign]{\tmpres}}%
+		}%
+		{}%
+	\ensuremath{%
+		\ifboolKV[calcfactorielle]{Enonce}%
+			{%
+				\IfBooleanTF{#1}{#3\#}{\num{#3}\#}=
+			}%
+			{}%
+		\ifboolKV[calcfactorielle]{Complet}%
+			{%
+				\IfBooleanTF{#1}%
+					{%
+						\IfStrEq{\factochfsens}{m}%
+							{%
+								2 \xintFor* ##1 in {\xintSeq{3}{#3}}\do{\pgfmathisprime{##1}\ifnum\pgfmathresult=1\times##1\fi} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+							{%
+								\xintFor* ##1 in {\xintSeq{#3}{3}}\do{\pgfmathisprime{##1}\ifnum\pgfmathresult=1##1\times\fi} 2 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+					}%
+					{%
+						\IfStrEq{\factochfsens}{m}%
+							{%
+								2 \xintFor* ##1 in {\xintSeq{3}{#3}}\do{\pgfmathisprime{##1}\ifnum\pgfmathresult=1\times\num{##1}\fi} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+							{%
+								\xintFor* ##1 in {\xintSeq{#3}{3}}\do{\pgfmathisprime{##1}\ifnum\pgfmathresult=1\num{##1}\times\fi} 2 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+					}%
+			}%
+			{}%
+		\IfBooleanTF{#1}%
+			{%
+				\tmpres%
+			}%
+			{%
+				\ifboolKV[calcfactorielle]{Grand}%
+					{%
+						\num[scientific-notation=true]{\tmpres}%
+					}%
+					{%
+						\num{\tmpres}%
+					}%
+			}%
+	}%
+}
+
+\NewDocumentCommand\DoubleFactorielle{ s O{} m }{%
+	\restoreKV[calcfactorielle]%
+	\setKV[calcfactorielle]{#2}%
+	\def\tmpres{1}%	
+	\xintFor* ##1 in {\xintSeq{1}{#3}}\do{%
+		\xintifboolexpr{\xintiiOdd{#3} == \xintiiOdd{##1} 'or' \xintiiEven{#3} == \xintiiEven{##1}}%
+			{%
+				\xdef\tmpres{\xinteval{\tmpres*##1}}%
+			}%
+			{}%
+	}%
+	\ifboolKV[calcfactorielle]{Grand}%
+	{%
+		\xdef\tmpres{\xintfloateval[\factochfsign]{\tmpres}}%
+	}%
+	{}%
+	\ensuremath{%
+		\ifboolKV[calcfactorielle]{Enonce}%
+		{%
+			\IfBooleanTF{#1}{#3\useKV[calcfactorielle]{Espace}!!}{\num{#3}\useKV[calcfactorielle]{Espace}!!}=
+		}%
+		{}%
+		\ifboolKV[calcfactorielle]{Complet}%
+		{%
+			\IfBooleanTF{#1}%
+			{%
+				\IfStrEq{\factochfsens}{m}%
+					{%
+						\xintifboolexpr{\xintiiOdd{#3} == 1}%
+							{%
+								1 \xintFor* ##1 in {\xintSeq{3}{#3}}\do{%
+									\xintifboolexpr{\xintiiOdd{##1} == 1}{\times##1}{}%
+								}%
+							}%
+							{%
+								2 \xintFor* ##1 in {\xintSeq{3}{#3}}\do{%
+									\xintifboolexpr{\xintiiOdd{##1} != 1}{\times##1}{}%
+								}%
+							}%
+						\ifboolKV[calcfactorielle]{Grand}{\approx}{=}%
+					}%
+					{%
+						\xintifboolexpr{\xintiiOdd{#3} == 1}%
+						{%
+							\xintFor* ##1 in {\xintSeq{#3}{3}}\do{%
+								\xintifboolexpr{\xintiiOdd{##1} == 1}{##1\times}{}%
+							}1%
+						}%
+						{%
+							\xintFor* ##1 in {\xintSeq{#3}{3}}\do{%
+								\xintifboolexpr{\xintiiOdd{##1} != 1}{##1\times}{}%
+							}2%
+						}%
+						\ifboolKV[calcfactorielle]{Grand}{\approx}{=}%
+					}%
+			}%
+			{%
+				\IfStrEq{\factochfsens}{m}%
+				{%
+					\xintifboolexpr{\xintiiOdd{#3} == 1}%
+					{%
+						1 \xintFor* ##1 in {\xintSeq{3}{#3}}\do{%
+							\xintifboolexpr{\xintiiOdd{##1} == 1}{\times\num{##1}}{}%
+						}%
+					}%
+					{%
+						2 \xintFor* ##1 in {\xintSeq{3}{#3}}\do{%
+							\xintifboolexpr{\xintiiOdd{##1} != 1}{\times\num{##1}}{}%
+						}%
+					}%
+					\ifboolKV[calcfactorielle]{Grand}{\approx}{=}%
+				}%
+				{%
+					\xintifboolexpr{\xintiiOdd{#3} == 1}%
+					{%
+						\xintFor* ##1 in {\xintSeq{#3}{3}}\do{%
+							\xintifboolexpr{\xintiiOdd{##1} == 1}{\num{##1}\times}{}%
+						}1%
+					}%
+					{%
+						\xintFor* ##1 in {\xintSeq{#3}{3}}\do{%
+							\xintifboolexpr{\xintiiOdd{##1} != 1}{\num{##1}\times}{}%
+						}2%
+					}%
+					\ifboolKV[calcfactorielle]{Grand}{\approx}{=}%
+				}%
+			}%
+		}%
+		{}%
+		\IfBooleanTF{#1}%
+		{%
+			\tmpres%
+		}%
+		{%
+			\ifboolKV[calcfactorielle]{Grand}%
+			{%
+				\num[scientific-notation=true]{\tmpres}%
+			}%
+			{%
+				\num{\tmpres}%
+			}%
+		}%
+	}%
+}
+
+\NewDocumentCommand\HyperFactorielle{ s O{} m }{%
+	\restoreKV[calcfactorielle]%
+	\setKV[calcfactorielle]{#2}%
+	\def\tmpres{1}%
+	\xintFor* ##1 in {\xintSeq{2}{#3}}\do{\xdef\tmpres{\xinteval{\tmpres*(##1)^(##1)}}}%
+	\ifboolKV[calcfactorielle]{Grand}%
+		{%
+			\xdef\tmpres{\xintfloateval[\factochfsign]{\tmpres}}%
+		}%
+		{}%
+	\ensuremath{%
+		\ifboolKV[calcfactorielle]{Enonce}%
+			{%
+				\IfBooleanTF{#1}{\text{H}(#3)}{\text{H}(\rm{#3})}=
+			}%
+			{}%
+		\ifboolKV[calcfactorielle]{Partiel}%
+			{%
+				\IfBooleanTF{#1}%
+					{%
+						\IfStrEqCase{\factochfsens}{%
+							{m}{1^1 \times 2^2 \times \ldots \times \xinteval{#3-1}^{\xinteval{#3-1}} \times #3^{#3} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+							{d}{#3^{#3} \times \xinteval{#3-1}^{\xinteval{#3-1}} \times \ldots \times 2^2 \times 1^1 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+						}%
+					}%
+					{%
+						\IfStrEqCase{\factochfsens}{%
+							{m}{1 \times 2 \times \ldots \times \num{\xinteval{#3-1}}^{\num{\xinteval{#3-1}}} \times \num{#3}^{\num{#3}} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+							{d}{\num{#3}^{\num{#3}} \times \num{\xinteval{#3-1}}^{\num{\xinteval{#3-1}}} \times \ldots \times 2^2 \times 1^1 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+						}%
+					}%
+			}%
+			{}%
+		\ifboolKV[calcfactorielle]{Complet}%
+			{%
+				\IfBooleanTF{#1}%
+					{%
+						\IfStrEq{\factochfsens}{m}%
+							{%
+								1^1 \xintFor* ##1 in {\xintSeq{2}{#3}}\do{\times ##1^{##1}} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+							{%
+								\xintFor* ##1 in {\xintSeq{#3}{2}}\do{##1^{##1} \times} 1^1 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+					}%
+					{%
+						\IfStrEq{\factochfsens}{m}%
+							{%
+								1^1 \xintFor* ##1 in {\xintSeq{2}{#3}}\do{\times \num{##1}^{\num{##1}}} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+							{%
+								\xintFor* ##1 in {\xintSeq{#3}{2}}\do{\num{##1}^{\num{##1}} \times} 1^1 \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+					}%
+			}%
+			{}%
+		\IfBooleanTF{#1}%
+			{%
+				\tmpres%
+			}%
+			{%
+				\ifboolKV[calcfactorielle]{Grand}%
+					{%
+						\num[scientific-notation=true]{\tmpres}%
+					}%
+					{%
+						\num{\tmpres}%
+					}%
+			}%
+	}%
+}
+
+\NewDocumentCommand\SuperFactorielle{ s O{} m }{%
+	\restoreKV[calcfactorielle]%
+	\setKV[calcfactorielle]{#2}%
+	\def\tmpres{1}%
+	\xintFor* ##1 in {\xintSeq{2}{#3}}\do{\xdef\tmpres{\xinteval{\tmpres*factorial(##1)}}}%
+	\ifboolKV[calcfactorielle]{Grand}%
+		{%
+			\xdef\tmpres{\xintfloateval[\factochfsign]{\tmpres}}%
+		}%
+		{}%
+	\ensuremath{%
+		\ifboolKV[calcfactorielle]{Enonce}%
+			{%
+				\IfBooleanTF{#1}{\text{sf}(#3)}{\text{sf}(\num{#3})}=
+			}%
+			{}%
+		\ifboolKV[calcfactorielle]{Partiel}%
+			{%
+				\IfBooleanTF{#1}%
+					{%
+						\IfStrEqCase{\factochfsens}{%
+							{m}{1\useKV[calcfactorielle]{Espace}! \times 2\useKV[calcfactorielle]{Espace}! \times \ldots \times \xinteval{#3-1}\useKV[calcfactorielle]{Espace}! \times #3\useKV[calcfactorielle]{Espace}! \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+							{d}{#3\useKV[calcfactorielle]{Espace}! \times \xinteval{#3-1}\useKV[calcfactorielle]{Espace}! \times \ldots \times 2\useKV[calcfactorielle]{Espace}! \times 1\useKV[calcfactorielle]{Espace}! \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+						}%
+					}%
+					{%
+						\IfStrEqCase{\factochfsens}{%
+							{m}{1\useKV[calcfactorielle]{Espace}! \times 2\useKV[calcfactorielle]{Espace}! \times \ldots \times \num{\xinteval{#3-1}}\useKV[calcfactorielle]{Espace}! \times \num{#3}\useKV[calcfactorielle]{Espace}! \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+							{d}{\num{#3}\useKV[calcfactorielle]{Espace}! \times \num{\xinteval{#3-1}}\useKV[calcfactorielle]{Espace}! \times \ldots \times 2\useKV[calcfactorielle]{Espace}! \times 1\useKV[calcfactorielle]{Espace}! \ifboolKV[calcfactorielle]{Grand}{\approx}{=}}%
+						}%
+					}%
+			}%
+			{}%
+		\ifboolKV[calcfactorielle]{Complet}%
+			{%
+				\IfBooleanTF{#1}%
+					{%
+						\IfStrEq{\factochfsens}{m}%
+							{%
+								1\useKV[calcfactorielle]{Espace}! \xintFor* ##1 in {\xintSeq{2}{#3}}\do{\times ##1\useKV[calcfactorielle]{Espace}!} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+							{%
+								\xintFor* ##1 in {\xintSeq{#3}{2}}\do{##1\useKV[calcfactorielle]{Espace}! \times} 1\useKV[calcfactorielle]{Espace}! \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+					}%
+					{%
+						\IfStrEq{\factochfsens}{m}%
+							{%
+								1\useKV[calcfactorielle]{Espace}! \xintFor* ##1 in {\xintSeq{2}{#3}}\do{\times \num{##1}\useKV[calcfactorielle]{Espace}!} \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+							{%
+								\xintFor* ##1 in {\xintSeq{#3}{2}}\do{\num{##1}\useKV[calcfactorielle]{Espace}! \times} 1\useKV[calcfactorielle]{Espace}! \ifboolKV[calcfactorielle]{Grand}{\approx}{=}
+							}%
+					}%
+			}%
+			{}%
+		\IfBooleanTF{#1}%
+			{%
+				\tmpres%
+			}%
+			{%
+				\ifboolKV[calcfactorielle]{Grand}%
+					{%
+						\num[scientific-notation=true]{\tmpres}%
+					}%
+					{%
+						\num{\tmpres}%
+					}%
+			}%
+	}%
 }
 
 \endinput

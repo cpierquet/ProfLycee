@@ -85,8 +85,18 @@
 
 \newcommand\NbAlea[4][0]{%entier ou décimal
 	\xintifboolexpr{#1 == 0}%
-		{\xdef#4{\fpeval{randint(#2,#3)}}}%
-		{\xdef#4{\fpeval{round(randint(#2,#3)+rand(),#1)}}}%
+		{%
+			\xdef#4{\fpeval{randint(#2,#3)}}%
+		}%
+		{%
+			\xintifboolexpr{(#3-#2) == 1}%
+				{%
+					\xdef#4{\fpeval{round(#2+rand(),#1)}}%
+				}%
+				{%
+					\xdef#4{\fpeval{round(randint(#2,#3)+rand(),#1)}}%
+				}%
+		}%
 }
 \newcommand\VarNbAlea[2]{%
 	\xdef#1{\fpeval{#2}}%

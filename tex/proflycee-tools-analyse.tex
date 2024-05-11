@@ -574,6 +574,36 @@
 		}%
 }
 
+%===intégrale 'brute'
+\NewDocumentCommand\CalcIntegrale{ s O{} D<>{50} m m m }{%
+	\xintdeffloatfunc varfct(x) := #4 ;%
+	\def\TmpNmU{\xinteval{(#3)-1}}%
+	\def\TmpRes{\xintfloateval{(#6-#5)/(6*(#3))*(2*add(varfct(#5+i*(#6-#5)/(#3)),i=1..\TmpNmU)+varfct(#5)+varfct(#6)+4*add(varfct(#5+(i+0.5)*(#6-#5)/(#3)), i=0..\TmpNmU))}}%
+	\IfStrEq{#2}{}%
+		{%
+			\IfBooleanTF{#1}{\num{\TmpRes}}{\TmpRes}%
+		}%
+		{%
+			\IfBooleanTF{#1}{\num{\xintfloateval{round(\TmpRes,#2)}}}{\xintfloateval{round(\TmpRes,#2)}}%
+		}%
+	\relax
+}
+
+%===intégrale 'brute'
+\NewDocumentCommand\ValeurMoyenneIntg{ s O{} D<>{50} m m m }{%
+	\xintdeffloatfunc varfct(x) := #4 ;%
+	\def\TmpNmU{\xinteval{(#3)-1}}%
+	\def\TmpRes{\xintfloateval{(1)/(6*(#3))*(2*add(varfct(#5+i*(#6-#5)/(#3)),i=1..\TmpNmU)+varfct(#5)+varfct(#6)+4*add(varfct(#5+(i+0.5)*(#6-#5)/(#3)), i=0..\TmpNmU))}}%
+	\IfStrEq{#2}{}%
+		{%
+			\IfBooleanTF{#1}{\num{\TmpRes}}{\TmpRes}%
+		}%
+		{%
+			\IfBooleanTF{#1}{\num{\xintfloateval{round(\TmpRes,#2)}}}{\xintfloateval{round(\TmpRes,#2)}}%
+		}%
+	\relax
+}
+
 %==intégrale tikz==
 
 \defKV[methodeintegrtkz]{%
