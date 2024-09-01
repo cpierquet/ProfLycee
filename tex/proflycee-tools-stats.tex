@@ -75,6 +75,69 @@
 	\expandafter\def\csname\RegLinCoeffrd\endcsname{\fpeval{\csname\RegLinCoeffr\endcsname*\csname\RegLinCoeffr\endcsname}}
 }
 
+\defKV[coeffregquad]{%
+	NomCoeffa=\def\RegQuadCoeffa{#1},%
+	NomCoeffb=\def\RegQuadCoeffb{#1},%
+	NomCoeffc=\def\RegQuadCoeffc{#1},%
+	NomXmin=\def\RegQuadCoeffXmin{#1},%
+	NomXmax=\def\RegQuadCoeffXmax{#1}
+}
+
+\setKVdefault[coeffregquad]{%
+	NomCoeffa=COEFFa,%
+	NomCoeffb=COEFFb,%
+	NomCoeffc=COEFFc,%
+	NomXmin=LXmin,%
+	NomXmax=LXmax
+}
+
+\newcommand\CalculsRegQuad[3][]{%
+	\useKVdefault[coeffregquad]%
+	\setKV[coeffregquad]{#1}% on paramètres les nouvelles clés et on les simplifie
+	%xmin et xmax
+	\expandafter\def\csname\RegQuadCoeffXmin\endcsname{\xintfloateval{min(#2)}}%
+	\expandafter\def\csname\RegQuadCoeffXmax\endcsname{\xintfloateval{max(#2)}}%
+	%listes des données
+	\def\xliste{#2}%
+	\def\yliste{#3}%
+	\readlist*\LX{\xliste}%
+	\readlist*\LY{\yliste}%
+	%taille des listes
+	\def\LNB{\inteval{\LXlen}}
+	%somme importantes
+	\xdef\LXSomme{0}%
+	\xdef\LXCSomme{0}%
+	\xdef\LYSomme{0}%
+	\xdef\LXXSomme{0}%
+	\xdef\LXYSomme{0}%
+	\xdef\LXXCSomme{0}%
+	\xdef\LXCXCSomme{0}%
+	\xdef\LXCYSomme{0}%
+	%calculs
+	\foreach \i in {1,2,...,\LNB}{%
+		\xdef\LXSomme{\xintfloateval{\LXSomme+\LX[\i]}}%
+		\xdef\LXCSomme{\xintfloateval{\LXCSomme+(\LX[\i])^2}}%
+	}%
+	\foreach \i in {1,2,...,\LNB}{%
+		\xdef\LYSomme{\xintfloateval{\LYSomme+\LY[\i]}}%
+	}%
+	\xdef\LXmoy{\xintfloateval{\LXSomme/\LNB}}%
+	\xdef\LYmoy{\xintfloateval{\LYSomme/\LNB}}%
+	\xdef\LXCmoy{\xintfloateval{\LXCSomme/\LNB}}%
+	%calculs suites
+	\foreach \i in {1,2,...,\LNB}{%
+		\xdef\LXXSomme{\xintfloateval{\LXXSomme+(\LX[\i]-\LXmoy)^2}}%
+		\xdef\LXYSomme{\xintfloateval{\LXYSomme+(\LX[\i]-\LXmoy)*(\LY[\i]-\LYmoy)}}%
+		\xdef\LXXCSomme{\xintfloateval{\LXXCSomme+(\LX[\i]-\LXmoy)*((\LX[\i])*(\LX[\i])-\LXCmoy)}}%
+		\xdef\LXCXCSomme{\xintfloateval{\LXCXCSomme+((\LX[\i])^2-\LXCmoy)^2}}%
+		\xdef\LXCYSomme{\xintfloateval{\LXCYSomme+((\LX[\i])^2-\LXCmoy)*(\LY[\i]-\LYmoy)}}%
+	}%
+	%COEFFS OK
+	\expandafter\def\csname\RegQuadCoeffb\endcsname{\xintfloateval{(\LXYSomme*\LXCXCSomme-\LXCYSomme*\LXXCSomme)/(\LXXSomme*\LXCXCSomme-(\LXXCSomme)^2)}}%
+	\expandafter\def\csname\RegQuadCoeffa\endcsname{\xintfloateval{(\LXCYSomme*\LXXSomme-\LXYSomme*\LXXCSomme)/(\LXXSomme*\LXCXCSomme-(\LXXCSomme)^2)}}%
+	\expandafter\def\csname\RegQuadCoeffc\endcsname{\xintfloateval{\LYmoy-\csname\RegQuadCoeffb\endcsname*\LXmoy-\csname\RegQuadCoeffa\endcsname*\LXCmoy}}%
+}
+
 %pour un nuage en TiKz
 \defKV[nuagereglin]{%
 	Couleur=\def\RegLinNuageCouleur{#1},%

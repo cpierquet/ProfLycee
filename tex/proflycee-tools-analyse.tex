@@ -996,4 +996,15 @@
 	}%
 }
 
+%----max/min
+\NewDocumentCommand\DetermineMax{ O{0.01} m m m O{\tmpmax} O{\tmpmaxvalx} }{%
+	\xdef#5{\xintfloateval{max(seq(#2,x=#3..[#1]..#4,#4))}}%
+	\xdef#6{\xintfloateval{first(seq((#2 == #5)?{x}{},x=#3..[#1]..#4,#4))}}%
+}
+
+\NewDocumentCommand\DetermineMin{ O{0.01} m m m O{\tmpmin} O{\tmpminvalx} }{%
+	\xdef#5{\xintfloateval{min(seq(#2,x=#3..[#1]..#4,#4))}}%
+	\xdef#6{\xintfloateval{first(seq((#2 == #5)?{x}{},x=#3..[#1]..#4,#4))}}%
+}
+
 \endinput

@@ -10,6 +10,39 @@
 \RequirePackage{mleftright} %pour une meilleure gestion des espacements avec \left \right :-)
 %\RequirePackage{mathrsfs}%pour \mathscr (à voir...)
 
+%===UNITÉS
+
+\NewDocumentCommand\pflprix{ o m }{%
+	\IfValueTF{#1}%
+		{%
+			\num[round-mode=places,round-precision=#1]{#2}\,\text{€}%
+		}%
+		{%
+			\num{#2}\,\text{€}%
+		}%
+}
+
+\NewDocumentCommand\pflangle{ o m }{%
+	\IfValueTF{#1}%
+		{%
+			\num[round-mode=places,round-precision=#1]{#2}\text{\textdegree}%
+		}%
+		{%
+			\num{#2}\text{\textdegree}%
+		}%
+}
+
+\NewDocumentCommand\pflpcent{ o m }{%
+	\IfValueTF{#1}%
+	{%
+		\num[round-mode=places,round-precision=#1]{#2}\,\%%
+	}%
+	{%
+		\num{#2}\,\%%
+	}%
+}
+
+
 %===ENSEMBLES CLASSIQUES
 \ifthenelse{\isundefined{\N}}%
 	{%
