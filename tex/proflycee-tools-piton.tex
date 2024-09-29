@@ -2,6 +2,7 @@
 % Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
+%3.04f	Ajout de clés pour la coloration des nombres et Piton
 %3.04d	PitonInputFile et styles, pour compatibilité pfm
 %3.03c	Thonny via piton + modification clé gobble ?
 %3.01f	PseudoCode via piton (?)
@@ -42,7 +43,7 @@
 	BarreTitre=true,%
 	Titre={{\scriptsize\faCode}~~Code Python},%
 	EspacementV=0.5\baselineskip,%
-	CouleurNombres=orange
+	CouleurNombres={orange!75!black}
 }
 
 %==Style Moderne
@@ -160,7 +161,7 @@
 	\useKVdefault[envpiton]%
 	\setKV[envpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%------les styles piton
-	\SetPitonStyle{ Number = \color{\CODPITcolnb} }
+	\SetPitonStyle[Python]{ Number = \color{\CODPITcolnb} }
 	\ifboolKV[envpiton]{Lignes}%si lignes=true
 		{\PitonOptions{left-margin=0.75em,line-numbers={skip-empty-lines=false,label-empty-lines=true,#3}}}%left-margin=auto,
 		{}%
@@ -227,7 +228,7 @@
 	\useKVdefault[envpiton]%
 	\setKV[envpiton]{#1}% on paramètres les nouvelles clés et on les simplifie
 	%------les styles piton
-	\SetPitonStyle{ Number = \color{\CODPITcolnb} }
+	\SetPitonStyle[Python]{ Number = \color{\CODPITcolnb} }
 	\ifboolKV[envpiton]{Lignes}%si lignes=true
 		{\PitonOptions{left-margin=0.75em,line-numbers,line-numbers={skip-empty-lines=false,label-empty-lines=true,#3}}}%left-margin=auto,
 		{}%
@@ -477,12 +478,14 @@
 
 \defKV[consolepyluatex]{%
 	Largeur=\def\ConsPyluaLarg{#1},
-	Alignement=\def\ConsPyluaAlign{#1}
+	Alignement=\def\ConsPyluaAlign{#1},%
+	CouleurNombres=\def\CODPITcolnb{#1}
 }
 \setKVdefault[consolepyluatex]{%
 	Logo=true,%
 	Largeur=\linewidth,%
-	Alignement=flush left
+	Alignement=flush left,%
+	CouleurNombres={orange!75!black}
 }
 
 \NewDocumentEnvironment{ConsolePiton}{ O{} D<>{} m }%
@@ -492,6 +495,7 @@
 {
 	\restoreKV[consolepyluatex]% revenir au valeurs par défaut
 	\setKV[consolepyluatex]{#2}% lit les arguments optionnels
+	\SetPitonStyle[Python]{ Number = \color{\CODPITcolnb} }
 	\PitonOptions{width={\ConsPyluaLarg-5mm},break-lines,end-of-broken-line={\,},continuation-symbol={\;},#1}
 	%\PitonOptions{width={\ConsPyluaLarg-5mm},#1}
 	\PyLTVerbatimEnv
@@ -524,14 +528,16 @@
 	NomFichier=\def\thonnypitonfilename{#1},%
 	NomConsole=\def\thonnypitonshellname{#1},%
 	IntroConsole=\def\thonnypitonintroconsole{#1},%
-	Gobble=\def\thonnypitongobble{#1}
+	Gobble=\def\thonnypitongobble{#1},%
+	CouleurNombres=\def\CODPITcolnb{#1}
 }
 
 \setKVdefault[pitonthonny]{%
 	NomFichier=script.py,%
 	NomConsole=console,%
 	IntroConsole={Python 3.11.6 /usr/bin/python},%
-	Gobble={}
+	Gobble={},%
+	CouleurNombres={orange!75!black}
 }
 
 \NewPitonEnvironment{PitonThonnyEditor}{ D<>{} O{} m }%
@@ -539,6 +545,7 @@
 	\restoreKV[pitonthonny]%
 	\setKV[pitonthonny]{#1}%
 	\settowidth{\LargeurNumbersThonny}{\footnotesize\texttt{00}}%
+	\SetPitonStyle[Python]{Number=\color{\CODPITcolnb}}
 	\PitonOptions{left-margin=\LargeurNumbersThonny+1mm,line-numbers={skip-empty-lines=false,label-empty-lines=true},break-lines,indent-broken-lines,continuation-symbol={}}%
 	%--gestion du gobble
 	\IfStrEqCase{\thonnypitongobble}{%
@@ -564,6 +571,7 @@
 	{\restoreKV[pitonthonny]%
 	\setKV[pitonthonny]{#1}%
 	\settowidth{\LargeurNumbersThonny}{\footnotesize\texttt{00}}%
+	\SetPitonStyle[Python]{Number=\color{\CODPITcolnb}}
 	\PitonOptions{left-margin=\LargeurNumbersThonny+1mm,line-numbers,line-numbers={skip-empty-lines=false,label-empty-lines=true},break-lines,indent-broken-lines,continuation-symbol={}}%
 	\tcbset{tcbthonnypiton/.style={title=\vphantom{pf}\thonnypitonfilename\:\textcolor{gray}{×}},before skip=0.33\baselineskip,after skip=0.33\baselineskip}%
 	\tcolorbox[sharp corners=all,enhanced,size=small,width=#2,colframe=gray,colback=lightgray!5,tcbthonnypiton,fonttitle=\scriptsize\sffamily,coltitle=black,
@@ -579,6 +587,7 @@
 	\PyLTVerbatimEnv%
 	\tcbset{tcbthonnypitonconsole/.style={title=\vphantom{pf}\thonnypitonshellname\:\textcolor{gray}{×}},before skip=0.33\baselineskip,after skip=0.33\baselineskip}%
 	\noindent%
+	\SetPitonStyle[Python]{Number=\color{\CODPITcolnb}}
 	%--gestion du gobble
 	\IfStrEqCase{\thonnypitongobble}{%
 		{auto}{\PitonOptions{auto-gobble}}%

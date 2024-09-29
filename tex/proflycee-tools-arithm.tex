@@ -1902,4 +1902,65 @@
 	}%
 }
 
+%====CONVERSIONS ENTRE BASES
+\ExplSyntaxOn
+%commande interne (stockage ou non)
+\NewDocumentCommand\pflbasetobase{ m m m }{%
+	%1=init
+	%2=fin
+	%3=nb
+	\ifnum#2=10%
+		\int_from_base:nn {#3}{#1}%
+	\else%
+		\int_to_Base:nn {\int_from_base:nn {#3}{#1}}{#2}%
+	\fi%
+}
+
+\NewDocumentCommand\tmpresconvbases{ m m m O{\tmpconvres} }{%
+	%1=init
+	%2=fin
+	%3=nb
+	\ifnum#2=10%
+		\xdef#4{\int_from_base:nn {#3}{#1}}%
+	\else%
+		\xdef#4{\int_to_Base:nn {\int_from_base:nn {#3}{#1}}{#2}}%
+	\fi%
+}
+\ExplSyntaxOff
+
+%commande interne split adaptée de https://tex.stackexchange.com/questions/171007/split-a-character-string-n-by-n // unbonpetit // CC BY-SA 3.0
+\NewDocumentCommand\tmpStrSplit{ O{\,} m m O{\tmpsplitres} }{%
+	%1=espace / %2=nb caract / %3=chaîne / %4=macro de stockage
+	\xdef\splitstring{#3}\let\splitresult\empty%
+	\loop%
+		\StrLen\splitstring[\tempa]%
+		\StrSplit\splitstring{\number\numexpr\tempa-#2}\splitstring\tempb%
+		\xdef\splitresult{\unless\ifx\splitstring\empty#1\fi\tempb\splitresult}%
+		\unless\ifx\splitstring\empty%
+	\repeat%
+	\xdef#4{\splitresult}%
+}
+
+\NewDocumentCommand\ConversionEntreBases{ s O{\,} m m }{%
+	%calculs internes
+	\StrCut{#3}{->}{\tmpbaseinit}{\tmpbasefin}%
+	\tmpresconvbases{\tmpbaseinit}{\tmpbasefin}{#4}%\tmpconvres
+	%affichage
+	\ensuremath{%
+		\ifnum\tmpbaseinit=2%
+			\tmpStrSplit{4}{#4}%
+			{\tmpsplitres}\IfBooleanT{#1}{_{\tmpbaseinit}}%
+		\else%
+			{#4}\IfBooleanT{#1}{_{\tmpbaseinit}}%
+		\fi%
+		=%
+		\ifnum\tmpbasefin=2%
+			\tmpStrSplit[#2]{4}{\tmpconvres}%
+			{\tmpsplitres}\IfBooleanT{#1}{_{\tmpbasefin}}%
+		\else%
+			{\tmpconvres}\IfBooleanT{#1}{_{\tmpbasefin}}%
+		\fi%
+	}%
+}
+
 \endinput

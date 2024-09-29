@@ -245,7 +245,10 @@
 	StyleTrait=\def\PLAPtypetrait{#1},%
 	EpaisseurTrait=\def\PLAPeptrait{#1},%
 	PositionProbas=\def\PLAPposprob{#1},%
-	CouleurFond=\def\PLAPcolback{#1}
+	CouleurFond=\def\PLAPcolback{#1},%
+	CouleurTraits=\def\PLAPcolarc{#1},%
+	CouleurProbas=\def\PLAPcolprobas{#1},%
+	CouleurNoeuds=\def\PLAPcolnoeuds{#1}
 }
 
 \setKVdefault[PLTIKZARBRE]{%
@@ -260,7 +263,10 @@
 	StyleTrait={},%
 	EpaisseurTrait=semithick,%
 	PositionProbas={},%
-	CouleurFond=white
+	CouleurFond=white,%
+	CouleurTraits=black,%
+	CouleurProbas=black,%
+	CouleurNoeuds=black
 }
 
 \NewDocumentCommand\IntPlaceProbasArbre{ m m m m m }{%
@@ -285,14 +291,14 @@
 	\readlist*\PLARBREDONNES{#2}%
 	\begin{tikzpicture}[x=\PLAPunite,y=\PLAPunite]
 		%styles
-		\tikzstyle{noeud} = [font=\PLAPfont]
-		\tikzstyle{probas}= [font=\PLAPfontproba]
+		\tikzstyle{noeud} = [font=\PLAPfont,text=\PLAPcolnoeuds]
+		\tikzstyle{probas}= [font=\PLAPfontproba,text=\PLAPcolprobas]
 		\ifboolKV[PLTIKZARBRE]{InclineProbas}
 			{\tikzstyle{PLetiquette}=[pos=0.525,sloped,inner sep=2pt,outer sep=2pt,rectangle]}
 			{\tikzstyle{PLetiquette}=[pos=0.525,inner sep=2pt,outer sep=2pt,rectangle]}
 		\ifboolKV[PLTIKZARBRE]{Fleche}
-			{\tikzstyle{PLfleche}=[->,>=latex,\PLAPtypetrait,\PLAPeptrait]}
-			{\tikzstyle{PLfleche}=[\PLAPtypetrait,\PLAPeptrait]}
+			{\tikzstyle{PLfleche}=[->,>=latex,\PLAPtypetrait,\PLAPeptrait,\PLAPcolarc]}
+			{\tikzstyle{PLfleche}=[\PLAPtypetrait,\PLAPeptrait,\PLAPcolarc]}
 		%arbre2x2
 		\IfEq{\PLAPtype}{2x2}
 		{%
@@ -576,14 +582,14 @@
 	\readlist*\PLARBREDONNES{#2}
 	\begin{tikzpicture}[x=\PLAPunite,y=\PLAPunite]
 		%styles
-		\tikzstyle{noeud} = [font=\PLAPfont]
-		\tikzstyle{probas}= [font=\PLAPfontproba]
+		\tikzstyle{noeud} = [font=\PLAPfont,text=\PLAPcolnoeuds]
+		\tikzstyle{probas}= [font=\PLAPfontproba,text=\PLAPcolprobas]
 		\ifboolKV[PLTIKZARBRE]{InclineProbas}
 			{\tikzstyle{PLetiquette}=[pos=0.525,sloped,inner sep=2pt,outer sep=2pt,rectangle]}
 			{\tikzstyle{PLetiquette}=[pos=0.525,inner sep=2pt,outer sep=2pt,rectangle]}
 		\ifboolKV[PLTIKZARBRE]{Fleche}
-			{\tikzstyle{PLfleche}=[->,>=latex,\PLAPtypetrait,\PLAPeptrait]}
-			{\tikzstyle{PLfleche}=[\PLAPtypetrait,\PLAPeptrait]}
+			{\tikzstyle{PLfleche}=[->,>=latex,\PLAPtypetrait,\PLAPeptrait,\PLAPcolarc]}
+			{\tikzstyle{PLfleche}=[\PLAPtypetrait,\PLAPeptrait,\PLAPcolarc]}
 		%arbre2x2
 		\IfEq{\PLAPtype}{2x2}
 		{%

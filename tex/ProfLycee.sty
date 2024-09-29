@@ -1,9 +1,13 @@
-% Author     : C. Pierquet
-% licence    : Released under the LaTeX Project Public License v1.3c
-% or later, see http://www.latex-project.org/lppl.txtf
+% Author.............: C. Pierquet
+% licence............: Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txtf
+% licence cliparts...: CC0 from openclipart
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2024/09/01 3.04e Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2024/09/27 3.05b Aide pour l'utilisation de LaTeX en lycee]
+% 3.05b	Mise en standby des commandes liées à minted (attente de compatibilité complète avec tcblisting) + Clé [ValeursTan] pour les cercles trigo
+% 3.05a	Conversions entre bases + vectorial clipart (de openclipart)
+% 3.04g	Ajout de clés pour les arbres de probas
+% 3.04f	Ajout de clés pour la coloration des nombres et Piton
 % 3.04e	Commandes prix/angle/pourcent en lien avec siunitx
 % 3.04d	PitonInputFile et styles
 % 3.04c	Max et min pour des fonctions
@@ -169,15 +173,15 @@
 			\input{proflycee-tools-espace.tex}
 		}%
 		{}%
-	\IfSubStr{#1}{minted}%
-		{%
-			\if@build
-				\RequirePackage[outputdir=build]{minted} %on charge minted avec le répertoire build
-			\fi
-			\tcbuselibrary{minted} %on charge minted via la librairie tcbox
-			\input{proflycee-tools-minted.tex}
-		}%
-		{}%
+	% \IfSubStr{#1}{minted}%
+		% {%
+			% \if@build
+				% \RequirePackage[outputdir=build]{minted} %on charge minted avec le répertoire build
+			% \fi
+			% \tcbuselibrary{minted} %on charge minted via la librairie tcbox
+			% \input{proflycee-tools-minted.tex}
+		% }%
+		% {}%
 	\IfSubStr{#1}{pythontex}%
 		{%
 			\RequirePackage[gobble=auto]{pythontex}
@@ -234,5 +238,7 @@
 \input{proflycee-tools-competences.tex}
 %%------Examens
 \input{proflycee-tools-exams.tex}
+%%------Cliparts
+\input{proflycee-tools-cliparts.tex}
 
 \endinput

@@ -35,7 +35,8 @@
 	Equationsin=false,%
 	cos=45,%
 	sin=30,%
-	CouleurSol=blue
+	CouleurSol=blue,%
+	ValeursTan=false
 }
 
 \newcommand\CercleTrigo[1][]{%
@@ -43,6 +44,28 @@
 	\setKV[cercletrigo]{#1}
 	\tikzset{PLval/.style={inner sep=1pt,font=\PLcerclevaleurs,fill=\PLcerclefond}}
 	\tikzset{PLagl/.style={inner sep=1pt,font=\PLcercleangles,fill=\PLcerclefond}}
+	%tangente ?
+	\ifboolKV[cercletrigo]{ValeursTan}%
+		{%
+			\draw[\PLcerclethick,dotted,gray] (30:\PLcerclerayon)--({\PLcerclerayon},{sqrt(3)/3*\PLcerclerayon}) ;
+			\draw[\PLcerclethick,dotted,gray] (45:\PLcerclerayon)--({\PLcerclerayon},{\PLcerclerayon}) ;
+			\draw[\PLcerclethick,dotted,gray] (60:\PLcerclerayon)--({\PLcerclerayon},{sqrt(3)*\PLcerclerayon}) ;
+			\draw[\PLcerclethick,dotted,gray] (-30:\PLcerclerayon)--({\PLcerclerayon},{-sqrt(3)/3*\PLcerclerayon}) ;
+			\draw[\PLcerclethick,dotted,gray] (-45:\PLcerclerayon)--({\PLcerclerayon},{-\PLcerclerayon}) ;
+			\draw[\PLcerclethick,dotted,gray] (-60:\PLcerclerayon)--({\PLcerclerayon},{-sqrt(3)*\PLcerclerayon}) ;
+			\draw[\PLcerclethick] ({\PLcerclerayon},{-1.8*\PLcerclerayon}) -- ({\PLcerclerayon},{1.8*\PLcerclerayon}) ;
+			\ifboolKV[cercletrigo]{AffValeurs}
+				{%
+					\draw[] ([xshift=-2pt]{\PLcerclerayon},{\PLcerclerayon})--++(4pt,0) node[right=2pt,PLval] {$1$} ;
+					\draw[] ([xshift=-2pt]{\PLcerclerayon},{-\PLcerclerayon})--++(4pt,0) node[right=2pt,PLval] {$-1$} ;
+					\draw[] ([xshift=-2pt]{\PLcerclerayon},{sqrt(3)*\PLcerclerayon})--++(4pt,0) node[right=2pt,PLval] {$\sqrt{3}$} ;
+					\draw[] ([xshift=-2pt]{\PLcerclerayon},{-sqrt(3)*\PLcerclerayon})--++(4pt,0) node[right=2pt,PLval] {$-\sqrt{3}$} ;
+					\draw[] ([xshift=-2pt]{\PLcerclerayon},{sqrt(3)/3*\PLcerclerayon})--++(4pt,0) node[right=2pt,PLval] {$\tfrac{\sqrt{3}}{3}$} ;
+					\draw[] ([xshift=-2pt]{\PLcerclerayon},{-sqrt(3)/3*\PLcerclerayon})--++(4pt,0) node[right=2pt,PLval] {$-\tfrac{\sqrt{3}}{3}$} ;
+				}%
+				{}%
+		}%
+		{}%
 	%valeurs remarquables
 	\ifboolKV[cercletrigo]{AffAngles}
 	{%valeursdudessus

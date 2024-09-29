@@ -1,0 +1,126 @@
+% proflycee-tools-cliparts.tex
+% Copyright 2024  Cédric Pierquet
+% Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
+% logos from CC0 opencliparts (users Firkin & Juhele & qubodup & TzeenieWheenie & jetxee)
+
+%====DIMENSIONS
+\newlength{\tmpcharacterheightinline}
+\newlength{\tmpcharacterdepthinline}
+
+%====MACRO PRINCIPALE
+\NewDocumentCommand\InsererClipart{ s O{} m }{%
+	\IfBooleanTF{#1}%
+		{%
+			\IfFileExists{pfl-#3.pdf}{\includegraphics[#2]{pfl-#3.pdf}}{}%
+		}%
+		{%
+			\settototalheight{\tmpcharacterheightinline}{\hbox{AZERTYUIOPQSDFGHJKLMWXCVBNazertyuiopqsdfghjklmwxcvbn}}%
+			\settodepth{\tmpcharacterdepthinline}{\hbox{AZERTYUIOPQSDFGHJKLMWXCVBNazertyuiopqsdfghjklmwxcvbn}}%
+			\IfFileExists{pfl-#3.pdf}{\raisebox{-\tmpcharacterdepthinline}{\includegraphics[height=\tmpcharacterheightinline]{pfl-#3.pdf}}}{}%
+		}%
+}
+
+%====ALIASES
+\NewDocumentCommand\pflimgcoupeb{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{bronze-cup}}%
+		{\InsererClipart{bronze-cup}}%
+}
+
+\NewDocumentCommand\pflimgmedb{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{bronze-medal}}%
+		{\InsererClipart{bronze-medal}}%
+}
+
+\NewDocumentCommand\pflimgmedbp{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{bronze-medal-flat}}%
+		{\InsererClipart{bronze-medal-flat}}%
+}
+
+\NewDocumentCommand\pflimgverif{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{checked}}%
+		{\InsererClipart{checked}}%
+}
+
+\NewDocumentCommand\pflimgnonverif{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{crossed}}%
+		{\InsererClipart{crossed}}%
+}
+
+\NewDocumentCommand\pflimgcoupeo{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{gold-cup}}%
+		{\InsererClipart{gold-cup}}%
+}
+
+\NewDocumentCommand\pflimgmedo{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{gold-medal}}%
+		{\InsererClipart{gold-medal}}%
+}
+
+\NewDocumentCommand\pflimgmedop{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{gold-medal-flat}}%
+		{\InsererClipart{gold-medal-flat}}%
+}
+
+\NewDocumentCommand\pflimgsouris{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{mouse}}%
+		{\InsererClipart{mouse}}%
+}
+
+\NewDocumentCommand\pflimgsourisg{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{mouse-left}}%
+		{\InsererClipart{mouse-left}}%
+}
+
+\NewDocumentCommand\pflimgsourisc{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{mouse-center}}%
+		{\InsererClipart{mouse-center}}%
+}
+
+\NewDocumentCommand\pflimgsourisd{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{mouse-right}}%
+		{\InsererClipart{mouse-right}}%
+}
+
+\NewDocumentCommand\pflimgko{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{notok}}%
+		{\InsererClipart{notok}}%
+}
+
+\NewDocumentCommand\pflimgok{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{ok}}%
+		{\InsererClipart{ok}}%
+}
+
+\NewDocumentCommand\pflimgcoupea{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{silver-cup}}%
+		{\InsererClipart{silver-cup}}%
+}
+
+\NewDocumentCommand\pflimgmeda{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{silver-medal}}%
+		{\InsererClipart{silver-medal}}%
+}
+
+\NewDocumentCommand\pflimgmedap{ s O{} }{%
+	\IfBooleanTF{#1}%
+		{\InsererClipart*[#2]{silver-medal-flat}}%
+		{\InsererClipart{silver-medal-flat}}%
+}
+
+\endinput
