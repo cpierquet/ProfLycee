@@ -310,6 +310,12 @@
 		}%
 }
 
+\NewDocumentCommand\EqCartDroite{ O{t} m m m }{%
+	\ensuremath{%
+	\begin{dcases} #2 \\ #3 \\ #4 \end{dcases}\text{, } #1 \in \R%
+	}%
+}
+
 %====PROBAS
 \setKVdefault[probascondit]{%
 	min=false,%

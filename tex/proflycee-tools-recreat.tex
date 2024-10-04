@@ -610,4 +610,122 @@
 	\end{tikzpicture}
 }
 
+%====PYRAMIDE D'ORANGES
+\usetikzlibrary{shadings}
+\usepackage{simplekv}
+
+\setKVdefault[PyrBalls]{%
+	Couleur=gray,%
+	Rotation=-5,%
+	Echelle=1
+}
+
+\NewDocumentCommand\EmpilementBalles{ O{} m }{%
+	\restoreKV[PyrBalls]%
+	\setKV[PyrBalls]{#1}%
+	\IfSubStr{#2}{-}%
+		{%
+			\StrCut{#2}{-}{\pyrballsdeb}{\pyrballsfin}%
+			\foreach \i in {\pyrballsdeb,...,\pyrballsfin}{%
+				\begin{tikzpicture}[scale=\fpeval{0.5*\useKV[PyrBalls]{Echelle}},rotate={\useKV[PyrBalls]{Rotation}},transform shape]
+					\foreach \x in {\numexpr\i-1\relax,...,0}{
+						\foreach \y in {\x,...,\numexpr\i-1\relax}{
+							%côté gauche
+							\shade[ball color={\useKV[PyrBalls]{Couleur}},shading angle=50] (0.6*\x,-\y+0.3*\x) circle[radius=0.55] ;
+							%côté 'droit'
+							\shade[ball color={\useKV[PyrBalls]{Couleur}},shading angle=0] (-0.6*\x,-\y+0.3*\x) circle[radius=0.55] ;
+						}
+					}
+				\end{tikzpicture}%
+			}%
+		}%
+		{%
+			\begin{tikzpicture}[scale={\useKV[PyrBalls]{Echelle}},rotate={\useKV[PyrBalls]{Rotation}},transform shape]
+				\foreach \x in {\numexpr#2-1\relax,...,0}{
+					\foreach \y in {\x,...,\numexpr#2-1\relax}{
+						%côté gauche
+						\shade[ball color={\useKV[PyrBalls]{Couleur}},shading angle=50] (0.6*\x,-\y+0.3*\x) circle[radius=0.55] ;
+						%côté 'droit'
+						\shade[ball color={\useKV[PyrBalls]{Couleur}},shading angle=0] (-0.6*\x,-\y+0.3*\x) circle[radius=0.55] ;
+					}
+				}
+			\end{tikzpicture}%
+		}%
+}
+
+%====DATES
+\IfPackageLoadedTF{datetime2}%
+	{}%
+	{%
+		\RequirePackage[fr-FR]{datetime2}
+	}%
+
+\RequirePackage{datetime2-calc}
+
+\newcount\tmpmyct
+
+\NewDocumentCommand\JourSelonDate{ s m }{%
+	\StrBehind[2]{#2}{/}[\tmptheyear]%
+	\StrBetween[1,2]{#2}{/}{/}[\tmpthemonth]%
+	\StrBefore[1]{#2}{/}[\tmptheday]%
+	\xdef\tmpdate{\tmptheyear-\tmpthemonth-\tmptheday}%
+	\DTMcomputedayofweekindex{\tmpdate}{\indexjdls}%
+	\IfStrEqCase{\indexjdls}{%
+		{0}{\IfBooleanTF{#1}{L}{l}undi}%
+		{1}{\IfBooleanTF{#1}{M}{m}ardi}%
+		{2}{\IfBooleanTF{#1}{M}{m}ercredi}%
+		{3}{\IfBooleanTF{#1}{J}{j}eudi}%
+		{4}{\IfBooleanTF{#1}{V}{v}endredi}%
+		{5}{\IfBooleanTF{#1}{S}{s}amedi}%
+		{6}{\IfBooleanTF{#1}{D}{d}imanche}%
+	}{}%
+}
+
+\NewDocumentCommand\DateComplete{ s m }{%
+	\IfBooleanTF{#1}%
+		{%
+			\JourSelonDate*{#2} %
+		}%
+		{
+			\JourSelonDate{#2} %
+		}%
+	\xdef\tmpdateinit{\tmptheyear-\tmpthemonth-\tmptheday}%
+	\DTMsavedate{datecplt}{\tmpdateinit}%
+	\DTMusedate{datecplt}{}%
+}
+
+\NewDocumentCommand\NbJoursEntreDates{ s m m O{\nbjoursentre} }{%
+	\StrBehind[2]{#2}{/}[\tmptheyear]%
+	\StrBetween[1,2]{#2}{/}{/}[\tmpthemonth]%
+	\StrBefore[1]{#2}{/}[\tmptheday]%
+	\xdef\tmpdateA{\tmptheyear-\tmpthemonth-\tmptheday}%
+	\StrBehind[2]{#3}{/}[\tmptheyear]%
+	\StrBetween[1,2]{#3}{/}{/}[\tmpthemonth]%
+	\StrBefore[1]{#3}{/}[\tmptheday]%
+	\xdef\tmpdateB{\tmptheyear-\tmpthemonth-\tmptheday}%
+	\DTMsavedate{dateinitiale}{\tmpdateA}%
+	\DTMsavedate{datefinale}{\tmpdateB}%
+	\DTMsaveddatediff{dateinitiale}{datefinale}{\tmpmyct}%
+	\xdef#4{\fpeval{abs(\tmpmyct)}}%
+	\IfBooleanT{#1}{#4}%
+}
+
+\NewDocumentCommand\AjoutJoursDate{ s m m }{%
+	\StrBehind[2]{#2}{/}[\tmptheyear]%
+	\StrBetween[1,2]{#2}{/}{/}[\tmpthemonth]%
+	\StrBefore[1]{#2}{/}[\tmptheday]%
+	\xdef\tmpdateinit{\tmptheyear-\tmpthemonth-\tmptheday}%
+	\DTMsavedate{dateinitiale}{\tmpdateinit}%
+	\DTMsaveddateoffsettojulianday{dateinitiale}{#3}\tmpmyct%
+	\DTMsavejulianday{datefinale}{\number\tmpmyct}%
+	\IfBooleanTF{#1}%
+		{%
+			\DTMfetchday{datefinale}/\DTMfetchmonth{datefinale}/\DTMfetchyear{datefinale}{}%
+		}%
+		{%
+			\DTMusedate{datefinale}{}%
+		}%
+}
+
+
 \endinput
