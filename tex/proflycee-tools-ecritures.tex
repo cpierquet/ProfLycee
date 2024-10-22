@@ -221,6 +221,16 @@
 	\IfBooleanTF{#1}{\ensuremath{\vv*{#2}{#3}}}{\ensuremath{\vv{#2}}}%
 }
 
+\NewDocumentCommand\EqParamDteEsp{ s O{t} m m m }{%
+	\IfBooleanTF{#1}%
+	{%
+		\ensuremath{\begin{cases}{#3}\\{#4}\\{#5}\end{cases}\text{ où }{#2}\in\R}%
+	}%
+	{%
+		\ensuremath{\begin{dcases}{#3}\\{#4}\\{#5}\end{dcases}\text{ où }{#2}\in\R}%
+	}%
+}
+
 %====REPÈRES
 \setKVdefault[ecrituresreperes]{%
 	Sep={;}
@@ -308,12 +318,6 @@
 		{%
 			\ensuremath{\left(#3\useKV[ecrituresreperes]{Sep}\Vecteur{\vphantom{t}\vecteurun},\Vecteur{\vphantom{t}\vecteurdeux},\Vecteur{\vphantom{t}\vecteurtrois}\right)}%
 		}%
-}
-
-\NewDocumentCommand\EqCartDroite{ O{t} m m m }{%
-	\ensuremath{%
-	\begin{dcases} #2 \\ #3 \\ #4 \end{dcases}\text{, } #1 \in \R%
-	}%
 }
 
 %====PROBAS

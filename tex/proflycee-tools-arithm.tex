@@ -526,11 +526,11 @@
 	Fleches=true
 }
 
-\NewDocumentCommand\ArbreDiviseurs{ O{} m }{%
+\NewDocumentCommand\ArbreDiviseurs{ O{} D<>{} m }{%
 	\useKVdefault[arbrediviseurs]%
 	\setKV[arbrediviseurs]{#1}%
 	% test avec CPoulain ^^
-	\xdef\tmpcalc{\xinteval{#2}}%
+	\xdef\tmpcalc{\xinteval{#3}}%
 	\xdef\tmparg{}%
 	\newcount\anp\newcount\bnp\newcount\cnp%
 	\newcount\pileb\newcount\exposant%
@@ -569,7 +569,7 @@
 	\ifboolKV[arbrediviseurs]{Fleches}%
 	{\tikzstyle{flechearbrediv} = [line width=\fpeval{\TmpEchelle*0.6}pt,->,>=latex]}%
 	{\tikzstyle{flechearbrediv} = [line width=\fpeval{\TmpEchelle*0.6}pt]}%
-	\begin{tikzpicture}[scale=\TmpEchelle,every node/.style={scale=\TmpEchelle}]
+	\begin{tikzpicture}[scale=\TmpEchelle,every node/.style={scale=\TmpEchelle},#2]
 		% grille d'aide
 		% \draw[xstep=\TmpEspNiv,ystep=\TMpEspFeuille,thin,lightgray] (0,{(-\arbredivnbdiv+1)*\TMpEspFeuille}) grid ({\arbredivnbdivprem*\TmpEspNiv},0) ;
 		% dernier niveau OK

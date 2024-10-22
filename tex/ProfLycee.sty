@@ -1,9 +1,13 @@
-% Author.............: C. Pierquet
-% licence............: Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txtf
-% licence cliparts...: CC0 from openclipart
+% Author...................: C. Pierquet
+% licence..................: Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txtf
+% licence (part of code).. : CC BY-SA 3.0 (from Mark Wibrow)
+% licence cliparts.........: CC0 (from openclipart)
+% code
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2024/10/04 3.10b Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2024/10/22 3.10d Aide pour l'utilisation de LaTeX en lycee]
+% 3.10d	Correction d'un nom de commande (doublon avec ProfMaquette)
+% 3.10c	Ajout de clés/arguments pour les arbres de probas + paramètres stats + arbres de dénombrement(s)
 % 3.10b	Ajout des empilements d'oranges + commandes sur les dates
 % 3.10a	Bifurcation pfl / pfllight + pflnum consolidée
 % 3.05b	Mise en standby des commandes liées à minted (attente de compatibilité complète avec tcblisting) + Clé [ValeursTan] pour les cercles trigo
@@ -121,7 +125,7 @@
 	\RequirePackage[table,svgnames]{xcolor}%Gestion des couleurs
 \fi
 \RequirePackage{tikz}
-\usetikzlibrary{decorations,decorations.pathreplacing,decorations.markings,arrows,arrows.meta,shapes.geometric,decorations.pathmorphing}
+\usetikzlibrary{calc,decorations,decorations.pathreplacing,decorations.markings,arrows,arrows.meta,shapes.geometric,decorations.pathmorphing}
 \if@loadtikzbabel
 	\usetikzlibrary{babel}
 \fi
@@ -172,15 +176,15 @@
 			\input{proflycee-tools-espace.tex}
 		}%
 		{}%
-	% \IfSubStr{#1}{minted}%
-		% {%
-			% \if@build
-				% \RequirePackage[outputdir=build]{minted} %on charge minted avec le répertoire build
-			% \fi
-			% \tcbuselibrary{minted} %on charge minted via la librairie tcbox
-			% \input{proflycee-tools-minted.tex}
-		% }%
-		% {}%
+	%\IfSubStr{#1}{minted}%
+	%	{%
+	%		\if@build
+	%			\RequirePackage[outputdir=build]{minted} %on charge minted avec le répertoire build
+	%		\fi
+	%		\tcbuselibrary{minted} %on charge minted via la librairie tcbox
+	%		\input{proflycee-tools-minted.tex}
+	%	}%
+	%	{}%
 	\IfSubStr{#1}{pythontex}%
 		{%
 			\RequirePackage[gobble=auto]{pythontex}

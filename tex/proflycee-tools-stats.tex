@@ -555,6 +555,7 @@
 	% \edef#3{\the\pgf@y}%
 % }
 
+\makeatletter
 \defKV[courbeECC]{%
 	Largeur=\def\ecc@larg@graph{#1},%
 	Hauteur=\def\ecc@haut@graph{#1},%
@@ -796,6 +797,7 @@
 	\end{tikzpicture}%
 	\CourbeECCStylesDefaut%
 }
+\makeatother
 
 %détermination 'simple' des paramètres
 \NewDocumentCommand\MedianeQuartilesECC{ m m }{%
@@ -836,6 +838,105 @@
 			}
 			{}%
 	}%
+}
+
+%====Paramètres statistiques (stockage/affichage, sans rédaction)
+\NewDocumentCommand\DeterminerParamStats{ s m O{\monmin} O{\monquartileun} O{\mamediane} O{\monquartiletrois} O{\monmax} }{%
+	%traitement de la liste, *=effectifs
+	\IfBooleanTF{#1}%
+		{%
+			\setsepchar[.]{,./}%
+			\readlist*\listeTdonneesregroup{#2}%
+			\def\TMPLST{}%
+			\foreach \i in {1,...,\listeTdonneesregrouplen}{%
+				\itemtomacro\listeTdonneesregroup[\i,1]\myelt%
+				\itemtomacro\listeTdonneesregroup[\i,2]\mynbelt%
+				\foreach \j in {1,...,\mynbelt}{%
+					\xintifboolexpr{ \i*\j == 1}%
+						{%
+							\xdef\TMPLST{\myelt}%
+						}%
+						{%
+							\xdef\TMPLST{\TMPLST,\myelt}%
+						}%
+				}%
+			}%
+		}%
+		{%
+			\xdef\TMPLST{#2}%
+			\sortasclist{\TMPLST}%
+		}%
+	\definemylist{\TMPLST}{\listeTdonneesregroup}%
+	\lenofdeflist{listeTdonneesregroup}[\nbdonnees]%
+	%médiane
+	\xintifboolexpr{ \xintiiRem{\nbdonnees}{2} == 0 }%
+		{%
+			\xdef\tmpranga{\xintfloateval{\nbdonnees/2}}%\tmpranga
+			\xdef\tmprangb{\xintfloateval{\nbdonnees/2+1}}%\tmprangb
+			\getvaluefromdeflist{listeTdonneesregroup}{\tmpranga}[\myvala]%
+			\getvaluefromdeflist{listeTdonneesregroup}{\tmprangb}[\myvalb]%
+			\xdef#5{\xintfloateval{(\myvala+\myvalb)/2}}%
+		}%
+		{%
+			\xdef\tmprang{\xintfloateval{(\nbdonnees+1)/2}}%
+			\getvaluefromdeflist{listeTdonneesregroup}{\tmprang}[#5]%
+		}%
+	%quartileun
+	\xdef\tmprangqa{\xintfloateval{ceil(0.25*\nbdonnees)}}%\tmpranga
+	\getvaluefromdeflist{listeTdonneesregroup}{\tmprangqa}[#4]%
+	%quartiletrois
+	\xdef\tmprangqc{\xintfloateval{ceil(0.75*\nbdonnees)}}%\tmpranga
+	\getvaluefromdeflist{listeTdonneesregroup}{\tmprangqc}[#6]%
+	%min/max
+	\minoflist{\TMPLST}[#3]%
+	\maxoflist{\TMPLST}[#7]%
+	%moyenne
+	\meanofdeflist{listeTdonneesregroup}[\mamoyenne]%
+	%écart-type
+	\xdef\monecarttype{0}%
+	\foreach \i in {1,...,\nbdonnees}{%
+			\getvaluefromdeflist{listeTdonneesregroup}{\i}[\myval]%
+			\xdef\monecarttype{\xintfloateval{\monecarttype+(\myval-\mamoyenne)^2}}%
+	}%
+	\xdef\monecarttype{\xintfloateval{sqrt(\monecarttype/\nbdonnees)}}%
+}
+
+\NewDocumentCommand\DeterminerMoyEctype{ s m O{\mamoyenne} O{\monecarttype} }{%
+	%traitement de la liste, *=effectifs
+	\IfBooleanTF{#1}%
+		{%
+			\setsepchar[.]{,./}%
+			\readlist*\listeTdonneesregroup{#2}%
+			\def\TMPLST{}%
+			\foreach \i in {1,...,\listeTdonneesregrouplen}{%
+				\itemtomacro\listeTdonneesregroup[\i,1]\myelt%
+				\itemtomacro\listeTdonneesregroup[\i,2]\mynbelt%
+				\foreach \j in {1,...,\mynbelt}{%
+					\xintifboolexpr{ \i*\j == 1}%
+						{%
+							\xdef\TMPLST{\myelt}%
+						}%
+						{%
+							\xdef\TMPLST{\TMPLST,\myelt}%
+						}%
+				}%
+			}%
+		}%
+		{%
+			\xdef\TMPLST{#2}%
+			\sortasclist{\TMPLST}%
+		}%
+	\definemylist{\TMPLST}{\listeTdonneesregroup}%
+	\lenofdeflist{listeTdonneesregroup}[\nbdonnees]%
+	%moyenne
+	\meanofdeflist{listeTdonneesregroup}[#3]%
+	%écart-type
+	\xdef#4{0}%
+	\foreach \i in {1,...,\nbdonnees}{%
+			\getvaluefromdeflist{listeTdonneesregroup}{\i}[\myval]%
+			\xdef#4{\xintfloateval{#4+(\myval-\mamoyenne)^2}}%
+	}%
+	\xdef#4{\xintfloateval{sqrt(#4/\nbdonnees)}}%
 }
 
 \endinput

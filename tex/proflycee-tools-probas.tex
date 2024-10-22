@@ -1,6 +1,7 @@
 % proflycee-tools-probas.tex
 % Copyright 2023-2024  Cédric Pierquet
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
+% CC BY-SA 3.0 (from Mark Wibrow)
 
 %%------LOISPROBAS
 %calculs "simples"
@@ -284,12 +285,12 @@
 	}%
 }
 
-\NewDocumentCommand\ArbreProbasTikz{ O{} m }{%1=options,2=libellés
+\NewDocumentCommand\ArbreProbasTikz{ O{} D<>{} m }{%1=options,2=libellés
 	\useKVdefault[PLTIKZARBRE]%
 	\setKV[PLTIKZARBRE]{#1}%
 	\setsepchar[.]{,./}%
-	\readlist*\PLARBREDONNES{#2}%
-	\begin{tikzpicture}[x=\PLAPunite,y=\PLAPunite]
+	\readlist*\PLARBREDONNES{#3}%
+	\begin{tikzpicture}[x=\PLAPunite,y=\PLAPunite,#2]
 		%styles
 		\tikzstyle{noeud} = [font=\PLAPfont,text=\PLAPcolnoeuds]
 		\tikzstyle{probas}= [font=\PLAPfontproba,text=\PLAPcolprobas]
@@ -574,13 +575,13 @@
 	\end{tikzpicture}
 }
 
-\NewDocumentEnvironment{EnvArbreProbasTikz}{ O{} m }%1=options,2=libellés
+\NewDocumentEnvironment{EnvArbreProbasTikz}{ O{} D<>{} m }%1=options,2=libellés
 {
 	\useKVdefault[PLTIKZARBRE]
 	\setKV[PLTIKZARBRE]{#1}
 	\setsepchar[.]{,./}%
-	\readlist*\PLARBREDONNES{#2}
-	\begin{tikzpicture}[x=\PLAPunite,y=\PLAPunite]
+	\readlist*\PLARBREDONNES{#3}
+	\begin{tikzpicture}[x=\PLAPunite,y=\PLAPunite,#2]
 		%styles
 		\tikzstyle{noeud} = [font=\PLAPfont,text=\PLAPcolnoeuds]
 		\tikzstyle{probas}= [font=\PLAPfontproba,text=\PLAPcolprobas]
@@ -1227,6 +1228,513 @@
 			seq((x,fctreploinorm(x,#4,#5)),x=#3)
 			\relax
 		};
+	}%
+}
+
+%====ARBRES CHOIX
+\RequirePackage{commalists-tools}
+
+\tikzset{arbrechoixaretes/.style={semithick}}
+\tikzset{arbrechoixsommets/.style={circle,draw=none,inner sep=1pt}}
+\tikzset{arbrechoixresultats/.style={rectangle,draw,inner sep=1.5pt}}
+\tikzset{arbrechoixnotices/.style={inner sep=1pt,font=\small\ttfamily,midway,below=\fpeval{0.75*\LISTECHOIXinterfeuille}cm,}}
+\tikzset{arbrechoixdeconotices/.style={semithick,decoration={brace,mirror,raise=\fpeval{0.25*\LISTECHOIXechelle*\LISTECHOIXinterfeuille}cm,amplitude=\fpeval{0.5*\LISTECHOIXechelle*\LISTECHOIXinterfeuille}cm},decorate}}
+
+%https://tex.stackexchange.com/questions/73173/how-to-change-the-item-separator-in-tikz-foreach-command/174135#174135
+%Mark Wibrow := CC BY-SA 3.0
+\makeatletter
+\let\pgffor@dotsscanend@original=\pgffor@dotsscanend
+\def\PGFFOR@PARAMDELIM#1{%
+	\def\pgffor@emptyvalues{#1 \pgffor@stop#1}%
+	\def\pgffor@normal@list##1{%
+		\def\pgffor@values{##1#1 \pgffor@stop#1}%
+		\ifx\pgffor@values\pgffor@emptyvalues
+		\def\pgffor@values{\pgffor@stop#1}%
+		\fi%
+		\let\pgffor@body=\pgfutil@empty%
+		\global\pgffor@continuetrue%
+		\pgffor@collectbody}%
+	\def\pgffor@scanround(##1)##2#1{\def\pgffor@value{(##1)##2}\pgffor@scanned}%
+	\def\pgffor@scanone##1#1{\def\pgffor@value{##1}\pgffor@scanned}%
+	\def\pgffor@dotsscanend##1#1{\pgffor@dotsscanend@original##1,}%
+}
+
+\pgfkeys{/pgf/foreach/separator/.code=\PGFFOR@PARAMDELIM{#1}}
+\makeatother
+
+\defKV[arbrechoix]{%
+	EspaceNiveaux=\def\LISTECHOIXinterniv{#1},%
+	EspaceFeuilles=\def\LISTECHOIXinterfeuille{#1},%
+	Echelle=\def\LISTECHOIXechelle{#1},%
+	Repet=\def\LISTECHOIXrepet{#1},%
+	Notice=\def\LISTECHOIXnotice{#1},%
+	CouleursNiveaux=\def\LISTECHOIXcoulniv{#1},%
+	SepResultats=\def\LISTECHOIXsepres{#1}
+}
+
+\setKVdefault[arbrechoix]{%
+	EspaceNiveaux=2.25,%
+	EspaceFeuilles=0.5,%
+	Echelle=1,%
+	Repet={},%
+	Notice={},%
+	TraitsNotice=false,%
+	CouleursNiveaux=black,%
+	AffResultats=false,%
+	SepResultats={}
+}
+
+\NewDocumentCommand\ArbreChoix{ O{} D<>{} m }{%
+	\restoreKV[arbrechoix]%
+	\setKV[arbrechoix]{#1}%
+	\def\LISTECHOIX{#3}%
+	\IfEq{\LISTECHOIXrepet}{}%
+		{}%
+		{%
+			\foreach \i in {2,...,\LISTECHOIXrepet}{%
+				\xdef\LISTECHOIX{\LISTECHOIX,#3}%
+			}%
+		}%
+	%données utiles
+	\setsepchar[.]{,./}%
+	\readlist*\TRLISTECHOIX{\LISTECHOIX}%
+	%les couleurs...
+	\IfSubStr{\LISTECHOIXcoulniv}{,}%
+		{%
+			\setsepchar{,}%
+			\readlist*\TRLISTECHOIXCOUL{\LISTECHOIXcoulniv}%
+		}%
+		{%
+			\xdef\tmplistcouleurs{\LISTECHOIXcoulniv}%
+			\foreach \i in {2,...,\TRLISTECHOIXlen}{%
+				\xdef\tmplistcouleurs{\tmplistcouleurs,\LISTECHOIXcoulniv}%
+			}%
+			\setsepchar{,}%
+			\readlist*\TRLISTECHOIXCOUL{\tmplistcouleurs}%
+		}%
+	%la figure
+	\begin{tikzpicture}[scale=\LISTECHOIXechelle,transform shape,#2]
+		%création de la liste des étapes intermédiaires
+		\def\tmpnbchoix{1}
+		\def\tmpnbchoixniv{1}
+		\def\tmplistnbchoix{1}
+		\foreach \i in {1,...,\TRLISTECHOIXlen}{%
+			\itemtomacro\TRLISTECHOIX[\i]\tmptrlistchoix%
+			\setsepchar[.]{/}%
+			\readlist*\TRLISTECHOIXTMP{\tmptrlistchoix}%
+			\xdef\tmpnbchoix{\xinteval{\tmpnbchoix*\TRLISTECHOIXTMPlen}}%
+			\xdef\tmpnbchoixniv{\tmpnbchoixniv,\TRLISTECHOIXTMPlen}%nb choix par niveau
+			\xdef\tmplistnbchoix{\tmplistnbchoix,\tmpnbchoix}%nb choix petit à petit
+		}%
+		%données utiles tout le temps
+		\getvaluefromlist{\tmplistnbchoix}{-1}[\nbeltstotal]%
+		%découpage horizontal
+		\ifboolKV[arbrechoix]{TraitsNotice}%
+			{%
+				\foreach \i in {1,...,\TRLISTECHOIXlen}{%
+					\draw[semithick,lightgray!50,densely dashed] ({\i*\LISTECHOIXinterniv},0) --++ (0,{\nbeltstotal*\LISTECHOIXinterfeuille}) ;
+				}%
+			}%
+			{}%
+		%boucle décroissante (OK !!)
+		\foreach \TTT in {\TRLISTECHOIXlen,...,1}{%
+			%\xdef\invTTT{\xinteval{\TRLISTECHOIXlen-\TTT+1}}%
+			\getvaluefromlist{\tmplistnbchoix}{\numexpr\TTT+1\relax}[\nbelts]%
+			\xdef\espchoiceV{\xintfloateval{(\nbeltstotal)/\nbelts}}%
+			\xdef\offsetchoiceV{\xintfloateval{0.5*\LISTECHOIXinterfeuille*(\nbeltstotal-(\nbelts-1)*\espchoiceV)}}%
+			\getvaluefromlist{\tmplistnbchoix}{\TTT}[\nbeltsavant]%
+			\xdef\tmpmodchoix{\xintieval{\nbelts/\nbeltsavant}}%
+			\foreach \i in {1,...,\nbelts}{%
+				\xdef\tmpii{\xinteval{\xintiiRem{\xinteval{\i-1}}{\tmpmodchoix}+1}}%
+				\node[arbrechoixsommets,text={\TRLISTECHOIXCOUL[\TTT]}] (N-\TTT-\i) at ({(\TTT)*\LISTECHOIXinterniv},{\offsetchoiceV+(\nbelts-\i)*\LISTECHOIXinterfeuille*\espchoiceV}) {\TRLISTECHOIX[\TTT,\tmpii]} ;
+			}
+			\ifnum\TTT=\TRLISTECHOIXlen%
+			\coordinate (N-0-1) at ({0*\LISTECHOIXinterniv},{\offsetchoiceV+0.5*(\nbeltstotal-1)*\LISTECHOIXinterfeuille} );
+			\fi
+		}
+		%les flèches
+		\foreach \j in {1,...,\TRLISTECHOIXlen}{%
+			\getvaluefromlist{\tmplistnbchoix}{\j}[\nbnoeuds]%nb nœuds de départ
+			\getvaluefromlist{\tmpnbchoixniv}{\numexpr\j+1\relax}[\nbfleches]%nb flèche par nœud
+			\foreach \i in {1,...,\nbnoeuds}{%
+				\foreach \k in {1,...,\nbfleches}{%
+					\xdef\tmpk{\xinteval{(\i-1)*(\nbfleches)+\k}}
+					\draw[arbrechoixaretes,color={\TRLISTECHOIXCOUL[\j]}] (N-\the\numexpr\j-1\relax-\i) -- (N-\j-\tmpk) ;
+				}
+			}
+		}
+		%notice
+		\IfEq{\LISTECHOIXnotice}{}%
+			{}%
+			{%
+				\foreach \notice [count=\i] in \LISTECHOIXnotice
+				{%
+					\draw[arbrechoixdeconotices] ({(\i-1)*\LISTECHOIXinterniv},0) -- ({(\i)*\LISTECHOIXinterniv},0) node[arbrechoixnotices] {\notice} ;
+				}%
+			}%
+		%listerésultats
+		\ifboolKV[arbrechoix]{AffResultats}%
+			{%
+				\xdef\malistedecombis{}%
+				\ifnum\TRLISTECHOIXlen=2%
+					\itemtomacro\TRLISTECHOIX[1]\myfirsttmp%
+					\itemtomacro\TRLISTECHOIX[2]\mysecondtmp%
+					\foreach \i [separator=/] in \myfirsttmp {%
+						\foreach \j [separator=/] in \mysecondtmp {
+							\xdef\malistedecombis{\malistedecombis,\i\LISTECHOIXsepres\j}%
+						}%
+					}%
+				\fi
+				\ifnum\TRLISTECHOIXlen=3%
+					\itemtomacro\TRLISTECHOIX[1]\myfirsttmp%
+					\itemtomacro\TRLISTECHOIX[2]\mysecondtmp%
+					\itemtomacro\TRLISTECHOIX[3]\mythirdtmp%
+					\foreach \i [separator=/] in \myfirsttmp {%
+						\foreach \j [separator=/] in \mysecondtmp {
+							\foreach \k [separator=/] in \mythirdtmp {
+								\xdef\malistedecombis{\malistedecombis,\i\LISTECHOIXsepres\j\LISTECHOIXsepres\k}%
+							}%
+						}%
+					}%
+				\fi
+				\ifnum\TRLISTECHOIXlen=4%
+					\itemtomacro\TRLISTECHOIX[1]\myfirsttmp%
+					\itemtomacro\TRLISTECHOIX[2]\mysecondtmp%
+					\itemtomacro\TRLISTECHOIX[3]\mythirdtmp%
+					\itemtomacro\TRLISTECHOIX[4]\myfourthtmp%
+					\foreach \i [separator=/] in \myfirsttmp {%
+						\foreach \j [separator=/] in \mysecondtmp {
+							\foreach \k [separator=/] in \mythirdtmp {
+								\foreach \l [separator=/] in \myfourthtmp {
+									\xdef\malistedecombis{\malistedecombis,\i\LISTECHOIXsepres\j\LISTECHOIXsepres\k\LISTECHOIXsepres\l}%
+								}%
+							}%
+						}%
+					}%
+				\fi
+				\ifnum\TRLISTECHOIXlen=5%
+					\itemtomacro\TRLISTECHOIX[1]\myfirsttmp%
+					\itemtomacro\TRLISTECHOIX[2]\mysecondtmp%
+					\itemtomacro\TRLISTECHOIX[3]\mythirdtmp%
+					\itemtomacro\TRLISTECHOIX[4]\myfourthtmp%
+					\itemtomacro\TRLISTECHOIX[5]\myfifthtmp%
+					\foreach \i [separator=/] in \myfirsttmp {%
+						\foreach \j [separator=/] in \mysecondtmp {
+							\foreach \k [separator=/] in \mythirdtmp {
+								\foreach \l [separator=/] in \myfourthtmp {
+									\foreach \m [separator=/] in \myfifthtmp {
+										\xdef\malistedecombis{\malistedecombis,\i\LISTECHOIXsepres\j\LISTECHOIXsepres\k\LISTECHOIXsepres\l\LISTECHOIXsepres\m}%
+									}%
+								}%
+							}%
+						}%
+					}%
+				\fi
+				\foreach \i in {1,...,\nbeltstotal}{%
+					\xdef\j{\xinteval{\i+1}}%
+					\draw (N-\TRLISTECHOIXlen-\i) node[arbrechoixresultats,right=\fpeval{0.5*\LISTECHOIXechelle*\LISTECHOIXinterniv}cm] {\getvaluefromlist*\malistedecombis{\j}} ;
+				}
+			}%
+			{}%
+	\end{tikzpicture}%
+}
+
+\NewDocumentCommand\IntNoeudArbreSansRemise{ m m m }{%
+	\node[arbrechoixsommets,text={\TRLISTECHOIXCOUL[#1]}] (T-#1-#2) at (N-#1-#2) {\TRLISTECHOIX[#3]} ;
+}
+\NewDocumentCommand\IntAreteArbreSansRemise{ m m }{%
+	\draw[arbrechoixaretes] (T-#1) -- (T-#2) ;
+}
+
+\NewDocumentCommand\ArbreChoixSansRemise{ O{} D<>{} m }{%
+	\restoreKV[arbrechoix]%
+	\setKV[arbrechoix]{#1}%
+	\def\LISTECHOIX{#3}%
+	%couleurs
+	\readlist*\TRLISTECHOIX{\LISTECHOIX}%
+	\IfSubStr{\LISTECHOIXcoulniv}{,}%
+		{%
+			\setsepchar{,}%
+			\readlist*\TRLISTECHOIXCOUL{\LISTECHOIXcoulniv}%
+		}%
+		{%
+			\xdef\tmplistcouleurs{\LISTECHOIXcoulniv}%
+			\foreach \i in {2,...,\TRLISTECHOIXlen}{%
+				\xdef\tmplistcouleurs{\tmplistcouleurs,\LISTECHOIXcoulniv}%
+			}%
+			\setsepchar{,}%
+			\readlist*\TRLISTECHOIXCOUL{\tmplistcouleurs}%
+		}%
+	%figure
+	\begin{tikzpicture}[scale=\LISTECHOIXechelle,transform shape,#2]
+		%création de la liste des étapes intermédiaires (OK)
+		\def\tmpnbchoixniv{\TRLISTECHOIXlen}%
+		\def\tmplistnbchoix{1,\TRLISTECHOIXlen}%
+		\def\tmplistnbchoixfact{\TRLISTECHOIXlen}%
+		\foreach \i in {1,...,\xinteval{\TRLISTECHOIXlen-1}}{%
+			\xdef\tmpnbchoix{\xinteval{\TRLISTECHOIXlen-\i}}%
+			\xdef\tmpnbchoixniv{\tmpnbchoixniv,\tmpnbchoix}%nb nœuds par niveau
+			\xdef\tmplistnbchoixfact{\xinteval{\tmplistnbchoixfact*(\TRLISTECHOIXlen-\i)}}%
+			\xdef\tmplistnbchoix{\tmplistnbchoix,\tmplistnbchoixfact}%nb choix petit à petit
+		}
+		%données utiles tout le temps
+		\getvaluefromlist{\tmplistnbchoix}{-1}[\nbeltstotal]%
+		\ifboolKV[arbrechoix]{TraitsNotice}%
+		%notice découpage
+			{%
+				\foreach \i in {1,...,\TRLISTECHOIXlen}{%
+					\draw[semithick,lightgray!50,densely dashed] ({\i*\LISTECHOIXinterniv},0) --++ (0,{\nbeltstotal*\LISTECHOIXinterfeuille}) ;
+				}%
+			}%
+			{}%
+		%boucle décroissante pour la création des nœuds
+		\foreach \TTT in {\TRLISTECHOIXlen,...,1}{%
+			\getvaluefromlist{\tmplistnbchoix}{\numexpr\TTT+1\relax}[\nbelts]%
+			\xdef\espchoiceV{\xintfloateval{(\nbeltstotal)/\nbelts}}%
+			\xdef\offsetchoiceV{\xintfloateval{0.5*\LISTECHOIXinterfeuille*(\nbeltstotal-(\nbelts-1)*\espchoiceV)}}%
+			\foreach \i in {1,...,\nbelts}{%
+				\coordinate (N-\TTT-\i) at ({(\TTT)*\LISTECHOIXinterniv},{\offsetchoiceV+(\nbelts-\i)*\LISTECHOIXinterfeuille*\espchoiceV});
+			}
+			\ifnum\TTT=\TRLISTECHOIXlen%
+			\coordinate (T-0-1) at ({0*\LISTECHOIXinterniv},{\offsetchoiceV+0.5*(\nbeltstotal-1)*\LISTECHOIXinterfeuille} );
+			\fi
+		}
+		%les sommets et les flèches ??
+		\ifnum\TRLISTECHOIXlen=4%
+			%N1
+			\IntNoeudArbreSansRemise{1}{1}{1}
+			\IntNoeudArbreSansRemise{1}{2}{2}
+			\IntNoeudArbreSansRemise{1}{3}{3}
+			\IntNoeudArbreSansRemise{1}{4}{4}
+			\IntAreteArbreSansRemise{0-1}{1-1}
+			\IntAreteArbreSansRemise{0-1}{1-2}
+			\IntAreteArbreSansRemise{0-1}{1-3}
+			\IntAreteArbreSansRemise{0-1}{1-4}
+			%N2
+			\IntNoeudArbreSansRemise{2}{1}{2}
+			\IntNoeudArbreSansRemise{2}{2}{3}
+			\IntNoeudArbreSansRemise{2}{3}{4}
+			\IntNoeudArbreSansRemise{2}{4}{1}
+			\IntNoeudArbreSansRemise{2}{5}{3}
+			\IntNoeudArbreSansRemise{2}{6}{4}
+			\IntNoeudArbreSansRemise{2}{7}{1}
+			\IntNoeudArbreSansRemise{2}{8}{2}
+			\IntNoeudArbreSansRemise{2}{9}{4}
+			\IntNoeudArbreSansRemise{2}{10}{1}
+			\IntNoeudArbreSansRemise{2}{11}{2}
+			\IntNoeudArbreSansRemise{2}{12}{3}
+			\IntAreteArbreSansRemise{1-1}{2-1}
+			\IntAreteArbreSansRemise{1-1}{2-2}
+			\IntAreteArbreSansRemise{1-1}{2-3}
+			\IntAreteArbreSansRemise{1-2}{2-4}
+			\IntAreteArbreSansRemise{1-2}{2-5}
+			\IntAreteArbreSansRemise{1-2}{2-6}
+			\IntAreteArbreSansRemise{1-3}{2-7}
+			\IntAreteArbreSansRemise{1-3}{2-8}
+			\IntAreteArbreSansRemise{1-3}{2-9}
+			\IntAreteArbreSansRemise{1-4}{2-10}
+			\IntAreteArbreSansRemise{1-4}{2-11}
+			\IntAreteArbreSansRemise{1-4}{2-12}
+			%N3
+			\IntNoeudArbreSansRemise{3}{1}{3}
+			\IntNoeudArbreSansRemise{3}{2}{4}
+			\IntNoeudArbreSansRemise{3}{3}{2}
+			\IntNoeudArbreSansRemise{3}{4}{4}
+			\IntNoeudArbreSansRemise{3}{5}{2}
+			\IntNoeudArbreSansRemise{3}{6}{3}
+			\IntNoeudArbreSansRemise{3}{7}{3}
+			\IntNoeudArbreSansRemise{3}{8}{4}
+			\IntNoeudArbreSansRemise{3}{9}{1}
+			\IntNoeudArbreSansRemise{3}{10}{4}
+			\IntNoeudArbreSansRemise{3}{11}{1}
+			\IntNoeudArbreSansRemise{3}{12}{3}
+			\IntNoeudArbreSansRemise{3}{13}{2}
+			\IntNoeudArbreSansRemise{3}{14}{4}
+			\IntNoeudArbreSansRemise{3}{15}{1}
+			\IntNoeudArbreSansRemise{3}{16}{4}
+			\IntNoeudArbreSansRemise{3}{17}{1}
+			\IntNoeudArbreSansRemise{3}{18}{2}
+			\IntNoeudArbreSansRemise{3}{19}{2}
+			\IntNoeudArbreSansRemise{3}{20}{3}
+			\IntNoeudArbreSansRemise{3}{21}{1}
+			\IntNoeudArbreSansRemise{3}{22}{3}
+			\IntNoeudArbreSansRemise{3}{23}{1}
+			\IntNoeudArbreSansRemise{3}{24}{2}
+			\IntAreteArbreSansRemise{2-1}{3-1}
+			\IntAreteArbreSansRemise{2-1}{3-2}
+			\IntAreteArbreSansRemise{2-2}{3-3}
+			\IntAreteArbreSansRemise{2-2}{3-4}
+			\IntAreteArbreSansRemise{2-3}{3-5}
+			\IntAreteArbreSansRemise{2-3}{3-6}
+			\IntAreteArbreSansRemise{2-4}{3-7}
+			\IntAreteArbreSansRemise{2-4}{3-8}
+			\IntAreteArbreSansRemise{2-5}{3-9}
+			\IntAreteArbreSansRemise{2-5}{3-10}
+			\IntAreteArbreSansRemise{2-6}{3-11}
+			\IntAreteArbreSansRemise{2-6}{3-12}
+			\IntAreteArbreSansRemise{2-7}{3-13}
+			\IntAreteArbreSansRemise{2-7}{3-14}
+			\IntAreteArbreSansRemise{2-8}{3-15}
+			\IntAreteArbreSansRemise{2-8}{3-16}
+			\IntAreteArbreSansRemise{2-9}{3-17}
+			\IntAreteArbreSansRemise{2-9}{3-18}
+			\IntAreteArbreSansRemise{2-10}{3-19}
+			\IntAreteArbreSansRemise{2-10}{3-20}
+			\IntAreteArbreSansRemise{2-11}{3-21}
+			\IntAreteArbreSansRemise{2-11}{3-22}
+			\IntAreteArbreSansRemise{2-12}{3-23}
+			\IntAreteArbreSansRemise{2-12}{3-24}
+			%N4
+			\IntNoeudArbreSansRemise{4}{1}{4}
+			\IntNoeudArbreSansRemise{4}{2}{3}
+			\IntNoeudArbreSansRemise{4}{3}{4}
+			\IntNoeudArbreSansRemise{4}{4}{2}
+			\IntNoeudArbreSansRemise{4}{5}{3}
+			\IntNoeudArbreSansRemise{4}{6}{2}
+			\IntNoeudArbreSansRemise{4}{7}{4}
+			\IntNoeudArbreSansRemise{4}{8}{3}
+			\IntNoeudArbreSansRemise{4}{9}{4}
+			\IntNoeudArbreSansRemise{4}{10}{1}
+			\IntNoeudArbreSansRemise{4}{11}{3}
+			\IntNoeudArbreSansRemise{4}{12}{1}
+			\IntNoeudArbreSansRemise{4}{13}{4}
+			\IntNoeudArbreSansRemise{4}{14}{2}
+			\IntNoeudArbreSansRemise{4}{15}{4}
+			\IntNoeudArbreSansRemise{4}{16}{1}
+			\IntNoeudArbreSansRemise{4}{17}{2}
+			\IntNoeudArbreSansRemise{4}{18}{1}
+			\IntNoeudArbreSansRemise{4}{19}{3}
+			\IntNoeudArbreSansRemise{4}{20}{2}
+			\IntNoeudArbreSansRemise{4}{21}{3}
+			\IntNoeudArbreSansRemise{4}{22}{1}
+			\IntNoeudArbreSansRemise{4}{23}{2}
+			\IntNoeudArbreSansRemise{4}{24}{1}
+			\IntAreteArbreSansRemise{3-1}{4-1}
+			\IntAreteArbreSansRemise{3-2}{4-2}
+			\IntAreteArbreSansRemise{3-3}{4-3}
+			\IntAreteArbreSansRemise{3-4}{4-4}
+			\IntAreteArbreSansRemise{3-5}{4-5}
+			\IntAreteArbreSansRemise{3-6}{4-6}
+			\IntAreteArbreSansRemise{3-7}{4-7}
+			\IntAreteArbreSansRemise{3-8}{4-8}
+			\IntAreteArbreSansRemise{3-9}{4-9}
+			\IntAreteArbreSansRemise{3-10}{4-10}
+			\IntAreteArbreSansRemise{3-11}{4-11}
+			\IntAreteArbreSansRemise{3-12}{4-12}
+			\IntAreteArbreSansRemise{3-13}{4-13}
+			\IntAreteArbreSansRemise{3-14}{4-14}
+			\IntAreteArbreSansRemise{3-15}{4-15}
+			\IntAreteArbreSansRemise{3-16}{4-16}
+			\IntAreteArbreSansRemise{3-17}{4-17}
+			\IntAreteArbreSansRemise{3-18}{4-18}
+			\IntAreteArbreSansRemise{3-19}{4-19}
+			\IntAreteArbreSansRemise{3-20}{4-20}
+			\IntAreteArbreSansRemise{3-21}{4-21}
+			\IntAreteArbreSansRemise{3-22}{4-22}
+			\IntAreteArbreSansRemise{3-23}{4-23}
+			\IntAreteArbreSansRemise{3-24}{4-24}
+		\fi
+		\ifnum\TRLISTECHOIXlen=3%
+			%N1
+			\IntNoeudArbreSansRemise{1}{1}{1}
+			\IntNoeudArbreSansRemise{1}{2}{2}
+			\IntNoeudArbreSansRemise{1}{3}{3}
+			\IntAreteArbreSansRemise{0-1}{1-1}
+			\IntAreteArbreSansRemise{0-1}{1-2}
+			\IntAreteArbreSansRemise{0-1}{1-3}
+			%N2
+			\IntNoeudArbreSansRemise{2}{1}{2}
+			\IntNoeudArbreSansRemise{2}{2}{3}
+			\IntNoeudArbreSansRemise{2}{3}{1}
+			\IntNoeudArbreSansRemise{2}{4}{3}
+			\IntNoeudArbreSansRemise{2}{5}{1}
+			\IntNoeudArbreSansRemise{2}{6}{2}
+			\IntAreteArbreSansRemise{1-1}{2-1}
+			\IntAreteArbreSansRemise{1-1}{2-2}
+			\IntAreteArbreSansRemise{1-2}{2-3}
+			\IntAreteArbreSansRemise{1-2}{2-4}
+			\IntAreteArbreSansRemise{1-3}{2-5}
+			\IntAreteArbreSansRemise{1-3}{2-6}
+			%N3
+			\IntNoeudArbreSansRemise{3}{1}{3}
+			\IntNoeudArbreSansRemise{3}{2}{2}
+			\IntNoeudArbreSansRemise{3}{3}{3}
+			\IntNoeudArbreSansRemise{3}{4}{1}
+			\IntNoeudArbreSansRemise{3}{5}{2}
+			\IntNoeudArbreSansRemise{3}{6}{1}
+			\IntAreteArbreSansRemise{2-1}{3-1}
+			\IntAreteArbreSansRemise{2-2}{3-2}
+			\IntAreteArbreSansRemise{2-3}{3-3}
+			\IntAreteArbreSansRemise{2-4}{3-4}
+			\IntAreteArbreSansRemise{2-5}{3-5}
+			\IntAreteArbreSansRemise{2-6}{3-6}
+		\fi
+		\ifnum\TRLISTECHOIXlen=2%
+			%N1
+			\IntNoeudArbreSansRemise{1}{1}{1}
+			\IntNoeudArbreSansRemise{1}{2}{2}
+			\IntAreteArbreSansRemise{0-1}{1-1}
+			\IntAreteArbreSansRemise{0-1}{1-2}
+			%N2
+			\IntNoeudArbreSansRemise{2}{1}{2}
+			\IntNoeudArbreSansRemise{2}{2}{1}
+			\IntAreteArbreSansRemise{1-1}{2-1}
+			\IntAreteArbreSansRemise{1-2}{2-2}
+		\fi
+		%notice
+		\IfEq{\LISTECHOIXnotice}{}%
+			{}%
+			{%
+				\foreach \notice [count=\i] in \LISTECHOIXnotice
+				{%
+					\draw[arbrechoixdeconotices] ({(\i-1)*\LISTECHOIXinterniv},0) -- ({(\i)*\LISTECHOIXinterniv},0) node[arbrechoixnotices] {\notice} ;
+				}
+			}%
+		%listerésultats
+		\ifboolKV[arbrechoix]{AffResultats}%
+			{%
+				\GeneratePermutations[\LISTECHOIXsepres]{#3}[\mylistofpermut]%on génère les permutations !
+				\foreach \i in {1,...,\nbeltstotal}{%
+					\draw (N-\TRLISTECHOIXlen-\i) node[arbrechoixresultats,right=\fpeval{0.5*\LISTECHOIXechelle*\LISTECHOIXinterniv}cm] {\getvaluefromlist*\mylistofpermut{\i}} ;
+				}
+			}%
+			{}%
+	\end{tikzpicture}%
+}
+
+\def\tmplistpermuttwo{{1,2},{2,1}}
+\def\tmplistpermutthree{{1,2,3},{1,3,2},{2,1,3},{2,3,1},{3,1,2},{3,2,1}}
+\def\tmplistpermutfour{{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}}
+
+\NewDocumentCommand\GeneratePermutations{ O{-} m O{\mylistofpermut} }{%
+	\lenoflist{#2}[\resmylen]%
+	\ifnum\resmylen=2%
+		\xdef\tmplistindex{\tmplistpermuttwo}%
+	\fi%
+	\ifnum\resmylen=3%
+		\xdef\tmplistindex{\tmplistpermutthree}%
+	\fi%
+	\ifnum\resmylen=4%
+		\xdef\tmplistindex{\tmplistpermutfour}%
+	\fi%
+	\lenoflist{\tmplistindex}[\resmylenindex]%
+	\xdef\tmpstringperm{}%
+	\xdef#3{}%
+	\foreach \i in {1,...,\resmylenindex}{%
+		\getvaluefromlist{\tmplistindex}{\i}[\mytmplst]%
+		\lenoflist{\mytmplst}[\resmylentmptmp]%
+		\foreach \j [count=\iii] in \mytmplst {%
+			\ifnum\iii=1%
+				\xdef\tmpstringperm{\getvaluefromlist*{#2}{\j}}%
+			\else%
+				\xdef\tmpstringperm{\tmpstringperm#1\getvaluefromlist*{#2}{\j}}%
+			\fi%
+		}%
+		\ifnum\i=1%
+			\xdef#3{\tmpstringperm}%
+		\else%
+			\xdef#3{#3,\tmpstringperm}%
+		\fi%
 	}%
 }
 

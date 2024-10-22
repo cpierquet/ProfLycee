@@ -759,6 +759,7 @@
 \defKV[FracPeriod]{Inconnue=\def\FracPerVar{#1}}
 \setKVdefault[FracPeriod]{Enonce=true,d=true,Inconnue=x,Solution=false,Brut=true,Simple=false}
 
+\makeatletter
 \NewDocumentCommand\FractionPeriode{ O{} m m }{%on verra pour la mise en forme après...
 	%clés
 	\restoreKV[FracPeriod]% revenir au valeurs par défaut
@@ -841,6 +842,7 @@
 		}%
 		{}%
 }
+\makeatletter
 
 %====tkz ligne convexité
 \makeatletter
