@@ -3,7 +3,8 @@
 % licence cliparts...: CC0 from openclipart
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLyceeLight}[2024/10/03 1.00a Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee-Light}[2024/10/24 1.00b Aide pour l'utilisation de LaTeX en lycee]
+%1.00b		Changement du préfixage de certaines commandes + \logo calculatrice interdite
 %1.00a		Refonte du fonctionnement
 
 %%=====Mathtools (la base)
@@ -83,10 +84,10 @@
 		{%
 			\IfBooleanTF{#1}%
 				{%
-					\xintnumfrac*[#3]{#4}%
+					\pflnumfrac*[#3]{#4}%
 				}%
 				{%
-					\xintnumfrac[#3]{#4}%
+					\pflnumfrac[#3]{#4}%
 				}%
 		}%
 		{}%
@@ -94,21 +95,21 @@
 		{%
 			\IfBooleanTF{#1}%
 				{%
-					\xintnumrad*[#3]{#4}%
+					\pflnumrad*[#3]{#4}%
 				}%
 				{%
-					\xintnumrad[#3]{#4}%
+					\pflnumrad[#3]{#4}%
 				}%
 		}%
 		{}%
 	\IfEq{#2}{rac}%
 		{%
-			\xintnumsqrt[#3]{#4}%
+			\pflnumsqrt[#3]{#4}%
 		}%
 		{}%
 }
 
-\DeclareDocumentCommand\xintnumsqrt{ O{} m }{% argument mandataire {calcul ou fraction}
+\DeclareDocumentCommand\pflnumsqrt{ O{} m }{% argument mandataire {calcul ou fraction}
 	\xdef\calculargument{\xintIrr{\xinteval{#2}}}%
 	\xintifboolexpr{\calculargument == 1}%
 	{%
@@ -179,7 +180,7 @@
 }%
 }
 
-\NewDocumentCommand\xintnumfrac{ s O{} m }{%patch xinttotexfrac
+\NewDocumentCommand\pflnumfrac{ s O{} m }{%patch xinttotexfrac
 	%*=moins sur le numérateur
 	%2=argument.optionnel[d/t/dec=...]
 	%3=argument mandataire {calcul ou fraction}
@@ -244,7 +245,7 @@
 		}%
 }
 
-\NewDocumentCommand\xintnumrad{ s O{} m }{%
+\NewDocumentCommand\pflnumrad{ s O{} m }{%
 	%1 = options
 	%2 = angle sous la forme a*pi/b
 	\StrDel{#3}{pi}[\MPargument]%

@@ -123,4 +123,23 @@
 		{\InsererClipart{silver-medal-flat}}%
 }
 
+%====NOCALC
+\newlength{\tmptotalheightcurrenttxt}
+\setlength{\tmptotalheightcurrenttxt}{1em}
+\newlength{\tmptotaldepthcurrenttxt}
+\setlength{\tmptotaldepthcurrenttxt}{0.1em}
+
+\NewDocumentCommand\pflnocalc{ s O{black} }{%
+	\settototalheight{\tmptotalheightcurrenttxt}{\hbox{azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN}}%
+	\settodepth{\tmptotaldepthcurrenttxt}{\hbox{azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN}}%
+	\IfBooleanTF{#1}{}{\hspace*{-0.05\tmptotalheightcurrenttxt}}%
+	\raisebox{-\tmptotaldepthcurrenttxt}{%
+		{\begin{tikzpicture}[line width={0.1\tmptotalheightcurrenttxt}]
+				\node[#2,inner sep=0pt,scale=0.8,outer sep=0pt] (TMPPP) at (0,0) {\faCalculator} ;
+				\draw[#2,line cap=round] (TMPPP.north east)--(TMPPP.south west) ;
+		\end{tikzpicture}}%
+	}%
+	\IfBooleanTF{#1}{}{\hspace*{-0.05\tmptotalheightcurrenttxt}}%
+}
+
 \endinput

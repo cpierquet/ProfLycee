@@ -3,7 +3,90 @@
 % Released under the LaTeX Project Public License v1.3c or later, see http://www.latex-project.org/lppl.txt
 
 \RequirePackage{ifthen}
+\RequirePackage{etoolbox}
 \RequirePackage{modulus}
+
+%%-----Nombres premiers (code venant de la documentation de xint :-))
+\NewDocumentCommand\pflboolestpremier{ m }{%
+	\ifnumodd{#1}%
+		{%
+			\ifnumless{#1}{8}%
+				{%
+					\ifnumequal{#1}{1}{0}{1}%
+				}%le cas 3,5,7 qui sont premiers
+				{%
+					\if\xintiloop[3+2]%
+						\ifnum#1<\numexpr\xintiloopindex*\xintiloopindex\relax%
+							\expandafter\xintbreakiloopanddo\expandafter1\expandafter.%
+						\fi%
+							\ifnum#1=\numexpr(#1/\xintiloopindex)*\xintiloopindex\relax%
+						\else
+							\repeat 00\expandafter0%
+					\else%
+						\expandafter1%
+					\fi%
+				}%
+		}%fin de la partie impaire
+		{%
+			\ifnumequal{#1}{2}{1}{0}%
+		}%partie paire
+}%
+
+\NewDocumentCommand\pflestpremier{ O{est premier} O{n'est pas premier} m }{%
+	\num{#3} \xintifboolexpr{\pflboolestpremier{#3} == 1}{#1}{#2}\relax%
+}%
+
+%%------Décomposition, adaptée de pfc
+\NewDocumentCommand\pfldecompnb{ s m }{%
+	\xdef\tmpcalc{\xinteval{#2}}%
+	\xdef\tmparg{}%
+	\newcount\pflanp\newcount\pflbnp\newcount\pflcnp%
+	\newcount\pflpileb\newcount\pflexposant%
+	\pflexposant=0\relax%
+	\pflanp=\tmpcalc\relax%
+	\pflbnp=2\relax%
+	\pflpileb=2\relax%
+	\ensuremath{%
+	\whiledo{\the\pflanp > 1}{%
+		\modulo{\the\pflanp}{\the\pflbnp}%
+		\ifnum\remainder=0\relax%
+		\pflcnp=\numexpr\pflanp/\pflbnp\relax%
+		\pflexposant=\numexpr\pflexposant+1\relax%
+		\pflanp=\pflcnp\relax%
+		\else%
+		\ifnum\pflexposant>0\relax%
+			\IfBooleanTF{#1}%
+				{%
+					\xdef\tmparg{\tmparg\num{\the\pflpileb}^{\the\pflexposant}\times}%
+				}%
+				{%
+					\ifnum\pflexposant=1\relax%
+						\xdef\tmparg{\tmparg\num{\the\pflpileb}\times}%
+					\else%
+						\xdef\tmparg{\tmparg\num{\the\pflpileb}^{\the\pflexposant}\times}%
+					\fi%
+				}%
+		\fi%
+		\pflbnp=\numexpr\pflbnp+1\relax%
+		\pflpileb=\pflbnp\relax%
+		\pflexposant=0\relax%
+		\fi%
+	}%
+	\IfBooleanTF{#1}%
+		{%
+			\xdef\tmparg{\tmparg\num{\the\pflpileb}^{\the\pflexposant}}%
+		}%
+		{%
+			\ifnum\pflexposant=1\relax%
+				\xdef\tmparg{\tmparg\num{\the\pflpileb}}%
+			\else%
+				\xdef\tmparg{\tmparg\num{\the\pflpileb}^{\the\pflexposant}}%
+			\fi%
+		}%
+	\tmparg\relax%
+	}%
+}
+
 
 %%------ConversionsBases
 %dec->bin avec blocs de 4 chiffres
@@ -1287,8 +1370,6 @@
 		\StrChar{#1}{##1}[\tmpchar]%
 		\settowidth{\charwd}{\tmpchar}%
 		\setlength{\widestcharwd}{\maxof{\widestcharwd}{\charwd}}%
-		
-		
 	}%
 }
 

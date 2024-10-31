@@ -5,7 +5,9 @@
 % code
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ProfLycee}[2024/10/22 3.10d Aide pour l'utilisation de LaTeX en lycee]
+\ProvidesPackage{ProfLycee}[2024/10/30 3.10f Aide pour l'utilisation de LaTeX en lycee]
+% 3.10f	Ajout de quelques commandes arithmétiques (test premier + décompo)
+% 3.10e	Correction de noms de commandes + \logo calculatrice interdite
 % 3.10d	Correction d'un nom de commande (doublon avec ProfMaquette)
 % 3.10c	Ajout de clés/arguments pour les arbres de probas + paramètres stats + arbres de dénombrement(s)
 % 3.10b	Ajout des empilements d'oranges + commandes sur les dates
@@ -220,10 +222,10 @@
 		{%
 			\IfBooleanTF{#1}%
 				{%
-					\xintnumfrac*[#3]{#4}%
+					\pflnumfrac*[#3]{#4}%
 				}%
 				{%
-					\xintnumfrac[#3]{#4}%
+					\pflnumfrac[#3]{#4}%
 				}%
 		}%
 		{}%
@@ -231,21 +233,21 @@
 		{%
 			\IfBooleanTF{#1}%
 				{%
-					\xintnumrad*[#3]{#4}%
+					\pflnumrad*[#3]{#4}%
 				}%
 				{%
-					\xintnumrad[#3]{#4}%
+					\pflnumrad[#3]{#4}%
 				}%
 		}%
 		{}%
 	\IfEq{#2}{rac}%
 		{%
-			\xintnumsqrt[#3]{#4}%
+			\pflnumsqrt[#3]{#4}%
 		}%
 		{}%
 }
 
-\DeclareDocumentCommand\xintnumsqrt{ O{} m }{% argument mandataire {calcul ou fraction}
+\DeclareDocumentCommand\pflnumsqrt{ O{} m }{% argument mandataire {calcul ou fraction}
 	\xdef\calculargument{\xintIrr{\xinteval{#2}}}%
 	\xintifboolexpr{\calculargument == 1}%
 	{%
@@ -316,7 +318,7 @@
 }%
 }
 
-\NewDocumentCommand\xintnumfrac{ s O{} m }{%patch xinttotexfrac
+\NewDocumentCommand\pflnumfrac{ s O{} m }{%patch xinttotexfrac
 	%*=moins sur le numérateur
 	%2=argument.optionnel[d/t/dec=...]
 	%3=argument mandataire {calcul ou fraction}
@@ -381,7 +383,7 @@
 		}%
 }
 
-\NewDocumentCommand\xintnumrad{ s O{} m }{%
+\NewDocumentCommand\pflnumrad{ s O{} m }{%
 	%1 = options
 	%2 = angle sous la forme a*pi/b
 	\StrDel{#3}{pi}[\MPargument]%

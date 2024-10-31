@@ -42,7 +42,6 @@
 	}%
 }
 
-
 %===ENSEMBLES CLASSIQUES
 \ifthenelse{\isundefined{\N}}%
 	{%
@@ -212,11 +211,57 @@
 }
 
 %====COORDONNEES, VECTEURS
-\NewDocumentCommand\CoordPtPl{ m m }{\ensuremath{\left(#1;#2\right)}}
-\NewDocumentCommand\CoordPtEsp{ m m m }{\ensuremath{\left(#1;#2;#3\right)}}
-\NewDocumentCommand\CoordVecPl{ m m }{\ensuremath{\begin{pmatrix} #1 \\ #2 \end{pmatrix}}}
-\NewDocumentCommand\CoordVecEsp{ m m m }{\ensuremath{\begin{pmatrix} #1 \\ #2 \\ #3 \end{pmatrix}}}
-\NewDocumentCommand\MatDeux{ m m m m }{\ensuremath{\begin{pmatrix} #1 & #2 \\ #3 & #4 \end{pmatrix}}}
+\RequirePackage{nicematrix}
+
+\NewDocumentCommand\CoordPtPl{ O{0} m m }{%
+	\IfEq{#1}{0}%si pas d'argument optionnel := array, sinon nicematrix avec cell-space-limits
+		{%
+			\ensuremath{\left(#2;#3\right)}%
+		}%
+		{%
+			\ensuremath{\begin{pNiceMatrix}[cell-space-limits=#1] #2 ; #3 \end{pNiceMatrix}}%
+		}%
+}
+\NewDocumentCommand\CoordPtEsp{ O{0} m m m }{%
+	\IfEq{#1}{0}%si pas d'argument optionnel := array, sinon nicematrix avec cell-space-limits
+		{%
+			\ensuremath{\left(#2;#3;#4\right)}%
+		}%
+		{%
+			\ensuremath{\begin{pNiceMatrix}[cell-space-limits=#1] #2 ; #3 ; #4 \end{pNiceMatrix}}%
+		}%
+}
+
+\NewDocumentCommand\CoordVecPl{ O{0} m m }{%
+	\IfEq{#1}{0}%si pas d'argument optionnel := array, sinon nicematrix avec cell-space-limits
+		{%
+			\ensuremath{\begin{pmatrix} #2 \\ #3 \end{pmatrix}}%
+		}%
+		{%
+			\ensuremath{\begin{pNiceMatrix}[cell-space-limits=#1] #2 \\ #3 \end{pNiceMatrix}}%
+		}%
+}
+
+\NewDocumentCommand\CoordVecEsp{ O{0} m m m }{%
+	\IfEq{#1}{0}%si pas d'argument optionnel := array, sinon nicematrix avec cell-space-limits
+		{%
+			\ensuremath{\begin{pmatrix} #2 \\ #3 \\ #4 \end{pmatrix}}%
+		}%
+		{%
+			\ensuremath{\begin{pNiceMatrix}[cell-space-limits=#1] #2 \\ #3 \\ #4 \end{pNiceMatrix}}%
+		}%
+}
+
+\NewDocumentCommand\MatDeux{ O{0} m m m m }{%
+	\IfEq{#1}{0}%si pas d'argument optionnel := array, sinon nicematrix avec cell-space-limits
+		{%
+			\ensuremath{\begin{pmatrix} #2 & #3 \\ #4 & #5 \end{pmatrix}}%
+		}%
+		{%
+			\ensuremath{\begin{pNiceMatrix}[cell-space-limits=#1] #2 & #3 \\ #4 & #5 \end{pNiceMatrix}}%
+		}%
+}
+
 \NewDocumentCommand\Vecteur{ s m O{} }{%
 	\IfBooleanTF{#1}{\ensuremath{\vv*{#2}{#3}}}{\ensuremath{\vv{#2}}}%
 }
